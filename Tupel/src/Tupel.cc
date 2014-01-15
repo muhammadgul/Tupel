@@ -1,6 +1,6 @@
 /*
 
-Code by: Bugra Bilin, Kittikul Kovitanggoon, Efe Yazgan
+Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 
 */
 
@@ -49,10 +49,10 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Efe Yazgan
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
-#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+//#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
-#include "External/interface/PileupJetIdentifier.h"
+#include "CMGTools/External/interface/PileupJetIdentifier.h"
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 
 #include "FWCore/Framework/interface/MakerMacros.h"
@@ -245,7 +245,7 @@ private:
   //HLT
   double HLT_Mu17_Mu8,HLT_Mu17_TkMu8;
   double HLT_Elec17_Elec8;
-  JetCorrectionUncertainty *jecUnc;
+//  JetCorrectionUncertainty *jecUnc;
 };
 
 using namespace std;
@@ -1009,8 +1009,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       patJetPfAk05nemf_.push_back(nemf);
       patJetPfAk05cmult_.push_back(cmult);
       patJetPfAk05nconst_.push_back(nconst);
-      jecUnc->setJetEta(jet.eta());
-      jecUnc->setJetPt(jet.pt());
+//      jecUnc->setJetEta(jet.eta());
+//      jecUnc->setJetPt(jet.pt());
       //double unc = jecUnc->getUncertainty(true);
       double unc = 1.;
       unc_.push_back(unc);
@@ -1071,7 +1071,7 @@ void
 Tupel::beginJob()
 {
   
-  jecUnc = new JetCorrectionUncertainty("Fall12_V7_DATA_Uncertainty_AK5PFchs.txt");
+//  jecUnc = new JetCorrectionUncertainty("Fall12_V7_DATA_Uncertainty_AK5PFchs.txt");
     // register to the TFileService
     edm::Service<TFileService> fs;
     TFileDirectory TestDir = fs->mkdir("test");
@@ -1249,7 +1249,7 @@ Tupel::beginJob()
 void 
 Tupel::endJob() 
 {
-  delete jecUnc;
+//  delete jecUnc;
   myTree->Print();
 }
 
