@@ -1,3 +1,5 @@
+Instructions for ntuple Producer
+
 setenv CVSROOT ":ext:<cern-user-account>@lxplus5.cern.ch:/afs/cern.ch/user/c/cvscmssw/public/CMSSW"
 
 cmsrel CMSSW_5_3_11
@@ -27,9 +29,9 @@ cvs co -r V01-04-26      RecoTauTag/RecoTau
 cvs co -r V02-02-06      RecoVertex/AdaptiveVertexFinder                  
 cvs co -r V00-09-03      SHarper/HEEPAnalyzer                             
 cvs co -r V00-02-03s     TauAnalysis/CandidateTools                       
-cvs co bTag/CommissioningCommonSetup​
 git clone git@github.com:h2gglobe/External CMGTools/External
 git clone git@github.com:cms-analysis/EgammaAnalysis-ElectronTools EgammaAnalysis/ElectronTools
+git clone git@github.com:UGent/Tupel
 cd EgammaAnalysis/ElectronTools/data
 cat download.url | xargs wget​
 cd -
@@ -40,3 +42,6 @@ scram b -j 10
 // eos mount (active for ~24 hours)
 mkdir ~/eos
 eosmount ~/eos
+
+cd test
+cmsRun config_final_mc_cfg.py
