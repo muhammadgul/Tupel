@@ -1,6 +1,9 @@
 Instructions for ntuple Producer
 
 setenv CVSROOT ":ext:<cern-user-account>@lxplus5.cern.ch:/afs/cern.ch/user/c/cvscmssw/public/CMSSW"
+if you are using bash:
+export CVSROOT=":ext:<cern-user-account>@lxplus5.cern.ch:/afs/cern.ch/user/c/cvscmssw/public/CMSSW"
+
 
 cmsrel CMSSW_5_3_11
 cd CMSSW_5_3_11/src
