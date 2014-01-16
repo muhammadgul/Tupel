@@ -988,7 +988,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       patJetPfAk05jetpukTight_.push_back(tight);
       
       chf = jet.chargedHadronEnergyFraction();
-      nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.energy();
+      nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
       cemf = jet.chargedEmEnergyFraction();
       nemf = jet.neutralEmEnergyFraction();
       cmult = jet.chargedMultiplicity();
