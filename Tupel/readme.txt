@@ -35,7 +35,7 @@ git clone git@github.com:h2gglobe/External CMGTools/External
 git clone git@github.com:cms-analysis/EgammaAnalysis-ElectronTools EgammaAnalysis/ElectronTools
 git clone git@github.com:UGent/Tupel
 cd EgammaAnalysis/ElectronTools/data
-cat download.url | xargs wget​
+cat  download.url | xargs wget
 cd -
 in CMGTools/External/python/puJetIDAlgo_cff.py: change "RecoJets/JetProducers" --> "CMGTools/External" 
 
