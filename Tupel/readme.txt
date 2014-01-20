@@ -30,7 +30,6 @@ cvs co -r V15-02-06      RecoParticleFlow/PFProducer
 cvs co -r V01-04-14      RecoTauTag/Configuration                        
 cvs co -r V01-04-26      RecoTauTag/RecoTau                               
 cvs co -r V02-02-06      RecoVertex/AdaptiveVertexFinder                  
-cvs co -r V00-09-03      SHarper/HEEPAnalyzer                             
 cvs co -r V00-02-03s     TauAnalysis/CandidateTools                       
 git clone git@github.com:h2gglobe/External CMGTools/External
 git clone git@github.com:cms-analysis/EgammaAnalysis-ElectronTools EgammaAnalysis/ElectronTools
