@@ -27,6 +27,7 @@ process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('RecoMET.METFilters.metFilters_cff')
+process.load('RecoBTag/Configuration/RecoBTag_cff')
 process.hcalLaserEventFilter.taggingMode   = cms.bool(True)
 process.EcalDeadCellTriggerPrimitiveFilter.taggingMode=cms.bool(True)
 process.eeBadScFilter.taggingMode           = cms.bool(True)
@@ -219,6 +220,7 @@ if isMC:
         process.patseq*
         process.patDefaultSequence*
 	process.puJetIdSqeuenceChs* #for (PFlow) CHS objects
+	process.btagging* 
         process.tupel
         )
 else :
