@@ -45,5 +45,5 @@ scram b -j 10
 mkdir ~/eos
 eosmount ~/eos
 
-cd test
+cd /Tupel/Tupel/test/
 cmsRun config_final_mc_cfg.py
