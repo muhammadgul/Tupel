@@ -57,6 +57,8 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+#include "DataFormats/BTauReco/interface/JetTag.h"
+
 class TTree;
 class Tupel : public edm::EDAnalyzer {
 
@@ -324,6 +326,11 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   edm::Handle<edm::View<reco::Vertex> >  pvHandle;
   iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
   //  const edm::View<reco::Vertex> & vertexColl = *pvHandle;
+
+  //# Get b tag information
+  edm::Handle<reco::JetTagCollection> bTagHandle;
+  iEvent.getByLabel("trackCountingHighEffBJetTags", bTagHandle);
+  const reco::JetTagCollection & bTags = *(bTagHandle.product());
 							  
   //  Handle<VertexCollection> pvHandl;//reco::VertexRef needs VertexCollection and does not work with edm::View<reco::Vertex>
   //  iEvent.getByLabel("offlinePrimaryVertices", pvHandl); 
@@ -1063,6 +1070,17 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     }
     
     /////////////////////////////////////////////////////////
+    
+    cout<<"bTags size  "<<bTags.size()<<endl;
+
+//# Loop over jets and study b tag info.
+
+for (uint i = 0; i != bTags.size(); ++i) {
+   cout<<" Jet "<< i
+         <<" has b tag discriminator = "<<bTags[i].second
+         << " and jet Pt = "<<bTags[i].first->pt()<<endl;
+}
+    
     myTree->Fill();
     
 }
