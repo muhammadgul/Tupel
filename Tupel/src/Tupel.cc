@@ -1001,6 +1001,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       cmult = jet.chargedMultiplicity();
       nconst = jet.numberOfDaughters();
       
+           cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+      
       patJetPfAk05En_.push_back(jet.energy());
       patJetPfAk05Pt_.push_back(jet.pt());
       patJetPfAk05Eta_.push_back(jet.eta());
