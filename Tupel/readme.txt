@@ -15,12 +15,11 @@ cvs co -r V06-05-06-12   DataFormats/PatCandidates
 cvs co -r V00-00-08      DataFormats/TrackerCommon                        
 cvs co -r V08-09-62      PhysicsTools/PatAlgos                            
 cvs co -r V03-09-28      PhysicsTools/PatUtils         
-cvs co -r V00-07-03      RecoBTag/Configuration                           
-cvs co -r V01-04-09      RecoBTag/ImpactParameter            
-cvs co RecoBTag/PerformanceMeasurements             
-cvs co -r V01-10-02      RecoBTag/SecondaryVertex                         
-cvs co -r V05-09-02      RecoBTag/SoftLepton                              
-cvs co -r V02-03-00      RecoBTau/JetTagComputer                          
+cvs co -r V01-04-09-01   RecoBTag/ImpactParameter
+cvs co -r V05-09-11      RecoBTag/SoftLepton
+cvs co -r V01-10-06      RecoBTag/SecondaryVertex
+cvs co -r V02-03-02      RecoBTau/JetTagComputer
+cvs co -r V00-07-05      RecoBTag/Configuration
 cvs co -r V09-00-01      RecoEgamma/EgammaTools                           
 cvs co -r V01-09-05      RecoLocalTracker/SubCollectionProducers          
 cvs co -r V00-00-08      RecoMET/METAnalyzers                             
