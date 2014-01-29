@@ -212,6 +212,15 @@ process.patseq = cms.Sequence(
     getattr(process,"patPF2PATSequence"+postfix)
     )
 
+
+process.btagAnalyzer = cms.EDAnalyzer("WrappedEDAnalysisTasksAnalyzerBTag",
+                                      Jets = cms.InputTag("selectedPatJetsPFlow"),
+                                      bTagAlgo=cms.string('trackCounting'),
+                                      bins=cms.uint32(100),
+                                      lowerbin=cms.double(0.),
+                                      upperbin=cms.double(10.)
+)
+
 # let it run
 if isMC:
     process.p = cms.Path(
