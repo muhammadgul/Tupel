@@ -125,6 +125,8 @@ switchJetCollection(process,
 process.pfPileUpPFlow.checkClosestZVertex = False
 process.pfPileUpIsoPFlow.checkClosestZVertex = cms.bool(False)
 
+process.genParticlesForJetsNoNu.excludeFromResonancePids = cms.vuint32(12, 14, 16)
+
 if not isMC : removeMCMatching(process, ['All'])
 if not isMC : removeMCMatchingPF2PAT( process, '' )
 
