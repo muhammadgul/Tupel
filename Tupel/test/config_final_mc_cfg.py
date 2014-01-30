@@ -92,10 +92,35 @@ usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=isMC, postfix=postfix
           pvCollection=cms.InputTag('goodOfflinePrimaryVertices')
           )
 
+process.load('CondCore.DBCommon.CondDBSetup_cfi')#
+process.BTauMVAJetTagComputerRecord = cms.ESSource('PoolDBESSource',
+    process.CondDBSetup,
+    timetype = cms.string('runnumber'),
+    toGet = cms.VPSet(cms.PSet(
+        record = cms.string('BTauGenericMVAJetTagComputerRcd'),
+        tag = cms.string('MVAComputerContainer_Retrained53X_JetTags_v2')
+    )),
+    connect = cms.string('frontier://FrontierProd/CMS_COND_PAT_000'),
+    BlobStreamerName = cms.untracked.string('TBufferBlobStreamingService')
+)
+process.es_prefer_BTauMVAJetTagComputerRecord = cms.ESPrefer('PoolDBESSource','BTauMVAJetTagComputerRecord')
+
 useGsfElectrons(process,postfix=postfix,dR="03")
 process.patMuonsPFlow.pfMuonSource = cms.InputTag("pfSelectedMuonsPFlow") 
 process.muonMatchPFlow.src = cms.InputTag("pfSelectedMuonsPFlow")
 
+switchJetCollection(process,
+    cms.InputTag('pfNoTau'+postfix),
+    doJTA              = True,
+    doBTagging         = True,
+    btagInfo           = cms.vstring('impactParameterTagInfos','secondaryVertexTagInfos','softPFMuonsTagInfos','softPFElectronsTagInfos'),
+    btagdiscriminators = cms.vstring('jetBProbabilityBJetTags','jetProbabilityBJetTags','trackCountingHighPurBJetTags','trackCountingHighEffBJetTags','simpleSecondaryVertexHighEffBJetTags','simpleSecondaryVertexHighPurBJetTags','combinedSecondaryVertexBJetTags','combinedSecondaryVertexV1BJetTags','combinedSecondaryVertexSoftPFLeptonV1BJetTags'),
+    jetCorrLabel       = ('AK5PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute'])),
+    doType1MET         = False,
+    genJetCollection   = cms.InputTag('ak5GenJetsNoNu'),
+    doJetID            = False,
+    postfix            = postfix
+)
 
 process.pfPileUpPFlow.checkClosestZVertex = False
 process.pfPileUpIsoPFlow.checkClosestZVertex = cms.bool(False)
@@ -213,13 +238,13 @@ process.patseq = cms.Sequence(
     )
 
 
-process.btagAnalyzer = cms.EDAnalyzer("WrappedEDAnalysisTasksAnalyzerBTag",
-                                      Jets = cms.InputTag("selectedPatJetsPFlow"),
-                                      bTagAlgo=cms.string('trackCounting'),
-                                      bins=cms.uint32(100),
-                                      lowerbin=cms.double(0.),
-                                      upperbin=cms.double(10.)
-)
+#process.btagAnalyzer = cms.EDAnalyzer("WrappedEDAnalysisTasksAnalyzerBTag",
+#                                      Jets = cms.InputTag("selectedPatJetsPFlow"),
+#                                      bTagAlgo=cms.string('trackCounting'),
+#                                      bins=cms.uint32(100),
+#                                      lowerbin=cms.double(0.),
+#                                      upperbin=cms.double(10.)
+#)
 
 # let it run
 if isMC:
