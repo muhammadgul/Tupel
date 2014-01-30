@@ -180,6 +180,9 @@ private:
   std::vector<bool> patJetPfAk05jetpukTight_;
   std::vector<double> patJetPfAk05PtUp_;
   std::vector<double> patJetPfAk05PtDn_;
+  std::vector<double> patJetPfAk05BDiscCSV_;
+  std::vector<double> patJetPfAk05BDiscCSVV1_;
+  std::vector<double> patJetPfAk05BDiscCSVSLV1_;
   std::vector<double> unc_;
   ///Muons
   std::vector<double> patMuonPt_;
@@ -457,6 +460,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     patJetPfAk05jetpukTight_.clear();
     patJetPfAk05PtUp_.clear();
     patJetPfAk05PtDn_.clear();
+    patJetPfAk05BDiscCSV_.clear();
+    patJetPfAk05BDiscCSVV1_.clear();
+    patJetPfAk05BDiscCSVSLV1_.clear();
     unc_.clear();
     ///Muons
     patMuonPt_.clear();
@@ -1001,7 +1007,12 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       cmult = jet.chargedMultiplicity();
       nconst = jet.numberOfDaughters();
       
-           cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+      cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+      cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
+      cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
+      patJetPfAk05BDiscCSV_.push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
+      patJetPfAk05BDiscCSVV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
+      patJetPfAk05BDiscCSVSLV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
       
       patJetPfAk05En_.push_back(jet.energy());
       patJetPfAk05Pt_.push_back(jet.pt());
@@ -1241,6 +1252,9 @@ Tupel::beginJob()
     myTree->Branch("patJetPfAk05jetpukLoose_",&patJetPfAk05jetpukLoose_);
     myTree->Branch("patJetPfAk05jetpukMedium_",&patJetPfAk05jetpukMedium_);
     myTree->Branch("patJetPfAk05jetpukTight_",&patJetPfAk05jetpukTight_);
+    myTree->Branch("patJetPfAk05BDiscCSV_",&patJetPfAk05BDiscCSV_);
+    myTree->Branch("patJetPfAk05BDiscCSVV1_",&patJetPfAk05BDiscCSVV1_);
+    myTree->Branch("patJetPfAk05BDiscCSVSLV1_",&patJetPfAk05BDiscCSVSLV1_);
     myTree->Branch("unc_",&unc_);
     myTree->Branch("patJetPfAk05PtUp_",&patJetPfAk05PtUp_);
     myTree->Branch("patJetPfAk05PtDn_",&patJetPfAk05PtDn_); 
