@@ -651,8 +651,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       iEvent.getByType(lheH);
       if(lheH.isValid()) nup=lheH->hepeup().NUP;
       edm::Handle<reco::GenJetCollection> genjetColl;
-      iEvent.getByLabel("ak5GenJets", genjetColl);
-      //    iEvent.getByLabel("ak5GenJetsNoNu", genjetColl);
+      //iEvent.getByLabel("ak5GenJets", genjetColl);
+          iEvent.getByLabel("ak5GenJetsNoNu", genjetColl);
       const reco::GenJetCollection & genjet = *genjetColl;
       for(unsigned int k=0; k<genjetColl->size(); ++k){
 	if(genjet[k].pt()<=10 || fabs(genjet[k].eta())>4.7)continue;
