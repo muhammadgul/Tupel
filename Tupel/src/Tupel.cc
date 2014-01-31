@@ -1084,7 +1084,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     
     /////////////////////////////////////////////////////////
     
-    cout<<"bTags size  "<<bTags.size()<<endl;
+ //   cout<<"bTags size  "<<bTags.size()<<endl;
 
 //# Loop over jets and study b tag info.
 
