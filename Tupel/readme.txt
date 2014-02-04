@@ -50,7 +50,7 @@ cmsRun config_final_mc_cfg.py
 (or crab ...)
 
 // To run the analyzer
-
+cd tupelanalyzer
 make
 ./tupelanalyzer
 
