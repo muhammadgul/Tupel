@@ -579,8 +579,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	int st = gen[i].status();
 	int id = gen[i].pdgId();
 	if(gen[i].numberOfMothers()){
-	  //        if (st!=3 && fabs(id)!=13&& fabs(id)!=11 && fabs(id)!=22 && fabs(id)!=23) continue;
-	  if (st==3 && gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0){
+	  if (st==3){
 	    TLorentzVector genLep3(0,0,0,0);
 	    genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
 	    St03Pt.push_back(genLep3.Pt());
@@ -591,8 +590,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	    St03Id.push_back(id);
 	    St03Status.push_back(st);
 	  }
-	  if(gen[i].numberOfMothers() ==1 && gen[i].mother()->pdgId() != id) continue;
-	  if (st==1 && (abs(id)==13||abs(id)==11) && gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0){
+	  if (st==1){
 	    TLorentzVector genLep1(0,0,0,0);
 	    genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
 	    TLorentzVector genR1Pho1(0,0,0,0);
@@ -655,7 +653,6 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
           iEvent.getByLabel("ak5GenJetsNoNu", genjetColl);
       const reco::GenJetCollection & genjet = *genjetColl;
       for(unsigned int k=0; k<genjetColl->size(); ++k){
-	if(genjet[k].pt()<=10 || fabs(genjet[k].eta())>4.7)continue;
 	GjPt.push_back(genjet[k].pt());
 	Gjeta.push_back(genjet[k].eta());
 	Gjphi.push_back(genjet[k].phi());
@@ -734,7 +731,6 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     double Mu17_Mu8_Matched=0;
     double Mu17_TkMu8_Matched=0;
     for (unsigned int j = 0; j < muons->size(); ++j){
-      if(mu[j].pt()<15) continue;
       if(mu[j].isGlobalMuon()){ 
 	const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
 	if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
