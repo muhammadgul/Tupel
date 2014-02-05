@@ -956,7 +956,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       patElec_mva_presel_.push_back(myTrigPresel);
       ElecFill++; 
     }
-    double PFjetFill=0;
+    //double PFjetFill=0;
     double chf = 0;
     double nhf = 0;
     double cemf = 0;
@@ -1047,7 +1047,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	if ((nhf<0.9)&&(nemf<0.9)&&(nconst>1))tempJetID=3;
       }
       patJetPfAk05LooseId_.push_back(tempJetID);//ala 
-      PFjetFill++;
+      //PFjetFill++;
       
       if(!realdata){
 	bool matchGen=false;
@@ -1068,7 +1068,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     
     for(edm::View<pat::Jet>::const_iterator calojet=calojets->begin(); calojet!=calojets->end(); ++calojet){
 //      if( calojet->pt()<10 || PFjetFill==0)  continue;
-      if (PFjetFill==0) continue;	
+    //  if (PFjetFill==0) continue;	
       caloJetPt_.push_back(calojet->pt());
       caloJetRawPt_.push_back(calojet->correctedJet(0).pt());
       caloJetEn_.push_back(calojet->energy());
