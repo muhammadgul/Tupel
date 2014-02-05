@@ -845,7 +845,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     for (unsigned int j=0; j < electronColl->size();++j){
       pat::Electron & el = (*electronColl)[j];
       double Elec17_Elec8_Matched=0;
-      if(el.pt()<10. ||el.superCluster()->eta()>5.1 )continue;
+ //     if(el.pt()<10. ||el.superCluster()->eta()>5.1 )continue;
       const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( electrons,j,elecMatch_, iEvent, *triggerEvent ) );
       if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
 	Elec17_Elec8_Matched=1;
@@ -971,7 +971,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       //if(jet.pt()<20 || MuFill<2) continue;
       //PFjetFill=1;
       //   if(realdata && (jet.pt()<10.|| MuFill<2)) continue;
-      if(/*!realdata &&*/ (jet.pt()<10.))continue;  
+
+//      if(/*!realdata &&*/ (jet.pt()<10.))continue;  
       
       patJetPfAk05jetpuMVA_.push_back( (*puJetIDMVA)[jets->refAt(i)]);
       patJetPfAk05jetBeta_.push_back((*puJetIdentifier)[jets->refAt(i)].beta());  
@@ -1045,7 +1046,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	if ((nhf<0.95)&&(nemf<0.95)&&(nconst>1))tempJetID=2; 
 	if ((nhf<0.9)&&(nemf<0.9)&&(nconst>1))tempJetID=3;
       }
-      patJetPfAk05LooseId_.push_back(tempJetID);
+      patJetPfAk05LooseId_.push_back(tempJetID);//ala 
       PFjetFill++;
       
       if(!realdata){
@@ -1066,7 +1067,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     iEvent.getByLabel(CaloJet_,calojets);
     
     for(edm::View<pat::Jet>::const_iterator calojet=calojets->begin(); calojet!=calojets->end(); ++calojet){
-      if( calojet->pt()<10 || PFjetFill==0)  continue;
+//      if( calojet->pt()<10 || PFjetFill==0)  continue;
+      if (PFjetFill==0) continue;	
       caloJetPt_.push_back(calojet->pt());
       caloJetRawPt_.push_back(calojet->correctedJet(0).pt());
       caloJetEn_.push_back(calojet->energy());
