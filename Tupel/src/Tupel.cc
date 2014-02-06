@@ -1069,7 +1069,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     for(edm::View<pat::Jet>::const_iterator calojet=calojets->begin(); calojet!=calojets->end(); ++calojet){
 //      if( calojet->pt()<10 || PFjetFill==0)  continue;
     //  if (PFjetFill==0) continue;
-      if (calojet>pt()<1.) continue;
+      if (calojet->pt()<1.) continue;
       caloJetPt_.push_back(calojet->pt());
       caloJetRawPt_.push_back(calojet->correctedJet(0).pt());
       caloJetEn_.push_back(calojet->energy());
