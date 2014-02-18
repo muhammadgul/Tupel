@@ -89,8 +89,9 @@ postfix = "PFlow"
 jetAlgo="AK5"
 usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=isMC, postfix=postfix,
 	  jetCorrections=inputJetCorrLabel,
-          pvCollection=cms.InputTag('goodOfflinePrimaryVertices')
-          )
+          pvCollection=cms.InputTag('goodOfflinePrimaryVertices'),
+          typeIMetCorrections=False)
+
 
 process.load('CondCore.DBCommon.CondDBSetup_cfi')#
 process.BTauMVAJetTagComputerRecord = cms.ESSource('PoolDBESSource',
@@ -183,13 +184,26 @@ if not isMC :
                                                maxd0 = cms.double(2)
                                                )
 
+process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+process.load('RecoJets.Configuration.RecoPFJets_cff')
+
+process.load("JetMETCorrections.Type1MET.pfMETCorrections_cff")
+process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi")
+process.pfType1CorrectedMet.applyType0Corrections = cms.bool(False)
+process.pfType1CorrectedMet.srcType1Corrections = cms.VInputTag( cms.InputTag('pfMETcorrType0'),
+                                                                 cms.InputTag('pfJetMETcorr', 'type1')
+                                                                 )
+
+
+
+
 # Add the files
 readFiles = cms.untracked.vstring()
 secFiles = cms.untracked.vstring()
 
 if isMC:
     readFiles.extend( [ #MC
-        'file:/afs/cern.ch/user/e/efe/eos/cms/store/user/bbilin/DY_2012_53X.root' #MC
+        'file:/afs/cern.ch/user/b/bbilin/eos/cms/store/user/bbilin/DY_2012_53X.root' #MC
         ] )
 else:
     readFiles.extend( [ #data
@@ -218,6 +232,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   muonMatch2    = cms.string( 'muonTriggerMatchHLTMuons2' ),
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
   mSrcRho      = cms.untracked.InputTag('kt6PFJets','rho'),
+  metSource       = cms.VInputTag("pfMETPFlow","pfMet","pfType1CorrectedMet","pfType1p2CorrectedMet"),
   CalojetLabel = cms.untracked.InputTag('selectedPatJetsAK5Calo')  
 )
 
@@ -253,6 +268,7 @@ if isMC:
     process.p = cms.Path(
         process.kt6PFJets *
         process.mvaID *
+        process.type0PFMEtCorrection*	process.producePFMETCorrections*
         process.patseq*
         process.patDefaultSequence*
 	process.puJetIdSqeuenceChs* #for (PFlow) CHS objects
@@ -311,7 +327,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 # reduce verbosity
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(10)
 # process all the events
-process.maxEvents = cms.untracked.PSet(  input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet(  input = cms.untracked.int32(10) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(False) )
 
 ## ---

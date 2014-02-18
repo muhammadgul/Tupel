@@ -97,6 +97,15 @@ private:
   int event,realdata,run,lumi,bxnumber;
   double EvtInfo_NumVtx,PU_npT,PU_npIT,nup;
   //particles
+  std::vector<double> METPt;
+  std::vector<double> METPx;
+  std::vector<double> METPy;
+  std::vector<double> METPz;
+  std::vector<double> METE;
+  std::vector<double> METsigx2;
+  std::vector<double> METsigxy;
+  std::vector<double> METsigy2;   
+  std::vector<double> METsig;
   std::vector<double> Dr01LepPt;
   std::vector<double> Dr01LepEta;
   std::vector<double> Dr01LepPhi;
@@ -250,6 +259,7 @@ private:
   //HLT
   double HLT_Mu17_Mu8,HLT_Mu17_TkMu8;
   double HLT_Elec17_Elec8;
+  std::vector<edm::InputTag> metSources;
 //  JetCorrectionUncertainty *jecUnc;
 };
 
@@ -270,7 +280,9 @@ trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
   jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
   metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
   mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
-  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel"))
+  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
+ metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"))
+
 {
 }
 
@@ -378,7 +390,16 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     MyWeight=0;
     nup=0;
     rhoPrime=0;
-    AEff=0;    												     
+    AEff=0; 
+    METPt.clear();
+    METPx.clear();
+    METPy.clear();
+    METPz.clear();
+    METE.clear();
+    METsigx2.clear();
+    METsigxy.clear();
+    METsigy2.clear();
+    METsig.clear();   
     Dr01LepPt.clear();
     Dr01LepEta.clear();
     Dr01LepPhi.clear();
@@ -542,6 +563,40 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     bxnumber = iEvent.bunchCrossing();
     realdata = iEvent.isRealData();
     
+
+     for(unsigned int imet=0;imet<metSources.size();imet++){
+        Handle<View<reco::PFMET> > metH;
+        iEvent.getByLabel(metSources[imet], metH);
+        if(!metH.isValid())continue;
+        cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
+
+        METPt.push_back(metH->ptrAt(0)->pt()); 
+        METPx.push_back(metH->ptrAt(0)->px()); 
+        METPy.push_back(metH->ptrAt(0)->py()); 
+        METPz.push_back(metH->ptrAt(0)->pz()); 
+        METE.push_back(metH->ptrAt(0)->energy()); 
+        METsigx2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,0)); 
+        METsigxy.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,1)); 
+        METsigy2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(1,1)); 
+        METsig.push_back(metH->ptrAt(0)->significance()); 
+        //Output object in EDM format
+        //std::auto_ptr<llvvMet> metOut(new llvvMet());
+        //llvvMet& met = *metOut;
+
+        //////////////////////////////////
+
+         // met.SetPxPyPzE(metH->ptrAt(0)->px(), metH->ptrAt(0)->py(), metH->ptrAt(0)->pz(), metH->ptrAt(0)->energy());
+          //met.sigx2 = metH->ptrAt(0)->getSignificanceMatrix()(0,0);
+          //met.sigxy = metH->ptrAt(0)->getSignificanceMatrix()(0,1);
+          //met.sigy2 = metH->ptrAt(0)->getSignificanceMatrix()(1,1);
+          //met.sig   = metH->ptrAt(0)->significance();
+
+         //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
+       }
+
+
+
+
     EvtInfo_NumVtx = 0;
     for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
       if (vtx->isValid() && !vtx->isFake()) ++EvtInfo_NumVtx ;
@@ -1106,6 +1161,15 @@ Tupel::beginJob()
     edm::Service<TFileService> fs;
     TFileDirectory TestDir = fs->mkdir("test");
     myTree = new TTree("MuonTree","MuonTree");
+    myTree->Branch("METPt",&METPt);
+    myTree->Branch("METPx",&METPx);
+    myTree->Branch("METPy",&METPy);
+    myTree->Branch("METPz",&METPz);
+    myTree->Branch("METE",&METE);
+    myTree->Branch("METsigx2",&METsigx2);
+    myTree->Branch("METsigxy",&METsigxy);
+    myTree->Branch("METsigy2",&METsigy2);
+    myTree->Branch("METsig",&METsig);
     myTree->Branch("event",&event);
     myTree->Branch("realdata",&realdata);
     myTree->Branch("run",&run);
