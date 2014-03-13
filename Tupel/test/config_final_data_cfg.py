@@ -142,7 +142,7 @@ if not isMC :
                                         applyfilter = cms.untracked.bool(True),
                                         debugOn = cms.untracked.bool(False),
                                         numtrack = cms.untracked.uint32(10),
-                                        thresh = cms.untracked.double(0.2)
+                                        thresh = cms.untracked.double(0.25)
                                         )
     # HB + HE noise filtering
     process.load('CommonTools/RecoAlgos/HBHENoiseFilter_cfi')
