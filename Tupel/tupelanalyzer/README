@@ -16,7 +16,7 @@ PU Weight usage:
 pileupCalc.py -i <input_json>  --inputLumiJSON pileup_JSON_DCSONLY_190389-208686_corr.txt --calcMode true --minBiasXsec 69400 --maxPileupBin 60 --pileupHistName pup  
 --numPileupBins 60 data.root
 
-puleup jason files can be found in /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/
+pileup json files can be found in /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/
 
 --> Copy data.root to tupelanalyzer folder and run the macro macro_extract_data.C
 
