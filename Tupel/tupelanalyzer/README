@@ -18,6 +18,8 @@ pileupCalc.py -i <input_json>  --inputLumiJSON pileup_JSON_DCSONLY_190389-208686
 
 pileup json files can be found in /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/
 
+n-vertex distributions for different MC scenarios: https://twiki.cern.ch/twiki/bin/viewauth/CMS/Pileup_MC_Gen_Scenarios
+
 --> Copy data.root to tupelanalyzer folder and run the macro macro_extract_data.C
 
 root -l -q macro_extract_data.C
