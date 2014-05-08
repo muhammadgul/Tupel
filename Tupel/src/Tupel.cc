@@ -94,7 +94,8 @@ private:
   // ----------member data ---------------------------
   TTree *myTree;
   double MyWeight;
-  int event,realdata,run,lumi,bxnumber;
+  unsigned int event,run,lumi;
+  int realdata,bxnumber;
   double EvtInfo_NumVtx,PU_npT,PU_npIT,nup;
   //particles
   std::vector<double> METPt;
