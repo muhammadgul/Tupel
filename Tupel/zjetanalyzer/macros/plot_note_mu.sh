@@ -18,6 +18,27 @@ jetY_2
 lpt
 leta
 lphi
+inc_ljet_pt_y_fb_0
+inc_ljet_pt_y_fb_1
+inc_ljet_pt_y_fb_2
+inc_ljet_pt_y_fb_3
+inc_ljet_pt_y_fb_4
+inc_ljet_pt_y_fb_5
+inc_ljet_pt_y_fb_6
+inc_ljet_pt_y_fb_z0_0
+inc_ljet_pt_y_fb_z0_1
+inc_ljet_pt_y_fb_z0_2
+inc_ljet_pt_y_fb_z0_3
+inc_ljet_pt_y_fb_z0_4
+inc_ljet_pt_y_fb_z0_5
+inc_ljet_pt_y_fb_z0_6
+inc_ljet_pt_y_fb_z1_0
+inc_ljet_pt_y_fb_z1_1
+inc_ljet_pt_y_fb_z1_2
+inc_ljet_pt_y_fb_z1_3
+inc_ljet_pt_y_fb_z1_4
+inc_ljet_pt_y_fb_z1_5
+inc_ljet_pt_y_fb_z1_6
 )
 declare -a title=(
 "M(jjjj)"
@@ -38,6 +59,27 @@ declare -a title=(
 "P_{T}^{#mu}[GeV]"
 "#eta_{#mu}"
 "#phi_{#mu}"
+"P_{T}(j) ( 0.0<|Y(j)|<0.5)"
+"P_{T}(j) (0.5<|Y(j)|<1.0)"
+"P_{T}(j) (1.0<|Y(j)|<1.5)"
+"P_{T}(j) (1.5<|Y(j)|<2.0)"
+"P_{T}(j) (2.0<|Y(j)|<2.5)"
+"P_{T}(j) (2.5<|Y(j)|<3.2)"
+"P_{T}(j) (3.2<|Y(j)|<4.7)"
+"P_{T}(j) (|Y(Z)|<1.0, 0.0<|Y(j)|<0.5)"
+"P_{T}(j) (|Y(Z)|<1.0,0.5<|Y(j)|<1.0)"
+"P_{T}(j) (|Y(Z)|<1.0,1.0<|Y(j)|<1.5)"
+"P_{T}(j) (|Y(Z)|<1.0,1.5<|Y(j)|<2.0)"
+"P_{T}(j) (|Y(Z)|<1.0,2.0<|Y(j)|<2.5)"
+"P_{T}(j) (|Y(Z)|<1.0,2.5<|Y(j)|<3.2)"
+"P_{T}(j) (|Y(Z)|<1.0,3.2<|Y(j)|<4.7)"
+"P_{T}(j) (|Y(Z)|>1.0, 0.0<|Y(j)|<0.5)"
+"P_{T}(j) (|Y(Z)|>1.0,0.5<|Y(j)|<1.0)"
+"P_{T}(j) (|Y(Z)|>1.0,1.0<|Y(j)|<1.5)"
+"P_{T}(j) (|Y(Z)|>1.0,1.5<|Y(j)|<2.0)"
+"P_{T}(j) (|Y(Z)|>1.0,2.0<|Y(j)|<2.5)"
+"P_{T}(j) (|Y(Z)|>1.0,2.5<|Y(j)|<3.2)"
+"P_{T}(j) (|Y(Z)|>1.0,3.2<|Y(j)|<4.7)"
 )
 
 
