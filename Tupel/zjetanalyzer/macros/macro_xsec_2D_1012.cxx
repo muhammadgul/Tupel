@@ -128,9 +128,9 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 		    bool setlogx=__LOGX__,
 		    bool is3d= __IS3D__,
 		    std::string var3d="__3DEND__",
-		    int isMu=0,
+		    int isMu=1,
 		    int JES=0,
-		    bool pullTest=true,
+		    bool pullTest=false,
 		    int ZPTweightcorr=0
 		  
 		    )
@@ -292,61 +292,51 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       if(pullTest && ss_index>0)continue;
       if(!pullTest){
 	if(ss_index==1){
-	  sprintf(nam,"../MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_ZPTweightcorr_%d_18_02.root",0,1,1,20,0,0,0); //same sign fake not used!!
+	  sprintf(nam,"../rootfiles/fake_ss.root"); //same sign fake not used!!
 	}
-        if(isMu){
 	  if(file_index==0){
-	    if(ss_index==0 ){sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_16_05_comb.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);}
+	    if(ss_index==0 ){
+		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);
+	    }
 	    else if(ss_index==2 ){
-	      sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_16_05_comb.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
 	    }//JES up
 	    else if(ss_index==3 ){
-	      sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_16_05_comb.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
 	    }  
 	  } 
-	}
-        if(!isMu){
-	  if(file_index==0){
-	    if(ss_index==0 ){sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_15_05.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);}
-	    else if(ss_index==2 ){
-	      sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_15_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
-	    }//JES up
-	    else if(ss_index==3 ){
-	      sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_15_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
-	    }  
-	  } 
-	}
+	
 	if(file_index==1){
 	  if (ss_index==0){
-	    sprintf(nam,"../MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_54_15_05.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
 	  }
 	  else if (ss_index==8){
-	    sprintf(nam,"../MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_ZPTweightcorr_%d_CT10ind_54_15_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
 	  }
 	  else if(ss_index==9){
-	    sprintf(nam,"../MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_ZPTweightcorr_%d_CT10ind_54_15_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
 	  }
 	  else if(ss_index==10){
-	    sprintf(nam,"../MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_ZPTweightcorr_%d_CT10ind_54_15_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
 	  }
 	  else if (ss_index==11){
-	    sprintf(nam,"../MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_ZPTweightcorr_%d_CT10ind_54_15_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
 	  }
         }
 	if(file_index>1&&ss_index!=1){
-	  sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_54_15_05.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
+	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
 
         }    
       }
 
       if(pullTest){
 	if(file_index==1){
-	  sprintf(nam,"../Pulltest_0_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",isMu,1,ss_index,ptthr,0,JES);
+	  sprintf(nam,"../rootfiles/Pulltest_0_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",isMu,1,ss_index,ptthr,0,JES);
 	}
 	else if(file_index==0){
-	  sprintf(nam,"../Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",1,isMu,1,ss_index,ptthr,0,JES);
+	  sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",1,isMu,1,ss_index,ptthr,0,JES);
 	}	
-	else sprintf(nam,"../Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",file_index,isMu,1,ss_index,ptthr,0,JES);
+	else sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",file_index,isMu,1,ss_index,ptthr,0,JES);
       }
       cout<<nam<<endl;
       farray[file_index][ss_index]  = TFile::Open(nam);
@@ -388,7 +378,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
     }  
   }
 
-  sprintf(nam,"../MD_Sherpa200_unweighted_isMu_0_doUnf_1_isSS_0_jetPt_%d_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_15_05.root",ptthr);
+  sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_0_doUnf_1_isSS_0_jetPt_%d_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_15_05.root",ptthr);
   TFile *sherpa = TFile::Open(nam);
   double unc[100][100][100];
   double unctot[100][100];
@@ -413,6 +403,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
   TH1D *hSherpa[100];
   double MaxPlot=0;  
   double MinPlot=999.;  
+    TH1D *h_pull_all_all= new TH1D ("h_pull_all_all","h_pull_all_all", 20, -3.,3.);
   int  nnn=1;
   if(pullTest)nnn=num_files;
  
@@ -661,6 +652,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       }
 
       cout<<"BİİİİİİİİR"<<endl;
+      if(pullTest)cout<<jjj<<endl;
       hUnf1[i][0]= (TH1D*) unfold1.Hreco();
       hUnf2[i][0]= (TH1D*) unfold2.Hreco();
       hUnf3[i][0]= (TH1D*) unfold3.Hreco();
@@ -770,11 +762,12 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       double j_y_range[]={0,0.5,1.0,1.5,2.0,2.5,3.2,4.7};
 
       double bin = data[i][0]->GetNbinsX();
-      for(int bb=1;bb<=bin;bb++){
+      for(int bb=3;bb<=bin;bb++){
 	if(pullTest)cout<<"DEBUG "<<data[i][0]->Integral()<<" "<<hUnf1[i][0]->GetBinContent(bb)<<"	"<<hgen->GetBinContent(bb)<<endl;
 	if(pullTest)cout<<"PULLLLLLL "<<(hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb)<<endl;
 	if(pullTest)h_pull[bb-1]->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
-	if(pullTest &&bb<=bin/2)h_pull_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
+	if(pullTest &&bb<=bin/3)h_pull_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
+	if(pullTest &&bb<=bin/3)h_pull_all_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
 	if(!pullTest){
 	double acc2=1;
 	double acc3=1;
@@ -822,7 +815,24 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       }
 
       cout<<"is it here"<<endl;
+
+ 
       if(!pullTest){
+      double binnn= hUnf1[i][0]->GetNbinsX();
+       double plmax= hUnf1[i][0]->GetBinCenter(binnn)+((hUnf1[i][0]->GetBinWidth(binnn))/2);
+     hSherpa[i]->GetXaxis()->SetRangeUser(30.,plmax);
+      hGen[i]->GetXaxis()->SetRangeUser(30.,plmax);
+
+        hUnf1[i][0]->GetXaxis()->SetRangeUser(30.,plmax);
+        mc[i]->GetXaxis()->SetRangeUser(30.,plmax);
+ 
+        data[i][0]->GetXaxis()->SetRangeUser(30.,plmax);
+      for(int jjjj=2;jjjj<sys_no;jjjj++){
+        double binnnn= hUnf1[i][jjjj]->GetNbinsX();
+        double plmaxx= hUnf1[i][jjjj]->GetBinCenter(binnnn)+((hUnf1[i][jjjj]->GetBinWidth(binnnn))/2);
+        hUnf1[i][jjjj]->GetXaxis()->SetRangeUser(30.,plmax);
+      }
+
       for(int binn=1;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	unctot[i][binn]=0;
 	for(int jjjj=0;jjjj<sys_no;jjjj++){
@@ -974,7 +984,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos) myfile<<"Jet Pt &$ d^{2} \\sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV^{2}] $& stat & JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) myfile<<"Jet Pt &$ d^{3} \\sigma/dP_{T}(j1) dY(j1)dY(Z) [pb/GeV] & stat $& JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile<<"Jet Pt & $d^{3} \\sigma/dP_{T}(j1)dP_{T}(j2)dY(Z) [pb/GeV^{2}] $& stat & JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
-	for(int binn=1;binn<=hUnf1[i][0]->GetNbinsX();binn++){
+	for(int binn=3;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
                 <<"-"
                 <<(hUnf1[i][0]->GetBinCenter(binn)+((hUnf1[i][0]->GetBinWidth(binn))/2))
@@ -1027,7 +1037,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
         myfile2<<"Jet Pt & tt &WW&WZ&ZZ&singe top & DY & Total & Data &Ratio \\\\ \\hline "<<endl;
       
 	//myfile2<<"Njet & $d \\sigma / d(NJet)$ & stat & JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
-	for(int binn=1;binn<=hUnf1[i][0]->GetNbinsX();binn++){
+	for(int binn=3;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile2<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
 		 <<"-"
 		 <<(hUnf1[i][0]->GetBinCenter(binn)+((hUnf1[i][0]->GetBinWidth(binn))/2))
@@ -1074,7 +1084,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range & $ d^{2} \\sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec &tot \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) myfile3<<"Pt range & $d^{3} \\sigma/dP_{T}(j1) dY(j1)dY(Z) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec &tot \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range &$ d^{3} \\sigma/dP_{T}(j1)dP_{T}(j2)dY(Z) [pb/GeV^{2}]$ & stat & JES & Lumi & JER &PU& xsec &tot \\\\ \\hline "<<endl;
-	for(int binn=1;binn<=hUnf1[i][0]->GetNbinsX();binn++){
+	for(int binn=3;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile3<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
 		 <<"-"
 		 <<(hUnf1[i][0]->GetBinCenter(binn)+((hUnf1[i][0]->GetBinWidth(binn))/2))
@@ -1106,23 +1116,36 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 
     }//jjj loop
 
+    if(pullTest){
     TCanvas *c6 = new TCanvas("c6","",700, 900);
     c6->cd();
     h_pull_all->Draw();
-    sprintf(nam,"histos_note_1605_md/__HISTNAME___pull_all_%i.root",i);
+    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d.root",var3d.c_str(),isMu,ZPTweightcorr,i);
     c6->Print(nam);
-    sprintf(nam,"histos_note_1605_md/__HISTNAME___pull_all_%i.pdf",i);
+    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i);
     c6->Print(nam);
+    
     for(int bbbb=0;bbbb<5;bbbb++){
       TCanvas *c5 = new TCanvas("c5","",700, 900);
       c5->cd();  
       h_pull[bbbb]->Draw();
-      sprintf(nam,"histos_note_1605_md/__HISTNAME___pull_%i_%i.root",i,bbbb);
+    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i,bbbb);
+      c5->Print(nam);
+    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d_%d.root",var3d.c_str(),isMu,ZPTweightcorr,i,bbbb);
       c5->Print(nam);
     }
-
+    }
 
   }//i loop
+    if(pullTest){
+    TCanvas *c66 = new TCanvas("c66","",700, 900);
+    c66->cd();
+    h_pull_all_all->Draw();
+    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d.root",var3d.c_str(),isMu,ZPTweightcorr);
+    c66->Print(nam);
+    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
+    c66->Print(nam);
+    }
   if(!pullTest){
     //TLegend *leg1 = new TLegend(0.68,0.713719,0.880511,0.965385);
     TLegend *leg1 = new TLegend(0.66,0.75,0.999999,0.979999);
@@ -1302,16 +1325,18 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       gPad->SetGridy();
       colorIt(Mont[i][0],kBlack,i+20);
       colorIt(MontSh[i][0],kBlue,i+20);
-      Mont[i][0]->SetMinimum(0.5);
-      Mont[i][0]->SetMaximum(1.5);
+      Mont[i][0]->SetMinimum(0);
+      Mont[i][0]->SetMaximum(2.0);
       Mont[i][0]->GetYaxis()->SetLabelSize(0.03);
       Mont[i][0]->GetXaxis()->SetLabelSize(0.03);
       TH1D* montunc= (TH1D*)Mont[i][0]->Clone("montunc");
       TH1D* montstat= (TH1D*)Mont[i][0]->Clone("montstat");
       leg3->AddEntry(montunc,"Total experimental uncertainty","F");  
       for(int ijk=1; ijk<=montunc->GetNbinsX();ijk++){
-	double aa= fabs(unctot[i][ijk]);
-	montunc->SetBinError(ijk,aa);
+	double aa= unctot[i][ijk];
+        double aa2 = hUnf1[i][0]->GetBinError(ijk)/hUnf1[i][0]->GetBinContent(ijk);
+        double aatot= sqrt(aa*aa + aa2*aa2);
+	montunc->SetBinError(ijk,aatot);
 	montunc->SetBinContent(ijk,1);
 	montstat->SetBinError(ijk,hUnf1[i][0]->GetBinError(ijk)/hUnf1[i][0]->GetBinContent(ijk));
 	montstat->SetBinContent(ijk,1);
@@ -1365,8 +1390,8 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	//gStyle.SetGridWidth(5);
 	gPad->SetGridy();
 
-	Mont[i][0]->SetMinimum(0.5);
-	Mont[i][0]->SetMaximum(1.5);
+	Mont[i][0]->SetMinimum(0);
+	Mont[i][0]->SetMaximum(2.0);
 	Mont[i][0]->GetYaxis()->SetLabelSize(0.03);
 	Mont[i][0]->GetXaxis()->SetLabelSize(0.03);
 	Mont[i][0]->Draw("E1");
@@ -1463,8 +1488,8 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       //   Mont2[i]->GetXaxis()->SetNdivisions(0.5);
       gPad->SetGridy();
       colorIt(Mont2[i],kBlack,i+20);
-      Mont2[i]->SetMinimum(0.5);
-      Mont2[i]->SetMaximum(1.5);
+      Mont2[i]->SetMinimum(0);
+      Mont2[i]->SetMaximum(2.0);
       Mont2[i]->GetYaxis()->SetLabelSize(0.09);
       Mont2[i]->GetXaxis()->SetLabelSize(0.09);
       Mont2[i]->Draw("peX0C");
