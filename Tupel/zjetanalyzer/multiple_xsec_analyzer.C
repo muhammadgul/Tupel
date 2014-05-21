@@ -47,7 +47,7 @@ int doUnf;
 int scale;
 int PUSys;  
 int tight=0;
-int muon=0;
+int muon=1;
 int JERcorr;
 int JERsys;
 
@@ -110,17 +110,18 @@ for (int rind=0;rind<=125;rind++){
     float DeltaPhi(float phi1, float phi2);
 
 
-    //if(rind!=0||sysind>3)continue;//only data
-    //if(rind!=15||sysind==2||sysind==3||sysind>7)continue; //MG no PDF variations
+ //   if(rind!=0||sysind>3)continue;//only data
+
+    if(rind!=15||sysind==2||sysind==3||sysind>7)continue; //MG no PDF variations
     //if(rind!=15||sysind<8)continue; //MG with PDF variations
-    //if(rind==0 || rind>14||sysind>1)continue; //run only background
+  //  if(rind==0 || rind>14||sysind>1)continue; //run only background
     //if(rind!=18 ||sysind!=1)continue; // sherpa_unweighted
 
     //if(rind!=16||sysind!=1)continue; //MG incl only
     //if(rind!=17 ||ssind!=0||sysind!=1)continue; // sherpa_weighted
 
     //if(rind!=19 ||ssind!=0||sysind!=1)continue; // nonu
-    if(rind<20 ||rind>120||ssind!=0||sysind!=1)continue; // pull sample
+    //if(rind<20 ||rind>120||ssind!=0||sysind!=1)continue; // pull sample
     //if(rind!=1 ||ssind!=0||sysind!=1)continue; // ttbar only
     //if(rind!=124 ||ssind!=0||sysind!=1)continue; // Filter eff sample
     //if(rind!=125 ||ssind!=0)continue; //DY Filter eff sample
@@ -140,90 +141,90 @@ for (int rind=0;rind<=125;rind++){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_2012ABCD.root");
       data=true;
       dataname = "DATA";
-      outFileRoot="MD_DoubleElec_";
+      outFileRoot="rootfiles/MD_DoubleElec_";
     } 
     if(rind==1){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_TTjets_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_TTjets_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_TTjets_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_tt_";
+      outFileRoot="rootfiles/MD_tt_";
       dataname = "tt";
     }  
     if(rind==2){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WWJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WWJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WWJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_wwj2L2Nu_";
+      outFileRoot="rootfiles/MD_wwj2L2Nu_";
       dataname = "wwj2L2Nu";
     }
     if(rind==3){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WZJetsTo2L2Q_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WZJetsTo2L2Q_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WZJetsTo2L2Q_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_wzj2L2Q_";
+      outFileRoot="rootfiles/MD_wzj2L2Q_";
       dataname = "wzj2L2Q";      
     } 
     if(rind==4){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WZJetsTo3LNu_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WZJetsTo3LNu_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_WZJetsTo3LNu_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_wzj3LNu_";
+      outFileRoot="rootfiles/MD_wzj3LNu_";
       dataname = "wzj3LNu";
     } 
     if(rind==5){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_zzj2L2Nu_";
+      outFileRoot="rootfiles/MD_zzj2L2Nu_";
       dataname = "zzj2L2Nu";
     }
     if(rind==6){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZjetTo2L2Q_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZjetTo2L2Q_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZjetTo2L2Q_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_zzj2L2Q_";
+      outFileRoot="rootfiles/MD_zzj2L2Q_";
       dataname = "zzj2L2Q";
 }
     if(rind==7){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZJetsTo4L_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZJetsTo4L_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/EE_hadd_ZZJetsTo4L_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_zzj4L_";
+      outFileRoot="rootfiles/MD_zzj4L_";
       dataname = "zzj4L";
     }
     if(rind==8){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_T_tW.root");
-      outFileRoot="MD_T_tW_";
+      outFileRoot="rootfiles/MD_T_tW_";
       dataname = "T_tW";
     }
     if(rind==9){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_T_t.root");
-      outFileRoot="MD_T_t_";
+      outFileRoot="rootfiles/MD_T_t_";
       dataname = "T_t";
     }
     if(rind==10){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_T_s.root");
-      outFileRoot="MD_T_s_";
+      outFileRoot="rootfiles/MD_T_s_";
       dataname = "T_s";
     }
     if(rind==11){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_Tbar_tW.root");
-      outFileRoot="MD_Tbar_tW_";
+      outFileRoot="rootfiles/MD_Tbar_tW_";
       dataname = "Tbar_tW";
     }
     if(rind==12){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_Tbar_t.root");
-      outFileRoot="MD_Tbar_t_";
+      outFileRoot="rootfiles/MD_Tbar_t_";
       dataname = "Tbar_t";
     }
     if(rind==13){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_Tbar_s.root");
-      outFileRoot="MD_Tbar_s_";
+      outFileRoot="rootfiles/MD_Tbar_s_";
       dataname = "Tbar_s";
     }
     if(rind==14){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_WJets.root");
-      outFileRoot="MD_WJets_";
+      outFileRoot="rootfiles/MD_WJets_";
       dataname = "WJets";
     }
     if(rind==15){
@@ -234,7 +235,7 @@ for (int rind=0;rind<=125;rind++){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_exc4jet.root");
 
       signal =true; 
-      outFileRoot="MD_DYJetstoLL_";
+      outFileRoot="rootfiles/MD_DYJetstoLL_";
       dataname = "DYJetstoLL";
       JERcorr=1;
       mc=true;
@@ -242,20 +243,20 @@ for (int rind=0;rind<=125;rind++){
     if(rind==16){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/hadd_DYtoLL_1102.root");
       signal =false;
-      outFileRoot="MD_DYJetstoLL_inclonly";
-      dataname = "MD_DYJetstoLL_inclonly";
+      outFileRoot="rootfiles/MD_DYJetstoLL_inclonly";
+      dataname = "rootfiles/MD_DYJetstoLL_inclonly";
       JERcorr=1;
       mc=true;
     }
     if(rind==17){
       #include "Z2jetNLO4jetLO_MPI_crab_seed2_Weighted_enhanced_sherpa2.0.0_.h"
-      outFileRoot="MD_Sherpa200_";
+      outFileRoot="rootfiles/MD_Sherpa200_";
       sherpa=true;
       dataname = "SHERPA 200 Weighted";
     }
     if(rind==18){
       #include "Z2jetNLO4jetLO_MPI_crab_seed2_Unweighted_enhanced_sherpa2.0.0_.h"
-      outFileRoot="MD_Sherpa200_unweighted_";
+      outFileRoot="rootfiles/MD_Sherpa200_unweighted_";
       sherpa=true;
       dataname = "SHERPA 200 UnWeighted";
     }
@@ -326,14 +327,10 @@ for (int rind=0;rind<=125;rind++){
 
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_DoubleMu2012A_22Jan2013_MuEle_112213_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_DoubleMu2012A_22Jan2013_MuEle_112213_1_.root");
-
-/*
+ 
      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_2012B_Mu_2504_0_.root");
      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_2012B_Mu_2504_1_.root");
      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_2012B_Mu_2504_2_.root");
-*/
-
- 
 
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_DoubleMu2012C_22Jan2013_MuEle_112213_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/MuMu_hadd_DoubleMu2012C_22Jan2013_MuEle_112213_1_.root");
@@ -353,96 +350,100 @@ for (int rind=0;rind<=125;rind++){
 
       data=true;
       dataname = "DATA";
-      outFileRoot="MD_DoubleElec_";
+      outFileRoot="rootfiles/MD_DoubleElec_";
     } 
     if(rind==1){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_TTjets_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_TTjets_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_TTjets_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_tt_";
+      outFileRoot="rootfiles/MD_tt_";
       dataname = "tt";
     }  
     if(rind==2){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WWJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WWJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WWJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_wwj2L2Nu_";
+      outFileRoot="rootfiles/MD_wwj2L2Nu_";
       dataname = "wwj2L2Nu";
     }
     if(rind==3){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WZJetsTo2L2Q_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WZJetsTo2L2Q_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WZJetsTo2L2Q_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_wzj2L2Q_";
+      outFileRoot="rootfiles/MD_wzj2L2Q_";
       dataname = "wzj2L2Q";      
     } 
     if(rind==4){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WZJetsTo3LNu_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WZJetsTo3LNu_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_WZJetsTo3LNu_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_wzj3LNu_";
+      outFileRoot="rootfiles/MD_wzj3LNu_";
       dataname = "wzj3LNu";
     } 
     if(rind==5){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZJetsTo2L2Nu_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_zzj2L2Nu_";
+      outFileRoot="rootfiles/MD_zzj2L2Nu_";
       dataname = "zzj2L2Nu";
     }
     if(rind==6){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZjetTo2L2Q_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZjetTo2L2Q_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZjetTo2L2Q_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_zzj2L2Q_";
+      outFileRoot="rootfiles/MD_zzj2L2Q_";
       dataname = "zzj2L2Q";
 }
     if(rind==7){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZJetsTo4L_8TeV_Summer12_MuEle_112313_0_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZJetsTo4L_8TeV_Summer12_MuEle_112313_1_.root");
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/MuMu_hadd_ZZJetsTo4L_8TeV_Summer12_MuEle_112313_2_.root");
-      outFileRoot="MD_zzj4L_";
+      outFileRoot="rootfiles/MD_zzj4L_";
       dataname = "zzj4L";
     }
     if(rind==8){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_T_tW.root");
-      outFileRoot="MD_T_tW_";
+      outFileRoot="rootfiles/MD_T_tW_";
       dataname = "T_tW";
     }
     if(rind==9){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_T_t.root");
-      outFileRoot="MD_T_t_";
+      outFileRoot="rootfiles/MD_T_t_";
       dataname = "T_t";
     }
     if(rind==10){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_T_s.root");
-      outFileRoot="MD_T_s_";
+      outFileRoot="rootfiles/MD_T_s_";
       dataname = "T_s";
     }
     if(rind==11){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_Tbar_tW.root");
-      outFileRoot="MD_Tbar_tW_";
+      outFileRoot="rootfiles/MD_Tbar_tW_";
       dataname = "Tbar_tW";
     }
     if(rind==12){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_Tbar_t.root");
-      outFileRoot="MD_Tbar_t_";
+      outFileRoot="rootfiles/MD_Tbar_t_";
       dataname = "Tbar_t";
     }
     if(rind==13){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_Tbar_s.root");
-      outFileRoot="MD_Tbar_s_";
+      outFileRoot="rootfiles/MD_Tbar_s_";
       dataname = "Tbar_s";
     }
     if(rind==14){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/hadd_WJets.root");
-      outFileRoot="MD_WJets_";
+      outFileRoot="rootfiles/MD_WJets_";
       dataname = "WJets";
     }
     if(rind==15){
-      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/2111/skimmed/hadd_DYtoLL.root");
+       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_1102.root");
+      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_exc1jet.root");
+      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_exc2jet.root");
+      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_exc3jet.root");
+      myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_exc4jet.root");
       signal =true;
-      outFileRoot="MD_DYJetstoLL_";
+      outFileRoot="rootfiles/MD_DYJetstoLL_";
       dataname = "DYJetstoLL";
       JERcorr=1;
       mc=true;
@@ -450,20 +451,20 @@ for (int rind=0;rind<=125;rind++){
     if(rind==16){
       myTree.Add("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_smp/ZPlusJets/8TeV/ntuples/0202/skimmed/hadd_DYtoLL_1102.root");
       signal =false;
-      outFileRoot="MD_DYJetstoLL_inclonly";
-      dataname = "MD_DYJetstoLL_inclonly";
+      outFileRoot="rootfiles/MD_DYJetstoLL_inclonly";
+      dataname = "rootfiles/MD_DYJetstoLL_inclonly";
       JERcorr=1;
       mc=true;
     }
     if(rind==17){
       #include "Z2jetNLO4jetLO_MPI_crab_seed2_Weighted_enhanced_sherpa2.0.0_.h"
-      outFileRoot="MD_Sherpa200_";
+      outFileRoot="rootfiles/MD_Sherpa200_";
       sherpa=true;
       dataname = "SHERPA 200 Weighted";
     }
     if(rind==18){
       #include "Z2jetNLO4jetLO_MPI_crab_seed2_Unweighted_enhanced_sherpa2.0.0_.h"
-      outFileRoot="MD_Sherpa200_unweighted_";
+      outFileRoot="rootfiles/MD_Sherpa200_unweighted_";
       sherpa=true;
       dataname = "SHERPA 200 UnWeighted";
     }
@@ -683,7 +684,7 @@ if(!sherpa){
  /* myTree.SetBranchAddress("event",&event);
 
   myTree.SetBranchAddress("lumi",&lumi);*/
-  //if(muon)myTree.SetBranchAddress("run",&run);
+  if(muon)myTree.SetBranchAddress("run",&run);
   myTree.SetBranchAddress("PU_npT", &PU_npT);
   myTree.SetBranchAddress("PU_npIT", &PU_npIT);
   myTree.SetBranchAddress("nup", &nup);
@@ -1954,6 +1955,7 @@ double Ratio_Z_PT_inc[]= {1.01085 , 0.956019 , 0.959092 , 0.953853 , 0.960982 , 
           double chf= patJetPfAk05chf_->at(pf);
           double nhf= (patJetPfAk05nhf_->at(pf) * patJetPfAk05En_->at(pf))/patJetPfAk05RawEn_->at(pf);// buggy in data & BG
           if (mc) nhf= patJetPfAk05nhf_->at(pf);
+        if(muon==1 &&run>=193834 && run<=196531){/*cout<<"BURDA Aq"<<endl;*/nhf= patJetPfAk05nhf_->at(pf);}
           //if(muon==1){/*cout<<"HEREEEEE"<<endl;*/nhf= patJetPfAk05nhf_->at(pf);}
           double cmult=patJetPfAk05cmult_->at(pf);
           double cemf= patJetPfAk05cemf_->at(pf);
@@ -2544,11 +2546,11 @@ if (n_jet_30_n_30>3) cout << " jet #" <<  4 << "  pt: " << j4_BE.Pt() << "  eta:
       h_n_jet_30_Gen_VS_reco->Fill(n_jet_30_n_30,Gn_jet_30_n_30,weight);
       if(Gn_jet_30_n>0 && n_jet_30_n>0){
         h_1jetpt_Gen_VS_reco->Fill(j1_BE.Pt(),j1G_BE.Pt(),weight);
-        if(j1_BE.Pt()>30.&&j1G_BE.Pt()>30.)h_1jetY_Gen_VS_reco->Fill(j1_BE.Rapidity(),j1G_BE.Rapidity(),weight);
+        if(j1_BE.Pt()>30.&&j1G_BE.Pt()>30.)h_1jetY_Gen_VS_reco->Fill(fabs(j1_BE.Rapidity()),fabs(j1G_BE.Rapidity()),weight);
       }
       if(Gn_jet_30_n>1 && n_jet_30_n>1){
         h_2jetpt_Gen_VS_reco->Fill(j2_BE.Pt(),j2G_BE.Pt(),weight);
-       if(j2_BE.Pt()>30.&&j2G_BE.Pt()>30.) h_2jetY_Gen_VS_reco->Fill(j2_BE.Rapidity(),j2G_BE.Rapidity(),weight);
+       if(j2_BE.Pt()>30.&&j2G_BE.Pt()>30.) h_2jetY_Gen_VS_reco->Fill(fabs(j2_BE.Rapidity()),fabs(j2G_BE.Rapidity()),weight);
       }
     }
 
@@ -2556,11 +2558,11 @@ if (n_jet_30_n_30>3) cout << " jet #" <<  4 << "  pt: " << j4_BE.Pt() << "  eta:
       h_n_jet_30_unfold->Fill(n_jet_30_n_30,weight);
       if(n_jet_30_n>0) {
 	h_1jetpt->Fill(j1_BE.Pt(),weight);
-        if(j1_BE.Pt()>30.)h_1jetY->Fill(j1_BE.Eta(),weight);
+        if(j1_BE.Pt()>30.)h_1jetY->Fill(fabs(j1_BE.Rapidity()),weight);
       }	
       if(n_jet_30_n>1){
 	h_2jetpt->Fill(j2_BE.Pt(),weight);
-	if(j2_BE.Pt()>30.)h_2jetY->Fill(j2_BE.Eta(),weight);
+	if(j2_BE.Pt()>30.)h_2jetY->Fill(fabs(j2_BE.Rapidity()),weight);
       }
       if(n_jet_30_n==0){
           h_MZ_0->Fill(MZ,weight);
@@ -2599,11 +2601,11 @@ if (n_jet_30_n_30>3) cout << " jet #" <<  4 << "  pt: " << j4_BE.Pt() << "  eta:
 
 	if(Gn_jet_30_n>0){
         h_1Gjetpt->Fill(j1G_BE.Pt(),PUweight);
-	if(j1G_BE.Pt()>30.)h_1GjetY->Fill(j1G_BE.Eta(),PUweight);
+	if(j1G_BE.Pt()>30.)h_1GjetY->Fill(fabs(j1G_BE.Rapidity()),PUweight);
 	}
         if(Gn_jet_30_n>1){
         h_2Gjetpt->Fill(j2G_BE.Pt(),PUweight);
-        if(j2G_BE.Pt()>30.)h_2GjetY->Fill(j2G_BE.Eta(),PUweight);
+        if(j2G_BE.Pt()>30.)h_2GjetY->Fill(fabs(j2G_BE.Rapidity()),PUweight);
         }		
 	
         if(Gn_jet_30_n>2){
