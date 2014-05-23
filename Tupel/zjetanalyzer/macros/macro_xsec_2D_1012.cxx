@@ -128,7 +128,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 		    bool setlogx=__LOGX__,
 		    bool is3d= __IS3D__,
 		    std::string var3d="__3DEND__",
-		    int isMu=1,
+		    int isMu=0,
 		    int JES=0,
 		    bool pullTest=false,
 		    int ZPTweightcorr=0
@@ -142,7 +142,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
   bool unf3=false;//bin by bin
   //  double niter[] = {2,2,2,2,2,2,1};
   // double niter[] = {20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20};
-  double niter[7]={9,7,6,4,5,19,31}; //fine bin
+  double niter[7]={9,7,6,4,5,4,9}; //fine bin
   if(isMu==0){
   if(is3d &&var3d.find("z0")!= std::string::npos){
     cout<<"I am here"<<endl;
@@ -151,8 +151,8 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       niter[2]=5;
       niter[3]=3;
       niter[4]=2;
-      niter[5]=18;
-      niter[6]=23;
+      niter[5]=5;
+      niter[6]=8;
 
   }
 
@@ -163,41 +163,41 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       niter[2]=4;
       niter[3]=4;
       niter[4]=5;
-      niter[5]=9;
-      niter[6]=17;
+      niter[5]=2;
+      niter[6]=5;
 
   }
   }
 
  if(isMu==1){
-      niter[0]=6;
-      niter[1]=5;
-      niter[2]=5;
-      niter[3]=3;
-      niter[4]=4;
-      niter[5]=13;
-      niter[6]=19;
+      niter[0]=7;
+      niter[1]=6;
+      niter[2]=7;
+      niter[3]=4;
+      niter[4]=5;
+      niter[5]=4;
+      niter[6]=8;
   if(is3d &&var3d.find("z0")!= std::string::npos){
     cout<<"I am here"<<endl;
-      niter[0]=7;
-      niter[1]=4;
-      niter[2]=5;
+      niter[0]=8;
+      niter[1]=5;
+      niter[2]=7;
       niter[3]=2;
-      niter[4]=4;
-      niter[5]=16;
-      niter[6]=20;
+      niter[4]=3;
+      niter[5]=5;
+      niter[6]=7;
 
   }
 
   if(is3d &&var3d.find("z1")!= std::string::npos){
     cout<<"I am here too"<<endl;
-      niter[0]=2;
+      niter[0]=3;
       niter[1]=3;
-      niter[2]=4;
+      niter[2]=5;
       niter[3]=4;
-      niter[4]=5;
-      niter[5]=3;
-      niter[6]=9;
+      niter[4]=6;
+      niter[5]=1;
+      niter[6]=3;
 
   }
   }
@@ -296,47 +296,47 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	}
 	  if(file_index==0){
 	    if(ss_index==0 ){
-		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);
+		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);
 	    }
 	    else if(ss_index==2 ){
-	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
 	    }//JES up
 	    else if(ss_index==3 ){
-	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
 	    }  
 	  } 
 	
 	if(file_index==1){
 	  if (ss_index==0){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
 	  }
 	  else if (ss_index==8){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
 	  }
 	  else if(ss_index==9){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
 	  }
 	  else if(ss_index==10){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
 	  }
 	  else if (ss_index==11){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
 	  }
         }
 	if(file_index>1&&ss_index!=1){
-	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
+	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
 
         }    
       }
 
       if(pullTest){
 	if(file_index==1){
-	  sprintf(nam,"../rootfiles/Pulltest_0_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",isMu,1,ss_index,ptthr,0,JES);
+	  sprintf(nam,"../rootfiles/Pulltest_0_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",isMu,1,ss_index,ptthr,0,JES);
 	}
 	else if(file_index==0){
-	  sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",1,isMu,1,ss_index,ptthr,0,JES);
+	  sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",1,isMu,1,ss_index,ptthr,0,JES);
 	}	
-	else sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_18_05.root",file_index,isMu,1,ss_index,ptthr,0,JES);
+	else sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",file_index,isMu,1,ss_index,ptthr,0,JES);
       }
       cout<<nam<<endl;
       farray[file_index][ss_index]  = TFile::Open(nam);
@@ -378,7 +378,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
     }  
   }
 
-  sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_0_doUnf_1_isSS_0_jetPt_%d_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_15_05.root",ptthr);
+  sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_0_doUnf_1_isSS_0_jetPt_%d_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",ptthr);
   TFile *sherpa = TFile::Open(nam);
   double unc[100][100][100];
   double unctot[100][100];
@@ -411,6 +411,8 @@ void      macro_tmp(std::string var1="__HISTNAME__",
   if(pullTest)nnn=num_files;
 
   for(int i=0 ; i<no_ranges;i++){
+    int binn_minn=3;
+    if(i>4)binn_minn=5;
     TH1D *h_pull[1000];
     TH1D *h_pull_all= new TH1D ("h_pull_all","h_pull_all", 20, -3.,3.);
 
@@ -550,6 +552,18 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       TH1D *hRec   =(TH1D*)(farray[1][0]->Get(var));
       TH1D *hgen   =(TH1D*)(farray[1][0]->Get(varGen));
       TH2D *hMat   =(TH2D*)(farray[1][0]->Get(varMC)); 
+   if(i>4){//HF 
+    hRec->SetBinContent(1,0);
+    hRec->SetBinContent(2,0);
+    hgen->SetBinContent(1,0);
+    hgen->SetBinContent(2,0);
+    for(int binn=1;binn<=hRec->GetNbinsX();binn++){
+      hMat->SetBinContent(1,binn,0);
+      hMat->SetBinContent(2,binn,0);
+      hMat->SetBinContent(binn,1,0);
+      hMat->SetBinContent(binn,2,0);
+    }
+   }
       if(!pullTest){
 	TH1D *hRecJERup   =(TH1D*)(farray[1][8]->Get(var));
 	TH1D *hgenJERup   =(TH1D*)(farray[1][8]->Get(varGen));
@@ -566,6 +580,43 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	TH1D *hRecPUdown   =(TH1D*)(farray[1][11]->Get(var));
 	TH1D *hgenPUdown   =(TH1D*)(farray[1][11]->Get(varGen));
 	TH2D *hMatPUdown   =(TH2D*)(farray[1][11]->Get(varMC)); 
+
+   if(i>4){//HF 
+    hRecJERup->SetBinContent(1,0);
+    hRecJERup->SetBinContent(2,0);
+    hgenJERup->SetBinContent(1,0);
+    hgenJERup->SetBinContent(2,0);
+    hRecJERdown->SetBinContent(1,0);
+    hRecJERdown->SetBinContent(2,0);
+    hgenJERdown->SetBinContent(1,0);
+    hgenJERdown->SetBinContent(2,0);
+    hRecPUup->SetBinContent(1,0);
+    hRecPUup->SetBinContent(2,0);
+    hgenPUup->SetBinContent(1,0);
+    hgenPUup->SetBinContent(2,0);
+    hRecPUdown->SetBinContent(1,0);
+    hRecPUdown->SetBinContent(2,0);
+    hgenPUdown->SetBinContent(1,0);
+    hgenPUdown->SetBinContent(2,0);
+    for(int binn=1;binn<=hRecJERup->GetNbinsX();binn++){
+      hMatJERup->SetBinContent(1,binn,0);
+      hMatJERup->SetBinContent(2,binn,0);
+      hMatJERup->SetBinContent(binn,1,0);
+      hMatJERup->SetBinContent(binn,2,0);
+      hMatJERdown->SetBinContent(1,binn,0);
+      hMatJERdown->SetBinContent(2,binn,0);
+      hMatJERdown->SetBinContent(binn,1,0);
+      hMatJERdown->SetBinContent(binn,2,0);
+      hMatPUup->SetBinContent(1,binn,0);
+      hMatPUup->SetBinContent(2,binn,0);
+      hMatPUup->SetBinContent(binn,1,0);
+      hMatPUup->SetBinContent(binn,2,0);
+      hMatPUdown->SetBinContent(1,binn,0);
+      hMatPUdown->SetBinContent(2,binn,0);
+      hMatPUdown->SetBinContent(binn,1,0);
+      hMatPUdown->SetBinContent(binn,2,0);
+    }
+   }
       }
 
 
@@ -765,9 +816,9 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       for(int bb=3;bb<=bin;bb++){
 	if(pullTest)cout<<"DEBUG "<<data[i][0]->Integral()<<" "<<hUnf1[i][0]->GetBinContent(bb)<<"	"<<hgen->GetBinContent(bb)<<endl;
 	if(pullTest)cout<<"PULLLLLLL "<<(hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb)<<endl;
-	if(pullTest)h_pull[bb-1]->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
-	if(pullTest &&bb<=bin/3)h_pull_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
-	if(pullTest &&bb<=bin/3)h_pull_all_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
+	if(pullTest&&bb<=bin/2)h_pull[bb-1]->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
+	if(pullTest &&bb<=bin/2)h_pull_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
+	if(pullTest &&bb<=(bin/2))h_pull_all_all->Fill((hUnf1[i][0]->GetBinContent(bb)-hgen->GetBinContent(bb))/hUnf1[i][0]->GetBinError(bb));
 	if(!pullTest){
 	double acc2=1;
 	double acc3=1;
@@ -820,17 +871,29 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       if(!pullTest){
       double binnn= hUnf1[i][0]->GetNbinsX();
        double plmax= hUnf1[i][0]->GetBinCenter(binnn)+((hUnf1[i][0]->GetBinWidth(binnn))/2);
-     hSherpa[i]->GetXaxis()->SetRangeUser(30.,plmax);
+      hSherpa[i]->GetXaxis()->SetRangeUser(30.,plmax);
       hGen[i]->GetXaxis()->SetRangeUser(30.,plmax);
 
         hUnf1[i][0]->GetXaxis()->SetRangeUser(30.,plmax);
         mc[i]->GetXaxis()->SetRangeUser(30.,plmax);
  
         data[i][0]->GetXaxis()->SetRangeUser(30.,plmax);
+        if(i>4){
+      hSherpa[i]->GetXaxis()->SetRangeUser(54.,plmax);
+      hGen[i]->GetXaxis()->SetRangeUser(54.,plmax);
+
+        hUnf1[i][0]->GetXaxis()->SetRangeUser(54.,plmax);
+        mc[i]->GetXaxis()->SetRangeUser(54.,plmax);
+ 
+        data[i][0]->GetXaxis()->SetRangeUser(54.,plmax);
+       }
       for(int jjjj=2;jjjj<sys_no;jjjj++){
         double binnnn= hUnf1[i][jjjj]->GetNbinsX();
         double plmaxx= hUnf1[i][jjjj]->GetBinCenter(binnnn)+((hUnf1[i][jjjj]->GetBinWidth(binnnn))/2);
         hUnf1[i][jjjj]->GetXaxis()->SetRangeUser(30.,plmax);
+        if(i>4){
+        hUnf1[i][jjjj]->GetXaxis()->SetRangeUser(54.,plmax);
+       }
       }
 
       for(int binn=1;binn<=hUnf1[i][0]->GetNbinsX();binn++){
@@ -984,7 +1047,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos) myfile<<"Jet Pt &$ d^{2} \\sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV^{2}] $& stat & JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) myfile<<"Jet Pt &$ d^{3} \\sigma/dP_{T}(j1) dY(j1)dY(Z) [pb/GeV] & stat $& JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile<<"Jet Pt & $d^{3} \\sigma/dP_{T}(j1)dP_{T}(j2)dY(Z) [pb/GeV^{2}] $& stat & JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
-	for(int binn=3;binn<=hUnf1[i][0]->GetNbinsX();binn++){
+	for(int binn=binn_minn;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
                 <<"-"
                 <<(hUnf1[i][0]->GetBinCenter(binn)+((hUnf1[i][0]->GetBinWidth(binn))/2))
@@ -1037,7 +1100,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
         myfile2<<"Jet Pt & tt &WW&WZ&ZZ&singe top & DY & Total & Data &Ratio \\\\ \\hline "<<endl;
       
 	//myfile2<<"Njet & $d \\sigma / d(NJet)$ & stat & JES & Lumi & JER &PU& xsec \\\\ \\hline "<<endl;
-	for(int binn=3;binn<=hUnf1[i][0]->GetNbinsX();binn++){
+	for(int binn=binn_minn;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile2<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
 		 <<"-"
 		 <<(hUnf1[i][0]->GetBinCenter(binn)+((hUnf1[i][0]->GetBinWidth(binn))/2))
@@ -1084,7 +1147,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range & $ d^{2} \\sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec &tot \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) myfile3<<"Pt range & $d^{3} \\sigma/dP_{T}(j1) dY(j1)dY(Z) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec &tot \\\\ \\hline "<<endl;
 	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range &$ d^{3} \\sigma/dP_{T}(j1)dP_{T}(j2)dY(Z) [pb/GeV^{2}]$ & stat & JES & Lumi & JER &PU& xsec &tot \\\\ \\hline "<<endl;
-	for(int binn=3;binn<=hUnf1[i][0]->GetNbinsX();binn++){
+	for(int binn=binn_minn;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile3<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
 		 <<"-"
 		 <<(hUnf1[i][0]->GetBinCenter(binn)+((hUnf1[i][0]->GetBinWidth(binn))/2))
@@ -1272,7 +1335,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	hSherpa[i]->Draw("e2same");
 
       }
-      hGen[i]->Draw("hhistsame");
+      hGen[i]->Draw("][hhistsame");
       if(unf1)    hUnf1[i][0]->Draw("eX0Csame");
       if(unf2)    hUnf2[i][0]->Draw("eX0Csame");
       if(unf3)    hUnf3[i][0]->Draw("eX0Csame");
@@ -1438,7 +1501,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       mc[i]->SetLineWidth(1.5);
       mc[i]->SetLineColor(kBlack);
       if(i==0){
-	mc[i]->Draw("hhist");
+	mc[i]->Draw("][hhist");
 	mc[i]->SetMaximum(MaxPlot*10);
 	mc[i]->SetMinimum(MinPlot/100);
 	mc[i]->SetXTitle(Xtitle);
