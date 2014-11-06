@@ -649,7 +649,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	//      TLorentzVector genPho(0,0,0,0); 
 	int st = gen[i].status();
 	int id = gen[i].pdgId();
-        cout<<"STATUS ID "<<st<<" "<<id<<endl;
+        cout<<"STATUS ID "<<status<<" "<<id<<endl;
 	if(gen[i].numberOfMothers()){
 	  if (st==3){
 	    TLorentzVector genLep3(0,0,0,0);
