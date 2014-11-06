@@ -581,7 +581,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     
 
      for(unsigned int imet=0;imet<metSources.size();imet++){
-        Handle<View<reco::PFMET> > metH;
+        Handle<View<pat::MET> > metH;
         iEvent.getByLabel(metSources[imet], metH);
         if(!metH.isValid())continue;
         cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
