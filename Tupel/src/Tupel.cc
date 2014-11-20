@@ -88,11 +88,14 @@ private:
   edm::InputTag muonSrc_;
   edm::InputTag tauSrc_;
   edm::InputTag jetSrc_;
+  edm::InputTag gjetSrc_;
   edm::InputTag metSrc_;
   edm::InputTag mSrcRho_;
   edm::InputTag CaloJet_;
-  std::vector<edm::InputTag> metSources;
+  edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
+  std::vector<edm::InputTag> metSources;
+
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
 
   // ----------member data ---------------------------
@@ -299,11 +302,14 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),
   //tauSrc_(iConfig.getUntrackedParameter<edm::InputTag>("tauSrc" )),
   jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
+  gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
   metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
   mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
   CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
- metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
-genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc"))
+  lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
+genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
+ metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"))
+
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
 
 
@@ -335,13 +341,14 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   // get muon collection
   edm::Handle<edm::View<pat::Muon> > muons;
   iEvent.getByLabel(muonSrc_,muons);
-  const edm::View<pat::Muon> & mu = *muons;
+  const edm::View<pat::Muon> * muon = muons.failedToGet () ? 0 : &*muons;
+
   
   // get electron collection
   edm::Handle<vector<pat::Electron> > electrons;
   iEvent.getByLabel(elecSrc_,electrons);
-  auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
-  //const edm::View<pat::Electron> & elec = *electrons;
+
+  const vector<pat::Electron>  *electron = electrons.failedToGet () ? 0 :  &*electrons;
 			      
  // edm::Handle<reco::GsfElectronCollection> els_h;
  // iEvent.getByLabel("gsfElectrons", els_h);			       
@@ -357,7 +364,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   // get jet collection
   edm::Handle<edm::View<pat::Jet> > jets;
   iEvent.getByLabel(jetSrc_,jets);
-  //const edm::View<pat::Jet> & jet = *jets;
+  const edm::View<pat::Jet> * jettt = jets.failedToGet () ? 0 : &*jets ;
   
   // get met collection  
   edm::Handle<edm::View<pat::MET> > mets;
@@ -369,20 +376,23 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   
   edm::Handle<edm::View<reco::Vertex> >  pvHandle;
   iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
-
+  const edm::View<reco::Vertex> * vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
 			  
   edm ::Handle<reco::VertexCollection> vtx_h;
   iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h); 
+  if(vtxx){
   int nvtx=vtx_h->size();
   if(nvtx==0) return;
   reco::VertexRef primVtx(vtx_h,0);
+  }
   edm::Handle<double>  rho_;
   iEvent.getByLabel(mSrcRho_, rho_);
-  double rhoIso = *rho_;
+  double rhoIso=99;
+  if(!rho_.failedToGet())rhoIso = *rho_;
   reco::BeamSpot beamSpot;
   edm::Handle<reco::BeamSpot> beamSpotHandle;
   iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
-  beamSpot = *beamSpotHandle;
+  if(!beamSpotHandle.failedToGet())beamSpot = *beamSpotHandle;
   edm::Handle<double> rho;
   iEvent.getByLabel(mSrcRho_,rho);
 
@@ -581,10 +591,10 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     
 
      for(unsigned int imet=0;imet<metSources.size();imet++){
-        Handle<View<pat::MET> > metH;
+        Handle<View<reco::PFMET> > metH;
         iEvent.getByLabel(metSources[imet], metH);
         if(!metH.isValid())continue;
-        cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
+       // cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
         METPt.push_back(metH->ptrAt(0)->pt()); 
         METPx.push_back(metH->ptrAt(0)->px()); 
@@ -614,14 +624,15 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
 
     EvtInfo_NumVtx = 0;
+    if(vtxx){
     for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
       if (vtx->isValid() && !vtx->isFake()) ++EvtInfo_NumVtx ;
     }
-    
+    }
     if(!realdata){
       Handle<std::vector< PileupSummaryInfo > >  PupInfo;
       iEvent.getByLabel("addPileupInfo", PupInfo);
-      
+      if(!PupInfo.failedToGet()){
       std::vector<PileupSummaryInfo>::const_iterator PVI;
       float npT=-1.;
       float npIT=-1.;
@@ -642,6 +653,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       PU_npT=-2.; 
       PU_npIT=-2.;
     }
+    }
     if (!realdata && genParticles){     
       const std::vector<reco::GenParticle> & gen = *genParticles_h;
       for (size_t i=0; i<genParticles->size(); ++i){
@@ -649,7 +661,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	//      TLorentzVector genPho(0,0,0,0); 
 	int st = gen[i].status();
 	int id = gen[i].pdgId();
-        cout<<"STATUS ID "<<st<<" "<<id<<endl;
+      //  cout<<"STATUS ID "<<st<<" "<<id<<endl;
 	if(gen[i].numberOfMothers()){
 	  if (st==3){
 	    TLorentzVector genLep3(0,0,0,0);
@@ -718,11 +730,12 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     if (!realdata){
       //matrix element info
       Handle<LHEEventProduct> lheH;
-      iEvent.getByLabel("externalLHEProducer",lheH);
+      iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
       if(lheH.isValid()) nup=lheH->hepeup().NUP;
       edm::Handle<reco::GenJetCollection> genjetColl;
       //iEvent.getByLabel("ak5GenJets", genjetColl);
-          iEvent.getByLabel("slimmedGenJets", genjetColl);
+          iEvent.getByLabel(gjetSrc_, genjetColl);
+      if(!genjetColl.failedToGet()){
       const reco::GenJetCollection & genjet = *genjetColl;
       for(unsigned int k=0; k<genjetColl->size(); ++k){
 	GjPt.push_back(genjet[k].pt());
@@ -732,17 +745,18 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	GjPx.push_back(genjet[k].px());
 	GjPy.push_back(genjet[k].py());
 	GjPz.push_back(genjet[k].pz());
-	double isChargedJet=false;
+	//double isChargedJet=false;
 	double chargedFraction = 0.;
 	std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
 	for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
 	  if ( (**thepart).charge()!=0 ){
-	    isChargedJet=true;
+	    //isChargedJet=true;
 	    chargedFraction += (**thepart).pt();
 	  }
 	}
-	if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
+	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
 	GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
+      }
       }
     }
     
@@ -802,7 +816,10 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     double MuFill=0;
     double Mu17_Mu8_Matched=0;
     double Mu17_TkMu8_Matched=0;
+
+    if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
+      const edm::View<pat::Muon> & mu = *muons;
       if(mu[j].isGlobalMuon()){ 
 	//const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
 	//if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
@@ -893,13 +910,14 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	MuFill++;
       }
     }
-    
+    }
     
     //electrons B.B.
     
     int ElecFill=0;
     
-
+    if(electron){
+    auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
       pat::Electron & el = (*electronColl)[j];
 
@@ -946,7 +964,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
      }
 
 
-     cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
+     //cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
 
      patElecdEtaIn_.push_back(dEtaIn_);
      patElecdPhiIn_.push_back(dPhiIn_);
@@ -1014,6 +1032,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       patElec_mva_presel_.push_back(myTrigPresel);
       ElecFill++; 
     }
+    }
     //double PFjetFill=0;
     double chf = 0;
     double nhf = 0;
@@ -1023,6 +1042,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     double nconst = 0;
     
     //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
+    if(jettt){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
       const pat::Jet & jet = jets->at(i);
       
@@ -1034,9 +1054,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       cmult = jet.chargedMultiplicity();
       nconst = jet.numberOfDaughters();
       
-      cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
-      cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
-      cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
+    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
+    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
       patJetPfAk05BDiscCSV_.push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
       patJetPfAk05BDiscCSVV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
       patJetPfAk05BDiscCSVSLV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
@@ -1088,6 +1108,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	}
 	matchGjet.push_back(matchGen);
       }
+    }
     }//end jets
     
     myTree->Fill();
