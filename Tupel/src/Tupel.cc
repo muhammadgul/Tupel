@@ -559,6 +559,10 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     patElecCharge_.clear();
     patElecMediumIDOff_.clear();
     patElecMediumIDOff_Tom_.clear();
+    patElecchIso03_.clear();
+    patElecnhIso03_.clear();
+    patElecphIso03_.clear();
+    patElecpuChIso03_.clear();
     patElecPfIso_.clear();
     patElecPfIsodb_.clear();
     patElecPfIsoRho_.clear();
@@ -591,10 +595,10 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     
 
      for(unsigned int imet=0;imet<metSources.size();imet++){
-        Handle<View<reco::PFMET> > metH;
+        Handle<View<pat::MET> > metH;
         iEvent.getByLabel(metSources[imet], metH);
         if(!metH.isValid())continue;
-       // cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
+        //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
         METPt.push_back(metH->ptrAt(0)->pt()); 
         METPx.push_back(metH->ptrAt(0)->px()); 
@@ -683,50 +687,56 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	    iEvent.getByLabel(genParticleSrc_, genpart2);
 	    const std::vector<reco::GenParticle> & gen2 = *genpart2;
 	    //LOOP over photons//
-	    
-	    for(unsigned int j=0; j<genpart2->size(); ++j){
-	      if(gen2[j].numberOfMothers()){
-		if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
-		TLorentzVector thisPho1(0,0,0,0);
-		thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
-		double dR = genLep1.DeltaR(thisPho1);
-		if(dR<0.1){
-		  genR1Pho1+=thisPho1;
-		}
+	    if(abs(id)==11 || abs(id)==13){
+	      for(unsigned int j=0; j<genpart2->size(); ++j){
+	        if(gen2[j].numberOfMothers()){
+		  if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
+		  TLorentzVector thisPho1(0,0,0,0);
+		  thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
+		  double dR = genLep1.DeltaR(thisPho1);
+		  if(dR<0.1){
+		    genR1Pho1+=thisPho1;
+
+		  }
 		
-		if(dR<0.2){
-		  St01PhotonPt.push_back(thisPho1.Pt());
-		  St01PhotonEta.push_back(thisPho1.Eta());
-		  St01PhotonPhi.push_back(thisPho1.Phi());
-		  St01PhotonE.push_back(thisPho1.Energy());
-		  St01PhotonM.push_back(thisPho1.M());
-		  St01PhotonId.push_back(gen2[j].pdgId());
-		  St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
-		  St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
-		  St01PhotonStatus.push_back(gen2[j].status()); 
-		}
+		  if(dR<0.2){
+		    St01PhotonPt.push_back(thisPho1.Pt());
+		    St01PhotonEta.push_back(thisPho1.Eta());
+		    St01PhotonPhi.push_back(thisPho1.Phi());
+		    St01PhotonE.push_back(thisPho1.Energy());
+		    St01PhotonM.push_back(thisPho1.M());
+		    St01PhotonId.push_back(gen2[j].pdgId());
+		    St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
+		    St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
+		    St01PhotonStatus.push_back(gen2[j].status()); 
+		  }
+	        }
 	      }
-	    }
-	    genR1DressLep1=genLep1+genR1Pho1;
-	    Dr01LepPt.push_back(genR1DressLep1.Pt());
-	    Dr01LepEta.push_back(genR1DressLep1.Eta());
-	    Dr01LepPhi.push_back(genR1DressLep1.Phi());
-	    Dr01LepE.push_back(genR1DressLep1.Energy());
-	    Dr01LepM.push_back(genR1DressLep1.M());
-	    Dr01LepId.push_back(id);
-	    Dr01LepStatus.push_back(st);
-	    
-	    Bare01LepPt.push_back(genLep1.Pt());
-	    Bare01LepEta.push_back(genLep1.Eta());
-	    Bare01LepPhi.push_back(genLep1.Phi());
-	    Bare01LepE.push_back(genLep1.Energy());
-	    Bare01LepM.push_back(genLep1.M());
-	    Bare01LepId.push_back(id);
-	    Bare01LepStatus.push_back(st);
-	  }
+
+	      genR1DressLep1=genLep1+genR1Pho1;
+	      Dr01LepPt.push_back(genR1DressLep1.Pt());
+	      Dr01LepEta.push_back(genR1DressLep1.Eta());
+	      Dr01LepPhi.push_back(genR1DressLep1.Phi());
+	      Dr01LepE.push_back(genR1DressLep1.Energy());
+	      Dr01LepM.push_back(genR1DressLep1.M());
+	      Dr01LepId.push_back(id);
+	      Dr01LepStatus.push_back(st);
+            }	  
+            if(fabs(id)==12 ||fabs(id)==14 ||fabs(id)==16 ||fabs(id)==11 ||fabs(id)==13 ||fabs(id)==15){
+              cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
+	      Bare01LepPt.push_back(genLep1.Pt());
+	      Bare01LepEta.push_back(genLep1.Eta());
+	      Bare01LepPhi.push_back(genLep1.Phi());
+	      Bare01LepE.push_back(genLep1.Energy());
+	      Bare01LepM.push_back(genLep1.M());
+	      Bare01LepId.push_back(id);
+	      Bare01LepStatus.push_back(st);
+            }
+ 	  }
 	}
       }
     }
+    cout<<"END OF EVENT"<<endl<<endl;
     if (!realdata){
       //matrix element info
       Handle<LHEEventProduct> lheH;
@@ -940,10 +950,10 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
      sigmaIetaIeta_ = el.sigmaIetaIeta();
      full5x5_sigmaIetaIeta_ =  el.full5x5_sigmaIetaIeta();
      if( el.ecalEnergy() == 0 ){
-       printf("Electron energy is zero!\n");
+      // printf("Electron energy is zero!\n");
        ooEmooP_ = 1e30;
      }else if( !std::isfinite(el.ecalEnergy())){
-       printf("Electron energy is not finite!\n");
+      // printf("Electron energy is not finite!\n");
        ooEmooP_ = 1e30;
      }else{
        ooEmooP_ = fabs(1.0/el.ecalEnergy() - el.eSuperClusterOverP()/el.ecalEnergy() );
