@@ -559,10 +559,6 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     patElecCharge_.clear();
     patElecMediumIDOff_.clear();
     patElecMediumIDOff_Tom_.clear();
-    patElecchIso03_.clear();
-    patElecnhIso03_.clear();
-    patElecphIso03_.clear();
-    patElecpuChIso03_.clear();
     patElecPfIso_.clear();
     patElecPfIsodb_.clear();
     patElecPfIsoRho_.clear();
@@ -722,21 +718,18 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	      Dr01LepId.push_back(id);
 	      Dr01LepStatus.push_back(st);
             }	  
-            if(fabs(id)==12 ||fabs(id)==14 ||fabs(id)==16 ||fabs(id)==11 ||fabs(id)==13 ||fabs(id)==15){
-              cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
-	      Bare01LepPt.push_back(genLep1.Pt());
-	      Bare01LepEta.push_back(genLep1.Eta());
-	      Bare01LepPhi.push_back(genLep1.Phi());
-	      Bare01LepE.push_back(genLep1.Energy());
-	      Bare01LepM.push_back(genLep1.M());
-	      Bare01LepId.push_back(id);
-	      Bare01LepStatus.push_back(st);
-            }
- 	  }
+            cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
+	    Bare01LepPt.push_back(genLep1.Pt());
+	    Bare01LepEta.push_back(genLep1.Eta());
+	    Bare01LepPhi.push_back(genLep1.Phi());
+	    Bare01LepE.push_back(genLep1.Energy());
+	    Bare01LepM.push_back(genLep1.M());
+	    Bare01LepId.push_back(id);
+	    Bare01LepStatus.push_back(st);
+	  }
 	}
       }
     }
-    cout<<"END OF EVENT"<<endl<<endl;
     if (!realdata){
       //matrix element info
       Handle<LHEEventProduct> lheH;
@@ -964,7 +957,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
 
 
-     expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();
+//     expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();//MISSING!!
      passConversionVeto_ = false;
      if( beamSpotHandle.isValid() && conversions_h.isValid()) {
        passConversionVeto_ = !ConversionTools::hasMatchedConversion(el,conversions_h,
@@ -1025,8 +1018,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	   el.hadronicOverEm() < 0.15 &&
 	   el.dr03TkSumPt()/el.pt() < 0.2 &&
 	   el.dr03EcalRecHitSumEt()/el.pt() < 0.2 &&
-	   el.dr03HcalTowerSumEt()/el.pt() < 0.2 &&
-	   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0)
+	   el.dr03HcalTowerSumEt()/el.pt() < 0.2 /*&&
+	   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
 	  myTrigPresel = true;
       }
       else {
@@ -1034,8 +1027,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	   el.hadronicOverEm() < 0.10 &&
 	   el.dr03TkSumPt()/el.pt() < 0.2 &&
 	   el.dr03EcalRecHitSumEt()/el.pt() < 0.2 &&
-	   el.dr03HcalTowerSumEt()/el.pt() < 0.2 &&
-	   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0)
+	   el.dr03HcalTowerSumEt()/el.pt() < 0.2 /*&&
+	   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
 	  myTrigPresel = true;
 	  }
       
