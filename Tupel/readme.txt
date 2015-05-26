@@ -13,7 +13,7 @@ mkdir ~/eos
 eosmount ~/eos
 
 cd /Tupel/Tupel/
-cmsRun run_cfg.py
+cmsRun simple_run_cfg.py
 (or crab ...)
 
 
