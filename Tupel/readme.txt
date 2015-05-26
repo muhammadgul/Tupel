@@ -1,7 +1,7 @@
 Instructions for ntuple Producer
 ssh -Y <uname>@lxplus.cern.ch
-cmsrel CMSSW_7_2_0
-cd CMSSW_7_2_0/src
+cmsrel CMSSW_7_4_1
+cd CMSSW_7_4_1/src
 cmsenv
 
 git clone -b Tupel_MiniAOD git@github.com:UGent/Tupel
