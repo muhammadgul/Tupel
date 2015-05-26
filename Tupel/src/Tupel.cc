@@ -896,7 +896,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	double chargedHadronIsoPU = mu[j].pfIsolationR04().sumPUPt;  
 	double neutralHadronIso  = mu[j].pfIsolationR04().sumNeutralHadronEt;
 	double photonIso  = mu[j].pfIsolationR04().sumPhotonEt;
-	float a=0.5;  
+	double a=0.5;  
 	// OPTION 1: DeltaBeta corrections for iosolation
 	float RelativeIsolationDBetaCorr = (chargedHadronIso + std::max(photonIso+neutralHadronIso - 0.5*chargedHadronIsoPU,0.))/std::max(a, mu[j].pt());
 	patMuonPfIsoDbeta_.push_back(RelativeIsolationDBetaCorr);
