@@ -4,7 +4,7 @@ cmsrel CMSSW_7_4_1
 cd CMSSW_7_4_1/src
 cmsenv
 
-git clone -b Tupel_MiniAOD git@github.com:UGent/Tupel
+git clone -b Tupel_MiniAOD_TTbar git@github.com:UGent/Tupel
 
 scram b -j 10
 
