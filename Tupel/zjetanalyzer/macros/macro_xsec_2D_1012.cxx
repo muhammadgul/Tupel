@@ -22,7 +22,91 @@ using std::pow;
 #include "RooUnfoldTUnfold.h"
 #endif
 
-void splithist(double ratio=0.){
+TH2D* makeCovFromUpAndDown(const TH1D* hUnf2Central, const TH1D* hUnf2Up, const TH1D* hUnf2Down, TString name)
+{
+cout<<"aaa"<<endl;
+if(!hUnf2Central)cout<<"ebeeeee"<<endl;
+    int nBins = hUnf2Central->GetNbinsX();
+    TH2D* h = new TH2D(name, name, nBins, 0, nBins, nBins, 0, nBins);
+cout<<"aaa"<<endl;
+    for (int i = 1; i <= nBins; ++i) {
+        double sigmaMeani = 0.5*fabs(hUnf2Up->GetBinContent(i) - hUnf2Down->GetBinContent(i)); 
+        int signi = (hUnf2Up->GetBinContent(i) - hUnf2Down->GetBinContent(i) < 0) ? -1 : 1;
+cout<<"bbb"<<endl;
+
+        for (int j = 1; j <= nBins; ++j) {
+            double sigmaMeanj = 0.5*fabs(hUnf2Up->GetBinContent(j) - hUnf2Down->GetBinContent(j)); 
+            int signj = (hUnf2Up->GetBinContent(j) - hUnf2Down->GetBinContent(j) < 0) ? -1 : 1;
+
+            h->SetBinContent(i, j, signi * signj * sigmaMeani * sigmaMeanj);
+cout<<"ccc"<<endl;
+        }
+    }
+
+    return h;
+cout<<"ddd"<<endl;
+}
+
+TH2D* M2H(const TMatrixD m) 
+{
+    int nBinsY = m.GetNrows();
+    int nBinsX = m.GetNrows();
+
+    TH2D *h = new TH2D(m.GetName(), m.GetName(), nBinsX-2, 0, nBinsX-2, nBinsY-2, 0, nBinsY-2);
+    for (int i = 0; i < nBinsX; ++i) {
+        for (int j = 0; j < nBinsY; ++j) {
+            h->SetBinContent(i, j, m(i, j));
+        }
+    }
+
+    return h;
+}
+
+void splithist(double ratio=0.2){
+  TVirtualPad* pmain = TVirtualPad::Pad();
+  
+  double h = 1. - pmain->GetTopMargin() - pmain->GetBottomMargin();
+
+  double xlow = 0.; //gStyle->GetPadLeftMargin();
+  double xhigh = 1.; // - gStyle->GetPadRightMargin();
+
+  double ytop = 1.; //- gStyle->GetPadTopMargin();
+  double ybot = 0.05; //gStyle->GetPadBottomMargin();
+  double ymid = pmain->GetBottomMargin() + ratio * h; //ybot + ratio * (ytop-ybot);
+  
+
+  double yp1bot = ymid;
+  double yp2top = ymid;
+
+  TPad* p1 = new TPad(TString(pmain->GetName()) + "_1", pmain->GetTitle(),
+		      xlow, yp1bot, xhigh, ytop);
+  p1->SetNumber(1);
+  TPad* p2 = new TPad(TString(pmain->GetName()) + "_2", pmain->GetTitle(), 
+		      xlow, ybot, xhigh, yp2top);
+  p2->SetNumber(2);
+  p1->SetFillStyle(4000);
+  p2->SetFillStyle(4000);
+
+  double p1h = ytop - yp1bot;
+  double p2h = yp2top - ybot;
+ 
+    p1->SetTopMargin(0.11);
+    p1->SetBottomMargin(0.08);
+    p1->SetRightMargin(0.02);
+ 
+    p2->SetTopMargin(0.);
+    p2->SetBottomMargin(0.3);
+    p2->SetRightMargin(0.02);
+
+
+  p2->Draw();
+  p1->Draw();
+  pmain->Modified();
+
+  p1->cd();
+}
+
+/*void splithist(double ratio=0.){
   TVirtualPad* pmain = TVirtualPad::Pad();
   
   double h = 1. - pmain->GetTopMargin() - pmain->GetBottomMargin();
@@ -51,17 +135,7 @@ void splithist(double ratio=0.){
   double p2h = yp2top - ybot;
   
 
-  /*
-    p1->SetTopMargin(pmain->GetTopMargin()/p1h);
-    p1->SetBottomMargin((ymid-yp1bot)/p1h);
-    p1->SetLeftMargin(pmain->GetLeftMargin());
-    p1->SetRightMargin(pmain->GetRightMargin());
-  
-    p2->SetTopMargin((ymid-yp2top)/p2h);
-    p2->SetBottomMargin(pmain->GetBottomMargin()/p2h);
-    p2->SetLeftMargin(pmain->GetLeftMargin());
-    p2->SetRightMargin(pmain->GetRightMargin());
-  */
+ 
   p1->SetTopMargin(0.11);
   p1->SetBottomMargin(0.1);
   p1->SetRightMargin(0.02);
@@ -77,7 +151,7 @@ void splithist(double ratio=0.){
   pmain->Modified();
 
   p1->cd();
-}
+}*/
 
 void colorIt(TH1D *hMidA, int kCyan, int style ){
   hMidA->SetMarkerColor(kCyan);
@@ -146,9 +220,9 @@ void      macro_tmp(std::string var1="__HISTNAME__",
   bool unf3=false;//bin by bin
   //  double niter[] = {2,2,2,2,2,2,1};
   // double niter[] = {20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20};
-  double niter[7]={9,7,6,4,5,4,9}; //fine bin
-  double nitersh[7]={2,3,3,3,3,2,6}; //fine bin
-  if(isMu==0){
+  double niter[7]={2,3,3,3,3,3,2}; //fine bin
+  double nitersh[7]={2,3,3,3,3,2,1}; //fine bin
+  /*if(isMu==0){
   if(is3d &&var3d.find("z0")!= std::string::npos){
     cout<<"I am here"<<endl;
       niter[0]=8;
@@ -172,25 +246,34 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       niter[6]=5;
 
   }
-  }
+  }*/
 
- if(isMu==1){
-      niter[0]=7;
+ //if(isMu==1){
+      niter[0]=3;
+      niter[1]=3;
+      niter[2]=3;
+      niter[3]=3;
+      niter[4]=3;
+      niter[5]=2;
+      niter[6]=1;
+  /*      niter[0]=7;
       niter[1]=6;
       niter[2]=7;
       niter[3]=4;
       niter[4]=5;
-      niter[5]=4;
-      niter[6]=8;
-  if(is3d &&var3d.find("z0")!= std::string::npos){
+      niter[5]=2;
+      niter[6]=1;
+ /* if(is3d &&var3d.find("z0")!= std::string::npos){
     cout<<"I am here"<<endl;
       niter[0]=8;
       niter[1]=5;
       niter[2]=7;
       niter[3]=2;
       niter[4]=3;
-      niter[5]=5;
-      niter[6]=7;
+      niter[5]=2;
+      niter[6]=1;
+      nitersh[5]=2;
+      nitersh[6]=1;
 
   }
 
@@ -204,8 +287,8 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       niter[5]=1;
       niter[6]=3;
 
-  }
-  }
+  }*/
+ // }
 
 
 double PDFu[8][15]={
@@ -243,7 +326,7 @@ double PDFd[8][15]={
 
   int num_files=16;
     //int sys_no=67;
-  int sys_no=13;
+  int sys_no=15;
   if(pullTest)num_files=101;
   double scale_array[17];
 
@@ -319,55 +402,63 @@ double PDFd[8][15]={
 	}
 	  if(file_index==0){
 	    if(ss_index==0 ){
-		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);
+		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);
 	    }
 	    else if(ss_index==2 ){
-	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
 	    }//JES up
 	    else if(ss_index==3 ){
-	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
+	    }  
+
+	    else if(ss_index==12 ){
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_1_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,0,ZPTweightcorr);
+	    }//JES up
+	    else if(ss_index==13 ){
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_-1_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,0,ZPTweightcorr);//JES down
 	    }  
 	  } 
 	
 	if(file_index==1){
 	  if (ss_index==0){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
+//	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_Sherpa_weight_cut_positive_22387200_27_04_1.root");
 	  }
 	  else if (ss_index==8){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
 	  }
 	  else if(ss_index==9){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
 	  }
 	  else if(ss_index==10){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
 	  }
 	  else if (ss_index==11){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_ZPTweightcorr_%d_CT10ind_-1_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
 	  }
-	  else if (ss_index==12){
-	    sprintf(nam,"../rootfiles/Sherpa1.4_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_07_06.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//Sherpa1.4
+	  else if (ss_index==14){
+	    sprintf(nam,"../rootfiles/Sherpa1.4_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//Sherpa1.4
 	  }
 /*	  else if (ss_index>11){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_%d_22_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr,ss_index-12);//PDF
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_%d_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr,ss_index-12);//PDF
 	  }*/
 
 
         }
 	if(file_index>1&&ss_index!=1){
-	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_22_05.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
+	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
 
         }    
       }
 
       if(pullTest){
 	if(file_index==1){
-	  sprintf(nam,"../rootfiles/Pulltest_0_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",isMu,1,ss_index,ptthr,0,JES);
+	  sprintf(nam,"../rootfiles/Pulltest_0_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_0_CT10ind_-1_27_04.root",isMu,1,ss_index,ptthr,0,JES);
 	}
 	else if(file_index==0){
-	  sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",1,isMu,1,ss_index,ptthr,0,JES);
+	  sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_0_CT10ind_-1_27_04.root",1,isMu,1,ss_index,ptthr,0,JES);
 	}	
-	else sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_22_05.root",file_index,isMu,1,ss_index,ptthr,0,JES);
+	else sprintf(nam,"../rootfiles/Pulltest_%disMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_0_CT10ind_-1_27_04.root",file_index,isMu,1,ss_index,ptthr,0,JES);
       }
       cout<<nam<<endl;
       farray[file_index][ss_index]  = TFile::Open(nam);
@@ -376,7 +467,7 @@ double PDFd[8][15]={
 	//if(i==6)continue;
 	var1_[i]= var1;
 	if(is3d) var1_[i]+=(var3d);
-	var1_[i]+=(i);
+	/*if(!(var1.find("alljetrap")!= std::string::npos))*/var1_[i]+=(i);
 	//if(is3d) var1_[i]+="_";
 
 	cout<<"BBB "<<var1_[i]<<endl;
@@ -396,11 +487,11 @@ double PDFd[8][15]={
 	  else if((file_index>1)&&ss_index==5)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*0.974);//lumi-2.2%
 	  else if((file_index>1)&&ss_index==6){
 	    if(file_index==2)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*1.1);//xsec +10% ttbar
-	    if(file_index>2 &&file_index<9)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*1.5);//xsec +15% VV                       
+	    if(file_index>2 &&file_index<9)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*1.15);//xsec +15% VV                       
 	  }
 	  else if((file_index>1)&&ss_index==7){
 	    if(file_index==2)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*0.9);//xsec -10% ttbar
-	    if(file_index>2 &&file_index<9)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*0.5);//xsec -15% VV                       
+	    if(file_index>2 &&file_index<9)histarray[file_index][i][ss_index]->Scale(scale_array[file_index]*0.85);//xsec -15% VV                       
 	  }
 	  else if((file_index>1)||(file_index==1&&ss_index==1))histarray[file_index][i][ss_index]->Scale(scale_array[file_index]); 
 	}
@@ -408,14 +499,24 @@ double PDFd[8][15]={
       }
     }  
   }
+double sumfactor=1;
+//  sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_%d_doUnf_1_isSS_0_jetPt_%d_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_06_08.root",isMu,ptthr);
+  
+//sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_Sherpa_weight_cut_8285752.7010000004_19_08.root",isMu,ptthr);
+//sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_Sherpa_weight_cut_82857527.010000005_19_08.root",isMu,ptthr);
 
-  sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_%d_doUnf_1_isSS_0_jetPt_%d_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_13_06.root",isMu,ptthr);
-  //sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_combined_22_05.root");
-  double sumfactor=1;
+//sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_Sherpa_weight_cut_828575270.10000002_19_08.root",isMu,ptthr);
+//sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_Sherpa_weight_cut_248572581.03_19_08.root",isMu,ptthr);
+//sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_19_08_dummy.root",isMu,ptthr);
+  sprintf(nam,"../rootfiles/MD_Sherpa200_weighted_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_0_CT10ind_-1_27_04.root",isMu,ptthr);
+
+  /*sprintf(nam,"../rootfiles/MD_Sherpa200_unweighted_combined_22_05.root");
+   sumfactor=2;*/
   TFile *sherpa = TFile::Open(nam);
   double unc[100][100][100];
   double unctot[100][100];
-  double SFeff=0.02;
+  double SFeff=0.025;
+  if(!isMu)SFeff=0.005;
   TH1D *mc_bg_ss[100];
   TH1D *tot_ss[100];
   TH1D *mc_bg[100][100];
@@ -430,6 +531,7 @@ double PDFd[8][15]={
   TH1D *MontSh[100][100];
   TH1D *MontSh14[100][100];
   TH1D *Mont2[100];
+  //TMatrixD *Cov2[100][100];
   TH1D* hUnf1[100][100];
   TH1D* hUnf2[100][100];
   TH1D* hUnf3[100][100];
@@ -447,7 +549,7 @@ double PDFd[8][15]={
 
   for(int i=0 ; i<no_ranges;i++){
     int binn_minn=3;
-    if(i>4)binn_minn=5;
+    //if(i>4)binn_minn=5;
     TH1D *h_pull[1000];
     TH1D *h_pull_all= new TH1D ("h_pull_all","h_pull_all", 20, -3.,3.);
 
@@ -463,19 +565,19 @@ double PDFd[8][15]={
 
       var1_[i]= var1;
       if(is3d) var1_[i]+=(var3d);
-      var1_[i]+=(i);
+      /*if(!(var1.find("alljetrap")!= std::string::npos))*/var1_[i]+=(i);
       var= var1_[i];
  
       if(!is3d){
 
 	var2_[i]= var1;
 	var2_[i]+="Gen_";
-	var2_[i]+=(i);  
+	/*if(!(var1.find("alljetrap")!= std::string::npos))*/var2_[i]+=(i);  
 	cout<<var2_[i]<<endl;
 
 	var3_[i]= var1;
 	var3_[i]+="Gen_VS_reco_";
-	var3_[i]+=(i);  
+	/*if(!(var1.find("alljetrap")!= std::string::npos))*/var3_[i]+=(i);  
 	cout<<var3_[i]<<endl;
 
       }
@@ -484,13 +586,13 @@ double PDFd[8][15]={
 	var2_[i]= var1;
 	var2_[i]+="Gen_";
 	var2_[i]+=(var3d);  
-	var2_[i]+=(i);  
+	/*if(!(var1.find("alljetrap")!= std::string::npos))*/var2_[i]+=(i);  
 	cout<<var2_[i]<<endl;
 
 	var3_[i]= var1;
 	var3_[i]+="Gen_VS_reco_";
 	var3_[i]+=(var3d);  
-	var3_[i]+=(i);  
+	/*if(!(var1.find("alljetrap")!= std::string::npos))*/var3_[i]+=(i);  
 	cout<<var3_[i]<<endl;
 
       }
@@ -499,8 +601,9 @@ double PDFd[8][15]={
       TString varGen= var2_[i];
       TString varMC= var3_[i];
       hGen[i]     =(TH1D*)(farray[1][0]->Get(varGen));
+      if(!pullTest){
       hSherpa[i]  =(TH1D*)(sherpa->Get(varGen));
-      hSherpa14[i]  =(TH1D*)(farray[1][12]->Get(varGen));
+      hSherpa14[i]  =(TH1D*)(farray[1][14]->Get(varGen));
 
       TTree *tree1 = (TTree *)sherpa->Get("tree");
 
@@ -510,11 +613,11 @@ double PDFd[8][15]={
 
       tree1->GetEntry(0);
 
-                         TTree *tree2 = (TTree *)farray[1][12]->Get("tree");
+                         TTree *tree2 = (TTree *)farray[1][14]->Get("tree");
                           double totw;
                           tree2->SetBranchAddress("cnt0",&totw);
                          tree2->GetEntry(0);
-      if(!pullTest){
+
 	mc_bg_ss[i]= (TH1D*)histarray[1][i][1]->Clone("mc_bg_ss");
 	for(int file_index=2;file_index<num_files;file_index++){
 	  mc_bg_ss[i]->Add(histarray[file_index][i][1]);
@@ -567,7 +670,9 @@ double PDFd[8][15]={
 	data[i][9]= (TH1D*) histarray[jjj][i][0]->Clone();
 	data[i][10]= (TH1D*) histarray[jjj][i][0]->Clone();
 	data[i][11]= (TH1D*) histarray[jjj][i][0]->Clone();
-	data[i][12]= (TH1D*) histarray[jjj][i][0]->Clone();
+	data[i][12]= (TH1D*) histarray[jjj][i][12]->Clone();
+	data[i][13]= (TH1D*) histarray[jjj][i][13]->Clone();
+	data[i][14]= (TH1D*) histarray[jjj][i][0]->Clone();
 
 
 	data[i][0]->Add(mc_bg[i][0],-1.0);
@@ -582,7 +687,10 @@ double PDFd[8][15]={
 	data[i][9]->Add(mc_bg[i][0],-1.0);//JER -
 	data[i][10]->Add(mc_bg[i][0],-1.0);//PU+
 	data[i][11]->Add(mc_bg[i][0],-1.0);//PU-
-	data[i][12]->Add(mc_bg[i][0],-1.0);//PU-
+	data[i][12]->Add(mc_bg[i][0],-1.0);
+	data[i][13]->Add(mc_bg[i][0],-1.0);
+	data[i][14]->Add(mc_bg[i][0],-1.0);
+
 
 	//cout<<"ALADASDASDASDASDA  "<< mc_bg[i][0]->GetBinContent(1)<<"   "<<mc_bg[i][4]->GetBinContent(1)<<"   "<<mc_bg[i][5]->GetBinContent(1)<<"    "<<mc_bg[i][6]->GetBinContent(1)<<"   "<<mc_bg[i][7]->GetBinContent(1)<<endl<<endl; 
       }
@@ -593,7 +701,7 @@ double PDFd[8][15]={
       TH1D *hRec   =(TH1D*)(farray[1][0]->Get(var));
       TH1D *hgen   =(TH1D*)(farray[1][0]->Get(varGen));
       TH2D *hMat   =(TH2D*)(farray[1][0]->Get(varMC)); 
-   if(i>4){//HF 
+  /* if(i>4){//HF 
     hRec->SetBinContent(1,0);
     hRec->SetBinContent(2,0);
     hgen->SetBinContent(1,0);
@@ -604,7 +712,9 @@ double PDFd[8][15]={
       hMat->SetBinContent(binn,1,0);
       hMat->SetBinContent(binn,2,0);
     }
-   }
+   }*/
+    TH2D *CovDataStat;
+    TH2D *CovMCStat;
       if(!pullTest){
 	TH1D *hRecJERup   =(TH1D*)(farray[1][8]->Get(var));
 	TH1D *hgenJERup   =(TH1D*)(farray[1][8]->Get(varGen));
@@ -622,11 +732,11 @@ double PDFd[8][15]={
 	TH1D *hgenPUdown   =(TH1D*)(farray[1][11]->Get(varGen));
 	TH2D *hMatPUdown   =(TH2D*)(farray[1][11]->Get(varMC)); 
 
-	TH1D *hRecsh   =(TH1D*)(farray[1][12]->Get(var));
-	TH1D *hgensh   =(TH1D*)(farray[1][12]->Get(varGen));
-	TH2D *hMatsh   =(TH2D*)(farray[1][12]->Get(varMC)); 
+	TH1D *hRecsh   =(TH1D*)(farray[1][14]->Get(var));
+	TH1D *hgensh   =(TH1D*)(farray[1][14]->Get(varGen));
+	TH2D *hMatsh   =(TH2D*)(farray[1][14]->Get(varMC)); 
 
-   if(i>4){//HF 
+  /* if(i>4){//HF 
     hRecJERup->SetBinContent(1,0);
     hRecJERup->SetBinContent(2,0);
     hgenJERup->SetBinContent(1,0);
@@ -671,7 +781,7 @@ double PDFd[8][15]={
       hMatsh->SetBinContent(binn,2,0);
 
     }
-   }
+   }*/
       }
 
 
@@ -700,8 +810,15 @@ double PDFd[8][15]={
       cout << "==================================== UNFOLD ===================================" <<i<<" "<<niter[i]<< endl;
 
       RooUnfoldBayes   unfold1 (&response, data[i][0], niter[i]);    // OR
+      RooUnfoldBayes   unfold11 (&response, data[i][0], niter[i]);    // OR
       RooUnfoldSvd     unfold2 (&response, data[i][0], 3);   // OR
       RooUnfoldBinByBin unfold3 (&response, data[i][0]);
+
+    unfold1.IncludeSystematics(0); // new version of RooUnfold: will compute Cov based on Data Statistics only
+    unfold11.IncludeSystematics(2); // new version of RooUnfold: will compute Cov based on MCs Statistics only
+    //int a= RooUnfold::kCovariance;
+    CovDataStat = M2H(unfold1.Ereco(RooUnfold::kCovariance)); // new version of RooUnfold   
+    CovMCStat = M2H(unfold11.Ereco(RooUnfold::kCovariance)); // new version of RooUnfold   
       if(!pullTest){
 	//JESUP
 
@@ -757,65 +874,158 @@ double PDFd[8][15]={
 	RooUnfoldSvd     unfold2PUdown (&responsePUdown, data[i][11], 3);   // OR
 	RooUnfoldBinByBin unfold3PUdown (&responsePUdown, data[i][11]);
 
+	  RooUnfoldBayes   unfold1PUSubtSysUp(&response, data[i][12], niter[i]);    // OR
+	RooUnfoldSvd     unfold2PUSubtSysUp (&responsePUdown, data[i][12], 3);   // OR
+	RooUnfoldBinByBin unfold3PUSubtSysUp (&responsePUdown, data[i][12]);
 
-	RooUnfoldBayes   unfold1sh (&responsesh, data[i][12], nitersh[i]);    // OR
-	RooUnfoldSvd     unfold2sh (&responsesh, data[i][12], 3);   // OR
-	RooUnfoldBinByBin unfold3sh (&responsesh, data[i][12]);
+	RooUnfoldBayes  unfold1PUSubtSysDown (&response, data[i][13],niter[i]);    // OR
+	RooUnfoldSvd     unfold2PUSubtSysDown (&responsePUdown, data[i][13], 3);   // OR
+	RooUnfoldBinByBin unfold3PUSubtSysDown (&responsePUdown, data[i][13]);
+
+
+	RooUnfoldBayes   unfold1sh (&responsesh, data[i][14], nitersh[i]);    // OR
+	RooUnfoldSvd     unfold2sh (&responsesh, data[i][14], 3);   // OR
+	RooUnfoldBinByBin unfold3sh (&responsesh, data[i][14]);
 
       }
 
       cout<<"BİİİİİİİİR"<<endl;
       if(pullTest)cout<<jjj<<endl;
-      hUnf1[i][0]= (TH1D*) unfold1.Hreco();
-      hUnf2[i][0]= (TH1D*) unfold2.Hreco();
-      hUnf3[i][0]= (TH1D*) unfold3.Hreco();
+      hUnf1[i][0]= (TH1D*) unfold1.Hreco(RooUnfold::kCovariance);
+      hUnf2[i][0]= (TH1D*) unfold2.Hreco(RooUnfold::kCovariance);
+      hUnf3[i][0]= (TH1D*) unfold3.Hreco(RooUnfold::kCovariance);
+      //Cov2[i][0]=  (TMatrixD*)unfold2.Ereco(2);
       if(!pullTest){
 	cout<<"İKİİİİİİİİ"<<endl;
-	hUnf1[i][2]= (TH1D*) unfold1JESup.Hreco();
-	hUnf2[i][2]= (TH1D*) unfold2JESup.Hreco();
-	hUnf3[i][2]= (TH1D*) unfold3JESup.Hreco();     
+	hUnf1[i][2]= (TH1D*) unfold1JESup.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][2]= (TH1D*) unfold2JESup.Hreco(RooUnfold::kCovariance);
+        //Cov2[i][2]=  (TMatrixD*)unfold2JESup.Ereco(2);
+        //TMatrixD * asd = (TMatrixD*)unfold2JESup.Ereco(2);
+        //cout<<"AAAAA"<< asd(1,1)<<"  "<< asd(1,2)<<endl;
+        hUnf3[i][2]= (TH1D*) unfold3JESup.Hreco(RooUnfold::kCovariance);     
 	cout<<"ÜÜÜÜÜÜÜÇ"<<endl;
-	hUnf1[i][3]= (TH1D*) unfold1JESdown.Hreco();
-	hUnf2[i][3]= (TH1D*) unfold2JESdown.Hreco();
-	hUnf3[i][3]= (TH1D*) unfold3JESdown.Hreco();
+	hUnf1[i][3]= (TH1D*) unfold1JESdown.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][3]= (TH1D*) unfold2JESdown.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][3]= (TH1D*) unfold3JESdown.Hreco(RooUnfold::kCovariance);
+        //Cov2[i][3]=  (TMatrixD*)unfold2JESdown.Ereco(2);
+        //cout<<"AAAAA"<<asdd(1,1)<<"  "<<asdd(1,2)<<endl;
 	cout<<"DÖÖÖÖÖÖRRT"<<endl;
-	hUnf1[i][4]= (TH1D*) unfold1Lumiup.Hreco();
-	hUnf2[i][4]= (TH1D*) unfold2Lumiup.Hreco();
-	hUnf3[i][4]= (TH1D*) unfold3Lumiup.Hreco();     
+	hUnf1[i][4]= (TH1D*)    unfold1Lumiup.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][4]= (TH1D*)    unfold2Lumiup.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][4]= (TH1D*)    unfold3Lumiup.Hreco(RooUnfold::kCovariance); 
+        //Cov2[i][4]=  (TMatrixD*)unfold2Lumiup.Ereco(2);    
 	cout<<"BEEEEEEEŞ"<<endl;
-	hUnf1[i][5]= (TH1D*) unfold1Lumidown.Hreco();
-	hUnf2[i][5]= (TH1D*) unfold2Lumidown.Hreco();
-	hUnf3[i][5]= (TH1D*) unfold3Lumidown.Hreco();
+	hUnf1[i][5]= (TH1D*)    unfold1Lumidown.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][5]= (TH1D*)    unfold2Lumidown.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][5]= (TH1D*)    unfold3Lumidown.Hreco(RooUnfold::kCovariance);
+        //Cov2[i][5]=  (TMatrixD*)unfold2Lumidown.Ereco(2);    
 	cout<<"ALTIIIII"<<endl;
-	hUnf1[i][6]= (TH1D*) unfold1Xsecup.Hreco();
-	hUnf2[i][6]= (TH1D*) unfold2Xsecup.Hreco();
-	hUnf3[i][6]= (TH1D*) unfold3Xsecup.Hreco();     
+	hUnf1[i][6]= (TH1D*)    unfold1Xsecup.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][6]= (TH1D*)    unfold2Xsecup.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][6]= (TH1D*)    unfold3Xsecup.Hreco(RooUnfold::kCovariance);  
+        //Cov2[i][6]=  (TMatrixD*)unfold2Xsecup.Ereco(2);       
 	cout<<"YEDİİİİİİ"<<endl;
-	hUnf1[i][7]= (TH1D*) unfold1Xsecdown.Hreco();
-	hUnf2[i][7]= (TH1D*) unfold2Xsecdown.Hreco();
-	hUnf3[i][7]= (TH1D*) unfold3Xsecdown.Hreco(); 
+	hUnf1[i][7]= (TH1D*)    unfold1Xsecdown.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][7]= (TH1D*)    unfold2Xsecdown.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][7]= (TH1D*)    unfold3Xsecdown.Hreco(RooUnfold::kCovariance); 
+        //Cov2[i][7]=  (TMatrixD*)unfold2Xsecdown.Ereco(2);       
 	cout<<"SEKİİİİİİİz"<<endl;
-	hUnf1[i][8]= (TH1D*) unfold1JERup.Hreco();
-	hUnf2[i][8]= (TH1D*) unfold2JERup.Hreco();
-	hUnf3[i][8]= (TH1D*) unfold3JERup.Hreco();     
+	hUnf1[i][8]= (TH1D*)    unfold1JERup.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][8]= (TH1D*)    unfold2JERup.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][8]= (TH1D*)    unfold3JERup.Hreco(RooUnfold::kCovariance);
+        //Cov2[i][8]=  (TMatrixD*)unfold2JERup.Ereco(2);            
 	cout<<"DOKUUUUUUz"<<endl;
-	hUnf1[i][9]= (TH1D*) unfold1JERdown.Hreco();
-	hUnf2[i][9]= (TH1D*) unfold2JERdown.Hreco();
-	hUnf3[i][9]= (TH1D*) unfold3JERdown.Hreco(); 
+	hUnf1[i][9]= (TH1D*)    unfold1JERdown.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][9]= (TH1D*)    unfold2JERdown.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][9]= (TH1D*)    unfold3JERdown.Hreco(RooUnfold::kCovariance); 
+        //Cov2[i][9]=  (TMatrixD*)unfold2JERdown.Ereco(2);            
 	cout<<"OOOOOONN"<<endl;
-	hUnf1[i][10]= (TH1D*) unfold1PUup.Hreco();
-	hUnf2[i][10]= (TH1D*) unfold2PUup.Hreco();
-	hUnf3[i][10]= (TH1D*) unfold3PUup.Hreco();     
+	hUnf1[i][10]= (TH1D*)    unfold1PUup.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][10]= (TH1D*)    unfold2PUup.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][10]= (TH1D*)    unfold3PUup.Hreco(RooUnfold::kCovariance);   
+        //Cov2[i][10]=  (TMatrixD*)unfold2PUup.Ereco(2);              
 	cout<<"ONBİİİİİİRR"<<endl;
-	hUnf1[i][11]= (TH1D*) unfold1PUdown.Hreco();
-	hUnf2[i][11]= (TH1D*) unfold2PUdown.Hreco();
-	hUnf3[i][11]= (TH1D*) unfold3PUdown.Hreco(); 
+	hUnf1[i][11]= (TH1D*) unfold1PUdown.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][11]= (TH1D*) unfold2PUdown.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][11]= (TH1D*) unfold3PUdown.Hreco(RooUnfold::kCovariance);
+        //Cov2[i][11]=  (TMatrixD*)unfold2PUdown.Ereco(2);               
 	cout<<"ONIKIIIII"<<endl;
-	hUnf1[i][12]= (TH1D*) unfold1sh.Hreco();
-	hUnf2[i][12]= (TH1D*) unfold2sh.Hreco();
-	hUnf3[i][12]= (TH1D*) unfold3sh.Hreco(); 
-      }
+	hUnf1[i][12]= (TH1D*) unfold1PUSubtSysUp.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][12]= (TH1D*) unfold2PUSubtSysUp.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][12]= (TH1D*) unfold3PUSubtSysUp.Hreco(RooUnfold::kCovariance);
 
+	cout<<"ONUUUUUCCC"<<endl;
+	hUnf1[i][13]= (TH1D*) unfold1PUSubtSysDown.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][13]= (TH1D*) unfold2PUSubtSysDown.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][13]= (TH1D*) unfold3PUSubtSysDown.Hreco(RooUnfold::kCovariance);
+
+	cout<<"ONDOOOOORRTTT"<<endl;
+	hUnf1[i][14]= (TH1D*) unfold1sh.Hreco(RooUnfold::kCovariance);
+	hUnf2[i][14]= (TH1D*) unfold2sh.Hreco(RooUnfold::kCovariance);
+	hUnf3[i][14]= (TH1D*) unfold3sh.Hreco(RooUnfold::kCovariance); 
+        //Cov2[i][12]=  (TMatrixD*)unfold2sh.Ereco(2);              
+
+        TH1D* UnfDataCentral= (TH1D*)hUnf2[i][0]->Clone();
+	TH1D* mggen= (TH1D*)hGen[i]->Clone();
+	TH1D* shgen= (TH1D*)hSherpa[i]->Clone();
+	TH1D* pwgen= (TH1D*)hSherpa[i]->Clone();
+
+        TH2D* CovJES = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][2], hUnf1[i][3], "CovJES");
+        TH2D* CovPU = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][10], hUnf1[i][11], "CovPU");
+        TH2D* CovJER = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][8], hUnf1[i][9], "CovJER");
+        TH2D* CovXSec = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][6], hUnf1[i][7], "CovXSec");
+        TH2D* CovLumi = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][4], hUnf1[i][5], "CovLumi");
+        TH2D* CovPUSubt = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][12],hUnf1[i][13], "CovPUSubt");
+        TH1D* asdd =  (TH1D*)hUnf1[i][0]->Clone();
+        asdd->Scale(1+0.025);
+        TH1D* asddd =  (TH1D*)hUnf1[i][0]->Clone();
+        asddd->Scale(1-0.025);
+        TH2D* CovSF = makeCovFromUpAndDown(hUnf1[i][0], asdd, asddd, "CovSF");//now xsec treated as SF unc
+        TH1D* asd =  (TH1D*)hUnf1[i][0]->Clone();
+        asd->Add(hUnf1[i][0]);
+        asd->Add(hUnf1[i][14],-1);
+        TH2D* CovSherpaUnf = makeCovFromUpAndDown(hUnf1[i][0], hUnf1[i][14],asd, "CovSherpaUnf");
+ 
+        sprintf(nam,"histos_note_1610_md/File_for_combi___HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.root",i,var3d.c_str(),isMu,ZPTweightcorr);
+        TFile*f= new TFile(nam,"RECREATE");
+        f->cd();
+        UnfDataCentral->Scale(data_scale);
+	mggen->Scale(Mc_scale);
+	shgen->Scale(1/(sumfactor*MyWeight1));
+	//pwgen->
+	CovDataStat->Scale(data_scale*data_scale);
+	 CovMCStat->Scale(data_scale*data_scale);
+	CovJES->Scale(data_scale*data_scale);
+	 CovPU->Scale(data_scale*data_scale);
+	CovJER->Scale(data_scale*data_scale);
+	 CovXSec->Scale(data_scale*data_scale);
+	CovLumi->Scale(data_scale*data_scale);
+	CovSF->Scale(data_scale*data_scale);
+	CovSherpaUnf->Scale(data_scale*data_scale);
+	CovPUSubt->Scale(data_scale*data_scale);
+
+        UnfDataCentral->Write("UnfDataCentral");
+	mggen->Write("hMadGenDYJetsCrossSection");
+	shgen->Write("hSheGenDYJetsCrossSection");
+	pwgen->Write("hPowGenDYJetsCrossSection");
+        CovDataStat->Write("CovDataStat");
+        CovMCStat->Write("CovMCStat");
+        CovJES->Write();
+        CovPU->Write();
+        CovJER->Write();
+        CovXSec->Write();
+        CovLumi->Write();
+        CovSF->Write();
+        CovSherpaUnf->Write();
+        CovPUSubt->Write();
+        f->Write();
+        f->Close();
+
+      }
+      /*for(int jjkj=0;jjkj<13;jjkj++){
+      if (jjkj==1) continue;
+      Cov2[i][jjkj]->Print();
+      }*/
       if(!pullTest){
       hUnf1[i][0]->Scale(data_scale*pow(10,(no_ranges-i-1)));
       hUnf2[i][0]->Scale(data_scale*pow(10,(no_ranges-i-1)));
@@ -866,6 +1076,14 @@ double PDFd[8][15]={
 	hUnf2[i][12]->Scale(data_scale*pow(10,(no_ranges-i-1)));
 	hUnf3[i][12]->Scale(data_scale*pow(10,(no_ranges-i-1)));
 
+	hUnf1[i][13]->Scale(data_scale*pow(10,(no_ranges-i-1)));
+	hUnf2[i][13]->Scale(data_scale*pow(10,(no_ranges-i-1)));
+	hUnf3[i][13]->Scale(data_scale*pow(10,(no_ranges-i-1)));
+
+	hUnf1[i][14]->Scale(data_scale*pow(10,(no_ranges-i-1)));
+	hUnf2[i][14]->Scale(data_scale*pow(10,(no_ranges-i-1)));
+	hUnf3[i][14]->Scale(data_scale*pow(10,(no_ranges-i-1)));
+
       hGen[i]->Scale(Mc_scale*pow(10,(no_ranges-i-1)));
       mc[i]->Scale(Mc_scale*pow(10,(no_ranges-i-1)));
       data[i][0]->Scale(data_scale*pow(10,(no_ranges-i-1)));
@@ -881,6 +1099,8 @@ double PDFd[8][15]={
       //cout<<"MyWeight1 "<<MyWeight1<<endl<<endl<<endl<<endl;
       double j_pt_range[]={30.,50.,100.,200.,1000.};
       double j_y_range[]={0,0.5,1.0,1.5,2.0,2.5,3.2,4.7};
+      double threed_j_y_range[]={0,1.5,2.5,4.7,4.7,4.7,4.7,4.7,4.7};
+      double Z_y_range[]={0,1.0,2.5};
 
       double bin = data[i][0]->GetNbinsX();
       for(int bb=3;bb<=bin;bb++){
@@ -894,6 +1114,8 @@ double PDFd[8][15]={
 	double acc3=1;
 	if(var1.find("ljet_pt_y")!= std::string::npos)acc2=2*(j_y_range[i+1]-j_y_range[i]);
 	if(var1.find("ljet_pt_sljetpt")!= std::string::npos)acc2=(j_pt_range[i+1]-j_pt_range[i]);
+
+	if(var1.find("pos")!= std::string::npos || var1.find("neg")!= std::string::npos)acc2=2*(threed_j_y_range[i+1]-threed_j_y_range[i]);
 	if(!is3d &&var3d.find("z1")!= std::string::npos)acc3=1.5;
 	double acc = hUnf1[i][0]->GetBinWidth(bb)*acc2*acc3 ;
 	double scale_data =  data[i][0]->GetBinContent(bb)/acc;
@@ -956,7 +1178,7 @@ double PDFd[8][15]={
         mc[i]->GetXaxis()->SetRangeUser(30.,plmax);
  
         data[i][0]->GetXaxis()->SetRangeUser(30.,plmax);
-        if(i>4){
+    /*    if(i>4){
       hSherpa[i]->GetXaxis()->SetRangeUser(50.,plmax);
       hSherpa14[i]->GetXaxis()->SetRangeUser(50.,plmax);
       hGen[i]->GetXaxis()->SetRangeUser(50.,plmax);
@@ -965,7 +1187,7 @@ double PDFd[8][15]={
         mc[i]->GetXaxis()->SetRangeUser(50.,plmax);
  
         data[i][0]->GetXaxis()->SetRangeUser(50.,plmax);
-       }
+       }*/
       for(int jjjj=2;jjjj<sys_no;jjjj++){
         double binnnn= hUnf1[i][jjjj]->GetNbinsX();
         double plmaxx= hUnf1[i][jjjj]->GetBinCenter(binnnn)+((hUnf1[i][jjjj]->GetBinWidth(binnnn))/2);
@@ -990,9 +1212,9 @@ double PDFd[8][15]={
 	  cout<<i<<"  "<<binn<<"  "<<jjjj<<"  "<<a<<"  "<<b<<" "<<sqrt(unctot[i][binn])<<endl;
 	  unctot[i][binn] += pow(unc[i][binn][jjjj],2);
 	}
-        if(hUnf1[i][0]->GetBinContent(binn)!=0)cout<<"Unf unc"<<fabs(hUnf1[i][12]  ->GetBinContent(binn)-hUnf1[i][0]->GetBinContent(binn))/ hUnf1[i][0]->GetBinContent(binn)<<endl ;
-        unc[i][binn][12]=fabs(hUnf1[i][12]  ->GetBinContent(binn)-hUnf1[i][0]->GetBinContent(binn))/ hUnf1[i][0]->GetBinContent(binn);
-	unctot[i][binn]= sqrt(unctot[i][binn] +unc[i][binn][12]*unc[i][binn][12]  + SFeff*SFeff );
+        if(hUnf1[i][0]->GetBinContent(binn)!=0)cout<<"Unf unc"<<fabs(hUnf1[i][14]  ->GetBinContent(binn)-hUnf1[i][0]->GetBinContent(binn))/ hUnf1[i][0]->GetBinContent(binn)<<endl ;
+        unc[i][binn][14]=fabs(hUnf1[i][14]  ->GetBinContent(binn)-hUnf1[i][0]->GetBinContent(binn))/ hUnf1[i][0]->GetBinContent(binn);
+	unctot[i][binn]= sqrt(unctot[i][binn] +unc[i][binn][14]*unc[i][binn][14]  + SFeff*SFeff );
 	cout<<unctot[i][binn]<<endl;
       }
       }
@@ -1070,23 +1292,45 @@ double PDFd[8][15]={
 	leg10->SetFillStyle(0);
 	leg10->SetFillColor(kWhite);
 	leg10->SetTextSize(0.028);
-	sprintf(nam," %.1lf<|y|<%.1lf ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
-	leg10->AddEntry(Mont[i][0], nam,"");
+        if(!(is3d&&var1.find("pos")!= std::string::npos ||is3d&&var1.find("neg")!= std::string::npos )){
+	  sprintf(nam," %.1lf<|y|<%.1lf ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
+	  leg10->AddEntry(Mont[i][0], nam,"");
+        }
 
+        if(is3d&&(var1.find("pos")!= std::string::npos ||var1.find("neg")!= std::string::npos )){
+	  sprintf(nam," %.1lf<|y|<%.1lf ",threed_j_y_range[i],threed_j_y_range[i+1],no_ranges-i-1);
+	  leg10->AddEntry(Mont[i][0], nam,"");
+        }
 	if(is3d&&var3d.find("z0")!= std::string::npos) leg10->AddEntry(Mont[i][0]," |y(Z)|<1.0  ","");
   
 	if(is3d&&var3d.find("z1")!= std::string::npos) leg10->AddEntry(Mont[i][0],"1.0<|y(Z)|<2.5","");
- 
-	TPaveText *pt = new TPaveText(.11,.915,.70,0.96);
+
+	if(is3d&&var1.find("pos")!= std::string::npos) leg10->AddEntry(Mont[i][0]," y(Z)*y(j)>0  ","");
+  
+	if(is3d&&var1.find("neg")!= std::string::npos) leg10->AddEntry(Mont[i][0],"y(Z)*y(j)<0","");
+
+	/*TPaveText *pt = new TPaveText(.11,.915,.70,0.96);
 	pt->SetFillColor(0);
 	pt->SetBorderSize(0);
 	pt->SetLineColor(0);
-	pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV, #int L dt = 19.6 fb^{-1} ");
+	pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV, #int L dt = 19.6 fb^{-1} ");*/
+      TPaveText *pt = new TPaveText(.093,.90925,.70,0.958);
+      pt->SetFillColor(0);
+      pt->SetBorderSize(0);
+      pt->SetLineColor(0);
+      pt->SetTextAlign(11);
+      pt->AddText("CMS Preliminary");
+      pt->AddText("#sqrt{s} = 8 TeV L_{int} = 19.6 fb^{-1} ");
+
+
+
+
 
 	TCanvas *c3 = new TCanvas("c3","",700, 900);
-	pt->Draw();
+	//pt->Draw();
 
 	c3->cd();
+
 	splithist(0.0);
 	c3->cd(1);
 
@@ -1106,16 +1350,30 @@ double PDFd[8][15]={
 	gPad->SetLogz();
 	hMat->Draw("COLZTEXT");
 	leg10->Draw("SAME");
-	sprintf(nam,"histos_note_1605_md/Response__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.C",i,var3d.c_str(),isMu,ZPTweightcorr);
+    TLatex *latexLabel = new TLatex(); 
+
+    latexLabel->SetTextSize(0.03305);
+    latexLabel->SetTextFont(42);
+    latexLabel->SetLineWidth(2);
+    latexLabel->SetNDC();
+
+    latexLabel->SetTextFont(61);
+    latexLabel->DrawLatex(0.13,0.963,"CMS");
+    latexLabel->SetTextFont(52);
+    latexLabel->DrawLatex(0.20,0.963,"Preliminary");
+    latexLabel->SetTextFont(42);
+    latexLabel->DrawLatex(0.13,0.963-0.035,"19.6 fb^{-1} (8 TeV)");
+    latexLabel->Draw("same");
+	sprintf(nam,"histos_note_1610_md/Response__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.C",i,var3d.c_str(),isMu,ZPTweightcorr);
 	c3->Print(nam);
-	sprintf(nam,"histos_note_1605_md/Response__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.pdf",i,var3d.c_str(),isMu,ZPTweightcorr);
+	sprintf(nam,"histos_note_1610_md/Response__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.pdf",i,var3d.c_str(),isMu,ZPTweightcorr);
 	c3->Print(nam);
-	sprintf(nam,"histos_note_1605_md/Response__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.png",i,var3d.c_str(),isMu,ZPTweightcorr);
+	sprintf(nam,"histos_note_1610_md/Response__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.png",i,var3d.c_str(),isMu,ZPTweightcorr);
 	c3->Print(nam);
 
 
 	ofstream myfile;
-	sprintf(nam,"histos_note_1605_md/Table__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.tex",i,var3d.c_str(),isMu,ZPTweightcorr);
+	sprintf(nam,"histos_note_1610_md/Table__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.tex",i,var3d.c_str(),isMu,ZPTweightcorr);
 	myfile.open (nam);
 	myfile.precision(4);
 
@@ -1170,7 +1428,7 @@ double PDFd[8][15]={
 
 
 	ofstream myfile2;
-	sprintf(nam,"histos_note_1605_md/Table_MC__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.tex",i,var3d.c_str(),isMu,ZPTweightcorr);
+	sprintf(nam,"histos_note_1610_md/Table_MC__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.tex",i,var3d.c_str(),isMu,ZPTweightcorr);
 	myfile2.open (nam);
 	myfile2.precision(4);
 
@@ -1216,7 +1474,7 @@ double PDFd[8][15]={
 
 
 	ofstream myfile3;
-	sprintf(nam,"histos_note_1605_md/Table_symm_error__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.tex",i,var3d.c_str(),isMu,ZPTweightcorr);
+	sprintf(nam,"histos_note_1610_md/Table_symm_error__HISTNAME___%i_%s_ismu_%d_ZPTweightcorr_%d.tex",i,var3d.c_str(),isMu,ZPTweightcorr);
 	myfile3.open (nam);
 	myfile3.precision(4);
 
@@ -1233,12 +1491,12 @@ double PDFd[8][15]={
  	  if(is3d&&var3d.find("z1")!= std::string::npos)myfile3<<"\\caption{Leading jet pt ( "<<j_y_range[i]<<" $< Y_j <$ "<<j_y_range[i+1] <<", 1.0 $< Y_Z <$ 2.5) muon channel}"<<endl;
         }
 	myfile3<<"\\scriptsize{"<<endl;
-	myfile3<<"\\begin{tabular}{c|ccccccccc} \\hline"<<endl;
+	myfile3<<"\\begin{tabular}{c|cccccccccc} \\hline"<<endl;
 
-	if(!is3d&&var1.find("ljet_pt_y")!= std::string::npos)myfile3<<"Pt range & $ d^{2} \\sigma/dP_{T}(j1) dy(j1) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec&unf&tot\\\\ \\hline "<<endl;
-	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range & $ d^{2} \\sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec&unf &tot \\\\ \\hline "<<endl;
-	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) myfile3<<"Pt range & $d^{3} \\sigma/dP_{T}(j1) dy(j1)dy(Z) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec&unf &tot \\\\ \\hline "<<endl;
-	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range &$ d^{3} \\sigma/dP_{T}(j1)dP_{T}(j2)dy(Z) [pb/GeV^{2}]$ & stat & JES & Lumi & JER &PU& xsec &unf&tot \\\\ \\hline "<<endl;
+	if(!is3d&&var1.find("ljet_pt_y")!= std::string::npos)myfile3<<"Pt range & $ d^{2} \\sigma/dP_{T}(j1) dy(j1) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec&pu subt&unf&tot\\\\ \\hline "<<endl;
+	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range & $ d^{2} \\sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec&pu subt&unf &tot \\\\ \\hline "<<endl;
+	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) myfile3<<"Pt range & $d^{3} \\sigma/dP_{T}(j1) dy(j1)dy(Z) [pb/GeV]$ & stat & JES & Lumi & JER &PU& xsec&pu subt&unf &tot \\\\ \\hline "<<endl;
+	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos)myfile3<<"Pt range &$ d^{3} \\sigma/dP_{T}(j1)dP_{T}(j2)dy(Z) [pb/GeV^{2}]$ & stat & JES & Lumi & JER &PU& xsec &pu subt&unf&tot \\\\ \\hline "<<endl;
 	for(int binn=binn_minn;binn<=hUnf1[i][0]->GetNbinsX();binn++){
 	  myfile3<<(hUnf1[i][0]->GetBinCenter(binn)-((hUnf1[i][0]->GetBinWidth(binn))/2))
 		 <<"-"
@@ -1259,6 +1517,7 @@ double PDFd[8][15]={
 		 << "  & "<<100*unc[i][binn][6]//xsec
 
                  << "  & "<<100*unc[i][binn][12]//unf
+                 << "  & "<<100*unc[i][binn][14]//unf
 
 		 << "  & "<<100*unctot[i][binn]//tot
 		 <<"\\\\"<<endl;
@@ -1277,18 +1536,18 @@ double PDFd[8][15]={
     TCanvas *c6 = new TCanvas("c6","",700, 900);
     c6->cd();
     h_pull_all->Draw();
-    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d.root",var3d.c_str(),isMu,ZPTweightcorr,i);
+    sprintf(nam,"histos_note_1610_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d.root",var3d.c_str(),isMu,ZPTweightcorr,i);
     c6->Print(nam);
-    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i);
+    sprintf(nam,"histos_note_1610_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i);
     c6->Print(nam);
     
     for(int bbbb=0;bbbb<5;bbbb++){
       TCanvas *c5 = new TCanvas("c5","",700, 900);
       c5->cd();  
       h_pull[bbbb]->Draw();
-    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i,bbbb);
+    sprintf(nam,"histos_note_1610_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i,bbbb);
       c5->Print(nam);
-    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d_%d.root",var3d.c_str(),isMu,ZPTweightcorr,i,bbbb);
+    sprintf(nam,"histos_note_1610_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d_%d_%d.root",var3d.c_str(),isMu,ZPTweightcorr,i,bbbb);
       c5->Print(nam);
     }
     }
@@ -1298,19 +1557,19 @@ double PDFd[8][15]={
     TCanvas *c66 = new TCanvas("c66","",700, 900);
     c66->cd();
     h_pull_all_all->Draw();
-    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d.root",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d.root",var3d.c_str(),isMu,ZPTweightcorr);
     c66->Print(nam);
-    sprintf(nam,"histos_note_1605_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/pull_all___HISTNAME___%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
     c66->Print(nam);
     }
   if(!pullTest){
     //TLegend *leg1 = new TLegend(0.68,0.713719,0.880511,0.965385);
-    TLegend *leg1 = new TLegend(0.62,0.65,0.839999,0.869999);
-    //leg1 = new TLegend(0.831567,0.653719,0.980511,1.025385);
-    leg1->SetBorderSize(0);
+   //TLegend *leg1 = new TLegend(0.62,0.65,0.839999,0.869999);
+    TLegend *leg1 = new TLegend(0.651567,0.6953719,0.999,0.975385);
+    leg1->SetBorderSize(1);
     //leg1->SetFillStyle(1);
     leg1->SetFillColor(kWhite);
-    leg1->SetTextSize(0.028);
+    leg1->SetTextSize(0.02);
 
     //TLegend *leg2 = new TLegend(0.68,0.713719,0.880511,0.965385);
     TLegend *leg2 = new TLegend(0.65,0.60,0.939511,0.755385);
@@ -1329,12 +1588,47 @@ double PDFd[8][15]={
 
     cout<<"Burdayım ulenn"<<endl;
     for(int ii=0;ii<no_ranges;ii++){
-      if(var1.find("ljet_pt_y")!= std::string::npos){
-	sprintf(nam,"%.1lf<|y|<%.1lf (\\times 10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+      if(var1.find("ljet_pt_y")!= std::string::npos &&!(var1.find("alljetrap")!= std::string::npos) && !(var1.find("pos")!= std::string::npos ||var1.find("neg")!= std::string::npos) ){
+	sprintf(nam,"%.1lf<|y_{j}|<%.1lf (\\times 10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
 	leg1->AddEntry(hUnf1[ii][0], nam,"pe");
 	//sprintf(nam,"Gen %.1lf<|y|<%.1lf (*10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
 	//leg1->AddEntry(hGen[ii], nam,"l");
-	sprintf(nam,"%.1lf<|y|<%.1lf (\\times 10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	sprintf(nam,"%.1lf<|y_{j}|<%.1lf (\\times 10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	leg2->AddEntry(data[ii][0], nam,"pe");
+
+
+	//sprintf(nam,"MC %.1lf<|y|<%.1lf (*10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	//leg2->AddEntry(mc[ii], nam,"l");
+      }
+      if(var1.find("ljet_pt_y")!= std::string::npos &&!(var1.find("alljetrap")!= std::string::npos) && (var1.find("pos")!= std::string::npos ||var1.find("neg")!= std::string::npos) ){
+
+	sprintf(nam,"%.1lf<|y_{j}|<%.1lf (\\times 10^{%d})",threed_j_y_range[ii],threed_j_y_range[ii+1],no_ranges-ii-1);
+	leg1->AddEntry(hUnf1[ii][0], nam,"pe");
+	//sprintf(nam,"Gen %.1lf<|y|<%.1lf (*10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	//leg1->AddEntry(hGen[ii], nam,"l");
+	sprintf(nam,"%.1lf<|y_{j}|<%.1lf (\\times 10^{%d})",threed_j_y_range[ii],threed_j_y_range[ii+1],no_ranges-ii-1);
+	leg2->AddEntry(data[ii][0], nam,"pe");
+      }
+      if(var1.find("alljetrap")!= std::string::npos ){
+	sprintf(nam,"%.1lf<|y_{Z}|<%.1lf (\\times 10^{%d})",Z_y_range[ii],Z_y_range[ii+1],no_ranges-ii-1);
+	leg1->AddEntry(hUnf1[ii][0], nam,"pe");
+	//sprintf(nam,"Gen %.1lf<|y|<%.1lf (*10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	//leg1->AddEntry(hGen[ii], nam,"l");
+	sprintf(nam,"%.1lf<|y_{Z}|<%.1lf (\\times 10^{%d})",Z_y_range[ii],Z_y_range[ii+1],no_ranges-ii-1);
+	leg2->AddEntry(data[ii][0], nam,"pe");
+
+
+	//sprintf(nam,"MC %.1lf<|y|<%.1lf (*10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	//leg2->AddEntry(mc[ii], nam,"l");
+      }
+
+
+      if(var1.find("ljet_Z")!= std::string::npos ){
+	sprintf(nam,"%.1lf<|y_{j}|<%.1lf (\\times 10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	leg1->AddEntry(hUnf1[ii][0], nam,"pe");
+	//sprintf(nam,"Gen %.1lf<|y|<%.1lf (*10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
+	//leg1->AddEntry(hGen[ii], nam,"l");
+	sprintf(nam,"%.1lf<|y_{j}|<%.1lf (\\times 10^{%d})",j_y_range[ii],j_y_range[ii+1],no_ranges-ii-1);
 	leg2->AddEntry(data[ii][0], nam,"pe");
 
 
@@ -1360,19 +1654,29 @@ double PDFd[8][15]={
     //leg1->AddEntry( hSherpa14[0], "Sherpa Z + #leq 4j@LO","l");
     leg2->AddEntry(mc[0]," MC","l");
     //}
-    TLegend *leg12 = new TLegend(0.75,0.183719,0.980511,0.355385);
+    TLegend *leg12 = new TLegend(0.75,0.183719,0.980511,0.205385);
     leg12->SetBorderSize(0);
     leg12->SetFillStyle(0);
     leg12->SetFillColor(kWhite);
     leg12->SetTextSize(0.028);
     leg12->AddEntry(hSherpa[0],"|y(Z)|<1.0","");
-    TLegend *leg13 = new TLegend(0.75,0.183719,0.980511,0.355385);
+    //if(var1.find("pos")!= std::string::npos)leg12->AddEntry(hSherpa[0],"y(j)*y(Z)>0","");
+    //if(var1.find("neg")!= std::string::npos)leg12->AddEntry(hSherpa[0],"y(j)*y(Z)<0","");
+    TLegend *leg112 = new TLegend(0.75,0.213719,0.980511,0.355385);
+    leg112->SetBorderSize(0);
+    leg112->SetFillStyle(0);
+    leg112->SetFillColor(kWhite);
+    leg112->SetTextSize(0.028);
+    if(var1.find("pos")!= std::string::npos)leg112->AddEntry(hSherpa[0],"y(j)*y(Z)>0","");
+    if(var1.find("neg")!= std::string::npos)leg112->AddEntry(hSherpa[0],"y(j)*y(Z)<0","");
+    TLegend *leg13 = new TLegend(0.75,0.183719,0.980511,0.205385);
     leg13->SetBorderSize(0);
     leg13->SetFillStyle(0);
     leg13->SetFillColor(kWhite);
     leg13->SetTextSize(0.028);
     leg13->AddEntry(hSherpa[0],"1.0<|y(Z)|<2.5","");  
-
+    //if(var1.find("pos")!= std::string::npos)leg13->AddEntry(hSherpa[0],"y(j)*y(Z)>0","");
+    //if(var1.find("neg")!= std::string::npos)leg13->AddEntry(hSherpa[0],"y(j)*y(Z)<0","");
 
     TCanvas *c1 = new TCanvas("c1","",2000, 1600);
  
@@ -1383,8 +1687,9 @@ double PDFd[8][15]={
     //  pt->SetLineColor(0);
     //  pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV, #int L dt = 19.6fb^{-1} ");
 
-    pt->Draw();
+
     c1->cd();
+
     splithist(0.0);
     c1->cd(1);
     //  gPad->SetTopMargin(0.02);
@@ -1416,11 +1721,11 @@ double PDFd[8][15]={
       //colorIt(hSherpa[i],kCyan,0);
       hSherpa[i]->SetLineColor(38);
       hSherpa[i]->SetFillColor(38);
-      hSherpa14[i]->SetLineColor(kGreen);
-      hSherpa14[i]->SetFillColor(kGreen);
+      hSherpa14[i]->SetLineColor(kGreen+3);
+      hSherpa14[i]->SetFillColor(kGreen+3);
       if(i==0){
 	hSherpa[i]->Draw("e2");
-	hSherpa[i]->SetMaximum(MaxPlot*10000);
+	hSherpa[i]->SetMaximum(MaxPlot*100);
 	hSherpa[i]->SetMinimum(MinPlot/10);
 	hSherpa[i]->SetXTitle(Xtitle); 
 	hSherpa[i]->GetYaxis()->SetLabelSize(0.03);
@@ -1430,7 +1735,8 @@ double PDFd[8][15]={
 	if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos) hSherpa[i]->GetYaxis()->SetTitle("d^{2} #sigma/dP_{T}(j1)dP_{T}(j2) [pb/GeV^{2}]  ");
 	if(is3d&&var1.find("ljet_pt_y")!= std::string::npos) hSherpa[i]->GetYaxis()->SetTitle("d^{3} #sigma/dP_{T}(j1) dy(j1)dy(Z) [pb/GeV]");
 	if(is3d&&var1.find("ljet_pt_sljet")!= std::string::npos) hSherpa[i]->GetYaxis()->SetTitle("d^{3} #sigma/dP_{T}(j1)dP_{T}(j2)dy(Z) [pb/GeV^{2}]  ");
-
+	if(!is3d&&var1.find("ljet_Z")!= std::string::npos) hSherpa[i]->GetYaxis()->SetTitle("d^{2} #sigma/dy(Z)dy(j1)[pb]");
+	if(var1.find("alljetrap")!= std::string::npos) hSherpa[i]->GetYaxis()->SetTitle("d^{2} #sigma/dP_{T}(j1) dy(Z) [pb/GeV]");
       }
       else{
 	hSherpa[i]->Draw("e2same");
@@ -1438,6 +1744,24 @@ double PDFd[8][15]={
       }
      // hSherpa14[i]->Draw("e2same");
       hGen[i]->Draw("][hhistsame");
+    TLatex *latexLabel = new TLatex(); 
+
+    latexLabel->SetTextSize(0.03305);
+    latexLabel->SetTextFont(42);
+    latexLabel->SetLineWidth(2);
+    latexLabel->SetNDC();
+
+    latexLabel->SetTextFont(61);
+    latexLabel->DrawLatex(0.13,0.963,"CMS");
+    latexLabel->SetTextFont(52);
+    latexLabel->DrawLatex(0.20,0.963,"Preliminary");
+    latexLabel->SetTextFont(42);
+    latexLabel->DrawLatex(0.13,0.963-0.035,"19.6 fb^{-1} (8 TeV)");
+    latexLabel->Draw("same");
+      if(unf1)    hUnf1[i][0]->SetMarkerSize(2.38);
+      if(unf2)    hUnf2[i][0]->SetMarkerSize(2.38);
+      if(unf3)    hUnf3[i][0]->SetMarkerSize(2.38);
+
       if(unf1)    hUnf1[i][0]->Draw("eX0Csame");
       if(unf2)    hUnf2[i][0]->Draw("eX0Csame");
       if(unf3)    hUnf3[i][0]->Draw("eX0Csame");
@@ -1446,32 +1770,47 @@ double PDFd[8][15]={
       if(unf3)    hUnf3[i][12]->Draw("eX0Csame");*/
     }
     leg1->Draw("same");
-    if(is3d&&var3d.find("z0")!= std::string::npos)leg12->Draw("same");
-    if(is3d&&var3d.find("z1")!= std::string::npos)leg13->Draw("same");
+    if(var3d.find("z0")!= std::string::npos  )leg12->Draw("same");
+    if(var3d.find("z1")!= std::string::npos)leg13->Draw("same");
+    if(var1.find("neg")!= std::string::npos ||var1.find("pos")!= std::string::npos) leg112->Draw("same");
 
-    sprintf(nam,"histos_note_1605_md/Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.C",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.C",var3d.c_str(),isMu,ZPTweightcorr);
     c1->Print(nam);
-    sprintf(nam,"histos_note_1605_md/Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
     c1->Print(nam);
-    sprintf(nam,"histos_note_1605_md/Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.png",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.png",var3d.c_str(),isMu,ZPTweightcorr);
     c1->Print(nam);
 
     for(int i=0; i<no_ranges;i++){
-      TLegend *leg3 = new TLegend(0.15,0.683719,0.280511,0.855385);
-      leg3->SetBorderSize(0);
-      leg3->SetFillStyle(0);
+      TLegend *leg3 = new TLegend(0.45,0.783719,0.999511,0.979385);
+      //TLegend *leg3 = new TLegend(0.15,0.683719,0.280511,0.855385);
+      leg3->SetBorderSize(1);
+      //leg3->SetFillStyle(1);
       leg3->SetFillColor(kWhite);
       leg3->SetTextSize(0.028);
 
+      TLegend *leg33 = new TLegend(0.08,0.75353719,0.300511,0.86905385);
+      leg33->SetBorderSize(0);
+      leg33->SetFillStyle(0);
+      leg33->SetFillColor(kWhite);
+      leg33->SetTextSize(0.037);
+
       if(!is3d&&var1.find("ljet_pt_y")!= std::string::npos)sprintf(nam," %.1lf<|y_{j}|<%.1lf ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
       if(!is3d&&var1.find("ljet_pt_sljet")!= std::string::npos) sprintf(nam," %.1lf<|y_{j}|<%.1lf   ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
-      if(is3d&&var3d.find("z0")!= std::string::npos&&var1.find("ljet_pt_y")!= std::string::npos) sprintf(nam," %.1lf<|y_{j}|<%.1lf, |y(Z)|<1.0 ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
+      if(is3d&&var3d.find("z0")!= std::string::npos&&var1.find("ljet_pt_y")!= std::string::npos &&!(var1.find("pos")!= std::string::npos ||var1.find("neg")!= std::string::npos)) sprintf(nam," %.1lf<|y_{j}|<%.1lf, |y(Z)|<1.0 ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
       if(is3d&&var3d.find("z0")!= std::string::npos&&var1.find("ljet_pt_sljet")!= std::string::npos) sprintf(nam," %.1lf<|y_{j}|<%.1lf, |y(Z)|<1.0 ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
       if(is3d&&var3d.find("z1")!= std::string::npos&&var1.find("ljet_pt_y")!= std::string::npos) sprintf(nam," %.1lf<|y_{j}|<%.1lf, 1.0<|y(Z)|<2.5  ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
       if(is3d&&var3d.find("z1")!= std::string::npos&&var1.find("ljet_pt_sljet")!= std::string::npos) sprintf(nam," %.1lf<|y{j}|<%.1lf, 1.0<|y(Z)|<2.5 ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
 
+      if(is3d&&var3d.find("z0")!= std::string::npos&&var1.find("ljet_pt_y")!= std::string::npos&&var1.find("pos")!= std::string::npos ||var1.find("neg")!= std::string::npos) sprintf(nam," %.1lf<|y_{j}|<%.1lf, |y(Z)|<1.0 ",threed_j_y_range[i],threed_j_y_range[i+1],no_ranges-i-1);
+      if(is3d&&var3d.find("z1")!= std::string::npos&&var1.find("ljet_pt_y")!= std::string::npos&&var1.find("pos")!= std::string::npos ||var1.find("neg")!= std::string::npos) sprintf(nam," %.1lf<|y_{j}|<%.1lf, 1.0<|y(Z)|<2.5  ",threed_j_y_range[i],threed_j_y_range[i+1],no_ranges-i-1);
 
-      //leg3->AddEntry(MontSh14[i][0],"Sherpa Z +<4j@LO","pe");
+      if(var1.find("alljetrap")!= std::string::npos)sprintf(nam," %.1lf<|y_{Z}|<%.1lf ",Z_y_range[i],Z_y_range[i+1],no_ranges-i-1);
+      if(!is3d&&var1.find("ljet_Z_y")!= std::string::npos)sprintf(nam," %.1lf<|y_{j}|<%.1lf ",j_y_range[i],j_y_range[i+1],no_ranges-i-1);
+      leg33->AddEntry(Mont[i][0], nam,"");
+	if(is3d&&var1.find("pos")!= std::string::npos) leg33->AddEntry(Mont[i][0]," y(Z)*y(j)>0  ","");
+  
+	if(is3d&&var1.find("neg")!= std::string::npos) leg33->AddEntry(Mont[i][0],"y(Z)*y(j)<0","");
 
       TH1D* montunc= (TH1D*)Mont[i][0]->Clone("montunc");
       TH1D* montstat= (TH1D*)Mont[i][0]->Clone("montstat");
@@ -1480,10 +1819,13 @@ double PDFd[8][15]={
       TH1D* montpdfupstat= (TH1D*)MontSh[i][0]->Clone("montpdfupstat");
       TH1D* montpdfdnstat= (TH1D*)MontSh[i][0]->Clone("montpdfdnstat");
       TH1D* montstatmd= (TH1D*)Mont[i][0]->Clone("montstatmd");
+      TH1D* montstatsh14= (TH1D*)MontSh14[i][0]->Clone("montstatsh14");
       montstatmd->SetFillColor(kOrange-5);
-      montpdfup->SetFillColor(38);
-      montpdfdn->SetFillColor(38);
+      montstatsh14->SetFillColor(kGreen-8);
+      montpdfup->SetFillColor(kBlue-10);
+      montpdfdn->SetFillColor(kBlue-10);
       montstatmd->SetFillStyle(1001);
+      montstatsh14->SetFillStyle(1001);
       montpdfup->SetFillStyle(1001);
       montpdfdn->SetFillStyle(1001);
       montpdfupstat->SetFillColor(kBlue-6);
@@ -1504,15 +1846,16 @@ double PDFd[8][15]={
       colorIt(Mont2[i],kRed,20);
       colorIt(Mont[i][12],kGreen,20);
       colorIt(MontSh[i][0],kBlue,25);
-      colorIt(MontSh14[i][0],kGreen,25);
-      leg3->AddEntry(Mont[i][0], nam,"");
+      colorIt(MontSh14[i][0],kGreen+3,25);
 
+ 
       //leg3->AddEntry(montpdfup,"Statistical unc (gen)","F");
       //leg3->AddEntry(montpdfupstat,"Theory uncertainty (gen)","F");
 
 
-      leg3->AddEntry(montstatmd, "MadGraph Z+<4j @LO","F");
-      leg3->AddEntry(montpdfupstat,"Sherpa Z +1,2j @NLO, <4j@LO","F");
+      leg3->AddEntry(montstatmd, "MadGraph Z+ #leq 4j @LO","F");
+      leg3->AddEntry(montpdfup,"Sherpa Z +1,2j @NLO, #leq 4j@LO","F");
+      //leg3->AddEntry(montstatsh14,"Sherpa Z+ #leq 4j @LO","F");
       leg3->AddEntry(montunc,"Total experimental unc","F");  
       for(int ijk=1; ijk<=montunc->GetNbinsX();ijk++){
 	double aa= unctot[i][ijk];
@@ -1539,6 +1882,7 @@ double PDFd[8][15]={
         montpdfdnstat->SetBinContent(ijk,MontSh[i][0]->GetBinContent(ijk)-pdfdn_stat/2);
         montpdfdnstat->SetBinError(ijk,pdfdn_stat/2);
         montstatmd->SetBinError(ijk,hGen[i]->GetBinError(ijk)/hGen[i]->GetBinContent(ijk));
+        montstatsh14->SetBinError(ijk,hSherpa14[i]->GetBinError(ijk)/hSherpa14[i]->GetBinContent(ijk));
 	Mont[i][0]->SetBinError(ijk,hGen[i]->GetBinError(ijk)/hGen[i]->GetBinContent(ijk));
 	MontSh[i][0]->SetBinError(ijk,hSherpa[i]->GetBinError(ijk)/hSherpa[i]->GetBinContent(ijk));
 	MontSh14[i][0]->SetBinError(ijk,hSherpa14[i]->GetBinError(ijk)/hSherpa14[i]->GetBinContent(ijk));
@@ -1548,32 +1892,36 @@ double PDFd[8][15]={
 
 
       TCanvas *c5 = new TCanvas("c2","",500, 500);
-      TPaveText *pt = new TPaveText(.09,.925,.70,0.98);
+     /* TPaveText *pt = new TPaveText(.093,.90925,.70,0.958);
       pt->SetFillColor(0);
       pt->SetBorderSize(0);
       pt->SetLineColor(0);
-      pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV, #int L dt = 19.6 fb^{-1} ");
+      pt->SetTextAlign(11);
+      pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV");
+      pt->AddText("L_{int} = 19.6 fb^{-1} ");*/
 
-      pt->Draw();
+
       c5->cd();
+
       splithist(0.0);
       c5->cd(1);
 
-      if(setlogx)gPad->SetLogx();
+      //if(setlogx)gPad->SetLogx();
       //Mont[i]->GetYaxis()->SetNdivisions(0.1);
       //gStyle.SetGridWidth(5);
       gPad->SetGridy();
-      montpdfupstat->SetMinimum(0);
-      montpdfupstat->SetMaximum(2.0);
-      montpdfupstat->GetYaxis()->SetLabelSize(0.03);
-      montpdfupstat->GetXaxis()->SetLabelSize(0.03);
-      montpdfupstat->SetXTitle(Xtitle); 
-      montpdfupstat->GetYaxis()->SetTitleOffset(1.5);
-      montpdfupstat->GetYaxis()->SetTitle("Theory/Data");
+      montpdfup->SetMinimum(0.4);
+      montpdfup->SetMaximum(1.6);
+      montpdfup->GetYaxis()->SetLabelSize(0.03);
+      montpdfup->GetXaxis()->SetLabelSize(0.03);
+      montpdfup->SetXTitle(Xtitle); 
+      montpdfup->GetYaxis()->SetTitleOffset(1.5);
+      montpdfup->GetYaxis()->SetTitle("Theory/Data");
 
-      montpdfupstat->Draw("][ e3 ");
-      montpdfdnstat->Draw("][ e3 SAME");
+      montpdfup->Draw("][ e3 ");
+      montpdfdn->Draw("][ e3 SAME");
       montstatmd->Draw("][ e3 SAME");
+      //montstatsh14->Draw("][ e3 SAME");
       //montpdfup->Draw("][ e3 SAME");
       //montpdfdn->Draw("][ e3 SAME");
      //montunc->SetMinimum(0);
@@ -1585,22 +1933,38 @@ double PDFd[8][15]={
      //montunc->GetYaxis()->SetTitle("Theory/Data");
       montunc->Draw("][ e3 SAME");
 
-      montstat->Draw("e1eX0 same");
+      montstat->Draw("e1eX1 same");
       Mont[i][0]->Draw("SAME peX0");
-      //Mont[i][12]->Draw("SAME peX0");
-      //Mont2[i][0]->Draw("SAME peX0");
+      colorIt(Mont[i][14],kYellow-2,20);
+      Mont[i][14]->Draw("SAME peX0");
+      Mont2[i][0]->Draw("SAME peX0");
       MontSh[i][0]->Draw("SAME peX0");
-      //MontSh14[i][0]->Draw("SAME peX0");
+      MontSh14[i][0]->Draw("SAME peX0");
      
       leg3->Draw("same");
+      leg33->Draw("same");
+    TLatex *latexLabel = new TLatex(); 
+
+    latexLabel->SetTextSize(0.03305);
+    latexLabel->SetTextFont(42);
+    latexLabel->SetLineWidth(2);
+    latexLabel->SetNDC();
+
+    latexLabel->SetTextFont(61);
+    latexLabel->DrawLatex(0.13,0.963,"CMS");
+    latexLabel->SetTextFont(52);
+    latexLabel->DrawLatex(0.20,0.963,"Preliminary");
+    latexLabel->SetTextFont(42);
+    latexLabel->DrawLatex(0.13,0.963-0.035,"19.6 fb^{-1} (8 TeV)");
+    latexLabel->Draw("same");
       //colorIt(Mont2[i],kRed,i+20);
       //    Mont2[i]->Draw("peX0Csame");
       //gPad->SetTopMargin(0.90);
-      sprintf(nam,"histos_note_1605_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d.C",var3d.c_str(),isMu,ZPTweightcorr,i);
+      sprintf(nam,"histos_note_1610_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d.C",var3d.c_str(),isMu,ZPTweightcorr,i);
       c5->Print(nam);
-      sprintf(nam,"histos_note_1605_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i);
+      sprintf(nam,"histos_note_1610_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i);
       c5->Print(nam);
-      sprintf(nam,"histos_note_1605_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d.png",var3d.c_str(),isMu,ZPTweightcorr,i);
+      sprintf(nam,"histos_note_1610_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d.png",var3d.c_str(),isMu,ZPTweightcorr,i);
       c5->Print(nam);
 
       for(int jjjj=0;jjjj<sys_no-1;jjjj++){
@@ -1618,8 +1982,9 @@ double PDFd[8][15]={
 	if(jjjj==10)leg5->AddEntry(Mont[i][jjjj], "PU ","l");
 
 	TCanvas *c6 = new TCanvas("c2","",500, 500);
-	pt->Draw();
+
 	c6->cd();
+
 	splithist(0.0);
 	c6->cd(1);
    
@@ -1645,21 +2010,34 @@ double PDFd[8][15]={
 	Mont[i][jjjj+1]->Draw("SAME Lhist");
 	leg3->Draw("same");
 	leg5->Draw("same");
+    TLatex *latexLabel = new TLatex(); 
+
+    latexLabel->SetTextSize(0.03305);
+    latexLabel->SetTextFont(42);
+    latexLabel->SetLineWidth(2);
+    latexLabel->SetNDC();
+
+    latexLabel->SetTextFont(61);
+    latexLabel->DrawLatex(0.13,0.963,"CMS");
+    latexLabel->SetTextFont(52);
+    latexLabel->DrawLatex(0.20,0.963,"Preliminary");
+    latexLabel->SetTextFont(42);
+    latexLabel->DrawLatex(0.13,0.963-0.035,"19.6 fb^{-1} (8 TeV)");
+    latexLabel->Draw("same");
 
 
-
-	sprintf(nam,"histos_note_1605_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d_sys_%d.C",var3d.c_str(),isMu,ZPTweightcorr,i,jjjj);
+	sprintf(nam,"histos_note_1610_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d_sys_%d.C",var3d.c_str(),isMu,ZPTweightcorr,i,jjjj);
 	c6->Print(nam);
-	sprintf(nam,"histos_note_1605_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d_sys_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i,jjjj);
+	sprintf(nam,"histos_note_1610_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d_sys_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr,i,jjjj);
 	c6->Print(nam);
-	sprintf(nam,"histos_note_1605_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d_sys_%d.png",var3d.c_str(),isMu,ZPTweightcorr,i,jjjj);
+	sprintf(nam,"histos_note_1610_md/ratio_Bayes___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d_Range_%d_sys_%d.png",var3d.c_str(),isMu,ZPTweightcorr,i,jjjj);
 	c6->Print(nam);     
       }
     }
 
     TCanvas *c3 = new TCanvas("c3","",1200, 900);
     c3->cd(); 
-    pt->Draw();
+
     c3->cd();
     splithist(0.0);
     c3->cd(1);
@@ -1692,26 +2070,40 @@ double PDFd[8][15]={
       data[i][0]->Draw("eX0Csame");
     }
     leg2->Draw("same");
+    TLatex *latexLabel = new TLatex(); 
+
+    latexLabel->SetTextSize(0.03305);
+    latexLabel->SetTextFont(42);
+    latexLabel->SetLineWidth(2);
+    latexLabel->SetNDC();
+
+    latexLabel->SetTextFont(61);
+    latexLabel->DrawLatex(0.13,0.963,"CMS");
+    latexLabel->SetTextFont(52);
+    latexLabel->DrawLatex(0.20,0.963,"Preliminary");
+    latexLabel->SetTextFont(42);
+    latexLabel->DrawLatex(0.13,0.963-0.035,"19.6 fb^{-1} (8 TeV)");
+    latexLabel->Draw("same");
     if(is3d&&var3d.find("z0")!= std::string::npos)leg12->Draw("same");
     if(is3d&&var3d.find("z1")!= std::string::npos)leg13->Draw("same");
 
-    sprintf(nam,"histos_note_1605_md/Detector_Level___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.C",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/Detector_Level___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.C",var3d.c_str(),isMu,ZPTweightcorr);
     c3->Print(nam);
-    sprintf(nam,"histos_note_1605_md/Detector_Level___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/Detector_Level___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
     c3->Print(nam);
-    sprintf(nam,"histos_note_1605_md/Detector_Level___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.png",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/Detector_Level___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.png",var3d.c_str(),isMu,ZPTweightcorr);
     c3->Print(nam);
 
 
 
     TCanvas *c4 = new TCanvas("c4","",700, 1000);
-    TPaveText *pt = new TPaveText(.09,.925,.70,0.98);
+  /*  TPaveText *pt = new TPaveText(.09,.925,.70,0.98);
     pt->SetFillColor(0);
     pt->SetBorderSize(0);
     pt->SetLineColor(0);
-    pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV, #int L dt = 19.6 fb^{-1} ");
+    pt->AddText("CMS Preliminary #sqrt{s} = 8 TeV, #int L dt = 19.6 fb^{-1} ");*/
 
-    pt->Draw();
+
 
 
     c4->Divide(1,no_ranges);
@@ -1738,11 +2130,11 @@ double PDFd[8][15]={
       if(i==no_ranges-1)Mont2[i]->SetXTitle(Xtitle); 
     }
 
-    sprintf(nam,"histos_note_1605_md/ratio_Detector___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.C",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/ratio_Detector___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.C",var3d.c_str(),isMu,ZPTweightcorr);
     c4->Print(nam);
-    sprintf(nam,"histos_note_1605_md/ratio_Detector___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/ratio_Detector___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.pdf",var3d.c_str(),isMu,ZPTweightcorr);
     c4->Print(nam);
-    sprintf(nam,"histos_note_1605_md/ratio_Detector___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.png",var3d.c_str(),isMu,ZPTweightcorr);
+    sprintf(nam,"histos_note_1610_md/ratio_Detector___HISTNAME__%s_ismu_%d_ZPTweightcorr_%d.png",var3d.c_str(),isMu,ZPTweightcorr);
     c4->Print(nam);
 
   }

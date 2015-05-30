@@ -123,7 +123,7 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 //	double lumi=19701;
 	double lumi=19701;
     if(isMu==1)lumi=19545.;
-    static int num_files=16;
+    static int num_files=15;
     double scale_array[17];
     scale_array[0]=1.;
  //  scale_array[1]=3531.5*lumi/74212048.; //MC
@@ -169,15 +169,16 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 
                    std::string filnam[]={"DoubleElec","DYJetstoLL","tt","wwj2L2Nu","wzj2L2Q","wzj3LNu","zzj2L2Nu","zzj4L","zzj2L2Q","T_s","T_tW","T_t","Tbar_s","Tbar_tW","Tbar_t","WJets"};
                    char nam[500];
-  		   TFile *farray[17][2];
-                   TH1D *histarray[17][2];
+  		   TFile *farray[100][100];
+                   TH1D *histarray[100][100];
                    int ptthr=20;
                    int istight=0;
                    int dunf=0;
                    int ZPTweightcorr=0;
+		    int JES=0;
 
                for(const int file_index=0;file_index<num_files;file_index++){
-                 for(int ss_index=0;ss_index<2;ss_index++){    
+                 for(int ss_index=0;ss_index<13;ss_index++){    
       //sprintf(nam,"../MD_%s_doUnf_%i_isSS_%i_jetPt_%i_08_12.root",filnam[file_index].c_str(),0,ss_index,ptthr);
       //sprintf(nam,"../MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_ZPTweightcorr_%d_18_02.root",filnam[file_index].c_str(),isMu,dunf,ss_index,ptthr,istight,ZPTweightcorr);
 
@@ -188,47 +189,70 @@ void      macro_tmp(std::string var1="__HISTNAME__",
 	}
 	  if(file_index==0){
 	    if(ss_index==0 ){
-		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,0,0);
+		sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,ss_index,ptthr,0,JES,ZPTweightcorr);
 	    }
 	    else if(ss_index==2 ){
-	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05_comb.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,1,ZPTweightcorr);
 	    }//JES up
 	    else if(ss_index==3 ){
-	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05_comb.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,-1,ZPTweightcorr);//JES down
+	    }  
+
+	    else if(ss_index==12 ){
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_1_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,0,ZPTweightcorr);
+	    }//JES up
+	    else if(ss_index==13 ){
+	      sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_-1_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,ptthr,0,0,ZPTweightcorr);//JES down
 	    }  
 	  } 
 	
 	if(file_index==1){
 	  if (ss_index==0){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,ss_index,ptthr,0,0,ZPTweightcorr);
+//	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_1_doUnf_1_isSS_0_jetPt_20_Tightjet_0_JES_0_JER_0_PU_0_ZPTweightcorr_0_CT10ind_-1_Sherpa_weight_cut_positive_22387200_27_04_1.root");
 	  }
 	  else if (ss_index==8){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_1_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER+
 	  }
 	  else if(ss_index==9){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_-1_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//JER-
 	  }
 	  else if(ss_index==10){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_1_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU+
 	  }
 	  else if (ss_index==11){
-	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_ZPTweightcorr_%d_CT10ind_-1_18_05.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_-1_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//PU-
 	  }
+	  else if (ss_index==14){
+	    sprintf(nam,"../rootfiles/Sherpa1.4_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr);//Sherpa1.4
+	  }
+/*	  else if (ss_index>11){
+	    sprintf(nam,"../rootfiles/MD_DYJetstoLL_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_%d_27_04.root",isMu,1,0,ptthr,0,0,ZPTweightcorr,ss_index-12);//PDF
+	  }*/
+
+
         }
 	if(file_index>1&&ss_index!=1){
-	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_ZPTweightcorr_%d_CT10ind_-1_18_05.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
+	  sprintf(nam,"../rootfiles/MD_%s_isMu_%d_doUnf_%d_isSS_%d_jetPt_%d_Tightjet_%d_JES_%d_JER_0_PU_0_PU_subt_fwd_0_ZPTweightcorr_%d_CT10ind_-1_27_04.root",filnam[file_index].c_str(),isMu,1,0,20,0,0,ZPTweightcorr); 
 
-        }   
-
+        }    
+      
                    //cout<<nam<<endl;
   		   farray[file_index][ss_index]  = TFile::Open(nam);
                    histarray[file_index][ss_index]  =(TH1D*)(farray[file_index][ss_index]->Get(var1.data()));
 //	           if(var1.find("jet_pt_y_5")!= std::string::npos)histarray[file_index][ss_index]->GetXaxis()->SetLimits(0.,351.);
 //		   if( var1.find("jet_pt_y_6")!= std::string::npos)histarray[file_index][ss_index]->GetXaxis()->SetLimits(0.,198.0);
                    histarray[file_index][ss_index]->Rebin(rebin);
-                   histarray[file_index][ss_index]->Scale(scale_array[file_index]);
+                   if(ss_index!=12)histarray[file_index][ss_index]->Scale(scale_array[file_index]);
+                   if(file_index ==1 && ss_index==12){
+			 TTree *tree1 = (TTree *)farray[file_index][ss_index]->Get("tree");
+                          double totw;
+			  tree1->SetBranchAddress("cnt0",&totw);
+			 tree1->GetEntry(0);
 
 
+			histarray[file_index][ss_index]->Scale(3531.5*lumi/totw);
+                   }
  		   double binn = histarray[file_index][ss_index]->GetNbinsX();
 
     		  for(int bb=1;bb<=binn;bb++){
@@ -272,6 +296,11 @@ void      macro_tmp(std::string var1="__HISTNAME__",
       mc_bg->Add(histarray[file_index][0]);
     }
  
+  TH1D *mc_bg_sherpa= (TH1D*)histarray[1][12]->Clone("mc_bg");
+    for(int file_index=2;file_index<num_files;file_index++){
+      //mc_bg_sherpa->Add(histarray[file_index][0]);
+    }
+
      for(int i=1;i<=histarray[0][0]->GetNbinsX();i++){
        cout<<i<<"  "<<  mc_bg->GetBinContent(i)-histarray[1][0]->GetBinContent(i)<<endl;
      } 
@@ -335,7 +364,7 @@ cout<<MaxPlot_mc<<"  "<<MaxPlot_data<<"  "<<MaxPlot<<endl;
   //////////////////////////
 
   TH1D *Mont= (TH1D*)mc_bg->Clone("Mont");
-//  TH1D *Mont2= (TH1D*)histarray[0][1]->Clone("Mont");
+  TH1D *Mont2= (TH1D*)mc_bg_sherpa->Clone("Mont");
 
 //   double xLowLeg(0.71), xHighLeg(0.755);
 //  leg1 = new TLegend(xLowLeg, 0.53, xHighLeg, 0.77);
@@ -350,7 +379,8 @@ cout<<MaxPlot_mc<<"  "<<MaxPlot_data<<"  "<<MaxPlot<<endl;
   if(num_files>15)leg1->AddEntry(histarray[15][0], "WJets","peF");
   //leg1->AddEntry(tot_ss,"QCD","peF");
   leg1->AddEntry(diboson, "VVJets","peF");
-  leg1->AddEntry(mc_bg, "DYJets MD","peF");
+  leg1->AddEntry(mc_bg, "DYJets MG","peF");
+  //leg1->AddEntry(mc_bg_sherpa, "DYJets Sherpa","peF");
   if(isMu==0)leg1->AddEntry(histarray[0][0], "ee Data","pe");
   if(isMu==1)leg1->AddEntry(histarray[0][0], "#mu#mu Data","pe");
   leg1->SetTextFont(42);
@@ -366,6 +396,7 @@ cout<<MaxPlot_mc<<"  "<<MaxPlot_data<<"  "<<MaxPlot<<endl;
 
 
   Mont->Divide(mc_bg,histarray[0][0],1.0,1.0);
+  Mont2->Divide(mc_bg_sherpa,histarray[0][0],1.0,1.0);
   //Mont->Add(mc_bg,-1);
   double ntot_data=0.;
   double ntot_mc=0.;
@@ -395,6 +426,10 @@ pt->Draw();
 	  hs->Draw("hhist");
          
 	  histarray[0][0]->Draw("eX0Csames");
+	  mc_bg_sherpa->SetLineColor(kGreen);
+	  mc_bg_sherpa->SetLineStyle(2);
+	  mc_bg_sherpa->SetLineWidth(3);
+          //mc_bg_sherpa->Draw("sames");
           leg1->Draw("same");
 
 
@@ -408,6 +443,7 @@ pt->Draw();
 	  Mont->GetXaxis()->SetTitleOffset(0.8);
           Mont->SetYTitle("MC/Data");
 	  Mont->Draw("peX0C");// rec/gen
+	  //Mont2->Draw("sames");// rec/gen
           fixsplithist(histarray[0][0],Mont);
 
           if(var1.find("jet_pt_y_fb_5")!= std::string::npos)hs->GetHistogram()->GetXaxis()->SetRangeUser(0.,348.0);
@@ -416,11 +452,11 @@ pt->Draw();
          if(var1.find("jet_pt_y_fb_5")!= std::string::npos)Mont->GetXaxis()->SetRangeUser(0.,348.0);
           if(var1.find("jet_pt_y_fb_6")!= std::string::npos)Mont->GetXaxis()->SetRangeUser(0.,198.0);
           cout<<Mont->GetBinContent(1)<<endl;
-          sprintf(nam,"histos_note_1605_dl/__HISTNAME___ismu_%d_doUnf_%d_PTJ_%i_tight_%i_ZPTweightcorr_%i.pdf",isMu,dunf,ptthr,istight,ZPTweightcorr);
+          sprintf(nam,"histos_note_2801_dl/__HISTNAME___ismu_%d_doUnf_%d_PTJ_%i_tight_%i_ZPTweightcorr_%i.pdf",isMu,dunf,ptthr,istight,ZPTweightcorr);
 	  c1->Print(nam);
-          sprintf(nam,"histos_note_1605_dl/__HISTNAME___ismu_%d_doUnf_%d_PTJ_%i_tight_%i_ZPTweightcorr_%i.png",isMu,dunf,ptthr,istight,ZPTweightcorr);
+          sprintf(nam,"histos_note_2801_dl/__HISTNAME___ismu_%d_doUnf_%d_PTJ_%i_tight_%i_ZPTweightcorr_%i.png",isMu,dunf,ptthr,istight,ZPTweightcorr);
 	  c1->Print(nam);
-          sprintf(nam,"histos_note_1605_dl/__HISTNAME___ismu_%d_doUnf_%d_PTJ_%i_tight_%i_ZPTweightcorr_%i.C",isMu,dunf,ptthr,istight,ZPTweightcorr);
+          sprintf(nam,"histos_note_2801_dl/__HISTNAME___ismu_%d_doUnf_%d_PTJ_%i_tight_%i_ZPTweightcorr_%i.C",isMu,dunf,ptthr,istight,ZPTweightcorr);
 	  c1->Print(nam);
 
 

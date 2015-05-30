@@ -10,8 +10,81 @@
 */
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
+  TH1D *h_ratio_ptsl_zpt   = new TH1D("ratio_ptsl_zpt","ratio_ptsl_zpt",100,0,5);
   TH2D *h_2dgenjet_recocorrjet =new TH2D("2dgenjet_recocorrjet","2dgenjet_recocorrjet",50,0.,1000,50,0.,1000);
   TH2D *h_2dgenjet_recorawjet =new TH2D("2dgenjet_recorawjet","2dgenjet_recorawjet",50,0.,1000,50,0.,1000);
+  TH1D *h_deltaphi_jet_Z= new TH1D("deltaphi_jet_Z","deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_match_gen_deltaphi_jet_Z= new TH1D("match_gen_deltaphi_jet_Z","match_gen_deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_nomatch_gen_deltaphi_jet_Z= new TH1D("nomatch_gen_deltaphi_jet_Z","nomatch_gen_deltaphi_jet_Z",40,0,3.14);
+
+  TH1D *h_deltaphi_jet_Z_ptj_20_30   = new TH1D("deltaphi_jet_Z_ptj_20_30",   "deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_30_50   = new TH1D("deltaphi_jet_Z_ptj_30_50",   "deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_50_100  = new TH1D("deltaphi_jet_Z_ptj_50_100",  "deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_100_1000= new TH1D("deltaphi_jet_Z_ptj_100_1000","deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+
+  TH1D *h_deltaphi_jet_Z_ptj_20_24   = new TH1D("deltaphi_jet_Z_ptj_20_24",   "deltaphi_jet_Z_ptj_20_24"   ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_24_30   = new TH1D("deltaphi_jet_Z_ptj_24_30",   "deltaphi_jet_Z_ptj_24_30"   ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_30_40   = new TH1D("deltaphi_jet_Z_ptj_30_40",   "deltaphi_jet_Z_ptj_30_40"   ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_40_50   = new TH1D("deltaphi_jet_Z_ptj_40_50",   "deltaphi_jet_Z_ptj_40_50"   ,40,0,3.14);
+  TH1D *h_deltaphi_jet_Z_ptj_50_68   = new TH1D("deltaphi_jet_Z_ptj_50_68",   "deltaphi_jet_Z_ptj_50_68"   ,40,0,3.14);
+
+
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_20_30   = new TH1D("match_gen_deltaphi_jet_Z_ptj_20_30",   "match_gen_deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_30_50   = new TH1D("match_gen_deltaphi_jet_Z_ptj_30_50",   "match_gen_deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_50_100  = new TH1D("match_gen_deltaphi_jet_Z_ptj_50_100",  "match_gen_deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_100_1000= new TH1D("match_gen_deltaphi_jet_Z_ptj_100_1000","match_gen_deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_20_30   = new TH1D("nomatch_gen_deltaphi_jet_Z_ptj_20_30",   "nomatch_gen_deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_30_50   = new TH1D("nomatch_gen_deltaphi_jet_Z_ptj_30_50",   "nomatch_gen_deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_50_100  = new TH1D("nomatch_gen_deltaphi_jet_Z_ptj_50_100",  "nomatch_gen_deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_100_1000= new TH1D("nomatch_gen_deltaphi_jet_Z_ptj_100_1000","nomatch_gen_deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+
+
+  TH1D *h_inc_deltaphi_jet_Z= new TH1D("inc_deltaphi_jet_Z","deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_inc_match_gen_deltaphi_jet_Z= new TH1D("inc_match_gen_deltaphi_jet_Z","inc_match_gen_deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z= new TH1D("inc_nomatch_gen_deltaphi_jet_Z","inc_nomatch_gen_deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_inc_deltaphi_jet_Z_ptj_20_30   = new TH1D("inc_deltaphi_jet_Z_ptj_20_30",   "inc_deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_inc_deltaphi_jet_Z_ptj_30_50   = new TH1D("inc_deltaphi_jet_Z_ptj_30_50",   "inc_deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_inc_deltaphi_jet_Z_ptj_50_100  = new TH1D("inc_deltaphi_jet_Z_ptj_50_100",  "inc_deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_inc_deltaphi_jet_Z_ptj_100_1000= new TH1D("inc_deltaphi_jet_Z_ptj_100_1000","inc_deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+
+  TH1D *h_inc_1j_deltaphi_jettot_Z= new TH1D("inc_1j_deltaphi_jettot_Z","deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z= new TH1D("inc_1j_match_gen_deltaphi_jettot_Z","inc_match_gen_deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z= new TH1D("inc_1j_nomatch_gen_deltaphi_jettot_Z","inc_nomatch_gen_deltaphi_jet_Z",40,0,3.14);
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_20_30   = new TH1D("inc_1j_deltaphi_jettot_Z_ptj_20_30",   "inc_deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_30_50   = new TH1D("inc_1j_deltaphi_jettot_Z_ptj_30_50",   "inc_deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_50_100  = new TH1D("inc_1j_deltaphi_jettot_Z_ptj_50_100",  "inc_deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_100_1000= new TH1D("inc_1j_deltaphi_jettot_Z_ptj_100_1000","inc_deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+
+
+
+
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_20_30   = new TH1D("inc_match_gen_deltaphi_jet_Z_ptj_20_30",   "inc_match_gen_deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_30_50   = new TH1D("inc_match_gen_deltaphi_jet_Z_ptj_30_50",   "inc_match_gen_deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_50_100  = new TH1D("inc_match_gen_deltaphi_jet_Z_ptj_50_100",  "inc_match_gen_deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_100_1000= new TH1D("inc_match_gen_deltaphi_jet_Z_ptj_100_1000","inc_match_gen_deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_20_30   = new TH1D("inc_nomatch_gen_deltaphi_jet_Z_ptj_20_30",   "inc_nomatch_gen_deltaphi_jet_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_30_50   = new TH1D("inc_nomatch_gen_deltaphi_jet_Z_ptj_30_50",   "inc_nomatch_gen_deltaphi_jet_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_50_100  = new TH1D("inc_nomatch_gen_deltaphi_jet_Z_ptj_50_100",  "inc_nomatch_gen_deltaphi_jet_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_100_1000= new TH1D("inc_nomatch_gen_deltaphi_jet_Z_ptj_100_1000","inc_nomatch_gen_deltaphi_jet_Z_ptj_100_1000",40,0,3.14);
+
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_20_30   = new TH1D("inc_1j_match_gen_deltaphi_jettot_Z_ptj_20_30",   "inc_1j_match_gen_deltaphi_jettot_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_30_50   = new TH1D("inc_1j_match_gen_deltaphi_jettot_Z_ptj_30_50",   "inc_1j_match_gen_deltaphi_jettot_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_50_100  = new TH1D("inc_1j_match_gen_deltaphi_jettot_Z_ptj_50_100",  "inc_1j_match_gen_deltaphi_jettot_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_100_1000= new TH1D("inc_1j_match_gen_deltaphi_jettot_Z_ptj_100_1000","inc_1j_match_gen_deltaphi_jettot_Z_ptj_100_1000",40,0,3.14);
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_20_30   = new TH1D("inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_20_30",   "inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_20_30"   ,40,0,3.14);
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_30_50   = new TH1D("inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_30_50",   "inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_30_50"   ,40,0,3.14);
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_50_100  = new TH1D("inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_50_100",  "inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_50_100"  ,40,0,3.14);
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_100_1000= new TH1D("inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_100_1000","inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_100_1000",40,0,3.14);
+
+TH1D * tackman_tau_cm_sum[100];
+TH1D * tackman_tau_sum[100];
+TH1D * tackman_tauc_cm_sum[100];
+TH1D * tackman_tauc_sum[100];
+
+TH1D * tackman_tau_cm_max[100];
+TH1D * tackman_tau_max[100];
+TH1D * tackman_tauc_cm_max[100];
+TH1D * tackman_tauc_max[100];
 
 TProfile* h_ptj_ratio_before  = new TProfile("ptj_ratio_before","Reco/gen vs eta",50,-5.1,5.1,0.,3.0);
 TProfile* h_ptj_ratio_after  = new TProfile("ptj_ratio_after","Reco/gen vs eta",50,-5.1,5.1,0.,3.0);
@@ -41,6 +114,8 @@ TProfile* h_ptj_ratioRaw_after_100  = new TProfile("ptj_ratioRaw_after_100","Rec
   TH1D* h_weight_plus_sherpa= new TH1D("weight_plus_sherpa","weight_plus_sherpa",150,0.,15.);
   TH1D* h_weight_minus_sherpa= new TH1D("weight_minus_sherpa","weight_minus_sherpa",150,0.,15.);
   TH1D* h_ljet_rapidity= new TH1D("ljet_rapidity","ljet_rapidity",50,-5.1,5.1);
+  TH1D* h_ljet_rapidity_50= new TH1D("ljet_rapidity_50","ljet_rapidity_50",50,-5.1,5.1);
+
   TH1D* h_ljet_eta= new TH1D("ljet_eta","ljet_eta",50,-5.1,5.1);
   TH1D* h_sljet_rapidity= new TH1D("sljet_rapidity","sljet_rapidity",50,-5.1,5.1);
   TH1D* h_sljet_eta= new TH1D("sljet_eta","sljet_eta",50,-5.1,5.1);
@@ -317,13 +392,123 @@ TProfile* h_ptj_ratioRaw_after_100  = new TProfile("ptj_ratioRaw_after_100","Rec
   TH2* h_ljet_y_pt_z0_Gen_VS_reco[100];
   TH2* h_ljet_y_pt_z1_Gen_VS_reco[100];
 
+  TH1D *h_ratio_jetpt30_50_zpt[100];
+  TH1D *h_ratio_jetpt50_inf_zpt[100];
 
+  TH1D *h_deltaphi_jet_Z_ptj_20_30_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_30_50_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_50_100_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_20_30_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_30_50_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_50_100_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_20_30_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_30_50_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_50_100_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_deltaphi_jet_Z_ptj_20_24_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_24_30_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_30_40_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_40_50_jrap[100];
+  TH1D *h_deltaphi_jet_Z_ptj_50_68_jrap[100];
+
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_20_24_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_24_30_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_30_40_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_40_50_jrap[100];
+  TH1D *h_nomatch_gen_deltaphi_jet_Z_ptj_50_68_jrap[100];
+
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_20_24_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_24_30_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_30_40_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_40_50_jrap[100];
+  TH1D *h_match_gen_deltaphi_jet_Z_ptj_50_68_jrap[100];
+
+
+  TH1D *h_inc_deltaphi_jet_Z_ptj_20_30_jrap[100];
+  TH1D *h_inc_deltaphi_jet_Z_ptj_30_50_jrap[100];
+  TH1D *h_inc_deltaphi_jet_Z_ptj_50_100_jrap[100];
+  TH1D *h_inc_deltaphi_jet_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_20_30_jrap[100];
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_30_50_jrap[100];
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_50_100_jrap[100];
+  TH1D *h_inc_nomatch_gen_deltaphi_jet_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_20_30_jrap[100];
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_30_50_jrap[100];
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_50_100_jrap[100];
+  TH1D *h_inc_match_gen_deltaphi_jet_Z_ptj_100_1000_jrap[100];
+
+
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_20_30_jrap[100];
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_30_50_jrap[100];
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_50_100_jrap[100];
+  TH1D *h_inc_1j_deltaphi_jettot_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_20_30_jrap[100];
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_30_50_jrap[100];
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_50_100_jrap[100];
+  TH1D *h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_100_1000_jrap[100];
+
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_20_30_jrap[100];
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_30_50_jrap[100];
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_50_100_jrap[100];
+  TH1D *h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_100_1000_jrap[100];
+
+
+  TH1D *h_ratio_Zpt0_30_zpt_dphi_28[100];
+  TH1D *h_ratio_Zpt30_50_zpt_dphi_28[100];
+  TH1D *h_ratio_Zpt50_inf_zpt_dphi_28[100];
+  TH1D *h_ratio_Zpt0_30_zpt_dphi_28_up[100];
+  TH1D *h_ratio_Zpt30_50_zpt_dphi_28_up[100];
+  TH1D *h_ratio_Zpt50_inf_zpt_dphi_28_up[100];
+  TH1D *h_ratio_Zpt0_30_zpt_dphi_28_dn[100];
+  TH1D *h_ratio_Zpt30_50_zpt_dphi_28_dn[100];
+  TH1D *h_ratio_Zpt50_inf_zpt_dphi_28_dn[100];
+
+  TH1D *h_ratio_jetpt30_50_zpt_dphi_28[100];
+  TH1D *h_ratio_jetpt50_inf_zpt_dphi_28[100];
+  TH1D *h_ratio_jetpt30_50_zpt_dphi_28_up[100];
+  TH1D *h_ratio_jetpt50_inf_zpt_dphi_28_up[100];
+  TH1D *h_ratio_jetpt30_50_zpt_dphi_28_dn[100];
+  TH1D *h_ratio_jetpt50_inf_zpt_dphi_28_dn[100];
   TH1D *h_inc_ljet_pt_y[100];
+  TH1D *h_inc_ljet_Z_y[100];
   TH1D *h_inc_ljet_pt_y_fb[100];
+  TH1D *h_inc_ljet_pt_y_fb_nomatch[100];
+  TH1D *h_inc_ljet_pt_y_fb_match[100];
+  TH1D *h_inc_ljet_pt_y_fb_dphi_lt_1pt5[100];
+  TH1D *h_inc_ljet_pt_y_fb_dphi_lt_1pt0[100];
   TH1D *h_inc_ljet_pt_y_fixbin[100];
  
- TH1D *h_inc_ljet_pt_y_fb_z0[100];
+double range_for_incl[]= {20,24,30,40,50,68,85,104,126,148,175,200,230,400};
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z0_pos = new TH1D ("inc_ljet_pt_y_fb_alljetrap_pos_z0","inc_ljet_pt_y_fb_alljetrap_pos_z0", 13,  range_for_incl);
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z1_pos = new TH1D ("inc_ljet_pt_y_fb_alljetrap_pos_z1","inc_ljet_pt_y_fb_alljetrap_pos_z1", 13,  range_for_incl);
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z0_neg = new TH1D ("inc_ljet_pt_y_fb_alljetrap_neg_z0","inc_ljet_pt_y_fb_alljetrap_neg_z0", 13,  range_for_incl);
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z1_neg = new TH1D ("inc_ljet_pt_y_fb_alljetrap_neg_z1","inc_ljet_pt_y_fb_alljetrap_neg_z1", 13,  range_for_incl);
+
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z0_pos_Gen = new TH1D ("inc_ljet_pt_y_fb_alljetrap_pos_Gen_z0","inc_ljet_pt_y_fb_alljetrap_pos_Gen_z0", 13,  range_for_incl);
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z1_pos_Gen = new TH1D ("inc_ljet_pt_y_fb_alljetrap_pos_Gen_z1","inc_ljet_pt_y_fb_alljetrap_pos_Gen_z1", 13,  range_for_incl);
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z0_neg_Gen = new TH1D ("inc_ljet_pt_y_fb_alljetrap_neg_Gen_z0","inc_ljet_pt_y_fb_alljetrap_neg_Gen_z0", 13,  range_for_incl);
+  TH1D *h_inc_ljet_pt_y_fb_alljetrap_z1_neg_Gen = new TH1D ("inc_ljet_pt_y_fb_alljetrap_neg_Gen_z1","inc_ljet_pt_y_fb_alljetrap_neg_Gen_z1", 13,  range_for_incl);
+
+  TH2D *h_inc_ljet_pt_y_fb_alljetrap_z0_pos_Gen_VS_reco = new TH2D ("inc_ljet_pt_y_fb_alljetrap_pos_Gen_VS_reco_z0","inc_ljet_pt_y_fb_alljetrap_pos_Gen_VS_reco_z0", 13,  range_for_incl,13,  range_for_incl);
+  TH2D *h_inc_ljet_pt_y_fb_alljetrap_z1_pos_Gen_VS_reco = new TH2D ("inc_ljet_pt_y_fb_alljetrap_pos_Gen_VS_reco_z1","inc_ljet_pt_y_fb_alljetrap_pos_Gen_VS_reco_z1", 13,  range_for_incl,13,  range_for_incl);
+  TH2D *h_inc_ljet_pt_y_fb_alljetrap_z0_neg_Gen_VS_reco = new TH2D ("inc_ljet_pt_y_fb_alljetrap_neg_Gen_VS_reco_z0","inc_ljet_pt_y_fb_alljetrap_neg_Gen_VS_reco_z0", 13,  range_for_incl,13,  range_for_incl);
+  TH2D *h_inc_ljet_pt_y_fb_alljetrap_z1_neg_Gen_VS_reco = new TH2D ("inc_ljet_pt_y_fb_alljetrap_neg_Gen_VS_reco_z1","inc_ljet_pt_y_fb_alljetrap_neg_Gen_VS_reco_z1", 13,  range_for_incl,13,  range_for_incl);
+
+
+  TH1D *h_inc_ljet_pt_y_fb_z0[100];
   TH1D *h_inc_ljet_pt_y_fb_z1[100];
+  TH1D *h_inc_ljet_pt_y_fb_z0_pos[100];
+  TH1D *h_inc_ljet_pt_y_fb_z1_pos[100];
+  TH1D *h_inc_ljet_pt_y_fb_z0_neg[100];
+  TH1D *h_inc_ljet_pt_y_fb_z1_neg[100];
   TH1D *h_inc_ljet_pt_sljetpt[100];
   TH1D *h_inc_ljet_y_pt[100];
   TH1D *h_inc_ljet_pt_y_z0[100];
@@ -335,6 +520,7 @@ TProfile* h_ptj_ratioRaw_after_100  = new TProfile("ptj_ratioRaw_after_100","Rec
   TH1D *h_inc_ljet_y_pt_z1[100];
 
   TH1D *h_inc_ljet_pt_y_Gen[100];
+  TH1D *h_inc_ljet_Z_y_Gen[100];
   TH1D *h_inc_ljet_pt_sljetpt_Gen[100];
   TH1D *h_inc_ljet_y_pt_Gen[100];
   TH1D *h_inc_ljet_pt_y_z0_Gen[100];
@@ -346,8 +532,13 @@ TProfile* h_ptj_ratioRaw_after_100  = new TProfile("ptj_ratioRaw_after_100","Rec
   TH1D *h_inc_ljet_pt_y_fb_Gen[100];
   TH1D *h_inc_ljet_pt_y_fb_z0_Gen[100];
   TH1D *h_inc_ljet_pt_y_fb_z1_Gen[100];
+  TH1D *h_inc_ljet_pt_y_fb_z0_pos_Gen[100];
+  TH1D *h_inc_ljet_pt_y_fb_z1_pos_Gen[100];
+  TH1D *h_inc_ljet_pt_y_fb_z0_neg_Gen[100];
+  TH1D *h_inc_ljet_pt_y_fb_z1_neg_Gen[100];
 
   TH2* h_inc_ljet_pt_y_Gen_VS_reco[100];
+  TH2 *h_inc_ljet_Z_y_Gen_VS_reco[100];
   TH2 *h_inc_ljet_pt_sljetpt_Gen_VS_reco[100];
   TH2* h_inc_ljet_y_pt_Gen_VS_reco[100];
   TH2* h_inc_ljet_pt_y_z0_Gen_VS_reco[100];
@@ -359,6 +550,10 @@ TProfile* h_ptj_ratioRaw_after_100  = new TProfile("ptj_ratioRaw_after_100","Rec
   TH2 *h_inc_ljet_pt_y_fb_Gen_VS_reco[100];
   TH2 *h_inc_ljet_pt_y_fb_z0_Gen_VS_reco[100];
   TH2 *h_inc_ljet_pt_y_fb_z1_Gen_VS_reco[100];
+  TH2 *h_inc_ljet_pt_y_fb_z0_pos_Gen_VS_reco[100];
+  TH2 *h_inc_ljet_pt_y_fb_z1_pos_Gen_VS_reco[100];
+  TH2 *h_inc_ljet_pt_y_fb_z0_neg_Gen_VS_reco[100];
+  TH2 *h_inc_ljet_pt_y_fb_z1_neg_Gen_VS_reco[100];
 
   TH1D *h_inc_sljet_pt_y[100];
   TH1D *h_inc_sljet_y_pt[100];
@@ -415,13 +610,13 @@ TProfile* h_ptj_ratioRaw_after_100  = new TProfile("ptj_ratioRaw_after_100","Rec
   double range_2d[7]={15,15,14,12,11,9,6};*/
 
 double j_pT_range3[7][18] = {
-{20,24,30,40,53,68,85,104,126,148,175,200,230,270,320,550},  
-{20,24,30,40,53,68,85,104,126,148,175,200,230,270,320,500}, 
-{20,24,30,40,53,68,85,104,126,148,175,200,230,270,450}, 
-{20,24,30,40,53,68,85,104,126,148,175,200,230,400}, 
-{20,24,30,40,53,68,85,104,126,148,175,200,320}, 
-{20,24,30,40,53,68,85,104,126,148,240}, 
-{20,24,30,40,53,68,85,104,180}};  
+{20,24,30,40,50,68,85,104,126,148,175,200,230,270,320,550},  
+{20,24,30,40,50,68,85,104,126,148,175,200,230,270,320,500}, 
+{20,24,30,40,50,68,85,104,126,148,175,200,230,270,450}, 
+{20,24,30,40,50,68,85,104,126,148,175,200,230,400}, 
+{20,24,30,40,50,68,85,104,126,148,175,200,320}, 
+{20,24,30,40,50,68,85,104,126,148,240}, 
+{20,24,30,40,50,68,85,104,180}};  
 
   double range_2d[7]={15,15,14,13,12,10,8};
 
@@ -429,6 +624,16 @@ double j_pT_range3[7][18] = {
 
   double Z_pT_range[6]={20.,30.,50.,100.,200.,1000.};
   double Z_Y_range[6]={0.,0.5,1.0,1.5,2.0,2.5};
+
+
+double j_pT_range33[3][18] = {
+
+{20,24,30,40,50,68,85,104,126,148,175,200,230,270,320,500}, 
+{20,24,30,40,50,68,85,104,126,148,175,200,230,400}, 
+{20,24,30,40,50,68,85,104,126,148,240}};  
+
+  double range_3d[7]={15,13,10};
+
  //   Z_y_range[5]={0,0.9,1.5,2.1,2.5};//
  //   threed_j_y_range[4]={0,1.5,2.4,4.7};//
  // pt_range[6]={20.,30.,50.,100.,200.,1000.};//
@@ -453,6 +658,25 @@ for(int i = 0; i<5;i++){//Z rapidity range
   }
 }
 for(int i = 0; i<9;i++){//j rapidity range
+
+
+sprintf(name,"tackman_tau_cm_sum_%i",i);
+tackman_tau_cm_sum[i] = new TH1D (name,name, 100,0, 100);
+sprintf(name,"tackman_tau_sum_%i",i);
+tackman_tau_sum[i] = new TH1D (name,name, 100,0, 100);
+sprintf(name,"tackman_tauc_cm_sum_%i",i);
+tackman_tauc_cm_sum[i] = new TH1D (name,name, 100,0, 100);
+sprintf(name,"tackman_tauc_sum_%i",i);
+tackman_tauc_sum[i] = new TH1D (name,name, 100,0, 100);
+
+sprintf(name,"tackman_tau_cm_max_%i",i);
+tackman_tau_cm_max[i] = new TH1D (name,name, 100,0, 100);
+sprintf(name,"tackman_tau_max_%i",i);
+tackman_tau_max[i] = new TH1D (name,name, 100,0, 100);
+sprintf(name,"tackman_tauc_cm_max_%i",i);
+tackman_tauc_cm_max[i] = new TH1D (name,name, 100,0, 100);
+sprintf(name,"tackman_tauc_max_%i",i);
+tackman_tauc_max[i] = new TH1D (name,name, 100,0, 100);
 
   sprintf(name,"ljet_pt_y_%i",i);
   h_ljet_pt_y[i] = new TH1D (name,name, 8, j_pT_range);
@@ -497,8 +721,187 @@ for(int i = 0; i<9;i++){//j rapidity range
   sprintf(name,"inc_ljet_pt_y_%i",i);
   h_inc_ljet_pt_y[i] = new TH1D (name,name, 8, j_pT_range);
 
+  sprintf(name,"inc_ljet_Z_y_%i",i);
+  h_inc_ljet_Z_y[i] = new TH1D (name,name, 20,-2.5,2.5);
+
+
+
+  sprintf(name,"ratio_jetpt30_50_zpt_%i",i);
+  h_ratio_jetpt30_50_zpt[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_jetpt50_inf_zpt_%i",i);
+  h_ratio_jetpt50_inf_zpt[i]= new TH1D (name,name, 30,0.,3.);
+
+  sprintf(name,"deltaphi_jet_Z_ptj_20_30_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_30_50_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_50_100_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_100_1000_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_20_30_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_30_50_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_50_100_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_100_1000_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_20_30_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_30_50_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_50_100_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_100_1000_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"deltaphi_jet_Z_ptj_20_24_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_20_24_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_24_30_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_24_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_30_40_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_30_40_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_40_50_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_40_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"deltaphi_jet_Z_ptj_50_68_jrap_%i",i);
+  h_deltaphi_jet_Z_ptj_50_68_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_20_24_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_20_24_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_24_30_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_24_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_30_40_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_30_40_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_40_50_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_40_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"match_gen_deltaphi_jet_Z_ptj_50_68_jrap_%i",i);
+  h_match_gen_deltaphi_jet_Z_ptj_50_68_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_20_24_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_20_24_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_24_30_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_24_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_30_40_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_30_40_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_40_50_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_40_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"nomatch_gen_deltaphi_jet_Z_ptj_50_68_jrap_%i",i);
+  h_nomatch_gen_deltaphi_jet_Z_ptj_50_68_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+
+
+
+  sprintf(name,"inc_deltaphi_jet_Z_ptj_20_30_jrap_%i",i);
+  h_inc_deltaphi_jet_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_deltaphi_jet_Z_ptj_30_50_jrap_%i",i);
+  h_inc_deltaphi_jet_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_deltaphi_jet_Z_ptj_50_100_jrap_%i",i);
+  h_inc_deltaphi_jet_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_deltaphi_jet_Z_ptj_100_1000_jrap_%i",i);
+  h_inc_deltaphi_jet_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"inc_match_gen_deltaphi_jet_Z_ptj_20_30_jrap_%i",i);
+  h_inc_match_gen_deltaphi_jet_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_match_gen_deltaphi_jet_Z_ptj_30_50_jrap_%i",i);
+  h_inc_match_gen_deltaphi_jet_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_match_gen_deltaphi_jet_Z_ptj_50_100_jrap_%i",i);
+  h_inc_match_gen_deltaphi_jet_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_match_gen_deltaphi_jet_Z_ptj_100_1000_jrap_%i",i);
+  h_inc_match_gen_deltaphi_jet_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"inc_nomatch_gen_deltaphi_jet_Z_ptj_20_30_jrap_%i",i);
+  h_inc_nomatch_gen_deltaphi_jet_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_nomatch_gen_deltaphi_jet_Z_ptj_30_50_jrap_%i",i);
+  h_inc_nomatch_gen_deltaphi_jet_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_nomatch_gen_deltaphi_jet_Z_ptj_50_100_jrap_%i",i);
+  h_inc_nomatch_gen_deltaphi_jet_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_nomatch_gen_deltaphi_jet_Z_ptj_100_1000_jrap_%i",i);
+  h_inc_nomatch_gen_deltaphi_jet_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"inc_1j_deltaphi_jettot_Z_ptj_20_30_jrap_%i",i);
+  h_inc_1j_deltaphi_jettot_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_deltaphi_jettot_Z_ptj_30_50_jrap_%i",i);
+  h_inc_1j_deltaphi_jettot_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_deltaphi_jettot_Z_ptj_50_100_jrap_%i",i);
+  h_inc_1j_deltaphi_jettot_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_deltaphi_jettot_Z_ptj_100_1000_jrap_%i",i);
+  h_inc_1j_deltaphi_jettot_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"inc_1j_match_gen_deltaphi_jettot_Z_ptj_20_30_jrap_%i",i);
+  h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_match_gen_deltaphi_jettot_Z_ptj_30_50_jrap_%i",i);
+  h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_match_gen_deltaphi_jettot_Z_ptj_50_100_jrap_%i",i);
+  h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_match_gen_deltaphi_jettot_Z_ptj_100_1000_jrap_%i",i);
+  h_inc_1j_match_gen_deltaphi_jettot_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_20_30_jrap_%i",i);
+  h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_20_30_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_30_50_jrap_%i",i);
+  h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_30_50_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_50_100_jrap_%i",i);
+  h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_50_100_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+  sprintf(name,"inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_100_1000_jrap_%i",i);
+  h_inc_1j_nomatch_gen_deltaphi_jettot_Z_ptj_100_1000_jrap[i]= new TH1D (name,name, 40,0.,3.14);
+
+  sprintf(name,"ratio_jetpt30_50_zpt_dphi_28_%i",i);
+  h_ratio_jetpt30_50_zpt_dphi_28[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_jetpt50_inf_zpt_dphi_28_%i",i);
+  h_ratio_jetpt50_inf_zpt_dphi_28[i]= new TH1D (name,name, 30,0.,3.);
+
+  sprintf(name,"ratio_jetpt30_50_zpt_dphi_28_up_%i",i);
+  h_ratio_jetpt30_50_zpt_dphi_28_up[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_jetpt50_inf_zpt_dphi_28_up_%i",i);
+  h_ratio_jetpt50_inf_zpt_dphi_28_up[i]= new TH1D (name,name, 30,0.,3.);
+
+  sprintf(name,"ratio_jetpt30_50_zpt_dphi_28_dn_%i",i);
+  h_ratio_jetpt30_50_zpt_dphi_28_dn[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_jetpt50_inf_zpt_dphi_28_dn_%i",i);
+  h_ratio_jetpt50_inf_zpt_dphi_28_dn[i]= new TH1D (name,name, 30,0.,3.);
+
+
+
+ sprintf(name,"ratio_Zpt0_30_zpt_dphi_28_%i",i);
+  h_ratio_Zpt0_30_zpt_dphi_28[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_Zpt30_50_zpt_dphi_28_%i",i);
+  h_ratio_Zpt30_50_zpt_dphi_28[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_Zpt50_inf_zpt_dphi_28_%i",i);
+  h_ratio_Zpt50_inf_zpt_dphi_28[i]= new TH1D (name,name, 30,0.,3.);
+
+  sprintf(name,"ratio_Zpt0_30_zpt_dphi_28_up_%i",i);
+  h_ratio_Zpt0_30_zpt_dphi_28_up[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_Zpt30_50_zpt_dphi_28_up_%i",i);
+  h_ratio_Zpt30_50_zpt_dphi_28_up[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_Zpt50_inf_zpt_dphi_28_up_%i",i);
+  h_ratio_Zpt50_inf_zpt_dphi_28_up[i]= new TH1D (name,name, 30,0.,3.);
+
+  sprintf(name,"ratio_Zpt0_30_zpt_dphi_28_dn_%i",i);
+  h_ratio_Zpt0_30_zpt_dphi_28_dn[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_Zpt30_50_zpt_dphi_28_dn_%i",i);
+  h_ratio_Zpt30_50_zpt_dphi_28_dn[i]= new TH1D (name,name, 30,0.,3.);
+  sprintf(name,"ratio_Zpt50_inf_zpt_dphi_28_dn_%i",i);
+  h_ratio_Zpt50_inf_zpt_dphi_28_dn[i]= new TH1D (name,name, 30,0.,3.);
+
+
   sprintf(name,"inc_ljet_pt_y_fb_%i",i);
   h_inc_ljet_pt_y_fb[i] = new TH1D (name,name, range_2d[i], j_pT_range3[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_dphi_lt_1p5_%i",i);
+  h_inc_ljet_pt_y_fb_dphi_lt_1pt5[i] = new TH1D (name,name, range_2d[i], j_pT_range3[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_dphi_lt_1pt0_%i",i);
+  h_inc_ljet_pt_y_fb_dphi_lt_1pt0[i] = new TH1D (name,name, range_2d[i], j_pT_range3[i]);
+
+ sprintf(name,"inc_ljet_pt_y_fb_match_%i",i);
+  h_inc_ljet_pt_y_fb_match[i] = new TH1D (name,name, range_2d[i], j_pT_range3[i]);
+
+ sprintf(name,"inc_ljet_pt_y_fb_nomatch_%i",i);
+  h_inc_ljet_pt_y_fb_nomatch[i] = new TH1D (name,name, range_2d[i], j_pT_range3[i]);
+
 
   sprintf(name,"inc_ljet_pt_y_fixbin_%i",i);
   h_inc_ljet_pt_y_fixbin[i] = new TH1D (name,name, 200,0.,1000. );
@@ -516,6 +919,15 @@ for(int i = 0; i<9;i++){//j rapidity range
   sprintf(name,"inc_ljet_pt_y_fb_z1_%i",i);
   h_inc_ljet_pt_y_fb_z1[i] = new TH1D (name,name, range_2d[i], j_pT_range3[i]);
 
+  sprintf(name,"inc_ljet_pt_y_fb_pos_z0_%i",i);
+  h_inc_ljet_pt_y_fb_z0_pos[i] = new TH1D (name,name, range_3d[i], j_pT_range33[i]);
+  sprintf(name,"inc_ljet_pt_y_fb_pos_z1_%i",i);
+  h_inc_ljet_pt_y_fb_z1_pos[i] = new TH1D (name,name, range_3d[i], j_pT_range33[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_neg_z0_%i",i);
+  h_inc_ljet_pt_y_fb_z0_neg[i] = new TH1D (name,name, range_3d[i], j_pT_range33[i]);
+  sprintf(name,"inc_ljet_pt_y_fb_neg_z1_%i",i);
+  h_inc_ljet_pt_y_fb_z1_neg[i] = new TH1D (name,name, range_3d[i], j_pT_range33[i]);
 
   sprintf(name,"inc_ljet_pt_sljetpt_%i",i);
   h_inc_ljet_pt_sljetpt[i] = new TH1D (name,name, 8, j_pT_range);
@@ -531,6 +943,9 @@ for(int i = 0; i<9;i++){//j rapidity range
 
   sprintf(name,"inc_ljet_pt_y_Gen_%i",i);
   h_inc_ljet_pt_y_Gen[i] = new TH1D(name,name,8,j_pT_range);
+  sprintf(name,"inc_ljet_Z_y_Gen_%i",i);
+  h_inc_ljet_Z_y_Gen[i] = new TH1D(name,name, 20,-2.5,2.5);
+
   sprintf(name,"inc_ljet_pt_y_fb_Gen_%i",i);
   h_inc_ljet_pt_y_fb_Gen[i] = new TH1D(name,name,range_2d[i], j_pT_range3[i]);
 
@@ -545,6 +960,17 @@ for(int i = 0; i<9;i++){//j rapidity range
   h_inc_ljet_pt_y_fb_z0_Gen[i] = new TH1D(name,name,range_2d[i], j_pT_range3[i]);
   sprintf(name,"inc_ljet_pt_y_fb_Gen_z1_%i",i);
   h_inc_ljet_pt_y_fb_z1_Gen[i] = new TH1D(name,name,range_2d[i], j_pT_range3[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_pos_Gen_z0_%i",i);
+  h_inc_ljet_pt_y_fb_z0_pos_Gen[i] = new TH1D(name,name,range_3d[i], j_pT_range33[i]);
+  sprintf(name,"inc_ljet_pt_y_fb_pos_Gen_z1_%i",i);
+  h_inc_ljet_pt_y_fb_z1_pos_Gen[i] = new TH1D(name,name,range_3d[i], j_pT_range33[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_neg_Gen_z0_%i",i);
+  h_inc_ljet_pt_y_fb_z0_neg_Gen[i] = new TH1D(name,name,range_3d[i], j_pT_range33[i]);
+  sprintf(name,"inc_ljet_pt_y_fb_neg_Gen_z1_%i",i);
+  h_inc_ljet_pt_y_fb_z1_neg_Gen[i] = new TH1D(name,name,range_3d[i], j_pT_range33[i]);
+
 
   sprintf(name,"inc_ljet_pt_sljetpt_Gen_%i",i);
   h_inc_ljet_pt_sljetpt_Gen[i] = new TH1D (name,name, 8, j_pT_range);
@@ -563,6 +989,10 @@ for(int i = 0; i<9;i++){//j rapidity range
   h_inc_ljet_y_pt_Gen_VS_reco[i] = new TH2D(name,name,7,j_Y_range,7,j_Y_range);
   sprintf(name,"inc_ljet_pt_y_Gen_VS_reco_%i",i);
   h_inc_ljet_pt_y_Gen_VS_reco[i] = new TH2D(name,name,8,j_pT_range,8,j_pT_range);
+
+  sprintf(name,"inc_ljet_Z_y_Gen_VS_reco_%i",i);
+  h_inc_ljet_Z_y_Gen_VS_reco[i] = new TH2D(name,name,20,-2.5,2.5, 20,-2.5,2.5);
+
   sprintf(name,"inc_ljet_pt_y_Gen_VS_reco_z0_%i",i);
   h_inc_ljet_pt_y_z0_Gen_VS_reco[i] = new TH2D(name,name,8,j_pT_range,8,j_pT_range);
   sprintf(name,"inc_ljet_pt_y_Gen_VS_reco_z1_%i",i);
@@ -574,6 +1004,16 @@ for(int i = 0; i<9;i++){//j rapidity range
   h_inc_ljet_pt_y_fb_z0_Gen_VS_reco[i] = new TH2D(name,name,range_2d[i], j_pT_range3[i],range_2d[i], j_pT_range3[i]);
   sprintf(name,"inc_ljet_pt_y_fb_Gen_VS_reco_z1_%i",i);
   h_inc_ljet_pt_y_fb_z1_Gen_VS_reco[i] = new TH2D(name,name,range_2d[i], j_pT_range3[i],range_2d[i], j_pT_range3[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_pos_Gen_VS_reco_z0_%i",i);
+  h_inc_ljet_pt_y_fb_z0_pos_Gen_VS_reco[i] = new TH2D(name,name,range_3d[i], j_pT_range33[i],range_3d[i], j_pT_range33[i]);
+  sprintf(name,"inc_ljet_pt_y_fb_pos_Gen_VS_reco_z1_%i",i);
+  h_inc_ljet_pt_y_fb_z1_pos_Gen_VS_reco[i] = new TH2D(name,name,range_3d[i], j_pT_range33[i],range_3d[i], j_pT_range33[i]);
+
+  sprintf(name,"inc_ljet_pt_y_fb_neg_Gen_VS_reco_z0_%i",i);
+  h_inc_ljet_pt_y_fb_z0_neg_Gen_VS_reco[i] = new TH2D(name,name,range_3d[i], j_pT_range33[i],range_3d[i], j_pT_range33[i]);
+  sprintf(name,"inc_ljet_pt_y_fb_neg_Gen_VS_reco_z1_%i",i);
+  h_inc_ljet_pt_y_fb_z1_neg_Gen_VS_reco[i] = new TH2D(name,name,range_3d[i], j_pT_range33[i],range_3d[i], j_pT_range33[i]);
 
   sprintf(name,"inc_ljet_pt_sljetpt_Gen_VS_reco_%i",i);
   h_inc_ljet_pt_sljetpt_Gen_VS_reco[i] = new TH2D(name,name,8,j_pT_range,8,j_pT_range);
@@ -646,9 +1086,9 @@ sprintf(name,"inc_sljet_pt_y_%i",i);
   h_2jetpt->Sumw2();
   //TH1D* h_jetY = new TH1D("jetY","jetY",24,-2.4,2.4);
   //h_jetY->Sumw2();
-  TH1D* h_1jetY  = new TH1D("jetY_1","1jetY",24,-2.4,2.4);
+  TH1D* h_1jetY  = new TH1D("jetY_1","1jetY",40,0,4.7);
   h_1jetY->Sumw2();
-  TH1D* h_2jetY  = new TH1D("jetY_2","2jetY",24,-2.4,2.4);
+  TH1D* h_2jetY  = new TH1D("jetY_2","2jetY",40,0,4.7);
   h_2jetY->Sumw2();
 
   //TH1D* h_Gjetpt  = new TH1D("Gjetpt","Gjetpt",nJetPt_Zinc1jet,jetPt_Zinc1jet);
@@ -659,9 +1099,9 @@ sprintf(name,"inc_sljet_pt_y_%i",i);
   h_2Gjetpt->Sumw2();
   //TH1D* h_GjetY = new TH1D("GjetY","GjetY",24,-2.4,2.4);
   //h_GjetY->Sumw2();
-  TH1D* h_1GjetY  = new TH1D("GjetY_1","G1jetY",24,-2.4,2.4);
+  TH1D* h_1GjetY  = new TH1D("GjetY_1","G1jetY",40,0,4.7);
   h_1GjetY->Sumw2();
-  TH1D* h_2GjetY  = new TH1D("GjetY_2","G2jetY",24,-2.4,2.4);
+  TH1D* h_2GjetY  = new TH1D("GjetY_2","G2jetY",40,0,4.7);
   h_2GjetY->Sumw2();
 
  TH1D* h_3Gjetpt  = new TH1D("Gjetpt_3","G3jetpt",nJetPt_Zinc2jet,jetPt_Zinc2jet);
@@ -687,8 +1127,8 @@ sprintf(name,"inc_sljet_pt_y_%i",i);
   //TH2* h_jetpt_Gen_VS_reco= new TH2D("jetpt_Gen_VS_reco","jetpt_Gen_VS_reco",nJetPt_Zinc1jet,jetPt_Zinc1jet,nJetPt_Zinc1jet,jetPt_Zinc1jet);
   //TH2* h_jetY_Gen_VS_reco= new TH2D("h_jetY_Gen_VS_reco","h_jetY_Gen_VS_reco",24,-2.4,2.4,24,-2.4,2.4);
   TH2* h_1jetpt_Gen_VS_reco= new TH2D("jet1pt_Gen_VS_reco","jet1pt_Gen_VS_reco",nJetPt_Zinc1jet,jetPt_Zinc1jet,nJetPt_Zinc1jet,jetPt_Zinc1jet);
-  TH2* h_1jetY_Gen_VS_reco = new TH2D("jet1Y_Gen_VS_reco","jet1Y_Gen_VS_reco",24,-2.4,2.4,24,-2.4,2.4);
+  TH2* h_1jetY_Gen_VS_reco = new TH2D("jet1Y_Gen_VS_reco","jet1Y_Gen_VS_reco",40,0,4.7,40,0,4.7);
   TH2* h_2jetpt_Gen_VS_reco= new TH2D("jet2pt_Gen_VS_reco","2jet2pt_Gen_VS_reco",nJetPt_Zinc2jet,jetPt_Zinc2jet,nJetPt_Zinc2jet,jetPt_Zinc2jet);
-  TH2* h_2jetY_Gen_VS_reco= new TH2D("jet2Y_Gen_VS_reco","jet2Y_Gen_VS_reco",24,-2.4,2.4,24,-2.4,2.4);
+  TH2* h_2jetY_Gen_VS_reco= new TH2D("jet2Y_Gen_VS_reco","jet2Y_Gen_VS_reco",40,0,4.7,40,0,4.7);
 
 
