@@ -716,17 +716,17 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	GjPx.push_back(genjet[k].px());
 	GjPy.push_back(genjet[k].py());
 	GjPz.push_back(genjet[k].pz());
-	double isChargedJet=false;
-	double chargedFraction = 0.;
-	std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
-	for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
-	  if ( (**thepart).charge()!=0 ){
-	    isChargedJet=true;
-	    chargedFraction += (**thepart).pt();
-	  }
-	}
-	if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
-	GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
+	//double isChargedJet=false;
+	//double chargedFraction = 0.;
+	//std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
+	//for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
+	//  if ( (**thepart).charge()!=0 ){
+	//    isChargedJet=true;
+	//    chargedFraction += (**thepart).pt();
+	//  }
+	//}
+	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
+	//GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
       }
     }
     
