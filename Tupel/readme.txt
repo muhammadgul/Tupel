@@ -1,3 +1,9 @@
+========================================!!!WARNING!!!=========================================
+THIS MASTER BRANCH IS AN OLD VERSION OF CODE FOR RUNI ANALYSIS. FOR RUN II PLEASE REFER TO
+https://github.com/UGent/Tupel/tree/Tupel_MiniAOD/Tupel
+https://github.com/UGent/Tupel/tree/Tupel_MiniAOD_TTbar/Tupel
+==============================================================================================
+
 Instructions for ntuple Producer
 
 setenv CVSROOT ":ext:<cern-user-account>@lxplus5.cern.ch:/afs/cern.ch/user/c/cvscmssw/public/CMSSW"
