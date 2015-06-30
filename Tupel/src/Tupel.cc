@@ -138,6 +138,9 @@ private:
   std::vector<double> St03M;
   std::vector<double> St03Id;
   std::vector<double> St03Status;
+  std::vector<double> St03MotherId;
+  std::vector<double> St03NumberMom;
+
   std::vector<double> St01PhotonPt;
   std::vector<double> St01PhotonEta;
   std::vector<double> St01PhotonPhi;
@@ -475,6 +478,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   St03M.clear();
   St03Id.clear();
   St03Status.clear();
+ St03MotherId.clear();
+St03NumberMom.clear();
+
   St01PhotonPt.clear();
   St01PhotonEta.clear();
   St01PhotonPhi.clear();
@@ -600,6 +606,10 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   patElecCharge_.clear();
   patElecMediumIDOff_.clear();
   patElecMediumIDOff_Tom_.clear();
+  patElecchIso03_.clear();
+  patElecnhIso03_.clear();
+  patElecphIso03_.clear();
+  patElecpuChIso03_.clear();
   patElecPfIso_.clear();
   patElecPfIsodb_.clear();
   patElecPfIsoRho_.clear();
@@ -742,6 +752,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	  St03M.push_back(genLep3.M());
 	  St03Id.push_back(id);
 	  St03Status.push_back(st);
+          St03MotherId.push_back(gen[i].mother()->pdgId());
+	  St03NumberMom.push_back(gen[i].numberOfMothers());
 	}
 	if (st==1){
 	  TLorentzVector genLep1(0,0,0,0);
@@ -1314,7 +1326,10 @@ Tupel::beginJob()
   myTree->Branch("St03M",&St03M);
   myTree->Branch("St03Id",&St03Id);
   myTree->Branch("St03Status",&St03Status);
-    
+   myTree->Branch("St03MotherId",&St03MotherId);
+    myTree->Branch("St03NumberMom",&St03NumberMom);    
+
+
   myTree->Branch("St01PhotonPt",&St01PhotonPt);
   myTree->Branch("St01PhotonEta",&St01PhotonEta);
   myTree->Branch("St01PhotonPhi",&St01PhotonPhi);
