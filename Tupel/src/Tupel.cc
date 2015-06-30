@@ -1,4 +1,4 @@
-/*
+/* -*- c-basic-offset: 2; -*-
 
 Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 
@@ -95,6 +95,9 @@ private:
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
   std::vector<edm::InputTag> metSources;
+
+  bool photonIdsListed_;
+  bool elecIdsListed_;
 
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
 
@@ -234,18 +237,23 @@ private:
   std::vector<double> patMuon_PF_IsoSumNeutralHadronEt_;
   std::vector<double> patMuon_PF_IsoDY_;
   std::vector<double> patMuon_Mu17_Mu8_Matched_;
-  std::vector<double> patMuon_Mu17_TkMu8_Matched_; 
+  std::vector<double> patMuon_Mu17_TkMu8_Matched_;
+  std::vector<bool>   patMuonIdLoose_;
+  std::vector<bool>   patMuonIdMedium_;
+  std::vector<unsigned> patMuonIdTight_;
 
-    std::vector<double> patElecdEtaIn_;
-    std::vector<double> patElecdPhiIn_;
-    std::vector<double> patElechOverE_;
-    std::vector<double> patElecsigmaIetaIeta_;
-    std::vector<double> patElecfull5x5_sigmaIetaIeta_;
-    std::vector<double> patElecooEmooP_;
-    std::vector<double> patElecd0_;
-    std::vector<double> patElecdz_;
-    std::vector<int>   patElecexpectedMissingInnerHits_;
-    std::vector<int>   patElecpassConversionVeto_;     
+  
+
+  std::vector<double> patElecdEtaIn_;
+  std::vector<double> patElecdPhiIn_;
+  std::vector<double> patElechOverE_;
+  std::vector<double> patElecsigmaIetaIeta_;
+  std::vector<double> patElecfull5x5_sigmaIetaIeta_;
+  std::vector<double> patElecooEmooP_;
+  std::vector<double> patElecd0_;
+  std::vector<double> patElecdz_;
+  std::vector<int>    patElecexpectedMissingInnerHits_;
+  std::vector<int>    patElecpassConversionVeto_;     
   std::vector<double> patElecTrig_;
   std::vector<double> patElecDz_;
   std::vector<double> patElecMVATrigId_;
@@ -258,14 +266,15 @@ private:
   std::vector<double> patElecCharge_;
   std::vector<double> patElecMediumIDOff_;
   std::vector<double> patElecMediumIDOff_Tom_;
-
-       std::vector<double>  patElecchIso03_;
-       std::vector<double>  patElecnhIso03_;
-       std::vector<double>  patElecphIso03_;
-       std::vector<double>  patElecpuChIso03_;
+  
+  std::vector<double> patElecchIso03_;
+  std::vector<double> patElecnhIso03_;
+  std::vector<double> patElecphIso03_;
+  std::vector<double> patElecpuChIso03_;
   std::vector<double> patElecPfIso_;
   std::vector<double> patElecPfIsodb_;
   std::vector<double> patElecPfIsoRho_;
+  std::vector<unsigned>  patElecId_;
   std::vector<double> charged_;
   std::vector<double> photon_;
   std::vector<double> neutral_;
@@ -273,12 +282,39 @@ private:
   std::vector<double> photon_Tom_;
   std::vector<double> neutral_Tom_;
   std::vector<double> patElec_mva_presel_;
+
+  //Photons
+  //photon momenta
+  std::vector<double> PhotonPt_;
+  std::vector<double> PhotonEta_;
+  std::vector<double> PhotonPhi_;
+  
+  //photon isolations
+  std::vector<double> PhotonIsoEcal_;
+  std::vector<double> PhotonIsoHcal_;
+  std::vector<double> PhotonPfIsoChargdH_;
+  std::vector<double> PhotonPfIsoNeutralH_;
+  std::vector<double> PhotonPfIsoPhoton_;
+  std::vector<double> PhotonPfIsoPuChargedH_;
+  std::vector<double> PhotonPfIsoEcalCluster_;
+  std::vector<double> PhotonPfIsoHcalCluster_;
+  
+  //photon cluster shapes
+  std::vector<double> PhotonE3x3_;
+  std::vector<double> PhotonSigmaIetaIeta_;
+
+  //photon id (bit field)
+  std::vector<unsigned> PhotonId_;
+  std::vector<double> PhotonHoE_;
+  std::vector<bool> PhotonHasPixelSeed_;
+  
   std::vector<double> id1_pdfInfo_;
   std::vector<double> id2_pdfInfo_;
   std::vector<double> x1_pdfInfo_;
   std::vector<double> x2_pdfInfo_;
   std::vector<double> scalePDF_pdfInfo_;
-  double ptHat_,mcWeight_; 
+  double ptHat_,mcWeight_;
+  std::vector<double> mcWeights_;
   double rhoPrime,AEff;
   //HLT
   double HLT_Mu17_Mu8,HLT_Mu17_TkMu8;
@@ -308,7 +344,9 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
 genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
- metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"))
+  metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
+  photonIdsListed_(false),
+  elecIdsListed_(false)
 
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
 
@@ -353,9 +391,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
  // edm::Handle<reco::GsfElectronCollection> els_h;
  // iEvent.getByLabel("gsfElectrons", els_h);			       
   edm::Handle<reco::ConversionCollection> conversions_h;
-  iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);
-  
-  
+  iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);  
   
   // get tau collection 
   edm::Handle<edm::View<pat::Tau> > taus;
@@ -371,8 +407,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   iEvent.getByLabel(metSrc_,mets);
   
   // get photon collection  
-  edm::Handle<edm::View<pat::Photon> > photons;
-  iEvent.getByLabel(photonSrc_,photons);
+  edm::Handle<edm::View<pat::Photon> > hPhotons;
+  iEvent.getByLabel(photonSrc_, hPhotons);
+  const edm::View<pat::Photon>  *photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
   
   edm::Handle<edm::View<reco::Vertex> >  pvHandle;
   iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
@@ -381,9 +418,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   edm ::Handle<reco::VertexCollection> vtx_h;
   iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h); 
   if(vtxx){
-  int nvtx=vtx_h->size();
-  if(nvtx==0) return;
-  reco::VertexRef primVtx(vtx_h,0);
+    int nvtx=vtx_h->size();
+    if(nvtx==0) return;
+    reco::VertexRef primVtx(vtx_h,0);
   }
   edm::Handle<double>  rho_;
   iEvent.getByLabel(mSrcRho_, rho_);
@@ -396,243 +433,275 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   edm::Handle<double> rho;
   iEvent.getByLabel(mSrcRho_,rho);
 
-    event=0;
-    realdata=0;
-    run=0;
-    lumi=0;
-    bxnumber=0;
-    EvtInfo_NumVtx=0;
-    PU_npT=0;
-    PU_npIT=0;
-    MyWeight=0;
-    nup=0;
-    rhoPrime=0;
-    AEff=0; 
-    METPt.clear();
-    METPx.clear();
-    METPy.clear();
-    METPz.clear();
-    METE.clear();
-    METsigx2.clear();
-    METsigxy.clear();
-    METsigy2.clear();
-    METsig.clear();   
-    Dr01LepPt.clear();
-    Dr01LepEta.clear();
-    Dr01LepPhi.clear();
-    Dr01LepE.clear();
-    Dr01LepM.clear();
-    Dr01LepId.clear();
-    Dr01LepStatus.clear();
-    Bare01LepPt.clear();
-    Bare01LepEta.clear();
-    Bare01LepPhi.clear();
-    Bare01LepE.clear();
-    Bare01LepM.clear();
-    Bare01LepId.clear();
-    Bare01LepStatus.clear();
-    St03Pt.clear();
-    St03Eta.clear();
-    St03Phi.clear();
-    St03E.clear();
-    St03M.clear();
-    St03Id.clear();
-    St03Status.clear();
-    St01PhotonPt.clear();
-    St01PhotonEta.clear();
-    St01PhotonPhi.clear();
-    St01PhotonE.clear();
-    St01PhotonM.clear();
-    St01PhotonId.clear();
-    St01PhotonMomId.clear();
-    St01PhotonNumberMom.clear();
-    St01PhotonStatus.clear();
-    GjPt.clear();
-    Gjeta.clear();
-    Gjphi.clear();
-    GjE.clear();
-    GjPx.clear();
-    GjPy.clear();
-    GjPz.clear();
-    GjChargedFraction.clear();
-    matchGjet.clear();
-    MGjPt.clear();
-    MGjeta.clear();
-    MGjphi.clear();
-    MGjE.clear();
-    caloJetPt_.clear();
-    caloJetRawPt_.clear();
-    caloJetEn_.clear();
-    caloJetEta_.clear();
-    caloJetPhi_.clear();
-    caloJetHadEHF_.clear();
-    caloJetEmEHF_.clear();
-    caloJetEmFrac_.clear();
-    caloJetn90_.clear();
-    patJetPfAk05En_.clear();
-    patJetPfAk05Pt_.clear();
-    patJetPfAk05Eta_.clear();
-    patJetPfAk05Phi_.clear();
-    //patJetPfAk05JesUncert_.clear();
-    patJetPfAk05LooseId_.clear();
-    patJetPfAk05Et_.clear();
-    patJetPfAk05RawPt_.clear();
-    patJetPfAk05RawEn_.clear();
-    patJetPfAk05HadEHF_.clear();
-    patJetPfAk05EmEHF_.clear();
-    //patJetPfAk05jetBSZ_.clear();
-    //patJetPfAk05jetBZ_.clear();
-    patJetPfAk05jetBetaClassic_.clear();
-    patJetPfAk05jetBeta_.clear();
-    patJetPfAk05jetBetaStar_.clear();
-    patJetPfAk05jetBetaStarClassic_.clear();
-    patJetPfAk05jetpuMVA_.clear();
-    patJetPfAk05chf_.clear();
-    patJetPfAk05nhf_.clear();
-    patJetPfAk05cemf_.clear();
-    patJetPfAk05nemf_.clear();
-    patJetPfAk05cmult_.clear();
-    patJetPfAk05nconst_.clear();
-    patJetPfAk05jetpukLoose_.clear();
-    patJetPfAk05jetpukMedium_.clear();
-    patJetPfAk05jetpukTight_.clear();
-    patJetPfAk05PtUp_.clear();
-    patJetPfAk05PtDn_.clear();
-    patJetPfAk05BDiscCSV_.clear();
-    patJetPfAk05BDiscCSVV1_.clear();
-    patJetPfAk05BDiscCSVSLV1_.clear();
-    unc_.clear();
-    ///Muons
-    patMuonPt_.clear();
-    patMuonEta_.clear();
-    patMuonPhi_.clear();
-    patMuonVtxZ_.clear();
-    patMuonEn_.clear();
-    patMuonCharge_.clear();
-    patMuonDxy_.clear();
-    patMuonCombId_.clear();
-    patMuonTrig_.clear();
-    patMuonDetIsoRho_.clear();
-    patMuonPfIsoDbeta_.clear();
-    patMuonM_.clear();
-    patMuonPx_.clear();
-    patMuonPy_.clear();
-    patMuonPz_.clear();
-    patMuonGlobalType_.clear();
-    patMuonTrackerType_.clear();
-    patMuonPFType_.clear();
-    patMuonIsoSumPt_.clear();
-    patMuonIsoRelative_.clear();
-    patMuonIsoCalComb_.clear();
-    patMuonIsoDY_.clear();
-    patMuonChi2Ndoff_.clear();
-    patMuonNhits_.clear();
-    patMuonNMatches_.clear();
-    patMuonDz_.clear();
-    patMuonPhits_.clear();
-    patMuonTkLayers_.clear();
-    patMuon_PF_IsoSumChargedHadronPt_.clear();
-    patMuon_PF_IsoSumNeutralHadronEt_.clear();
-    patMuon_PF_IsoDY_.clear();
-    patMuon_Mu17_Mu8_Matched_.clear();
-    patMuon_Mu17_TkMu8_Matched_.clear();
-    //electrons
-    patElecdEtaIn_.clear();
-    patElecdPhiIn_.clear();
-    patElechOverE_.clear();
-    patElecsigmaIetaIeta_.clear();
-    patElecfull5x5_sigmaIetaIeta_.clear();
-    patElecooEmooP_.clear();
-    patElecd0_.clear();
-    patElecdz_.clear();
-    patElecexpectedMissingInnerHits_.clear();
-    patElecpassConversionVeto_.clear();     
-    patElecTrig_.clear();
-    patElecDz_.clear();
-    patElecMVATrigId_.clear();
-    patElecMVANonTrigId_.clear();
-    patElecPt_.clear();
-    patElecEta_.clear();
-    patElecScEta_.clear();
-    patElecPhi_.clear();
-    patElecEnergy_.clear();
-    patElecCharge_.clear();
-    patElecMediumIDOff_.clear();
-    patElecMediumIDOff_Tom_.clear();
-    patElecPfIso_.clear();
-    patElecPfIsodb_.clear();
-    patElecPfIsoRho_.clear();
-    charged_.clear();
-    photon_.clear();  
-    neutral_.clear();
-    charged_Tom_.clear();
-    photon_Tom_.clear();
-    neutral_Tom_.clear();
-    patElec_mva_presel_.clear();
-    //HLT 
+  event=0;
+  realdata=0;
+  run=0;
+  lumi=0;
+  bxnumber=0;
+  EvtInfo_NumVtx=0;
+  PU_npT=0;
+  PU_npIT=0;
+  MyWeight=0;
+  nup=0;
+  rhoPrime=0;
+  AEff=0; 
+  METPt.clear();
+  METPx.clear();
+  METPy.clear();
+  METPz.clear();
+  METE.clear();
+  METsigx2.clear();
+  METsigxy.clear();
+  METsigy2.clear();
+  METsig.clear();   
+  Dr01LepPt.clear();
+  Dr01LepEta.clear();
+  Dr01LepPhi.clear();
+  Dr01LepE.clear();
+  Dr01LepM.clear();
+  Dr01LepId.clear();
+  Dr01LepStatus.clear();
+  Bare01LepPt.clear();
+  Bare01LepEta.clear();
+  Bare01LepPhi.clear();
+  Bare01LepE.clear();
+  Bare01LepM.clear();
+  Bare01LepId.clear();
+  Bare01LepStatus.clear();
+  St03Pt.clear();
+  St03Eta.clear();
+  St03Phi.clear();
+  St03E.clear();
+  St03M.clear();
+  St03Id.clear();
+  St03Status.clear();
+  St01PhotonPt.clear();
+  St01PhotonEta.clear();
+  St01PhotonPhi.clear();
+  St01PhotonE.clear();
+  St01PhotonM.clear();
+  St01PhotonId.clear();
+  St01PhotonMomId.clear();
+  St01PhotonNumberMom.clear();
+  St01PhotonStatus.clear();
+  GjPt.clear();
+  Gjeta.clear();
+  Gjphi.clear();
+  GjE.clear();
+  GjPx.clear();
+  GjPy.clear();
+  GjPz.clear();
+  GjChargedFraction.clear();
+  matchGjet.clear();
+  MGjPt.clear();
+  MGjeta.clear();
+  MGjphi.clear();
+  MGjE.clear();
+  caloJetPt_.clear();
+  caloJetRawPt_.clear();
+  caloJetEn_.clear();
+  caloJetEta_.clear();
+  caloJetPhi_.clear();
+  caloJetHadEHF_.clear();
+  caloJetEmEHF_.clear();
+  caloJetEmFrac_.clear();
+  caloJetn90_.clear();
+  patJetPfAk05En_.clear();
+  patJetPfAk05Pt_.clear();
+  patJetPfAk05Eta_.clear();
+  patJetPfAk05Phi_.clear();
+  //patJetPfAk05JesUncert_.clear();
+  patJetPfAk05LooseId_.clear();
+  patJetPfAk05Et_.clear();
+  patJetPfAk05RawPt_.clear();
+  patJetPfAk05RawEn_.clear();
+  patJetPfAk05HadEHF_.clear();
+  patJetPfAk05EmEHF_.clear();
+  //patJetPfAk05jetBSZ_.clear();
+  //patJetPfAk05jetBZ_.clear();
+  patJetPfAk05jetBetaClassic_.clear();
+  patJetPfAk05jetBeta_.clear();
+  patJetPfAk05jetBetaStar_.clear();
+  patJetPfAk05jetBetaStarClassic_.clear();
+  patJetPfAk05jetpuMVA_.clear();
+  patJetPfAk05chf_.clear();
+  patJetPfAk05nhf_.clear();
+  patJetPfAk05cemf_.clear();
+  patJetPfAk05nemf_.clear();
+  patJetPfAk05cmult_.clear();
+  patJetPfAk05nconst_.clear();
+  patJetPfAk05jetpukLoose_.clear();
+  patJetPfAk05jetpukMedium_.clear();
+  patJetPfAk05jetpukTight_.clear();
+  patJetPfAk05PtUp_.clear();
+  patJetPfAk05PtDn_.clear();
+  patJetPfAk05BDiscCSV_.clear();
+  patJetPfAk05BDiscCSVV1_.clear();
+  patJetPfAk05BDiscCSVSLV1_.clear();
+  unc_.clear();
+  ///Muons
+  patMuonPt_.clear();
+  patMuonEta_.clear();
+  patMuonPhi_.clear();
+  patMuonVtxZ_.clear();
+  patMuonEn_.clear();
+  patMuonCharge_.clear();
+  patMuonDxy_.clear();
+  patMuonCombId_.clear();
+  patMuonTrig_.clear();
+  patMuonDetIsoRho_.clear();
+  patMuonPfIsoDbeta_.clear();
+  patMuonM_.clear();
+  patMuonPx_.clear();
+  patMuonPy_.clear();
+  patMuonPz_.clear();
+  patMuonGlobalType_.clear();
+  patMuonTrackerType_.clear();
+  patMuonPFType_.clear();
+  patMuonIsoSumPt_.clear();
+  patMuonIsoRelative_.clear();
+  patMuonIsoCalComb_.clear();
+  patMuonIsoDY_.clear();
+  patMuonChi2Ndoff_.clear();
+  patMuonNhits_.clear();
+  patMuonNMatches_.clear();
+  patMuonDz_.clear();
+  patMuonPhits_.clear();
+  patMuonTkLayers_.clear();
+  patMuon_PF_IsoSumChargedHadronPt_.clear();
+  patMuon_PF_IsoSumNeutralHadronEt_.clear();
+  patMuon_PF_IsoDY_.clear();
+  patMuon_Mu17_Mu8_Matched_.clear();
+  patMuon_Mu17_TkMu8_Matched_.clear();
+  patMuonIdLoose_.clear();
+  patMuonIdMedium_.clear();
+  patMuonIdTight_.clear();
+  
+  //electrons
+  patElecdEtaIn_.clear();
+  patElecdPhiIn_.clear();
+  patElechOverE_.clear();
+  patElecsigmaIetaIeta_.clear();
+  patElecfull5x5_sigmaIetaIeta_.clear();
+  patElecooEmooP_.clear();
+  patElecd0_.clear();
+  patElecdz_.clear();
+  patElecexpectedMissingInnerHits_.clear();
+  patElecpassConversionVeto_.clear();     
+  patElecTrig_.clear();
+  patElecDz_.clear();
+  patElecMVATrigId_.clear();
+  patElecMVANonTrigId_.clear();
+  patElecPt_.clear();
+  patElecEta_.clear();
+  patElecScEta_.clear();
+  patElecPhi_.clear();
+  patElecEnergy_.clear();
+  patElecCharge_.clear();
+  patElecMediumIDOff_.clear();
+  patElecMediumIDOff_Tom_.clear();
+  patElecPfIso_.clear();
+  patElecPfIsodb_.clear();
+  patElecPfIsoRho_.clear();
+  patElecId_.clear();
+  charged_.clear();
+  photon_.clear();  
+  neutral_.clear();
+  charged_Tom_.clear();
+  photon_Tom_.clear();
+  neutral_Tom_.clear();
+  patElec_mva_presel_.clear();
+
+  //photon momenta
+  PhotonPt_.clear();
+  PhotonEta_.clear();
+  PhotonPhi_.clear();
+  
+  //photon isolations
+  PhotonIsoEcal_.clear();
+  PhotonIsoHcal_.clear();
+  PhotonPfIsoChargdH_.clear();
+  PhotonPfIsoNeutralH_.clear();
+  PhotonPfIsoPhoton_.clear();
+  PhotonPfIsoPuChargedH_.clear();
+  PhotonPfIsoEcalCluster_.clear();
+  PhotonPfIsoHcalCluster_.clear();
+  
+  //photon cluster shapes
+  PhotonE3x3_.clear();
+  PhotonSigmaIetaIeta_.clear();
+
+  //photon ids
+  PhotonId_.clear();
+  PhotonHoE_.clear();
+  PhotonHasPixelSeed_.clear();
+  
+  //HLT 
     
-    HLT_Mu17_Mu8=0;
-    HLT_Mu17_TkMu8=0;
-    HLT_Elec17_Elec8=0;
-    ////Add 08/23/13/////
-    id1_pdfInfo_.clear();
-    id2_pdfInfo_.clear();
-    x1_pdfInfo_.clear();
-    x2_pdfInfo_.clear();
-    scalePDF_pdfInfo_.clear();
-    ptHat_=0;
-    mcWeight_=0;
-    ///////////////////end clear vector////////////////////// 
-    event = iEvent.id().event();
-    run = iEvent.id().run();
-    lumi = iEvent.luminosityBlock();
-    bxnumber = iEvent.bunchCrossing();
-    realdata = iEvent.isRealData();
+  HLT_Mu17_Mu8=0;
+  HLT_Mu17_TkMu8=0;
+  HLT_Elec17_Elec8=0;
+  ////Add 08/23/13/////
+  id1_pdfInfo_.clear();
+  id2_pdfInfo_.clear();
+  x1_pdfInfo_.clear();
+  x2_pdfInfo_.clear();
+  scalePDF_pdfInfo_.clear();
+  ptHat_=0;
+  mcWeight_=0;
+  mcWeights_.clear();
+  ///////////////////end clear vector////////////////////// 
+  event = iEvent.id().event();
+  run = iEvent.id().run();
+  lumi = iEvent.luminosityBlock();
+  bxnumber = iEvent.bunchCrossing();
+  realdata = iEvent.isRealData();
     
 
-     for(unsigned int imet=0;imet<metSources.size();imet++){
-        Handle<View<pat::MET> > metH;
-        iEvent.getByLabel(metSources[imet], metH);
-        if(!metH.isValid())continue;
-        //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
+  ////////////////////MET////////////////////
+  for(unsigned int imet=0;imet<metSources.size();imet++){
+    Handle<View<pat::MET> > metH;
+    iEvent.getByLabel(metSources[imet], metH);
+    if(!metH.isValid())continue;
+    //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
-        METPt.push_back(metH->ptrAt(0)->pt()); 
-        METPx.push_back(metH->ptrAt(0)->px()); 
-        METPy.push_back(metH->ptrAt(0)->py()); 
-        METPz.push_back(metH->ptrAt(0)->pz()); 
-        METE.push_back(metH->ptrAt(0)->energy()); 
-        METsigx2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,0)); 
-        METsigxy.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,1)); 
-        METsigy2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(1,1)); 
-        METsig.push_back(metH->ptrAt(0)->significance()); 
-        //Output object in EDM format
-        //std::auto_ptr<llvvMet> metOut(new llvvMet());
-        //llvvMet& met = *metOut;
+    METPt.push_back(metH->ptrAt(0)->pt()); 
+    METPx.push_back(metH->ptrAt(0)->px()); 
+    METPy.push_back(metH->ptrAt(0)->py()); 
+    METPz.push_back(metH->ptrAt(0)->pz()); 
+    METE.push_back(metH->ptrAt(0)->energy()); 
+    METsigx2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,0)); 
+    METsigxy.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,1)); 
+    METsigy2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(1,1)); 
+    METsig.push_back(metH->ptrAt(0)->significance()); 
+    //Output object in EDM format
+    //std::auto_ptr<llvvMet> metOut(new llvvMet());
+    //llvvMet& met = *metOut;
 
-        //////////////////////////////////
+    //////////////////////////////////
 
-         // met.SetPxPyPzE(metH->ptrAt(0)->px(), metH->ptrAt(0)->py(), metH->ptrAt(0)->pz(), metH->ptrAt(0)->energy());
-          //met.sigx2 = metH->ptrAt(0)->getSignificanceMatrix()(0,0);
-          //met.sigxy = metH->ptrAt(0)->getSignificanceMatrix()(0,1);
-          //met.sigy2 = metH->ptrAt(0)->getSignificanceMatrix()(1,1);
-          //met.sig   = metH->ptrAt(0)->significance();
+    // met.SetPxPyPzE(metH->ptrAt(0)->px(), metH->ptrAt(0)->py(), metH->ptrAt(0)->pz(), metH->ptrAt(0)->energy());
+    //met.sigx2 = metH->ptrAt(0)->getSignificanceMatrix()(0,0);
+    //met.sigxy = metH->ptrAt(0)->getSignificanceMatrix()(0,1);
+    //met.sigy2 = metH->ptrAt(0)->getSignificanceMatrix()(1,1);
+    //met.sig   = metH->ptrAt(0)->significance();
 
-         //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
-       }
-
-
+    //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
+  }
 
 
-    EvtInfo_NumVtx = 0;
-    if(vtxx){
+
+
+  EvtInfo_NumVtx = 0;
+  if(vtxx){
     for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
       if (vtx->isValid() && !vtx->isFake()) ++EvtInfo_NumVtx ;
     }
-    }
-    if(!realdata){
-      Handle<std::vector< PileupSummaryInfo > >  PupInfo;
-      iEvent.getByLabel("addPileupInfo", PupInfo);
-      if(!PupInfo.failedToGet()){
+  }
+  if(!realdata){
+    Handle<std::vector< PileupSummaryInfo > >  PupInfo;
+    iEvent.getByLabel("addPileupInfo", PupInfo);
+    if(!PupInfo.failedToGet()){
       std::vector<PileupSummaryInfo>::const_iterator PVI;
       float npT=-1.;
       float npIT=-1.;
@@ -653,92 +722,92 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       PU_npT=-2.; 
       PU_npIT=-2.;
     }
-    }
-    if (!realdata && genParticles){     
-      const std::vector<reco::GenParticle> & gen = *genParticles_h;
-      for (size_t i=0; i<genParticles->size(); ++i){
-	TLorentzVector genR1DressLep1(0,0,0,0);
-	//      TLorentzVector genPho(0,0,0,0); 
-	int st = gen[i].status();
-	int id = gen[i].pdgId();
+  }
+  if (!realdata && genParticles){     
+    const std::vector<reco::GenParticle> & gen = *genParticles_h;
+    for (size_t i=0; i<genParticles->size(); ++i){
+      TLorentzVector genR1DressLep1(0,0,0,0);
+      //      TLorentzVector genPho(0,0,0,0); 
+      int st = gen[i].status();
+      int id = gen[i].pdgId();
       //  cout<<"STATUS ID "<<st<<" "<<id<<endl;
-	if(gen[i].numberOfMothers()){
-	  if (st==3){
-	    TLorentzVector genLep3(0,0,0,0);
-	    genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-	    St03Pt.push_back(genLep3.Pt());
-	    St03Eta.push_back(genLep3.Eta());
-	    St03Phi.push_back(genLep3.Phi());
-	    St03E.push_back(genLep3.Energy());
-	    St03M.push_back(genLep3.M());
-	    St03Id.push_back(id);
-	    St03Status.push_back(st);
-	  }
-	  if (st==1){
-	    TLorentzVector genLep1(0,0,0,0);
-	    genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-	    TLorentzVector genR1Pho1(0,0,0,0);
+      if(gen[i].numberOfMothers()){
+	if (st==3){
+	  TLorentzVector genLep3(0,0,0,0);
+	  genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+	  St03Pt.push_back(genLep3.Pt());
+	  St03Eta.push_back(genLep3.Eta());
+	  St03Phi.push_back(genLep3.Phi());
+	  St03E.push_back(genLep3.Energy());
+	  St03M.push_back(genLep3.M());
+	  St03Id.push_back(id);
+	  St03Status.push_back(st);
+	}
+	if (st==1){
+	  TLorentzVector genLep1(0,0,0,0);
+	  genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+	  TLorentzVector genR1Pho1(0,0,0,0);
 	   
-	    edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
-	    iEvent.getByLabel(genParticleSrc_, genpart2);
-	    const std::vector<reco::GenParticle> & gen2 = *genpart2;
-	    //LOOP over photons//
-	    if(abs(id)==11 || abs(id)==13){
-	      for(unsigned int j=0; j<genpart2->size(); ++j){
-	        if(gen2[j].numberOfMothers()){
-		  if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
-		  TLorentzVector thisPho1(0,0,0,0);
-		  thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
-		  double dR = genLep1.DeltaR(thisPho1);
-		  if(dR<0.1){
-		    genR1Pho1+=thisPho1;
+	  edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
+	  iEvent.getByLabel(genParticleSrc_, genpart2);
+	  const std::vector<reco::GenParticle> & gen2 = *genpart2;
+	  //LOOP over photons//
+	  if(abs(id)==11 || abs(id)==13){
+	    for(unsigned int j=0; j<genpart2->size(); ++j){
+	      if(gen2[j].numberOfMothers()){
+		if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
+		TLorentzVector thisPho1(0,0,0,0);
+		thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
+		double dR = genLep1.DeltaR(thisPho1);
+		if(dR<0.1){
+		  genR1Pho1+=thisPho1;
 
-		  }
+		}
 		
-		  if(dR<0.2){
-		    St01PhotonPt.push_back(thisPho1.Pt());
-		    St01PhotonEta.push_back(thisPho1.Eta());
-		    St01PhotonPhi.push_back(thisPho1.Phi());
-		    St01PhotonE.push_back(thisPho1.Energy());
-		    St01PhotonM.push_back(thisPho1.M());
-		    St01PhotonId.push_back(gen2[j].pdgId());
-		    St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
-		    St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
-		    St01PhotonStatus.push_back(gen2[j].status()); 
-		  }
-	        }
+		if(dR<0.2){
+		  St01PhotonPt.push_back(thisPho1.Pt());
+		  St01PhotonEta.push_back(thisPho1.Eta());
+		  St01PhotonPhi.push_back(thisPho1.Phi());
+		  St01PhotonE.push_back(thisPho1.Energy());
+		  St01PhotonM.push_back(thisPho1.M());
+		  St01PhotonId.push_back(gen2[j].pdgId());
+		  St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
+		  St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
+		  St01PhotonStatus.push_back(gen2[j].status()); 
+		}
 	      }
+	    }
 
-	      genR1DressLep1=genLep1+genR1Pho1;
-	      Dr01LepPt.push_back(genR1DressLep1.Pt());
-	      Dr01LepEta.push_back(genR1DressLep1.Eta());
-	      Dr01LepPhi.push_back(genR1DressLep1.Phi());
-	      Dr01LepE.push_back(genR1DressLep1.Energy());
-	      Dr01LepM.push_back(genR1DressLep1.M());
-	      Dr01LepId.push_back(id);
-	      Dr01LepStatus.push_back(st);
-            }	  
-            cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
-	    Bare01LepPt.push_back(genLep1.Pt());
-	    Bare01LepEta.push_back(genLep1.Eta());
-	    Bare01LepPhi.push_back(genLep1.Phi());
-	    Bare01LepE.push_back(genLep1.Energy());
-	    Bare01LepM.push_back(genLep1.M());
-	    Bare01LepId.push_back(id);
-	    Bare01LepStatus.push_back(st);
-	  }
+	    genR1DressLep1=genLep1+genR1Pho1;
+	    Dr01LepPt.push_back(genR1DressLep1.Pt());
+	    Dr01LepEta.push_back(genR1DressLep1.Eta());
+	    Dr01LepPhi.push_back(genR1DressLep1.Phi());
+	    Dr01LepE.push_back(genR1DressLep1.Energy());
+	    Dr01LepM.push_back(genR1DressLep1.M());
+	    Dr01LepId.push_back(id);
+	    Dr01LepStatus.push_back(st);
+	  }	  
+	  //	  cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
+	  Bare01LepPt.push_back(genLep1.Pt());
+	  Bare01LepEta.push_back(genLep1.Eta());
+	  Bare01LepPhi.push_back(genLep1.Phi());
+	  Bare01LepE.push_back(genLep1.Energy());
+	  Bare01LepM.push_back(genLep1.M());
+	  Bare01LepId.push_back(id);
+	  Bare01LepStatus.push_back(st);
 	}
       }
     }
-    if (!realdata){
-      //matrix element info
-      Handle<LHEEventProduct> lheH;
-      iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
-      if(lheH.isValid()) nup=lheH->hepeup().NUP;
-      edm::Handle<reco::GenJetCollection> genjetColl;
-      //iEvent.getByLabel("ak5GenJets", genjetColl);
-          iEvent.getByLabel(gjetSrc_, genjetColl);
-      if(!genjetColl.failedToGet()){
+  }
+  if (!realdata){
+    //matrix element info
+    Handle<LHEEventProduct> lheH;
+    iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
+    if(lheH.isValid()) nup=lheH->hepeup().NUP;
+    edm::Handle<reco::GenJetCollection> genjetColl;
+    //iEvent.getByLabel("ak5GenJets", genjetColl);
+    iEvent.getByLabel(gjetSrc_, genjetColl);
+    if(!genjetColl.failedToGet()){
       const reco::GenJetCollection & genjet = *genjetColl;
       for(unsigned int k=0; k<genjetColl->size(); ++k){
 	GjPt.push_back(genjet[k].pt());
@@ -753,87 +822,106 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	//std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
 	//for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
 	//  if ( (**thepart).charge()!=0 ){
-	    //isChargedJet=true;
+	//isChargedJet=true;
 	//    chargedFraction += (**thepart).pt();
 	//  }
 	//}
 	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
 	//GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
       }
-      }
     }
+  }
     
-    ////Add 08/27/13//////
-    if(!realdata){
-      edm::Handle<GenEventInfoProduct>   genEventInfoProd;
-      if (iEvent.getByLabel("generator",genEventInfoProd)) {
-	if (genEventInfoProd->hasBinningValues())
-	  ptHat_ = genEventInfoProd->binningValues()[0];
-	mcWeight_ = genEventInfoProd->weight();
+  ////Add 08/27/13//////
+  if(!realdata){
+    edm::Handle<GenEventInfoProduct>   genEventInfoProd;
+    if (iEvent.getByLabel("generator",genEventInfoProd)) {
+      if (genEventInfoProd->hasBinningValues()){
+	ptHat_ = genEventInfoProd->binningValues()[0];
       }
-      /// now get the PDF information
-      edm::Handle<GenEventInfoProduct> pdfInfoHandle;
-      if (iEvent.getByLabel("generator", pdfInfoHandle)) {
-	if (pdfInfoHandle->pdf()) {
-	  id1_pdfInfo_.push_back(pdfInfoHandle->pdf()->id.first);
-	  id2_pdfInfo_.push_back(pdfInfoHandle->pdf()->id.second);
-	  x1_pdfInfo_.push_back(pdfInfoHandle->pdf()->x.first);
-	  x2_pdfInfo_.push_back(pdfInfoHandle->pdf()->x.second);
-	  //pdfInfo_.push_back(pdfInfoHandle->pdf()->xPDF.first);
-	  //dfInfo_.push_back(pdfInfoHandle->pdf()->xPDF.second);
-	  scalePDF_pdfInfo_.push_back(pdfInfoHandle->pdf()->scalePDF);
-	}   
+      mcWeight_  = genEventInfoProd->weight();
+      mcWeights_ = genEventInfoProd->weights();
+    }
+    /// now get the PDF information
+    edm::Handle<GenEventInfoProduct> pdfInfoHandle;
+    if (iEvent.getByLabel("generator", pdfInfoHandle)) {
+      if (pdfInfoHandle->pdf()) {
+	id1_pdfInfo_.push_back(pdfInfoHandle->pdf()->id.first);
+	id2_pdfInfo_.push_back(pdfInfoHandle->pdf()->id.second);
+	x1_pdfInfo_.push_back(pdfInfoHandle->pdf()->x.first);
+	x2_pdfInfo_.push_back(pdfInfoHandle->pdf()->x.second);
+	//pdfInfo_.push_back(pdfInfoHandle->pdf()->xPDF.first);
+	//dfInfo_.push_back(pdfInfoHandle->pdf()->xPDF.second);
+	scalePDF_pdfInfo_.push_back(pdfInfoHandle->pdf()->scalePDF);
       }   
-    }
+    }   
+  }
     
-    int Mu17_Mu8=0;
-    int Mu17_TkMu8=0;
-    int Elec17_Elec8=0;
+  int Mu17_Mu8=0;
+  int Mu17_TkMu8=0;
+  int Elec17_Elec8=0;
     
-    HLT_Mu17_Mu8=0;
-    HLT_Mu17_TkMu8=0;
+  HLT_Mu17_Mu8=0;
+  HLT_Mu17_TkMu8=0;
     
-    int ntrigs;
-    vector<string> trigname;
-    vector<bool> trigaccept;
-    edm::Handle< edm::TriggerResults > HLTResHandle;
-    edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
-    iEvent.getByLabel(HLTTag, HLTResHandle);
-    if ( HLTResHandle.isValid() && !HLTResHandle.failedToGet() ) {
-      edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *HLTResHandle )) );
-      ntrigs = (int)trigNames->size();
-      for (int i = 0; i < ntrigs; i++) {
-	trigname.push_back(trigNames->triggerName(i));
-	trigaccept.push_back(HLTResHandle->accept(i));
-	if (trigaccept[i]){
-	  if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) Mu17_Mu8=1;
-	  if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) Mu17_TkMu8=1;
-	  if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) Elec17_Elec8=1;
-	}
+  int ntrigs;
+  vector<string> trigname;
+  vector<bool> trigaccept;
+  edm::Handle< edm::TriggerResults > HLTResHandle;
+  edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
+  iEvent.getByLabel(HLTTag, HLTResHandle);
+  if ( HLTResHandle.isValid() && !HLTResHandle.failedToGet() ) {
+    edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *HLTResHandle )) );
+    ntrigs = (int)trigNames->size();
+    for (int i = 0; i < ntrigs; i++) {
+      trigname.push_back(trigNames->triggerName(i));
+      trigaccept.push_back(HLTResHandle->accept(i));
+      if (trigaccept[i]){
+	if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) Mu17_Mu8=1;
+	if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) Mu17_TkMu8=1;
+	if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) Elec17_Elec8=1;
       }
     }
-    HLT_Mu17_Mu8=Mu17_Mu8;
-    HLT_Mu17_TkMu8=Mu17_TkMu8;
-    HLT_Elec17_Elec8=Elec17_Elec8;
+  }
+  HLT_Mu17_Mu8=Mu17_Mu8;
+  HLT_Mu17_TkMu8=Mu17_TkMu8;
+  HLT_Elec17_Elec8=Elec17_Elec8;
     
-    double MuFill=0;
-    double Mu17_Mu8_Matched=0;
-    double Mu17_TkMu8_Matched=0;
+  double MuFill=0;
+  double Mu17_Mu8_Matched=0;
+  double Mu17_TkMu8_Matched=0;
 
-    if(muon){
+  if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
       if(mu[j].isGlobalMuon()){ 
 	//const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
 	//if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
 	//  Mu17_Mu8_Matched=1;
-//	}
-//	const pat::TriggerObjectRef trigRef2( matchHelper.triggerMatchObject( muons,j,muonMatch2_, iEvent, *triggerEvent ) );
-//	if ( trigRef2.isAvailable() && trigRef2.isNonnull() ) {
-//	  Mu17_TkMu8_Matched=1;
-//	}
+	//	}
+	//	const pat::TriggerObjectRef trigRef2( matchHelper.triggerMatchObject( muons,j,muonMatch2_, iEvent, *triggerEvent ) );
+	//	if ( trigRef2.isAvailable() && trigRef2.isNonnull() ) {
+	//	  Mu17_TkMu8_Matched=1;
+	//	}
 	patMuon_Mu17_Mu8_Matched_.push_back(Mu17_Mu8_Matched);
 	patMuon_Mu17_TkMu8_Matched_.push_back(Mu17_TkMu8_Matched);
+
+	patMuonIdLoose_.push_back(mu[j].isLooseMuon());
+	//patMuonIdMedium_.push_back(mu[j].isMediumMuon()); Requires CMSSW >= 4_7_2
+	if(vtxx){
+	  unsigned bit = 0;
+	  unsigned muonTightIds = 0;
+	  for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
+	    if(vtx->isValid() && !vtx->isFake() && mu[j].isTightMuon(*vtx)){
+	      muonTightIds |= (1 <<bit);
+	    }
+	    ++bit;
+	    if(bit > 31) break;
+	  }
+	  patMuonIdTight_.push_back(muonTightIds);
+	}
+
+	
 	//MuFill=1;
 	patMuonPt_.push_back(mu[j].pt());
 	patMuonEta_.push_back(mu[j].eta());
@@ -913,72 +1001,88 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	MuFill++;
       }
     }
-    }
+  }
     
-    //electrons B.B.
+  //electrons B.B.
     
-    int ElecFill=0;
+  int ElecFill=0;
     
-    if(electron){
+  if(electron){
     auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
       pat::Electron & el = (*electronColl)[j];
 
-  double dEtaIn_;
-  double dPhiIn_;
-  double hOverE_;
-  double sigmaIetaIeta_;
-  double full5x5_sigmaIetaIeta_;
-  //double relIsoWithDBeta_;
-  double ooEmooP_;
-  double d0_;
-  double dz_;
-  int   expectedMissingInnerHits_;
-  int   passConversionVeto_;     
+      double dEtaIn_;
+      double dPhiIn_;
+      double hOverE_;
+      double sigmaIetaIeta_;
+      double full5x5_sigmaIetaIeta_;
+      //double relIsoWithDBeta_;
+      double ooEmooP_;
+      double d0_;
+      double dz_;
+      int   expectedMissingInnerHits_;
+      int   passConversionVeto_;     
+
+      std::vector<std::pair<std::string,float> > idlist = el.electronIDs();
+      if(!elecIdsListed_) {
+	std::cout << "Supported electron ids:\n"; 
+	for (unsigned k  = 0 ; k < idlist.size(); ++k){
+	  std::cout << idlist[k].first << ": " << idlist[k].second  << "\n";
+	}
+	std::cout << std::flush;
+	elecIdsListed_ = true;
+      }
+      unsigned elecid = 0;
+      
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= 1;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= 2;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-medium"))) elecid |= 4;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-tight"))) elecid |= 8;
+      patElecId_.push_back(elecid);
+      
+      dEtaIn_ = el.deltaEtaSuperClusterTrackAtVtx();
+      dPhiIn_ = el.deltaPhiSuperClusterTrackAtVtx();
+      hOverE_ = el.hcalOverEcal();
+      sigmaIetaIeta_ = el.sigmaIetaIeta();
+      full5x5_sigmaIetaIeta_ =  el.full5x5_sigmaIetaIeta();
+      if( el.ecalEnergy() == 0 ){
+	// printf("Electron energy is zero!\n");
+	ooEmooP_ = 1e30;
+      }else if( !std::isfinite(el.ecalEnergy())){
+	// printf("Electron energy is not finite!\n");
+	ooEmooP_ = 1e30;
+      }else{
+	ooEmooP_ = fabs(1.0/el.ecalEnergy() - el.eSuperClusterOverP()/el.ecalEnergy() );
+      }
+
+      d0_ = (-1) * el.gsfTrack()->dxy(vtx_h->at(0).position() );
+      dz_ = el.gsfTrack()->dz( vtx_h->at(0).position() );
 
 
-     dEtaIn_ = el.deltaEtaSuperClusterTrackAtVtx();
-     dPhiIn_ = el.deltaPhiSuperClusterTrackAtVtx();
-     hOverE_ = el.hcalOverEcal();
-     sigmaIetaIeta_ = el.sigmaIetaIeta();
-     full5x5_sigmaIetaIeta_ =  el.full5x5_sigmaIetaIeta();
-     if( el.ecalEnergy() == 0 ){
-      // printf("Electron energy is zero!\n");
-       ooEmooP_ = 1e30;
-     }else if( !std::isfinite(el.ecalEnergy())){
-      // printf("Electron energy is not finite!\n");
-       ooEmooP_ = 1e30;
-     }else{
-       ooEmooP_ = fabs(1.0/el.ecalEnergy() - el.eSuperClusterOverP()/el.ecalEnergy() );
-     }
 
-     d0_ = (-1) * el.gsfTrack()->dxy(vtx_h->at(0).position() );
-     dz_ = el.gsfTrack()->dz( vtx_h->at(0).position() );
+      //     expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();//MISSING!!
+      passConversionVeto_ = false;
+      if( beamSpotHandle.isValid() && conversions_h.isValid()) {
+	passConversionVeto_ = !ConversionTools::hasMatchedConversion(el,conversions_h,
+								     beamSpotHandle->position());
+      }else{
+	printf("\n\nERROR!!! conversions not found!!!\n");
+      }
 
 
+      //cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
 
-//     expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();//MISSING!!
-     passConversionVeto_ = false;
-     if( beamSpotHandle.isValid() && conversions_h.isValid()) {
-       passConversionVeto_ = !ConversionTools::hasMatchedConversion(el,conversions_h,
-								   beamSpotHandle->position());
-     }else{
-       printf("\n\nERROR!!! conversions not found!!!\n");
-     }
-
-
-     //cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
-
-     patElecdEtaIn_.push_back(dEtaIn_);
-     patElecdPhiIn_.push_back(dPhiIn_);
-     patElechOverE_.push_back(hOverE_);
-     patElecsigmaIetaIeta_.push_back(sigmaIetaIeta_);
-     patElecfull5x5_sigmaIetaIeta_.push_back(full5x5_sigmaIetaIeta_);
-     patElecooEmooP_.push_back(ooEmooP_);
-     patElecd0_.push_back(d0_);
-     patElecdz_.push_back(dz_);
-     patElecexpectedMissingInnerHits_.push_back(expectedMissingInnerHits_);
-     patElecpassConversionVeto_.push_back(passConversionVeto_);     
+      patElecdEtaIn_.push_back(dEtaIn_);
+      patElecdPhiIn_.push_back(dPhiIn_);
+      patElechOverE_.push_back(hOverE_);
+      patElecsigmaIetaIeta_.push_back(sigmaIetaIeta_);
+      patElecfull5x5_sigmaIetaIeta_.push_back(full5x5_sigmaIetaIeta_);
+      patElecooEmooP_.push_back(ooEmooP_);
+      patElecd0_.push_back(d0_);
+      patElecdz_.push_back(dz_);
+      patElecexpectedMissingInnerHits_.push_back(expectedMissingInnerHits_);
+      patElecpassConversionVeto_.push_back(passConversionVeto_);     
 
       double Elec17_Elec8_Matched=0;
       
@@ -1019,7 +1123,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	   el.dr03TkSumPt()/el.pt() < 0.2 &&
 	   el.dr03EcalRecHitSumEt()/el.pt() < 0.2 &&
 	   el.dr03HcalTowerSumEt()/el.pt() < 0.2 /*&&
-	   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
+						   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
 	  myTrigPresel = true;
       }
       else {
@@ -1028,24 +1132,24 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	   el.dr03TkSumPt()/el.pt() < 0.2 &&
 	   el.dr03EcalRecHitSumEt()/el.pt() < 0.2 &&
 	   el.dr03HcalTowerSumEt()/el.pt() < 0.2 /*&&
-	   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
+						   el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
 	  myTrigPresel = true;
-	  }
+      }
       
       patElec_mva_presel_.push_back(myTrigPresel);
       ElecFill++; 
     }
-    }
-    //double PFjetFill=0;
-    double chf = 0;
-    double nhf = 0;
-    double cemf = 0;
-    double nemf = 0;
-    double cmult = 0;
-    double nconst = 0;
+  }
+  //double PFjetFill=0;
+  double chf = 0;
+  double nhf = 0;
+  double cemf = 0;
+  double nemf = 0;
+  double cmult = 0;
+  double nconst = 0;
     
-    //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
-    if(jettt){
+  //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
+  if(jettt){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
       const pat::Jet & jet = jets->at(i);
       
@@ -1057,9 +1161,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       cmult = jet.chargedMultiplicity();
       nconst = jet.numberOfDaughters();
       
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
+      //  cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+      //  cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
+      //  cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
       patJetPfAk05BDiscCSV_.push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
       patJetPfAk05BDiscCSVV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
       patJetPfAk05BDiscCSVSLV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
@@ -1112,224 +1216,292 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	matchGjet.push_back(matchGen);
       }
     }
-    }//end jets
-    
-    myTree->Fill();
-    
+  }//end jets
+
+
+  //photons. Ph. G.
+  if(photons){
+    for (unsigned j = 0; j < photons->size(); ++j){
+      const pat::Photon& photon = (*photons)[j];
+      //photon momentum
+      PhotonPt_.push_back(photon.pt());
+      PhotonEta_.push_back(photon.eta());
+      PhotonPhi_.push_back(photon.phi());
+
+      //photon isolation
+      PhotonIsoEcal_.push_back(photon.ecalIso());
+      PhotonIsoHcal_.push_back(photon.hcalIso());
+      PhotonPfIsoChargdH_.push_back(photon.chargedHadronIso());
+      PhotonPfIsoNeutralH_.push_back(photon.neutralHadronIso());
+      PhotonPfIsoPhoton_.push_back(photon.photonIso());
+      PhotonPfIsoPuChargedH_.push_back(photon.puChargedHadronIso());
+      PhotonPfIsoEcalCluster_.push_back(photon.ecalPFClusterIso());
+      PhotonPfIsoHcalCluster_.push_back(photon.hcalPFClusterIso());
+      
+      //photon cluster shape
+      PhotonE3x3_.push_back(photon.e3x3());
+      PhotonSigmaIetaIeta_.push_back(photon.sigmaIetaIeta());
+
+      //photon ids:
+      std::vector<std::pair<std::string,Bool_t> > idlist = photon.photonIDs();
+      if(!photonIdsListed_) {
+	std::cout << "Supported photon ids:\n"; 
+	for (unsigned k  = 0 ; k < idlist.size(); ++k){
+	  std::cout << idlist[k].first << ": " << (idlist[k].second ? "yes" : "no") << "\n";
+	}
+	std::cout << std::flush;
+	photonIdsListed_ = true;
+      }
+
+      int photonId = 0;
+      if(photon.photonID(std::string("PhotonCutBasedIDLoose"))) photonId |= 1;
+      if(photon.photonID(std::string("PhotonCutBasedIDTight"))) photonId |= 4;
+      PhotonId_.push_back(photonId);
+      PhotonHoE_.push_back(photon.hadronicOverEm()); 
+      PhotonHasPixelSeed_.push_back(photon.hasPixelSeed());
+    }
+  }
+  myTree->Fill();
+  
 }
 
 void 
 Tupel::beginJob()
 {
   
-//  jecUnc = new JetCorrectionUncertainty("Fall12_V7_DATA_Uncertainty_AK5PFchs.txt");
-    // register to the TFileService
-    edm::Service<TFileService> fs;
-    TFileDirectory TestDir = fs->mkdir("test");
-    myTree = new TTree("MuonTree","MuonTree");
-    myTree->Branch("METPt",&METPt);
-    myTree->Branch("METPx",&METPx);
-    myTree->Branch("METPy",&METPy);
-    myTree->Branch("METPz",&METPz);
-    myTree->Branch("METE",&METE);
-    myTree->Branch("METsigx2",&METsigx2);
-    myTree->Branch("METsigxy",&METsigxy);
-    myTree->Branch("METsigy2",&METsigy2);
-    myTree->Branch("METsig",&METsig);
-    myTree->Branch("event",&event);
-    myTree->Branch("realdata",&realdata);
-    myTree->Branch("run",&run);
-    myTree->Branch("lumi",&lumi);
-    myTree->Branch("bxnumber",&bxnumber);
-    myTree->Branch("EvtInfo_NumVtx",&EvtInfo_NumVtx);
-    myTree->Branch("PU_npT",&PU_npT);
-    myTree->Branch("PU_npIT",&PU_npIT);
-    myTree->Branch("MyWeight",&MyWeight);
-    myTree->Branch("Dr01LepPt",&Dr01LepPt);
-    myTree->Branch("Dr01LepEta",&Dr01LepEta);
-    myTree->Branch("Dr01LepPhi",&Dr01LepPhi);
-    myTree->Branch("Dr01LepE",&Dr01LepE);
-    myTree->Branch("Dr01LepM",&Dr01LepM);
-    myTree->Branch("Dr01LepId",&Dr01LepId);
-    myTree->Branch("Dr01LepStatus",&Dr01LepStatus);
-    myTree->Branch("Bare01LepPt",&Bare01LepPt);
-    myTree->Branch("Bare01LepEta",&Bare01LepEta);
-    myTree->Branch("Bare01LepPhi",&Bare01LepPhi);
-    myTree->Branch("Bare01LepE",&Bare01LepE);
-    myTree->Branch("Bare01LepM",&Bare01LepM);
-    myTree->Branch("Bare01LepId",&Bare01LepId);
-    myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
+  //  jecUnc = new JetCorrectionUncertainty("Fall12_V7_DATA_Uncertainty_AK5PFchs.txt");
+  // register to the TFileService
+  edm::Service<TFileService> fs;
+  TFileDirectory TestDir = fs->mkdir("test");
+  myTree = new TTree("MuonTree","MuonTree");
+  myTree->Branch("METPt",&METPt);
+  myTree->Branch("METPx",&METPx);
+  myTree->Branch("METPy",&METPy);
+  myTree->Branch("METPz",&METPz);
+  myTree->Branch("METE",&METE);
+  myTree->Branch("METsigx2",&METsigx2);
+  myTree->Branch("METsigxy",&METsigxy);
+  myTree->Branch("METsigy2",&METsigy2);
+  myTree->Branch("METsig",&METsig);
+  myTree->Branch("event",&event);
+  myTree->Branch("realdata",&realdata);
+  myTree->Branch("run",&run);
+  myTree->Branch("lumi",&lumi);
+  myTree->Branch("bxnumber",&bxnumber);
+  myTree->Branch("EvtInfo_NumVtx",&EvtInfo_NumVtx);
+  myTree->Branch("PU_npT",&PU_npT);
+  myTree->Branch("PU_npIT",&PU_npIT);
+  myTree->Branch("MyWeight",&MyWeight);
+  myTree->Branch("Dr01LepPt",&Dr01LepPt);
+  myTree->Branch("Dr01LepEta",&Dr01LepEta);
+  myTree->Branch("Dr01LepPhi",&Dr01LepPhi);
+  myTree->Branch("Dr01LepE",&Dr01LepE);
+  myTree->Branch("Dr01LepM",&Dr01LepM);
+  myTree->Branch("Dr01LepId",&Dr01LepId);
+  myTree->Branch("Dr01LepStatus",&Dr01LepStatus);
+  myTree->Branch("Bare01LepPt",&Bare01LepPt);
+  myTree->Branch("Bare01LepEta",&Bare01LepEta);
+  myTree->Branch("Bare01LepPhi",&Bare01LepPhi);
+  myTree->Branch("Bare01LepE",&Bare01LepE);
+  myTree->Branch("Bare01LepM",&Bare01LepM);
+  myTree->Branch("Bare01LepId",&Bare01LepId);
+  myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
     
-    myTree->Branch("St03Pt",&St03Pt);
-    myTree->Branch("St03Eta",&St03Eta);
-    myTree->Branch("St03Phi",&St03Phi);
-    myTree->Branch("St03E",&St03E);
-    myTree->Branch("St03M",&St03M);
-    myTree->Branch("St03Id",&St03Id);
-    myTree->Branch("St03Status",&St03Status);
+  myTree->Branch("St03Pt",&St03Pt);
+  myTree->Branch("St03Eta",&St03Eta);
+  myTree->Branch("St03Phi",&St03Phi);
+  myTree->Branch("St03E",&St03E);
+  myTree->Branch("St03M",&St03M);
+  myTree->Branch("St03Id",&St03Id);
+  myTree->Branch("St03Status",&St03Status);
     
-    myTree->Branch("St01PhotonPt",&St01PhotonPt);
-    myTree->Branch("St01PhotonEta",&St01PhotonEta);
-    myTree->Branch("St01PhotonPhi",&St01PhotonPhi);
-    myTree->Branch("St01PhotonE",&St01PhotonE);
-    myTree->Branch("St01PhotonM",&St01PhotonM);
-    myTree->Branch("St01PhotonId",&St01PhotonId);
-    myTree->Branch("St01PhotonMomId",&St01PhotonMomId);
-    myTree->Branch("St01PhotonNumberMom",&St01PhotonNumberMom);
-    myTree->Branch("St01PhotonStatus",&St01PhotonStatus);
+  myTree->Branch("St01PhotonPt",&St01PhotonPt);
+  myTree->Branch("St01PhotonEta",&St01PhotonEta);
+  myTree->Branch("St01PhotonPhi",&St01PhotonPhi);
+  myTree->Branch("St01PhotonE",&St01PhotonE);
+  myTree->Branch("St01PhotonM",&St01PhotonM);
+  myTree->Branch("St01PhotonId",&St01PhotonId);
+  myTree->Branch("St01PhotonMomId",&St01PhotonMomId);
+  myTree->Branch("St01PhotonNumberMom",&St01PhotonNumberMom);
+  myTree->Branch("St01PhotonStatus",&St01PhotonStatus);
     
-    myTree->Branch("GjPt",&GjPt);
-    myTree->Branch("Gjeta",&Gjeta);
-    myTree->Branch("Gjphi",&Gjphi);
-    myTree->Branch("GjE",&GjE);
-    myTree->Branch("GjPx",&GjPx);
-    myTree->Branch("GjPy",&GjPy);
-    myTree->Branch("GjPz",&GjPz);
-    myTree->Branch("GjChargedFraction",&GjChargedFraction);
-    myTree->Branch("matchGjet",&matchGjet);
-    myTree->Branch("MGjPt",&MGjPt);
-    myTree->Branch("MGjeta",&MGjeta);
-    myTree->Branch("MGjphi",&MGjphi);
-    myTree->Branch("MGjE",&MGjE); 
+  myTree->Branch("GjPt",&GjPt);
+  myTree->Branch("Gjeta",&Gjeta);
+  myTree->Branch("Gjphi",&Gjphi);
+  myTree->Branch("GjE",&GjE);
+  myTree->Branch("GjPx",&GjPx);
+  myTree->Branch("GjPy",&GjPy);
+  myTree->Branch("GjPz",&GjPz);
+  myTree->Branch("GjChargedFraction",&GjChargedFraction);
+  myTree->Branch("matchGjet",&matchGjet);
+  myTree->Branch("MGjPt",&MGjPt);
+  myTree->Branch("MGjeta",&MGjeta);
+  myTree->Branch("MGjphi",&MGjphi);
+  myTree->Branch("MGjE",&MGjE); 
     
-    //HLT
-    myTree->Branch("HLT_Mu17_Mu8",&HLT_Mu17_Mu8);
-    myTree->Branch("HLT_Mu17_TkMu8",&HLT_Mu17_TkMu8);
-    myTree->Branch("HLT_Elec17_Elec8",&HLT_Elec17_Elec8);
+  //HLT
+  myTree->Branch("HLT_Mu17_Mu8",&HLT_Mu17_Mu8);
+  myTree->Branch("HLT_Mu17_TkMu8",&HLT_Mu17_TkMu8);
+  myTree->Branch("HLT_Elec17_Elec8",&HLT_Elec17_Elec8);
     
-    //Muons
-    myTree->Branch("patMuonPt_",&patMuonPt_);
-    myTree->Branch("patMuonEta_",&patMuonEta_);
-    myTree->Branch("patMuonPhi_",&patMuonPhi_);
-    myTree->Branch("patMuonVtxZ_",&patMuonVtxZ_);
-    myTree->Branch("patMuonEn_",&patMuonEn_);
-    myTree->Branch("patMuonCharge_",&patMuonCharge_);
-    myTree->Branch("patMuonDxy_",&patMuonDxy_);
-    myTree->Branch("patMuonCombId_",&patMuonCombId_);
-    myTree->Branch("patMuonTrig_",&patMuonTrig_);
-    myTree->Branch("patMuonDetIsoRho_",&patMuonDetIsoRho_);
-    myTree->Branch("patMuonPfIsoDbeta_",&patMuonPfIsoDbeta_);
-    myTree->Branch("patMuonM_",&patMuonM_);
-    myTree->Branch("patMuonPx_",&patMuonPx_);
-    myTree->Branch("patMuonPy_",&patMuonPy_);
-    myTree->Branch("patMuonPz_",&patMuonPz_);
-    myTree->Branch("patMuonGlobalType_",&patMuonGlobalType_);
-    myTree->Branch("patMuonTrackerType_",&patMuonTrackerType_);
-    myTree->Branch("patMuonPFType_",&patMuonPFType_);
-    myTree->Branch("patMuonIsoSumPt_",&patMuonIsoSumPt_);
-    myTree->Branch("patMuonIsoRelative_",&patMuonIsoRelative_);
-    myTree->Branch("patMuonIsoCalComb_",&patMuonIsoCalComb_);
-    myTree->Branch("patMuonIsoDY_",&patMuonIsoDY_);
-    myTree->Branch("patMuonChi2Ndoff_",&patMuonChi2Ndoff_);
-    myTree->Branch("patMuonNhits_",&patMuonNhits_);
-    myTree->Branch("patMuonNMatches_",&patMuonNMatches_);
-    myTree->Branch("patMuonDz_",&patMuonDz_);
-    myTree->Branch("patMuonPhits_",&patMuonPhits_);
-    myTree->Branch("patMuonTkLayers_",&patMuonTkLayers_);
-    myTree->Branch("patMuon_PF_IsoSumChargedHadronPt_",&patMuon_PF_IsoSumChargedHadronPt_);
-    myTree->Branch("patMuon_PF_IsoSumNeutralHadronEt_",&patMuon_PF_IsoSumNeutralHadronEt_);
-    myTree->Branch("patMuon_PF_IsoDY_",&patMuon_PF_IsoDY_);
-    myTree->Branch("patMuon_Mu17_Mu8_Matched_",&patMuon_Mu17_Mu8_Matched_);
-    myTree->Branch("patMuon_Mu17_TkMu8_Matched_",&patMuon_Mu17_TkMu8_Matched_);
+  //Muons
+  myTree->Branch("patMuonPt_",&patMuonPt_);
+  myTree->Branch("patMuonEta_",&patMuonEta_);
+  myTree->Branch("patMuonPhi_",&patMuonPhi_);
+  myTree->Branch("patMuonVtxZ_",&patMuonVtxZ_);
+  myTree->Branch("patMuonEn_",&patMuonEn_);
+  myTree->Branch("patMuonCharge_",&patMuonCharge_);
+  myTree->Branch("patMuonDxy_",&patMuonDxy_);
+  myTree->Branch("patMuonCombId_",&patMuonCombId_);
+  myTree->Branch("patMuonTrig_",&patMuonTrig_);
+  myTree->Branch("patMuonDetIsoRho_",&patMuonDetIsoRho_);
+  myTree->Branch("patMuonPfIsoDbeta_",&patMuonPfIsoDbeta_);
+  myTree->Branch("patMuonM_",&patMuonM_);
+  myTree->Branch("patMuonPx_",&patMuonPx_);
+  myTree->Branch("patMuonPy_",&patMuonPy_);
+  myTree->Branch("patMuonPz_",&patMuonPz_);
+  myTree->Branch("patMuonGlobalType_",&patMuonGlobalType_);
+  myTree->Branch("patMuonTrackerType_",&patMuonTrackerType_);
+  myTree->Branch("patMuonPFType_",&patMuonPFType_);
+  myTree->Branch("patMuonIsoSumPt_",&patMuonIsoSumPt_);
+  myTree->Branch("patMuonIsoRelative_",&patMuonIsoRelative_);
+  myTree->Branch("patMuonIsoCalComb_",&patMuonIsoCalComb_);
+  myTree->Branch("patMuonIsoDY_",&patMuonIsoDY_);
+  myTree->Branch("patMuonChi2Ndoff_",&patMuonChi2Ndoff_);
+  myTree->Branch("patMuonNhits_",&patMuonNhits_);
+  myTree->Branch("patMuonNMatches_",&patMuonNMatches_);
+  myTree->Branch("patMuonDz_",&patMuonDz_);
+  myTree->Branch("patMuonPhits_",&patMuonPhits_);
+  myTree->Branch("patMuonTkLayers_",&patMuonTkLayers_);
+  myTree->Branch("patMuon_PF_IsoSumChargedHadronPt_",&patMuon_PF_IsoSumChargedHadronPt_);
+  myTree->Branch("patMuon_PF_IsoSumNeutralHadronEt_",&patMuon_PF_IsoSumNeutralHadronEt_);
+  myTree->Branch("patMuon_PF_IsoDY_",&patMuon_PF_IsoDY_);
+  myTree->Branch("patMuon_Mu17_Mu8_Matched_",&patMuon_Mu17_Mu8_Matched_);
+  myTree->Branch("patMuon_Mu17_TkMu8_Matched_",&patMuon_Mu17_TkMu8_Matched_);
 
 
-    myTree->Branch("patElecdEtaIn_",&patElecdEtaIn_);
-    myTree->Branch("patElecdPhiIn_",&patElecdPhiIn_);
-    myTree->Branch("patElechOverE_",&patElechOverE_);
-    myTree->Branch("patElecsigmaIetaIeta_",&patElecsigmaIetaIeta_);
-    myTree->Branch("patElecfull5x5_sigmaIetaIeta_",&patElecfull5x5_sigmaIetaIeta_);
-    myTree->Branch("patElecooEmooP_",&patElecooEmooP_);
-    myTree->Branch("patElecd0_",&patElecd0_);
-    myTree->Branch("patElecdz_",&patElecdz_);
-    myTree->Branch("patElecexpectedMissingInnerHits_",&patElecexpectedMissingInnerHits_);
-    myTree->Branch("patElecpassConversionVeto_",&patElecpassConversionVeto_);     
-    myTree->Branch("patElecTrig_",&patElecTrig_);
-    myTree->Branch("patElecDz_",&patElecDz_);
-    myTree->Branch("patElecMVATrigId_",&patElecMVATrigId_);
-    myTree->Branch("patElecMVANonTrigId_",&patElecMVANonTrigId_);
-    myTree->Branch("patElecPt_",&patElecPt_);
-    myTree->Branch("patElecEta_",&patElecEta_);
-    myTree->Branch("patElecScEta_",&patElecScEta_);
-    myTree->Branch("patElecPhi_",&patElecPhi_);
-    myTree->Branch("patElecEnergy_",&patElecEnergy_);
-    myTree->Branch("patElecCharge_",&patElecCharge_);
-    myTree->Branch("patElecMediumIDOff_",&patElecMediumIDOff_);
-    myTree->Branch("patElecMediumIDOff_Tom_",&patElecMediumIDOff_Tom_);
+  myTree->Branch("patElecdEtaIn_",&patElecdEtaIn_);
+  myTree->Branch("patElecdPhiIn_",&patElecdPhiIn_);
+  myTree->Branch("patElechOverE_",&patElechOverE_);
+  myTree->Branch("patElecsigmaIetaIeta_",&patElecsigmaIetaIeta_);
+  myTree->Branch("patElecfull5x5_sigmaIetaIeta_",&patElecfull5x5_sigmaIetaIeta_);
+  myTree->Branch("patElecooEmooP_",&patElecooEmooP_);
+  myTree->Branch("patElecd0_",&patElecd0_);
+  myTree->Branch("patElecdz_",&patElecdz_);
+  myTree->Branch("patElecexpectedMissingInnerHits_",&patElecexpectedMissingInnerHits_);
+  myTree->Branch("patElecpassConversionVeto_",&patElecpassConversionVeto_);     
+  myTree->Branch("patElecTrig_",&patElecTrig_);
+  myTree->Branch("patElecDz_",&patElecDz_);
+  myTree->Branch("patElecMVATrigId_",&patElecMVATrigId_);
+  myTree->Branch("patElecMVANonTrigId_",&patElecMVANonTrigId_);
+  myTree->Branch("patElecPt_",&patElecPt_);
+  myTree->Branch("patElecEta_",&patElecEta_);
+  myTree->Branch("patElecScEta_",&patElecScEta_);
+  myTree->Branch("patElecPhi_",&patElecPhi_);
+  myTree->Branch("patElecEnergy_",&patElecEnergy_);
+  myTree->Branch("patElecCharge_",&patElecCharge_);
+  myTree->Branch("patElecMediumIDOff_",&patElecMediumIDOff_);
+  myTree->Branch("patElecMediumIDOff_Tom_",&patElecMediumIDOff_Tom_);
 
-    myTree->Branch("patElecchIso03_",&patElecchIso03_);
-    myTree->Branch("patElecnhIso03_",&patElecnhIso03_);
-    myTree->Branch("patElecphIso03_",&patElecphIso03_);
-    myTree->Branch("patElecpuChIso03_",&patElecpuChIso03_);
-    myTree->Branch("patElecPfIso_",&patElecPfIso_);
-    myTree->Branch("patElecPfIsodb_",&patElecPfIsodb_);
-    myTree->Branch("patElecPfIsoRho_",&patElecPfIsoRho_);
-    myTree->Branch("rhoPrime",&rhoPrime);
-    myTree->Branch("neutral_",&neutral_);
-    myTree->Branch("photon_",&photon_);
-    myTree->Branch("charged_",&charged_);
-    myTree->Branch("neutral_Tom_",&neutral_Tom_);
-    myTree->Branch("photon_Tom_",&photon_Tom_);
-    myTree->Branch("charged_Tom_",&charged_Tom_);
-    myTree->Branch("AEff",&AEff);
-    myTree->Branch("patElec_mva_presel_",&patElec_mva_presel_);
+  myTree->Branch("patElecchIso03_",&patElecchIso03_);
+  myTree->Branch("patElecnhIso03_",&patElecnhIso03_);
+  myTree->Branch("patElecphIso03_",&patElecphIso03_);
+  myTree->Branch("patElecpuChIso03_",&patElecpuChIso03_);
+  myTree->Branch("patElecPfIso_",&patElecPfIso_);
+  myTree->Branch("patElecPfIsodb_",&patElecPfIsodb_);
+  myTree->Branch("patElecPfIsoRho_",&patElecPfIsoRho_);
+  myTree->Branch("rhoPrime",&rhoPrime);
+  myTree->Branch("neutral_",&neutral_);
+  myTree->Branch("photon_",&photon_);
+  myTree->Branch("charged_",&charged_);
+  myTree->Branch("neutral_Tom_",&neutral_Tom_);
+  myTree->Branch("photon_Tom_",&photon_Tom_);
+  myTree->Branch("charged_Tom_",&charged_Tom_);
+  myTree->Branch("AEff",&AEff);
+  myTree->Branch("patElec_mva_presel_",&patElec_mva_presel_);
     
-    //PFJet
-    myTree->Branch("patJetPfAk05En_",&patJetPfAk05En_);
-    myTree->Branch("patJetPfAk05Pt_",&patJetPfAk05Pt_);
-    myTree->Branch("patJetPfAk05Eta_",&patJetPfAk05Eta_);
-    myTree->Branch("patJetPfAk05Phi_",&patJetPfAk05Phi_);
-    myTree->Branch("patJetPfAk05LooseId_",&patJetPfAk05LooseId_);
-    myTree->Branch("patJetPfAk05Et_",&patJetPfAk05Et_);
-    myTree->Branch("patJetPfAk05RawPt_",&patJetPfAk05RawPt_);
-    myTree->Branch("patJetPfAk05RawEn_",&patJetPfAk05RawEn_);
-    myTree->Branch("patJetPfAk05HadEHF_",&patJetPfAk05HadEHF_);
-    myTree->Branch("patJetPfAk05EmEHF_",&patJetPfAk05EmEHF_);
-    myTree->Branch("patJetPfAk05chf_",&patJetPfAk05chf_);
-    myTree->Branch("patJetPfAk05nhf_",&patJetPfAk05nhf_);
-    myTree->Branch("patJetPfAk05cemf_",&patJetPfAk05cemf_);
-    myTree->Branch("patJetPfAk05nemf_",&patJetPfAk05nemf_);
-    myTree->Branch("patJetPfAk05cmult_",&patJetPfAk05cmult_);
-    myTree->Branch("patJetPfAk05nconst_",&patJetPfAk05nconst_);
-    myTree->Branch("patJetPfAk05jetBeta_",&patJetPfAk05jetBeta_);
-    myTree->Branch("patJetPfAk05jetBetaClassic_",&patJetPfAk05jetBetaClassic_);
-    myTree->Branch("patJetPfAk05jetBetaStar_",&patJetPfAk05jetBetaStar_);
-    myTree->Branch("patJetPfAk05jetBetaStarClassic_",&patJetPfAk05jetBetaStarClassic_);
-    myTree->Branch("patJetPfAk05jetpuMVA_",&patJetPfAk05jetpuMVA_);
-    myTree->Branch("patJetPfAk05jetpukLoose_",&patJetPfAk05jetpukLoose_);
-    myTree->Branch("patJetPfAk05jetpukMedium_",&patJetPfAk05jetpukMedium_);
-    myTree->Branch("patJetPfAk05jetpukTight_",&patJetPfAk05jetpukTight_);
-    myTree->Branch("patJetPfAk05BDiscCSV_",&patJetPfAk05BDiscCSV_);
-    myTree->Branch("patJetPfAk05BDiscCSVV1_",&patJetPfAk05BDiscCSVV1_);
-    myTree->Branch("patJetPfAk05BDiscCSVSLV1_",&patJetPfAk05BDiscCSVSLV1_);
-    myTree->Branch("unc_",&unc_);
-    myTree->Branch("patJetPfAk05PtUp_",&patJetPfAk05PtUp_);
-    myTree->Branch("patJetPfAk05PtDn_",&patJetPfAk05PtDn_); 
+  //PFJet
+  myTree->Branch("patJetPfAk05En_",&patJetPfAk05En_);
+  myTree->Branch("patJetPfAk05Pt_",&patJetPfAk05Pt_);
+  myTree->Branch("patJetPfAk05Eta_",&patJetPfAk05Eta_);
+  myTree->Branch("patJetPfAk05Phi_",&patJetPfAk05Phi_);
+  myTree->Branch("patJetPfAk05LooseId_",&patJetPfAk05LooseId_);
+  myTree->Branch("patJetPfAk05Et_",&patJetPfAk05Et_);
+  myTree->Branch("patJetPfAk05RawPt_",&patJetPfAk05RawPt_);
+  myTree->Branch("patJetPfAk05RawEn_",&patJetPfAk05RawEn_);
+  myTree->Branch("patJetPfAk05HadEHF_",&patJetPfAk05HadEHF_);
+  myTree->Branch("patJetPfAk05EmEHF_",&patJetPfAk05EmEHF_);
+  myTree->Branch("patJetPfAk05chf_",&patJetPfAk05chf_);
+  myTree->Branch("patJetPfAk05nhf_",&patJetPfAk05nhf_);
+  myTree->Branch("patJetPfAk05cemf_",&patJetPfAk05cemf_);
+  myTree->Branch("patJetPfAk05nemf_",&patJetPfAk05nemf_);
+  myTree->Branch("patJetPfAk05cmult_",&patJetPfAk05cmult_);
+  myTree->Branch("patJetPfAk05nconst_",&patJetPfAk05nconst_);
+  myTree->Branch("patJetPfAk05jetBeta_",&patJetPfAk05jetBeta_);
+  myTree->Branch("patJetPfAk05jetBetaClassic_",&patJetPfAk05jetBetaClassic_);
+  myTree->Branch("patJetPfAk05jetBetaStar_",&patJetPfAk05jetBetaStar_);
+  myTree->Branch("patJetPfAk05jetBetaStarClassic_",&patJetPfAk05jetBetaStarClassic_);
+  myTree->Branch("patJetPfAk05jetpuMVA_",&patJetPfAk05jetpuMVA_);
+  myTree->Branch("patJetPfAk05jetpukLoose_",&patJetPfAk05jetpukLoose_);
+  myTree->Branch("patJetPfAk05jetpukMedium_",&patJetPfAk05jetpukMedium_);
+  myTree->Branch("patJetPfAk05jetpukTight_",&patJetPfAk05jetpukTight_);
+  myTree->Branch("patJetPfAk05BDiscCSV_",&patJetPfAk05BDiscCSV_);
+  myTree->Branch("patJetPfAk05BDiscCSVV1_",&patJetPfAk05BDiscCSVV1_);
+  myTree->Branch("patJetPfAk05BDiscCSVSLV1_",&patJetPfAk05BDiscCSVSLV1_);
+  myTree->Branch("unc_",&unc_);
+  myTree->Branch("patJetPfAk05PtUp_",&patJetPfAk05PtUp_);
+  myTree->Branch("patJetPfAk05PtDn_",&patJetPfAk05PtDn_); 
 
-    //CaloJets
-    myTree->Branch("caloJetPt_",&caloJetPt_);
-    myTree->Branch("caloJetRawPt_",&caloJetRawPt_);
-    myTree->Branch("caloJetEn_",&caloJetEn_);
-    myTree->Branch("caloJetEta_",&caloJetEta_);
-    myTree->Branch("caloJetPhi_",&caloJetPhi_);
-    myTree->Branch("caloJetHadEHF_",&caloJetHadEHF_);
-    myTree->Branch("caloJetEmEHF_",&caloJetEmEHF_);
-    myTree->Branch("caloJetEmFrac_",&caloJetEmFrac_);
-    myTree->Branch("caloJetn90_",&caloJetn90_);
-    
-    myTree->Branch("id1_pdfInfo_",&id1_pdfInfo_);
-    myTree->Branch("id2_pdfInfo_",&id2_pdfInfo_);
-    myTree->Branch("x1_pdfInfo_",&x1_pdfInfo_);
-    myTree->Branch("x2_pdfInfo_",&x2_pdfInfo_);
-    myTree->Branch("scalePDF_pdfInfo_",&scalePDF_pdfInfo_);
-    myTree->Branch("ptHat_",&ptHat_);
-    myTree->Branch("mcWeight_",&mcWeight_);
-    myTree->Branch("nup",&nup);   
+  //CaloJets
+  myTree->Branch("caloJetPt_",&caloJetPt_);
+  myTree->Branch("caloJetRawPt_",&caloJetRawPt_);
+  myTree->Branch("caloJetEn_",&caloJetEn_);
+  myTree->Branch("caloJetEta_",&caloJetEta_);
+  myTree->Branch("caloJetPhi_",&caloJetPhi_);
+  myTree->Branch("caloJetHadEHF_",&caloJetHadEHF_);
+  myTree->Branch("caloJetEmEHF_",&caloJetEmEHF_);
+  myTree->Branch("caloJetEmFrac_",&caloJetEmFrac_);
+  myTree->Branch("caloJetn90_",&caloJetn90_);
+
+
+  //photon momenta
+  myTree->Branch("PhotonPt", &PhotonPt_);;
+  myTree->Branch("PhotonEta", &PhotonEta_);;
+  myTree->Branch("PhotonPhi", &PhotonPhi_);;
+  
+  //photon isolations
+  myTree->Branch("PhotonIsoEcal", &PhotonIsoEcal_);
+  myTree->Branch("PhotonIsoHcal", &PhotonIsoHcal_);
+  myTree->Branch("PhotonPfIsoChargdH", &PhotonPfIsoChargdH_);
+  myTree->Branch("PhotonPfIsoNeutralH", &PhotonPfIsoNeutralH_);
+  myTree->Branch("PhotonPfIsoPhoton", &PhotonPfIsoPhoton_);
+  myTree->Branch("PhotonPfIsoPuChargedH", &PhotonPfIsoPuChargedH_);
+  myTree->Branch("PhotonPfIsoEcalCluster", &PhotonPfIsoEcalCluster_);
+  myTree->Branch("PhotonPfIsoHcalCluster", &PhotonPfIsoHcalCluster_);
+  
+  //photon cluster shapes
+  myTree->Branch("PhotonE3x3", &PhotonE3x3_);
+  myTree->Branch("PhotonSigmaIetaIeta", &PhotonSigmaIetaIeta_);
+
+  //photon ID
+  myTree->Branch("PhotonId", &PhotonId_);
+
+  
+  myTree->Branch("id1_pdfInfo_",&id1_pdfInfo_);
+  myTree->Branch("id2_pdfInfo_",&id2_pdfInfo_);
+  myTree->Branch("x1_pdfInfo_",&x1_pdfInfo_);
+  myTree->Branch("x2_pdfInfo_",&x2_pdfInfo_);
+  myTree->Branch("scalePDF_pdfInfo_",&scalePDF_pdfInfo_);
+  myTree->Branch("ptHat_",&ptHat_);
+  myTree->Branch("mcWeight_",&mcWeight_);
+  myTree->Branch("mcWeights_",&mcWeights_);
+  myTree->Branch("nup",&nup);   
 }
 
 void 
 Tupel::endJob() 
 {
-//  delete jecUnc;
+  //  delete jecUnc;
   myTree->Print();
 }
 
