@@ -159,6 +159,13 @@ private:
   std::vector<double> GjPz;
   std::vector<double> GjChargedFraction;
   std::vector<bool> matchGjet;
+  std::vector<int> GjDoughterId_;
+  std::vector<double> GjDoughterPt_;
+  std::vector<double> GjDoughterEta_;
+  std::vector<double> GjDoughterPhi_;
+  std::vector<double> GjDoughterE_;
+
+
   std::vector<double> MGjPt;
   std::vector<double> MGjeta;
   std::vector<double> MGjphi;
@@ -206,6 +213,12 @@ private:
   std::vector<double> patJetPfAk05BDiscCSV_;
   std::vector<double> patJetPfAk05BDiscCSVV1_;
   std::vector<double> patJetPfAk05BDiscCSVSLV1_;
+  std::vector<int> patJetPfAk05DoughterId_;
+  std::vector<double> patJetPfAk05DoughterPt_;
+  std::vector<double> patJetPfAk05DoughterEta_;
+  std::vector<double> patJetPfAk05DoughterPhi_;
+  std::vector<double> patJetPfAk05DoughterE_;
+
   std::vector<double> unc_;
   ///Muons
   std::vector<double> patMuonPt_;
@@ -499,6 +512,13 @@ St03NumberMom.clear();
   GjPz.clear();
   GjChargedFraction.clear();
   matchGjet.clear();
+  GjDoughterId_.clear();
+  GjDoughterPt_.clear();
+  GjDoughterEta_.clear();
+  GjDoughterPhi_.clear();
+  GjDoughterE_.clear();
+
+
   MGjPt.clear();
   MGjeta.clear();
   MGjphi.clear();
@@ -544,6 +564,12 @@ St03NumberMom.clear();
   patJetPfAk05BDiscCSV_.clear();
   patJetPfAk05BDiscCSVV1_.clear();
   patJetPfAk05BDiscCSVSLV1_.clear();
+  patJetPfAk05DoughterId_.clear();
+  patJetPfAk05DoughterPt_.clear();
+  patJetPfAk05DoughterEta_.clear();
+  patJetPfAk05DoughterPhi_.clear();
+  patJetPfAk05DoughterE_.clear();
+
   unc_.clear();
   ///Muons
   patMuonPt_.clear();
@@ -667,7 +693,7 @@ St03NumberMom.clear();
   bxnumber = iEvent.bunchCrossing();
   realdata = iEvent.isRealData();
     
-
+     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
   ////////////////////MET////////////////////
   for(unsigned int imet=0;imet<metSources.size();imet++){
     Handle<View<pat::MET> > metH;
@@ -700,7 +726,7 @@ St03NumberMom.clear();
   }
 
 
-
+     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<"aaaaaaaaaaaaaaaaaaa"<<endl;
 
   EvtInfo_NumVtx = 0;
   if(vtxx){
@@ -733,6 +759,7 @@ St03NumberMom.clear();
       PU_npIT=-2.;
     }
   }
+     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" BBBBBBBBBBBBBBBBBBBBBBbb "<<endl;
   if (!realdata && genParticles){     
     const std::vector<reco::GenParticle> & gen = *genParticles_h;
     for (size_t i=0; i<genParticles->size(); ++i){
@@ -811,6 +838,7 @@ St03NumberMom.clear();
       }
     }
   }
+     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" cccccccccccccccccccccccccc "<<endl;
   if (!realdata){
     //matrix element info
     Handle<LHEEventProduct> lheH;
@@ -840,10 +868,22 @@ St03NumberMom.clear();
 	//}
 	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
 	//GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
+    /*if(genjet[k].numberOfDaughters()>0){
+     for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
+        //cout<<genjet[k].numberOfDaughters()<<" GEN AHMEEEEET "<<idx<<"  "<<genjet[k].daughter(idx)->pdgId()<<"  "<<endl;
+        GjDoughterId_.push_back(genjet[k].daughter(idx)->pdgId());
+        GjDoughterPt_.push_back(genjet[k].daughter(idx)->pt());
+        GjDoughterEta_.push_back(genjet[k].daughter(idx)->eta());
+        GjDoughterPhi_.push_back(genjet[k].daughter(idx)->phi());
+        GjDoughterE_.push_back(genjet[k].daughter(idx)->energy());
+
+
+      }
+      }*/
       }
     }
   }
-    
+     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" dddddddddddddddddddddddddd "<<endl;
   ////Add 08/27/13//////
   if(!realdata){
     edm::Handle<GenEventInfoProduct>   genEventInfoProd;
@@ -868,7 +908,7 @@ St03NumberMom.clear();
       }   
     }   
   }
-    
+       cout<<"BBBBBBBBBBBBBBBBBBBBBB"<<endl;  
   int Mu17_Mu8=0;
   int Mu17_TkMu8=0;
   int Elec17_Elec8=0;
@@ -902,7 +942,7 @@ St03NumberMom.clear();
   double MuFill=0;
   double Mu17_Mu8_Matched=0;
   double Mu17_TkMu8_Matched=0;
-
+       cout<<"CCCCCCCCCCCCCCCCCCCCCCCC"<<endl;  
   if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
@@ -1018,7 +1058,7 @@ St03NumberMom.clear();
   //electrons B.B.
     
   int ElecFill=0;
-    
+         cout<<"DDDDDDDDDDDDDDDDDDDDDDDDDD"<<endl;    
   if(electron){
     auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
@@ -1159,12 +1199,12 @@ St03NumberMom.clear();
   double nemf = 0;
   double cmult = 0;
   double nconst = 0;
-    
+           cout<<"EEEEEEEEEEEEEEEEEEEEEEE"<<endl;  
   //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
   if(jettt){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
       const pat::Jet & jet = jets->at(i);
-      
+       
       patJetPfAk05jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
       chf = jet.chargedHadronEnergyFraction();
       nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
@@ -1195,7 +1235,17 @@ St03NumberMom.clear();
       patJetPfAk05nemf_.push_back(nemf);
       patJetPfAk05cmult_.push_back(cmult);
       patJetPfAk05nconst_.push_back(nconst);
+  
+      for(unsigned int idx =0; idx<jet.numberOfDaughters();idx++){
+       // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
+        patJetPfAk05DoughterId_.push_back(jet.daughter(idx)->pdgId());
+        patJetPfAk05DoughterPt_.push_back(jet.daughter(idx)->pt());
+        patJetPfAk05DoughterEta_.push_back(jet.daughter(idx)->eta());
+        patJetPfAk05DoughterPhi_.push_back(jet.daughter(idx)->phi());
+        patJetPfAk05DoughterE_.push_back(jet.daughter(idx)->energy());
 
+
+      }
       double unc = 1.;
       unc_.push_back(unc);
       double up = (1+unc)*jet.pt();
@@ -1230,7 +1280,7 @@ St03NumberMom.clear();
     }
   }//end jets
 
-
+           cout<<"FFFFFFFFFFFFFFFFFFFFFFFFFFFF"<<endl;  
   //photons. Ph. G.
   if(photons){
     for (unsigned j = 0; j < photons->size(); ++j){
@@ -1273,6 +1323,7 @@ St03NumberMom.clear();
       PhotonHasPixelSeed_.push_back(photon.hasPixelSeed());
     }
   }
+           cout<<"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"<<endl;  
   myTree->Fill();
   
 }
@@ -1349,6 +1400,13 @@ Tupel::beginJob()
   myTree->Branch("GjPz",&GjPz);
   myTree->Branch("GjChargedFraction",&GjChargedFraction);
   myTree->Branch("matchGjet",&matchGjet);
+
+  myTree->Branch("GjDoughterId_",&GjDoughterId_);
+  myTree->Branch("GjDoughterPt_",&GjDoughterPt_);
+  myTree->Branch("GjDoughterEta_",&GjDoughterEta_);
+  myTree->Branch("GjDoughterPhi_",&GjDoughterPhi_);
+  myTree->Branch("GjDoughterE_",&GjDoughterE_);
+
   myTree->Branch("MGjPt",&MGjPt);
   myTree->Branch("MGjeta",&MGjeta);
   myTree->Branch("MGjphi",&MGjphi);
@@ -1464,6 +1522,12 @@ Tupel::beginJob()
   myTree->Branch("patJetPfAk05BDiscCSVV1_",&patJetPfAk05BDiscCSVV1_);
   myTree->Branch("patJetPfAk05BDiscCSVSLV1_",&patJetPfAk05BDiscCSVSLV1_);
   myTree->Branch("unc_",&unc_);
+  myTree->Branch("patJetPfAk05DoughterId_",&patJetPfAk05DoughterId_);
+  myTree->Branch("patJetPfAk05DoughterPt_",&patJetPfAk05DoughterPt_);
+  myTree->Branch("patJetPfAk05DoughterEta_",&patJetPfAk05DoughterEta_);
+  myTree->Branch("patJetPfAk05DoughterPhi_",&patJetPfAk05DoughterPhi_);
+  myTree->Branch("patJetPfAk05DoughterE_",&patJetPfAk05DoughterE_);
+
   myTree->Branch("patJetPfAk05PtUp_",&patJetPfAk05PtUp_);
   myTree->Branch("patJetPfAk05PtDn_",&patJetPfAk05PtDn_); 
 
