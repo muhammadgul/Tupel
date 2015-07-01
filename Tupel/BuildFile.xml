@@ -1,3 +1,4 @@
+<flags CPPDEFINES="MYFILE_CHECKSUM=$$(shell git hash-object $$< | sed 's| .*||')"/>
 <use name="CondCore/DBOutputService"/>
 <use name="CondFormats/EgammaObjects"/>
 <use name="CondFormats/PhysicsToolsObjects"/>

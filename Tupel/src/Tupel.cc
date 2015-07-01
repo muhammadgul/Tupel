@@ -59,6 +59,12 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 
 #include "DataFormats/BTauReco/interface/JetTag.h"
 
+#define QUOTE2(a) #a
+#define QUOTE(a) QUOTE2(a)
+const static char* checksum = QUOTE(MYFILE_CHECKSUM);
+
+
+
 class TTree;
 class Tupel : public edm::EDAnalyzer {
 
@@ -76,6 +82,10 @@ private:
   /// everything that needs to be done after the event loop
   virtual void endJob() ;
 
+  //Write Job information tree in the output. The tree
+  //contains one event, with general information
+  void writeHeader();
+  
   // input tags
   //edm::InputTag trigger_;
   //edm::InputTag triggerEvent_;
@@ -377,6 +387,7 @@ Tupel::~Tupel()
 void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   using namespace edm; //ADD
   ++ccnevent;
+
  
   // PAT trigger event
   //edm::Handle<pat::TriggerEvent>  triggerEvent;
@@ -693,7 +704,6 @@ St03NumberMom.clear();
   bxnumber = iEvent.bunchCrossing();
   realdata = iEvent.isRealData();
     
-     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
   ////////////////////MET////////////////////
   for(unsigned int imet=0;imet<metSources.size();imet++){
     Handle<View<pat::MET> > metH;
@@ -724,9 +734,6 @@ St03NumberMom.clear();
 
     //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
   }
-
-
-     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<"aaaaaaaaaaaaaaaaaaa"<<endl;
 
   EvtInfo_NumVtx = 0;
   if(vtxx){
@@ -759,7 +766,7 @@ St03NumberMom.clear();
       PU_npIT=-2.;
     }
   }
-     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" BBBBBBBBBBBBBBBBBBBBBBbb "<<endl;
+
   if (!realdata && genParticles){     
     const std::vector<reco::GenParticle> & gen = *genParticles_h;
     for (size_t i=0; i<genParticles->size(); ++i){
@@ -838,7 +845,7 @@ St03NumberMom.clear();
       }
     }
   }
-     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" cccccccccccccccccccccccccc "<<endl;
+
   if (!realdata){
     //matrix element info
     Handle<LHEEventProduct> lheH;
@@ -883,7 +890,7 @@ St03NumberMom.clear();
       }
     }
   }
-     cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" dddddddddddddddddddddddddd "<<endl;
+
   ////Add 08/27/13//////
   if(!realdata){
     edm::Handle<GenEventInfoProduct>   genEventInfoProd;
@@ -908,7 +915,7 @@ St03NumberMom.clear();
       }   
     }   
   }
-       cout<<"BBBBBBBBBBBBBBBBBBBBBB"<<endl;  
+
   int Mu17_Mu8=0;
   int Mu17_TkMu8=0;
   int Elec17_Elec8=0;
@@ -942,7 +949,7 @@ St03NumberMom.clear();
   double MuFill=0;
   double Mu17_Mu8_Matched=0;
   double Mu17_TkMu8_Matched=0;
-       cout<<"CCCCCCCCCCCCCCCCCCCCCCCC"<<endl;  
+
   if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
@@ -1058,7 +1065,7 @@ St03NumberMom.clear();
   //electrons B.B.
     
   int ElecFill=0;
-         cout<<"DDDDDDDDDDDDDDDDDDDDDDDDDD"<<endl;    
+
   if(electron){
     auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
@@ -1199,7 +1206,7 @@ St03NumberMom.clear();
   double nemf = 0;
   double cmult = 0;
   double nconst = 0;
-           cout<<"EEEEEEEEEEEEEEEEEEEEEEE"<<endl;  
+
   //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
   if(jettt){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
@@ -1280,7 +1287,6 @@ St03NumberMom.clear();
     }
   }//end jets
 
-           cout<<"FFFFFFFFFFFFFFFFFFFFFFFFFFFF"<<endl;  
   //photons. Ph. G.
   if(photons){
     for (unsigned j = 0; j < photons->size(); ++j){
@@ -1323,9 +1329,16 @@ St03NumberMom.clear();
       PhotonHasPixelSeed_.push_back(photon.hasPixelSeed());
     }
   }
-           cout<<"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"<<endl;  
   myTree->Fill();
   
+}
+
+void
+Tupel::writeHeader(){
+  TTree* t = new TTree("Header", "Header");
+  TString checksum_(checksum);
+  t->Branch("Tupel_cc_githash", &checksum_);
+  t->Fill();
 }
 
 void 
@@ -1336,6 +1349,9 @@ Tupel::beginJob()
   // register to the TFileService
   edm::Service<TFileService> fs;
   TFileDirectory TestDir = fs->mkdir("test");
+
+  writeHeader();
+
   myTree = new TTree("MuonTree","MuonTree");
   myTree->Branch("METPt",&METPt);
   myTree->Branch("METPx",&METPx);
