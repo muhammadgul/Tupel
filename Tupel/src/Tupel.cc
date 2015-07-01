@@ -134,6 +134,7 @@ private:
   std::vector<double> Dr01LepM;
   std::vector<double> Dr01LepId;
   std::vector<double> Dr01LepStatus;
+  std::vector<double> Dr01LepMomId;
   std::vector<double> Bare01LepPt;
   std::vector<double> Bare01LepEta;
   std::vector<double> Bare01LepPhi;
@@ -141,6 +142,7 @@ private:
   std::vector<double> Bare01LepM;
   std::vector<double> Bare01LepId;
   std::vector<double> Bare01LepStatus;
+  std::vector<double> Bare01LepMomId;
   std::vector<double> St03Pt;
   std::vector<double> St03Eta;
   std::vector<double> St03Phi;
@@ -160,6 +162,9 @@ private:
   std::vector<double> St01PhotonMomId;
   std::vector<double> St01PhotonNumberMom;
   std::vector<double> St01PhotonStatus;
+
+
+
   std::vector<double> GjPt;
   std::vector<double> Gjeta;
   std::vector<double> Gjphi;
@@ -488,6 +493,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   Dr01LepM.clear();
   Dr01LepId.clear();
   Dr01LepStatus.clear();
+  Dr01LepMomId.clear();
   Bare01LepPt.clear();
   Bare01LepEta.clear();
   Bare01LepPhi.clear();
@@ -495,6 +501,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   Bare01LepM.clear();
   Bare01LepId.clear();
   Bare01LepStatus.clear();
+  Bare01LepMomId.clear();
   St03Pt.clear();
   St03Eta.clear();
   St03Phi.clear();
@@ -514,6 +521,8 @@ St03NumberMom.clear();
   St01PhotonMomId.clear();
   St01PhotonNumberMom.clear();
   St01PhotonStatus.clear();
+
+
   GjPt.clear();
   Gjeta.clear();
   Gjphi.clear();
@@ -704,6 +713,10 @@ St03NumberMom.clear();
   bxnumber = iEvent.bunchCrossing();
   realdata = iEvent.isRealData();
     
+<<<<<<< HEAD
+=======
+     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
+>>>>>>> origin/Tupel_MiniAOD
   ////////////////////MET////////////////////
   for(unsigned int imet=0;imet<metSources.size();imet++){
     Handle<View<pat::MET> > metH;
@@ -735,6 +748,12 @@ St03NumberMom.clear();
     //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
   }
 
+<<<<<<< HEAD
+=======
+
+     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<"aaaaaaaaaaaaaaaaaaa"<<endl;
+
+>>>>>>> origin/Tupel_MiniAOD
   EvtInfo_NumVtx = 0;
   if(vtxx){
     for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
@@ -766,86 +785,112 @@ St03NumberMom.clear();
       PU_npIT=-2.;
     }
   }
+<<<<<<< HEAD
 
   if (!realdata && genParticles){     
+=======
+     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" BBBBBBBBBBBBBBBBBBBBBBbb "<<endl;
+    if (!realdata && genParticles){     
+>>>>>>> origin/Tupel_MiniAOD
     const std::vector<reco::GenParticle> & gen = *genParticles_h;
     for (size_t i=0; i<genParticles->size(); ++i){
       TLorentzVector genR1DressLep1(0,0,0,0);
-      //      TLorentzVector genPho(0,0,0,0); 
+//      TLorentzVector genPho(0,0,0,0); 
       int st = gen[i].status();
       int id = gen[i].pdgId();
-      //  cout<<"STATUS ID "<<st<<" "<<id<<endl;
+
+
       if(gen[i].numberOfMothers()){
-	if (st==3){
-	  TLorentzVector genLep3(0,0,0,0);
-	  genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+//        if (st!=3 && fabs(id)!=13&& fabs(id)!=11 && fabs(id)!=22 && fabs(id)!=23) continue;
+       // if(abs(st)==13 ||abs(st)==12||abs(st)==11||abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 )cout<<"AAA "<<gen[i].numberOfMothers() <<"  "<< gen[i].mother()->pdgId()<<"  "<< gen[i].pdgId()<<"  "<<st<<"  "<<gen[i].px()<<"  "<<gen[i].py()<<"  "<<gen[i].pz()<<"  "<<gen[i].energy()<<endl;
+        if (abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 ||abs(st)==3 ){
+          TLorentzVector genLep3(0,0,0,0);
+          if(abs(st)!=21)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+          if(abs(st)==21)genLep3.SetPxPyPzE(0.001,0.001,gen[i].pz(),gen[i].energy());
 	  St03Pt.push_back(genLep3.Pt());
 	  St03Eta.push_back(genLep3.Eta());
 	  St03Phi.push_back(genLep3.Phi());
 	  St03E.push_back(genLep3.Energy());
 	  St03M.push_back(genLep3.M());
-	  St03Id.push_back(id);
-	  St03Status.push_back(st);
           St03MotherId.push_back(gen[i].mother()->pdgId());
 	  St03NumberMom.push_back(gen[i].numberOfMothers());
-	}
-	if (st==1){
-	  TLorentzVector genLep1(0,0,0,0);
-	  genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+	  St03Id.push_back(id);
+	  St03Status.push_back(st);
+        }
+       /* if(abs(id)==15){
+          //cout<<gen[i].numberOfMothers() <<"  "<< gen[i].mother()->pdgId()<<"  "<< gen[i].pdgId()<<"  "<<st<<endl;
+          n_tau++;
+        }*/
+        if(gen[i].numberOfMothers() ==1 && gen[i].mother()->pdgId() != id){
+          //if(abs(id)==15)cout<<"DEAD"<<endl;
+         continue;
+        }
+        if (st==1 && (abs(id)==13||abs(id)==11 || abs(id)==15 ||abs(id)==12||abs(id)==14||abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
+
+          TLorentzVector genLep1(0,0,0,0);
+          genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
 	  TLorentzVector genR1Pho1(0,0,0,0);
-	   
-	  edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
-	  iEvent.getByLabel(genParticleSrc_, genpart2);
-	  const std::vector<reco::GenParticle> & gen2 = *genpart2;
-	  //LOOP over photons//
-	  if(abs(id)==11 || abs(id)==13){
-	    for(unsigned int j=0; j<genpart2->size(); ++j){
-	      if(gen2[j].numberOfMothers()){
-		if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
-		TLorentzVector thisPho1(0,0,0,0);
-		thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
-		double dR = genLep1.DeltaR(thisPho1);
-		if(dR<0.1){
-		  genR1Pho1+=thisPho1;
 
-		}
-		
-		if(dR<0.2){
-		  St01PhotonPt.push_back(thisPho1.Pt());
-		  St01PhotonEta.push_back(thisPho1.Eta());
-		  St01PhotonPhi.push_back(thisPho1.Phi());
-		  St01PhotonE.push_back(thisPho1.Energy());
-		  St01PhotonM.push_back(thisPho1.M());
-		  St01PhotonId.push_back(gen2[j].pdgId());
-		  St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
-		  St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
-		  St01PhotonStatus.push_back(gen2[j].status()); 
-		}
-	      }
-	    }
+       	  edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
+          iEvent.getByLabel(genParticleSrc_, genpart2);
+          const std::vector<reco::GenParticle> & gen2 = *genpart2;
+            //LOOP over photons//
+	  if (st==1 && (abs(id)==13||abs(id)==11)){
+            for(unsigned int j=0; j<genpart2->size(); ++j){
+              if(gen2[j].numberOfMothers()){
+	        if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
+	        TLorentzVector thisPho1(0,0,0,0);
+	        thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
+  	        double dR = genLep1.DeltaR(thisPho1);
+	        if(dR<0.1){
+	          genR1Pho1+=thisPho1;
+	        }
 
-	    genR1DressLep1=genLep1+genR1Pho1;
-	    Dr01LepPt.push_back(genR1DressLep1.Pt());
-	    Dr01LepEta.push_back(genR1DressLep1.Eta());
-	    Dr01LepPhi.push_back(genR1DressLep1.Phi());
-	    Dr01LepE.push_back(genR1DressLep1.Energy());
-	    Dr01LepM.push_back(genR1DressLep1.M());
-	    Dr01LepId.push_back(id);
-	    Dr01LepStatus.push_back(st);
-	  }	  
-	  //	  cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
+	        if(dR<0.2){
+	          St01PhotonPt.push_back(thisPho1.Pt());
+	          St01PhotonEta.push_back(thisPho1.Eta());
+	          St01PhotonPhi.push_back(thisPho1.Phi());
+	          St01PhotonE.push_back(thisPho1.Energy());
+	          St01PhotonM.push_back(thisPho1.M());
+	          St01PhotonId.push_back(gen2[j].pdgId());
+	          St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
+	          St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
+	          St01PhotonStatus.push_back(gen2[j].status());
+	        }
+              }
+            }
+          }
+
+          genR1DressLep1=genLep1+genR1Pho1;
+	  Dr01LepPt.push_back(genR1DressLep1.Pt());
+	  Dr01LepEta.push_back(genR1DressLep1.Eta());
+	  Dr01LepPhi.push_back(genR1DressLep1.Phi());
+	  Dr01LepE.push_back(genR1DressLep1.Energy());
+	  Dr01LepM.push_back(genR1DressLep1.M());
+	  Dr01LepId.push_back(id);
+	  Dr01LepMomId.push_back(id);
+	  Dr01LepStatus.push_back(st);
+
 	  Bare01LepPt.push_back(genLep1.Pt());
 	  Bare01LepEta.push_back(genLep1.Eta());
 	  Bare01LepPhi.push_back(genLep1.Phi());
 	  Bare01LepE.push_back(genLep1.Energy());
 	  Bare01LepM.push_back(genLep1.M());
 	  Bare01LepId.push_back(id);
+	  Bare01LepMomId.push_back(id);
 	  Bare01LepStatus.push_back(st);
-	}
+
+        }
       }
     }
+<<<<<<< HEAD
   }
 
+=======
+    }
+
+     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" cccccccccccccccccccccccccc "<<endl;
+>>>>>>> origin/Tupel_MiniAOD
   if (!realdata){
     //matrix element info
     Handle<LHEEventProduct> lheH;
@@ -890,7 +935,11 @@ St03NumberMom.clear();
       }
     }
   }
+<<<<<<< HEAD
 
+=======
+     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" dddddddddddddddddddddddddd "<<endl;
+>>>>>>> origin/Tupel_MiniAOD
   ////Add 08/27/13//////
   if(!realdata){
     edm::Handle<GenEventInfoProduct>   genEventInfoProd;
@@ -915,7 +964,11 @@ St03NumberMom.clear();
       }   
     }   
   }
+<<<<<<< HEAD
 
+=======
+       //cout<<"BBBBBBBBBBBBBBBBBBBBBB"<<endl;  
+>>>>>>> origin/Tupel_MiniAOD
   int Mu17_Mu8=0;
   int Mu17_TkMu8=0;
   int Elec17_Elec8=0;
@@ -949,7 +1002,11 @@ St03NumberMom.clear();
   double MuFill=0;
   double Mu17_Mu8_Matched=0;
   double Mu17_TkMu8_Matched=0;
+<<<<<<< HEAD
 
+=======
+       //cout<<"CCCCCCCCCCCCCCCCCCCCCCCC"<<endl;  
+>>>>>>> origin/Tupel_MiniAOD
   if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
@@ -1065,7 +1122,11 @@ St03NumberMom.clear();
   //electrons B.B.
     
   int ElecFill=0;
+<<<<<<< HEAD
 
+=======
+         //cout<<"DDDDDDDDDDDDDDDDDDDDDDDDDD"<<endl;    
+>>>>>>> origin/Tupel_MiniAOD
   if(electron){
     auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
@@ -1378,6 +1439,7 @@ Tupel::beginJob()
   myTree->Branch("Dr01LepM",&Dr01LepM);
   myTree->Branch("Dr01LepId",&Dr01LepId);
   myTree->Branch("Dr01LepStatus",&Dr01LepStatus);
+  myTree->Branch("Dr01LepMomId",&Dr01LepMomId);
   myTree->Branch("Bare01LepPt",&Bare01LepPt);
   myTree->Branch("Bare01LepEta",&Bare01LepEta);
   myTree->Branch("Bare01LepPhi",&Bare01LepPhi);
@@ -1385,7 +1447,7 @@ Tupel::beginJob()
   myTree->Branch("Bare01LepM",&Bare01LepM);
   myTree->Branch("Bare01LepId",&Bare01LepId);
   myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
-    
+  myTree->Branch("Bare01LepMomId",&Bare01LepMomId);      
   myTree->Branch("St03Pt",&St03Pt);
   myTree->Branch("St03Eta",&St03Eta);
   myTree->Branch("St03Phi",&St03Phi);
