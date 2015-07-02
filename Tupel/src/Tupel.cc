@@ -713,10 +713,6 @@ St03NumberMom.clear();
   bxnumber = iEvent.bunchCrossing();
   realdata = iEvent.isRealData();
     
-<<<<<<< HEAD
-=======
-     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
->>>>>>> origin/Tupel_MiniAOD
   ////////////////////MET////////////////////
   for(unsigned int imet=0;imet<metSources.size();imet++){
     Handle<View<pat::MET> > metH;
@@ -748,12 +744,6 @@ St03NumberMom.clear();
     //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
   }
 
-<<<<<<< HEAD
-=======
-
-     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<"aaaaaaaaaaaaaaaaaaa"<<endl;
-
->>>>>>> origin/Tupel_MiniAOD
   EvtInfo_NumVtx = 0;
   if(vtxx){
     for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
@@ -785,13 +775,8 @@ St03NumberMom.clear();
       PU_npIT=-2.;
     }
   }
-<<<<<<< HEAD
 
   if (!realdata && genParticles){     
-=======
-     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" BBBBBBBBBBBBBBBBBBBBBBbb "<<endl;
-    if (!realdata && genParticles){     
->>>>>>> origin/Tupel_MiniAOD
     const std::vector<reco::GenParticle> & gen = *genParticles_h;
     for (size_t i=0; i<genParticles->size(); ++i){
       TLorentzVector genR1DressLep1(0,0,0,0);
@@ -883,14 +868,8 @@ St03NumberMom.clear();
         }
       }
     }
-<<<<<<< HEAD
   }
-
-=======
-    }
-
-     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" cccccccccccccccccccccccccc "<<endl;
->>>>>>> origin/Tupel_MiniAOD
+  
   if (!realdata){
     //matrix element info
     Handle<LHEEventProduct> lheH;
@@ -935,11 +914,7 @@ St03NumberMom.clear();
       }
     }
   }
-<<<<<<< HEAD
 
-=======
-     //cout<<"AAAAAAAAAAAAAAAAAAAAAAAAA"<<" dddddddddddddddddddddddddd "<<endl;
->>>>>>> origin/Tupel_MiniAOD
   ////Add 08/27/13//////
   if(!realdata){
     edm::Handle<GenEventInfoProduct>   genEventInfoProd;
@@ -964,11 +939,7 @@ St03NumberMom.clear();
       }   
     }   
   }
-<<<<<<< HEAD
 
-=======
-       //cout<<"BBBBBBBBBBBBBBBBBBBBBB"<<endl;  
->>>>>>> origin/Tupel_MiniAOD
   int Mu17_Mu8=0;
   int Mu17_TkMu8=0;
   int Elec17_Elec8=0;
@@ -1002,11 +973,7 @@ St03NumberMom.clear();
   double MuFill=0;
   double Mu17_Mu8_Matched=0;
   double Mu17_TkMu8_Matched=0;
-<<<<<<< HEAD
 
-=======
-       //cout<<"CCCCCCCCCCCCCCCCCCCCCCCC"<<endl;  
->>>>>>> origin/Tupel_MiniAOD
   if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
@@ -1122,11 +1089,7 @@ St03NumberMom.clear();
   //electrons B.B.
     
   int ElecFill=0;
-<<<<<<< HEAD
 
-=======
-         //cout<<"DDDDDDDDDDDDDDDDDDDDDDDDDD"<<endl;    
->>>>>>> origin/Tupel_MiniAOD
   if(electron){
     auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
