@@ -456,7 +456,10 @@ Tupel::~Tupel()
 }
 
 //#name -> "name", name ## _ -> name_
+#define ADD_BRANCH_D(name, desc) treeHelper_->addBranch(#name, name ## _, desc)
 #define ADD_BRANCH(name) treeHelper_->addBranch(#name, name ## _)
+#define ADD_MOMENTUM_BRANCH_D(name, desc) treeHelper_->addMomentumBranch(#name, name ## Pt_, name ## Eta_, name ## Phi_, name ## E_, desc)
+#define ADD_MOMENTUM_BRANCH(name) treeHelper_->addMomentumBranch(#name, name ## Pt_, name ## Eta_, name ## Phi_, name ## E_)
 
 void Tupel::readEvent(const edm::Event& iEvent){
   *event_ = iEvent.id().event();
@@ -1215,10 +1218,11 @@ Tupel::beginJob()
 
   writeHeader();
 
-  myTree = new TTree("MuonTree","MuonTree");
-  treeHelper_ = std::auto_ptr<TreeHelper>(new TreeHelper(myTree));
+  myTree = new TTree("EventTree"," EventTree");
+  treeHelper_ = std::auto_ptr<TreeHelper>(new TreeHelper(myTree, new TTree("Description", "Description")));
 			      
   ADD_BRANCH(METPt);
+  treeHelper_->addDescription("MET", "PF MET");
   ADD_BRANCH(METPx);
   ADD_BRANCH(METPy);
   ADD_BRANCH(METPz);
@@ -1227,11 +1231,11 @@ Tupel::beginJob()
   ADD_BRANCH(METsigxy);
   ADD_BRANCH(METsigy2);
   ADD_BRANCH(METsig);
-  ADD_BRANCH(event);
-  ADD_BRANCH(realdata);
-  ADD_BRANCH(run);
-  ADD_BRANCH(lumi);
-  ADD_BRANCH(bxnumber);
+  ADD_BRANCH_D(event, "Event number");
+  ADD_BRANCH_D(realdata, "True if real data, false if MC");
+  ADD_BRANCH_D(run, "Run number");
+  ADD_BRANCH_D(lumi, "Luminosity block number");
+  ADD_BRANCH_D(bxnumber, "Bunch crossing number");
   ADD_BRANCH(EvtInfo_NumVtx);
   ADD_BRANCH(PU_npT);
   ADD_BRANCH(PU_npIT);

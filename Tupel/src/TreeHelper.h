@@ -6,6 +6,9 @@
 
 #include "TTree.h"
 #include <memory>
+#include <string>
+#include <vector>
+#include <map>
 
 /** Helper class for TTree. This helper takes care of resetting
  * the variable storage after a tree fill. The values of the simple
@@ -15,19 +18,36 @@
  */
 class TreeHelper{
 public:
-  TreeHelper(TTree* tree): tree_(tree){
+  /** Constructor
+   * @param tree ROOT tree to store the events
+   * @param descTree secondary ROOT tree to store the description of the
+   * branches of the first tree. This tree will be filled with one entry
+   * only. It is ignored if the pointer is null*/
+  TreeHelper(TTree* tree, TTree* descTree = 0):
+    tree_(tree), descTree_(descTree){
   }
 
+  /** Destructor
+   */
+  ~TreeHelper(){    
+    while(!descriptions_.empty()){
+      delete[] descriptions_.back();
+      descriptions_.pop_back();
+    }
+  }
+  
   /** Add a branch of one the supported vector types
    * @param branchName name of the new branch
    * @param v auto pointer to store the variable attached to the branch
    */
   template<typename T>
-  void addBranch(const char* branchName, std::auto_ptr<std::vector<T> >& v){
+  void addBranch(const char* branchName, std::auto_ptr<std::vector<T> >& v,
+		 const char* branchDescription = 0){
     std::vector<T>* p = new std::vector<T>;
     v = std::auto_ptr<std::vector<T> >(p);
     addVar(p);
     tree_->Branch(branchName, p);
+    addDescription(branchName, branchDescription);
   }
 
   /** Add a branch of one the supported simple types
@@ -35,25 +55,46 @@ public:
    * @param v auto pointer to store the variable attached to the branch
    */
   template<typename T>
-  void addBranch(const char* branchName, std::auto_ptr<T>& v){
+  void addBranch(const char* branchName, std::auto_ptr<T>& v,
+		 const char* branchDescription = 0){
     v = std::auto_ptr<T> (new T);
     *v = 0;
     tree_->Branch(branchName, v.get());
+    addDescription(branchName, branchDescription);
   }
 
   /** Reset the variables attached to the tree branches
    */
   void clear();
 
-  /** Fill tree and reset variables attached to the tree branches
+  /** Fill tree and reset variables attached to the tree branches.
+   * The description tree is filled at the first call.
    */
   void fill(){
+    if(descTree_ && descTree_->GetEntries() < 1){
+      fillDescriptionTree();
+    }
     tree_->Fill();
     clear();
   }
 
-private:
+  /** Add a description branch. This method is already called by
+   * the addBranch methods when a description argument is provided.
+   * A typical usage of direct call to this method is to provide
+   * a description for a group of branches. In this case branchName
+   * will designate the group.
+   */
+  void addDescription(const char* branchName, const char* description){
+    if(descTree_ && description){
+      descriptions_.push_back(new char[strlen(description) + 1]);
+      strcpy(descriptions_.back(), description);
+      descTree_->Branch(branchName, descriptions_.back(), (std::string(description) + "/C").c_str());
+    }
+  }
+ 
   
+private:
+
   //Clear std::vector
   //@param v list of the pointers to thevectors to clear provided as a std::vector.
   template<typename T>
@@ -100,6 +141,12 @@ private:
     doubleList_.push_back(a);
   }
 
+  void fillDescriptionTree(){
+    if(descTree_){
+      descTree_->Fill();
+    }
+  }
+  
 private:
   std::vector<int*> intList_;
   std::vector<unsigned*> unsignedList_;
@@ -110,8 +157,10 @@ private:
   std::vector<std::vector<float>*> floatVectorList_;
   std::vector<std::vector<double>*> doubleVectorList_;
   std::vector<std::vector<bool>*> boolVectorList_;
-
+  std::vector<char*> descriptions_;
+  
   TTree* tree_;
+  TTree* descTree_;
 };
   
 
