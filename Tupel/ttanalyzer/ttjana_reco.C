@@ -567,19 +567,27 @@ void ttjana_reco::Loop()
         } 
 
         double mmin=9999;
-        int ljet_ind1=-99, ljet_ind2=-99;
+        int ljet_ind1=-99, ljet_ind2=-99, extra_jet_index=-99;
+        vector<int> a_min;
         for(unsigned int j_ind=0; j_ind<jet_vector.size();j_ind++){
           if(j_ind==b_jet_index[0]|| j_ind==b_jet_index[1])continue;
+          a_min.push_back(j_ind);
           for(unsigned int j_indd=j_ind; j_indd<jet_vector.size();j_indd++){
             if(j_ind==j_indd || j_indd==b_jet_index[0]|| j_indd==b_jet_index[1])continue;
-
+            cout<<j_ind<<"  "<<j_indd<<endl;
             double mmin_temp=(jet_vector[j_ind]+jet_vector[j_indd]).M();
             if(fabs(mmin_temp-80.4)<fabs(mmin-80.4)){
               mmin=mmin_temp;ljet_ind1=j_ind;ljet_ind2=j_indd;
+              cout<<ljet_ind1<<"  "<<ljet_ind2<<"  "<<mmin<<endl;
             }
           }
         }
-        cout<<ljet_ind1<<"  "<<ljet_ind2<<"  "<<(jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M()<<endl;
+        for(unsigned int i=0;i<a_min.size();i++){
+          if(a_min[i]==ljet_ind1||a_min[i]==ljet_ind2)continue;
+          extra_jet_index=a_min[i]; break;
+        }
+        cout<<"indices as follows "<<ljet_ind1<<"  "<<ljet_ind2<<" "<<extra_jet_index<<" "<<endl;
+        //cout<<ljet_ind1<<"  "<<ljet_ind2<<"  "<<(jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M()<<endl;
         h_ljet_pt->Fill(jet_vector[ljet_ind1].Pt());
         h_ljet_eta->Fill(jet_vector[ljet_ind1].Eta());    
 
@@ -616,6 +624,21 @@ void ttjana_reco::Loop()
 
         rec_sel=true;  
         
+        //Boosting to ttj CM frame for tt+>=1j
+        TLorentzVector sum_ttj_vector;
+        TLorentzVector extra_jet_vector;
+        if(extra_jet_index!=99){
+           extra_jet_vector=jet_vector[extra_jet_index];
+          sum_ttj_vector=(top_vector+atop_vector+extra_jet_vector);
+          top_vector.Boost(-sum_ttj_vector.BoostVector());
+          atop_vector.Boost(-sum_ttj_vector.BoostVector());
+          extra_jet_vector.Boost(-sum_ttj_vector.BoostVector());
+
+       }
+
+
+
+
       }//multiplicity requirement
 
       if(rec_sel&&gen_sel)real++;

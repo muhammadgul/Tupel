@@ -1,8 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri May 29 13:46:56 2015 by ROOT version 5.34/30
-// from TTree MuonTree/MuonTree
-// found on file: /afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_top/bbilin/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150525_154923/0003/DYJetsToLL_ntuple_3118.root
+// Thu Jul  2 12:00:13 2015 by ROOT version 6.02/05
+// from TChain tupel/MuonTree/
 //////////////////////////////////////////////////////////
 
 #ifndef ttjana_reco_h
@@ -13,11 +12,22 @@
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
-#include <vector>
-#include <vector>
-#include <vector>
+#include "vector"
+#include "vector"
+#include "vector"
+#include "vector"
+
+class ttjana_reco {
+public :
+   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+   Int_t           fCurrent; //!current Tree number in a TChain
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
+   const Int_t kMaxGjDoughterId = 1;
+   const Int_t kMaxGjDoughterPt = 1;
+   const Int_t kMaxGjDoughterEta = 1;
+   const Int_t kMaxGjDoughterPhi = 1;
+   const Int_t kMaxGjDoughterE = 1;
    const Int_t kMaxpatMuonPt = 1;
    const Int_t kMaxpatMuonEta = 1;
    const Int_t kMaxpatMuonPhi = 1;
@@ -115,6 +125,11 @@
    const Int_t kMaxpatJetPfAk05BDiscCSVV1 = 1;
    const Int_t kMaxpatJetPfAk05BDiscCSVSLV1 = 1;
    const Int_t kMaxunc = 1;
+   const Int_t kMaxpatJetPfAk05DoughterId = 1;
+   const Int_t kMaxpatJetPfAk05DoughterPt = 1;
+   const Int_t kMaxpatJetPfAk05DoughterEta = 1;
+   const Int_t kMaxpatJetPfAk05DoughterPhi = 1;
+   const Int_t kMaxpatJetPfAk05DoughterE = 1;
    const Int_t kMaxpatJetPfAk05PtUp = 1;
    const Int_t kMaxpatJetPfAk05PtDn = 1;
    const Int_t kMaxcaloJetPt = 1;
@@ -133,11 +148,7 @@
    const Int_t kMaxscalePDF_pdfInfo = 1;
    const Int_t kMaxptHat = 1;
    const Int_t kMaxmcWeight = 1;
-
-class ttjana_reco {
-public :
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-   Int_t           fCurrent; //!current Tree number in a TChain
+   const Int_t kMaxmcWeights = 1;
 
    // Declaration of leaf types
    vector<double>  *METPt;
@@ -165,6 +176,7 @@ public :
    vector<double>  *Dr01LepM;
    vector<double>  *Dr01LepId;
    vector<double>  *Dr01LepStatus;
+   vector<double>  *Dr01LepMomId;
    vector<double>  *Bare01LepPt;
    vector<double>  *Bare01LepEta;
    vector<double>  *Bare01LepPhi;
@@ -172,6 +184,7 @@ public :
    vector<double>  *Bare01LepM;
    vector<double>  *Bare01LepId;
    vector<double>  *Bare01LepStatus;
+   vector<double>  *Bare01LepMomId;
    vector<double>  *St03Pt;
    vector<double>  *St03Eta;
    vector<double>  *St03Phi;
@@ -199,6 +212,11 @@ public :
    vector<double>  *GjPz;
    vector<double>  *GjChargedFraction;
    vector<bool>    *matchGjet;
+   vector<int>     *GjDoughterId_;
+   vector<double>  *GjDoughterPt_;
+   vector<double>  *GjDoughterEta_;
+   vector<double>  *GjDoughterPhi_;
+   vector<double>  *GjDoughterE_;
    vector<double>  *MGjPt;
    vector<double>  *MGjeta;
    vector<double>  *MGjphi;
@@ -305,6 +323,11 @@ public :
    vector<double>  *patJetPfAk05BDiscCSVV1_;
    vector<double>  *patJetPfAk05BDiscCSVSLV1_;
    vector<double>  *unc_;
+   vector<int>     *patJetPfAk05DoughterId_;
+   vector<double>  *patJetPfAk05DoughterPt_;
+   vector<double>  *patJetPfAk05DoughterEta_;
+   vector<double>  *patJetPfAk05DoughterPhi_;
+   vector<double>  *patJetPfAk05DoughterE_;
    vector<double>  *patJetPfAk05PtUp_;
    vector<double>  *patJetPfAk05PtDn_;
    vector<double>  *caloJetPt_;
@@ -316,6 +339,20 @@ public :
    vector<double>  *caloJetEmEHF_;
    vector<double>  *caloJetEmFrac_;
    vector<double>  *caloJetn90_;
+   vector<double>  *PhotonPt;
+   vector<double>  *PhotonEta;
+   vector<double>  *PhotonPhi;
+   vector<double>  *PhotonIsoEcal;
+   vector<double>  *PhotonIsoHcal;
+   vector<double>  *PhotonPfIsoChargdH;
+   vector<double>  *PhotonPfIsoNeutralH;
+   vector<double>  *PhotonPfIsoPhoton;
+   vector<double>  *PhotonPfIsoPuChargedH;
+   vector<double>  *PhotonPfIsoEcalCluster;
+   vector<double>  *PhotonPfIsoHcalCluster;
+   vector<double>  *PhotonE3x3;
+   vector<double>  *PhotonSigmaIetaIeta;
+   vector<unsigned int> *PhotonId;
    vector<double>  *id1_pdfInfo_;
    vector<double>  *id2_pdfInfo_;
    vector<double>  *x1_pdfInfo_;
@@ -323,6 +360,7 @@ public :
    vector<double>  *scalePDF_pdfInfo_;
    Double_t        ptHat_;
    Double_t        mcWeight_;
+   vector<double>  *mcWeights_;
    Double_t        nup;
 
    // List of branches
@@ -351,6 +389,7 @@ public :
    TBranch        *b_Dr01LepM;   //!
    TBranch        *b_Dr01LepId;   //!
    TBranch        *b_Dr01LepStatus;   //!
+   TBranch        *b_Dr01LepMomId;   //!
    TBranch        *b_Bare01LepPt;   //!
    TBranch        *b_Bare01LepEta;   //!
    TBranch        *b_Bare01LepPhi;   //!
@@ -358,6 +397,7 @@ public :
    TBranch        *b_Bare01LepM;   //!
    TBranch        *b_Bare01LepId;   //!
    TBranch        *b_Bare01LepStatus;   //!
+   TBranch        *b_Bare01LepMomId;   //!
    TBranch        *b_St03Pt;   //!
    TBranch        *b_St03Eta;   //!
    TBranch        *b_St03Phi;   //!
@@ -385,6 +425,11 @@ public :
    TBranch        *b_GjPz;   //!
    TBranch        *b_GjChargedFraction;   //!
    TBranch        *b_matchGjet;   //!
+   TBranch        *b_GjDoughterId_;   //!
+   TBranch        *b_GjDoughterPt_;   //!
+   TBranch        *b_GjDoughterEta_;   //!
+   TBranch        *b_GjDoughterPhi_;   //!
+   TBranch        *b_GjDoughterE_;   //!
    TBranch        *b_MGjPt;   //!
    TBranch        *b_MGjeta;   //!
    TBranch        *b_MGjphi;   //!
@@ -491,6 +536,11 @@ public :
    TBranch        *b_patJetPfAk05BDiscCSVV1_;   //!
    TBranch        *b_patJetPfAk05BDiscCSVSLV1_;   //!
    TBranch        *b_unc_;   //!
+   TBranch        *b_patJetPfAk05DoughterId_;   //!
+   TBranch        *b_patJetPfAk05DoughterPt_;   //!
+   TBranch        *b_patJetPfAk05DoughterEta_;   //!
+   TBranch        *b_patJetPfAk05DoughterPhi_;   //!
+   TBranch        *b_patJetPfAk05DoughterE_;   //!
    TBranch        *b_patJetPfAk05PtUp_;   //!
    TBranch        *b_patJetPfAk05PtDn_;   //!
    TBranch        *b_caloJetPt_;   //!
@@ -502,6 +552,20 @@ public :
    TBranch        *b_caloJetEmEHF_;   //!
    TBranch        *b_caloJetEmFrac_;   //!
    TBranch        *b_caloJetn90_;   //!
+   TBranch        *b_PhotonPt;   //!
+   TBranch        *b_PhotonEta;   //!
+   TBranch        *b_PhotonPhi;   //!
+   TBranch        *b_PhotonIsoEcal;   //!
+   TBranch        *b_PhotonIsoHcal;   //!
+   TBranch        *b_PhotonPfIsoChargdH;   //!
+   TBranch        *b_PhotonPfIsoNeutralH;   //!
+   TBranch        *b_PhotonPfIsoPhoton;   //!
+   TBranch        *b_PhotonPfIsoPuChargedH;   //!
+   TBranch        *b_PhotonPfIsoEcalCluster;   //!
+   TBranch        *b_PhotonPfIsoHcalCluster;   //!
+   TBranch        *b_PhotonE3x3;   //!
+   TBranch        *b_PhotonSigmaIetaIeta;   //!
+   TBranch        *b_PhotonId;   //!
    TBranch        *b_id1_pdfInfo_;   //!
    TBranch        *b_id2_pdfInfo_;   //!
    TBranch        *b_x1_pdfInfo_;   //!
@@ -509,6 +573,7 @@ public :
    TBranch        *b_scalePDF_pdfInfo_;   //!
    TBranch        *b_ptHat_;   //!
    TBranch        *b_mcWeight_;   //!
+   TBranch        *b_mcWeights_;   //!
    TBranch        *b_nup;   //!
 
    ttjana_reco(TTree *tree=0);
@@ -523,7 +588,6 @@ public :
    virtual double    DeltaR(double entry1, double entry2, double entry3, double entry4);
    virtual double    DeltaPhi(double entry1, double entry2);
 
-
 };
 
 #endif
@@ -534,12 +598,28 @@ ttjana_reco::ttjana_reco(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_top/bbilin/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150525_154923/ntuple.root");
+
+#ifdef SINGLE_TREE
+      // The following code should be used if you want this class to access
+      // a single tree instead of a chain
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("Memory Directory");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_top/bbilin/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150525_154923/ntuple.root");
+         f = new TFile("Memory Directory");
       }
-      TDirectory * dir = (TDirectory*)f->Get("/afs/cern.ch/user/b/bbilin/eos/cms/store/group/phys_top/bbilin/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150525_154923/ntuple.root:/tupel");
-      dir->GetObject("MuonTree",tree);
+      f->GetObject("tupel/MuonTree",tree);
+
+#else // SINGLE_TREE
+
+      // The following code should be used if you want this class to access a chain
+      // of trees.
+      TChain * chain = new TChain("tupel/MuonTree","");
+/*      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_100.root/tupel/MuonTree");
+      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_101.root/tupel/MuonTree");
+      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_102.root/tupel/MuonTree");
+*/      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_103.root/tupel/MuonTree");
+//#include "inlist.h"
+      tree = chain;
+#endif // SINGLE_TREE
 
    }
    Init(tree);
@@ -597,6 +677,7 @@ void ttjana_reco::Init(TTree *tree)
    Dr01LepM = 0;
    Dr01LepId = 0;
    Dr01LepStatus = 0;
+   Dr01LepMomId = 0;
    Bare01LepPt = 0;
    Bare01LepEta = 0;
    Bare01LepPhi = 0;
@@ -604,6 +685,7 @@ void ttjana_reco::Init(TTree *tree)
    Bare01LepM = 0;
    Bare01LepId = 0;
    Bare01LepStatus = 0;
+   Bare01LepMomId = 0;
    St03Pt = 0;
    St03Eta = 0;
    St03Phi = 0;
@@ -631,6 +713,11 @@ void ttjana_reco::Init(TTree *tree)
    GjPz = 0;
    GjChargedFraction = 0;
    matchGjet = 0;
+   GjDoughterId_ = 0;
+   GjDoughterPt_ = 0;
+   GjDoughterEta_ = 0;
+   GjDoughterPhi_ = 0;
+   GjDoughterE_ = 0;
    MGjPt = 0;
    MGjeta = 0;
    MGjphi = 0;
@@ -732,6 +819,11 @@ void ttjana_reco::Init(TTree *tree)
    patJetPfAk05BDiscCSVV1_ = 0;
    patJetPfAk05BDiscCSVSLV1_ = 0;
    unc_ = 0;
+   patJetPfAk05DoughterId_ = 0;
+   patJetPfAk05DoughterPt_ = 0;
+   patJetPfAk05DoughterEta_ = 0;
+   patJetPfAk05DoughterPhi_ = 0;
+   patJetPfAk05DoughterE_ = 0;
    patJetPfAk05PtUp_ = 0;
    patJetPfAk05PtDn_ = 0;
    caloJetPt_ = 0;
@@ -743,11 +835,26 @@ void ttjana_reco::Init(TTree *tree)
    caloJetEmEHF_ = 0;
    caloJetEmFrac_ = 0;
    caloJetn90_ = 0;
+   PhotonPt = 0;
+   PhotonEta = 0;
+   PhotonPhi = 0;
+   PhotonIsoEcal = 0;
+   PhotonIsoHcal = 0;
+   PhotonPfIsoChargdH = 0;
+   PhotonPfIsoNeutralH = 0;
+   PhotonPfIsoPhoton = 0;
+   PhotonPfIsoPuChargedH = 0;
+   PhotonPfIsoEcalCluster = 0;
+   PhotonPfIsoHcalCluster = 0;
+   PhotonE3x3 = 0;
+   PhotonSigmaIetaIeta = 0;
+   PhotonId = 0;
    id1_pdfInfo_ = 0;
    id2_pdfInfo_ = 0;
    x1_pdfInfo_ = 0;
    x2_pdfInfo_ = 0;
    scalePDF_pdfInfo_ = 0;
+   mcWeights_ = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -779,6 +886,7 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("Dr01LepM", &Dr01LepM, &b_Dr01LepM);
    fChain->SetBranchAddress("Dr01LepId", &Dr01LepId, &b_Dr01LepId);
    fChain->SetBranchAddress("Dr01LepStatus", &Dr01LepStatus, &b_Dr01LepStatus);
+   fChain->SetBranchAddress("Dr01LepMomId", &Dr01LepMomId, &b_Dr01LepMomId);
    fChain->SetBranchAddress("Bare01LepPt", &Bare01LepPt, &b_Bare01LepPt);
    fChain->SetBranchAddress("Bare01LepEta", &Bare01LepEta, &b_Bare01LepEta);
    fChain->SetBranchAddress("Bare01LepPhi", &Bare01LepPhi, &b_Bare01LepPhi);
@@ -786,6 +894,7 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("Bare01LepM", &Bare01LepM, &b_Bare01LepM);
    fChain->SetBranchAddress("Bare01LepId", &Bare01LepId, &b_Bare01LepId);
    fChain->SetBranchAddress("Bare01LepStatus", &Bare01LepStatus, &b_Bare01LepStatus);
+   fChain->SetBranchAddress("Bare01LepMomId", &Bare01LepMomId, &b_Bare01LepMomId);
    fChain->SetBranchAddress("St03Pt", &St03Pt, &b_St03Pt);
    fChain->SetBranchAddress("St03Eta", &St03Eta, &b_St03Eta);
    fChain->SetBranchAddress("St03Phi", &St03Phi, &b_St03Phi);
@@ -813,6 +922,11 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("GjPz", &GjPz, &b_GjPz);
    fChain->SetBranchAddress("GjChargedFraction", &GjChargedFraction, &b_GjChargedFraction);
    fChain->SetBranchAddress("matchGjet", &matchGjet, &b_matchGjet);
+   fChain->SetBranchAddress("GjDoughterId_", &GjDoughterId_, &b_GjDoughterId_);
+   fChain->SetBranchAddress("GjDoughterPt_", &GjDoughterPt_, &b_GjDoughterPt_);
+   fChain->SetBranchAddress("GjDoughterEta_", &GjDoughterEta_, &b_GjDoughterEta_);
+   fChain->SetBranchAddress("GjDoughterPhi_", &GjDoughterPhi_, &b_GjDoughterPhi_);
+   fChain->SetBranchAddress("GjDoughterE_", &GjDoughterE_, &b_GjDoughterE_);
    fChain->SetBranchAddress("MGjPt", &MGjPt, &b_MGjPt);
    fChain->SetBranchAddress("MGjeta", &MGjeta, &b_MGjeta);
    fChain->SetBranchAddress("MGjphi", &MGjphi, &b_MGjphi);
@@ -919,6 +1033,11 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("patJetPfAk05BDiscCSVV1_", &patJetPfAk05BDiscCSVV1_, &b_patJetPfAk05BDiscCSVV1_);
    fChain->SetBranchAddress("patJetPfAk05BDiscCSVSLV1_", &patJetPfAk05BDiscCSVSLV1_, &b_patJetPfAk05BDiscCSVSLV1_);
    fChain->SetBranchAddress("unc_", &unc_, &b_unc_);
+   fChain->SetBranchAddress("patJetPfAk05DoughterId_", &patJetPfAk05DoughterId_, &b_patJetPfAk05DoughterId_);
+   fChain->SetBranchAddress("patJetPfAk05DoughterPt_", &patJetPfAk05DoughterPt_, &b_patJetPfAk05DoughterPt_);
+   fChain->SetBranchAddress("patJetPfAk05DoughterEta_", &patJetPfAk05DoughterEta_, &b_patJetPfAk05DoughterEta_);
+   fChain->SetBranchAddress("patJetPfAk05DoughterPhi_", &patJetPfAk05DoughterPhi_, &b_patJetPfAk05DoughterPhi_);
+   fChain->SetBranchAddress("patJetPfAk05DoughterE_", &patJetPfAk05DoughterE_, &b_patJetPfAk05DoughterE_);
    fChain->SetBranchAddress("patJetPfAk05PtUp_", &patJetPfAk05PtUp_, &b_patJetPfAk05PtUp_);
    fChain->SetBranchAddress("patJetPfAk05PtDn_", &patJetPfAk05PtDn_, &b_patJetPfAk05PtDn_);
    fChain->SetBranchAddress("caloJetPt_", &caloJetPt_, &b_caloJetPt_);
@@ -930,6 +1049,20 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("caloJetEmEHF_", &caloJetEmEHF_, &b_caloJetEmEHF_);
    fChain->SetBranchAddress("caloJetEmFrac_", &caloJetEmFrac_, &b_caloJetEmFrac_);
    fChain->SetBranchAddress("caloJetn90_", &caloJetn90_, &b_caloJetn90_);
+   fChain->SetBranchAddress("PhotonPt", &PhotonPt, &b_PhotonPt);
+   fChain->SetBranchAddress("PhotonEta", &PhotonEta, &b_PhotonEta);
+   fChain->SetBranchAddress("PhotonPhi", &PhotonPhi, &b_PhotonPhi);
+   fChain->SetBranchAddress("PhotonIsoEcal", &PhotonIsoEcal, &b_PhotonIsoEcal);
+   fChain->SetBranchAddress("PhotonIsoHcal", &PhotonIsoHcal, &b_PhotonIsoHcal);
+   fChain->SetBranchAddress("PhotonPfIsoChargdH", &PhotonPfIsoChargdH, &b_PhotonPfIsoChargdH);
+   fChain->SetBranchAddress("PhotonPfIsoNeutralH", &PhotonPfIsoNeutralH, &b_PhotonPfIsoNeutralH);
+   fChain->SetBranchAddress("PhotonPfIsoPhoton", &PhotonPfIsoPhoton, &b_PhotonPfIsoPhoton);
+   fChain->SetBranchAddress("PhotonPfIsoPuChargedH", &PhotonPfIsoPuChargedH, &b_PhotonPfIsoPuChargedH);
+   fChain->SetBranchAddress("PhotonPfIsoEcalCluster", &PhotonPfIsoEcalCluster, &b_PhotonPfIsoEcalCluster);
+   fChain->SetBranchAddress("PhotonPfIsoHcalCluster", &PhotonPfIsoHcalCluster, &b_PhotonPfIsoHcalCluster);
+   fChain->SetBranchAddress("PhotonE3x3", &PhotonE3x3, &b_PhotonE3x3);
+   fChain->SetBranchAddress("PhotonSigmaIetaIeta", &PhotonSigmaIetaIeta, &b_PhotonSigmaIetaIeta);
+   fChain->SetBranchAddress("PhotonId", &PhotonId, &b_PhotonId);
    fChain->SetBranchAddress("id1_pdfInfo_", &id1_pdfInfo_, &b_id1_pdfInfo_);
    fChain->SetBranchAddress("id2_pdfInfo_", &id2_pdfInfo_, &b_id2_pdfInfo_);
    fChain->SetBranchAddress("x1_pdfInfo_", &x1_pdfInfo_, &b_x1_pdfInfo_);
@@ -937,6 +1070,7 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("scalePDF_pdfInfo_", &scalePDF_pdfInfo_, &b_scalePDF_pdfInfo_);
    fChain->SetBranchAddress("ptHat_", &ptHat_, &b_ptHat_);
    fChain->SetBranchAddress("mcWeight_", &mcWeight_, &b_mcWeight_);
+   fChain->SetBranchAddress("mcWeights_", &mcWeights_, &b_mcWeights_);
    fChain->SetBranchAddress("nup", &nup, &b_nup);
    Notify();
 }
@@ -966,7 +1100,6 @@ Int_t ttjana_reco::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
-
 double ttjana_reco::DeltaR(double eta1, double eta2, double phi1, double phi2)
         {
         double deta = eta2 - eta1;
