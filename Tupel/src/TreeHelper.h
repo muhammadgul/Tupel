@@ -39,6 +39,11 @@ public:
       delete[] descriptions_.back();
       descriptions_.pop_back();
     }
+    
+    while(!vDescriptions_.empty()){
+      delete vDescriptions_.back();
+      vDescriptions_.pop_back();
+    }
   }
   
   /** Add a branch of one the supported vector types
@@ -96,6 +101,19 @@ public:
       descriptions_.push_back(new char[strlen(description) + 1]);
       strcpy(descriptions_.back(), description);
       descTree_->Branch(branchName, descriptions_.back(), (std::string(branchName) + "/C").c_str());
+    }
+  }
+
+  /** Add a description branch to descibe each elements of a vector type branch
+   */
+  void addDescription(const char* branchName, const std::vector<std::string>& descriptions){
+    if(descTree_){
+      std::vector<TString>* var = new std::vector<TString>(descriptions.size());
+      for(unsigned i = 0; i < descriptions.size(); ++i){
+	var->push_back(TString(descriptions[i]));
+      }
+      vDescriptions_.push_back(var);
+      descTree_->Branch(branchName, var);
     }
   }
  
@@ -165,6 +183,7 @@ private:
   std::vector<std::vector<double>*> doubleVectorList_;
   std::vector<std::vector<bool>*> boolVectorList_;
   std::vector<char*> descriptions_;
+  std::vector<std::vector<TString>*> vDescriptions_;
   
   TTree* tree_;
   TTree* descTree_;

@@ -57,6 +57,7 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan,
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "DataFormats/BTauReco/interface/JetTag.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
 
 #include "TreeHelper.h"
 
@@ -115,6 +116,8 @@ private:
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   /// everything that needs to be done after the event loop
   virtual void endJob() ;
+
+  virtual void endRun(edm::Run const& iRun, edm::EventSetup const&);
 
   void defineBitFields();
   
@@ -1295,7 +1298,7 @@ Tupel::beginJob()
   ADD_BRANCH_D(EvtVtxCnt, "Number of reconstructed primary vertices");
   ADD_BRANCH_D(EvtPuCnt, "Number of measured pile-up events");
   ADD_BRANCH_D(EvtPuCntTruth, "True number of pile-up events");
-  ADD_BRANCH_D(EvtWeights, "List of event weights. First element of the list should be used as default to fill histograms.");
+  ADD_BRANCH(EvtWeights); //description filled in endRun()
   ADD_BRANCH_D(EvtFastJetRho, "Fastjet pile-up variable \\rho");
   
   //Trigger
@@ -1520,6 +1523,28 @@ Tupel::endJob()
 {
   //  delete jecUnc;
   //  myTree->Print();
+}
+
+void
+Tupel::endRun(edm::Run const& iRun, edm::EventSetup const&){
+
+  edm::Handle<LHERunInfoProduct> lheRun;  
+  iRun.getByLabel(lheSource_, lheRun );
+
+  if(lheRun.failedToGet ()){
+    //No LHERunInfoProduct. Put some generic description.
+    treeHelper_->addDescription("EvtWeights", "List of MC event weights. First weight is the default weight to apply on events."); 
+  } else{
+
+    const LHERunInfoProduct& myLHERunInfoProduct = *(lheRun.product());
+    
+    for (std::vector<LHERunInfoProduct::Header>::const_iterator iter = myLHERunInfoProduct.headers_begin();
+	 iter != myLHERunInfoProduct.headers_end();
+	 iter++){
+      std::cout << iter->tag() << std::endl;
+      treeHelper_->addDescription("EvtWeights", iter->lines());
+    }
+  }
 }
 
 DEFINE_FWK_MODULE(Tupel);
