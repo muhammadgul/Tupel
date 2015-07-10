@@ -109,11 +109,11 @@ public:
   ~Tupel();
 
 private:
-/// everything that needs to be done before the EvtNum loop
+/// everything that needs to be done before the event loop
   virtual void beginJob() ;
-  /// everything that needs to be done during the EvtNum loop
+  /// everything that needs to be done during the event loop
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
-  /// everything that needs to be done after the EvtNum loop
+  /// everything that needs to be done after the event loop
   virtual void endJob() ;
 
   void defineBitFields();
@@ -397,6 +397,14 @@ private:
   std::auto_ptr<std::vector<float> > JetAk04BTagCsv_;
   std::auto_ptr<std::vector<float> > JetAk04BTagCsvV1_;
   std::auto_ptr<std::vector<float> > JetAk04BTagCsvSLV1_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscCisvV2_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscJp_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscBjp_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscTche_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscTchp_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscSsvhe_;
+  std::auto_ptr<std::vector<float> > JetAk04BDiscSsvhp_;
+  std::auto_ptr<std::vector<float> > JetAk04PartFlav_;
   std::auto_ptr<std::vector<float> > JetAk04JecUncUp_;
   std::auto_ptr<std::vector<float> > JetAk04JecUncDwn_;
   std::auto_ptr<std::vector<int> > JetAk04ConstId_;
@@ -1085,6 +1093,14 @@ void Tupel::processJets(){
     JetAk04BTagCsv_->push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
     JetAk04BTagCsvV1_->push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
     JetAk04BTagCsvSLV1_->push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
+    JetAk04BDiscCisvV2_->push_back(jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
+    JetAk04BDiscJp_->push_back(jet.bDiscriminator("pfJetProbabilityBJetTags"));
+    JetAk04BDiscBjp_->push_back(jet.bDiscriminator("pfJetBProbabilityBJetTags"));
+    JetAk04BDiscTche_->push_back(jet.bDiscriminator("pfTrackCountingHighEffBJetTags"));
+    JetAk04BDiscTchp_->push_back(jet.bDiscriminator("pfTrackCountingHighPurBJetTags"));
+    JetAk04BDiscSsvhe_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
+    JetAk04BDiscSsvhp_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
+    JetAk04PartFlav_->push_back(jet.partonFlavour());
       
     JetAk04E_->push_back(jet.energy());
     JetAk04Pt_->push_back(jet.pt());
@@ -1476,9 +1492,18 @@ Tupel::beginJob()
   ADD_BRANCH(JetAk04JetBetaClassic);
   ADD_BRANCH(JetAk04JetBetaStar);
   ADD_BRANCH(JetAk04JetBetaStarClassic);
-  ADD_BRANCH(JetAk04BTagCsv);
-  ADD_BRANCH(JetAk04BTagCsvV1);
-  ADD_BRANCH(JetAk04BTagCsvSLV1);
+  treeHelper_->addDescription("JetAk04BTag", "B tagging with different algorithms");
+  ADD_BRANCH_D(JetAk04BTagCsv, "combinedSecondaryVertexBJetTags");
+  ADD_BRANCH_D(JetAk04BTagCsvV1, "combinedSecondaryVertexV1BJetTags");
+  ADD_BRANCH_D(JetAk04BTagCsvSLV1, "combinedSecondaryVertexSoftPFLeptonV1BJetTags");
+  ADD_BRANCH_D(JetAk04BDiscCisvV2, "pfCombinedInclusiveSecondaryVertexV2BJetTags");
+  ADD_BRANCH_D(JetAk04BDiscJp, "pfJetProbabilityBJetTags");
+  ADD_BRANCH_D(JetAk04BDiscBjp, "pfJetBProbabilityBJetTags");
+  ADD_BRANCH_D(JetAk04BDiscTche, "pfTrackCountingHighEffBJetTags");
+  ADD_BRANCH_D(JetAk04BDiscTchp, "pfTrackCountingHighPurBJetTags");
+  ADD_BRANCH_D(JetAk04BDiscSsvhe, "pfSimpleSecondaryVertexHighEffBJetTags");
+  ADD_BRANCH_D(JetAk04BDiscSsvhp, "pfSimpleSecondaryVertexHighEffBJetTags");
+  ADD_BRANCH_D(JetAk04PartFlav, "Quark-based jet.");
   ADD_BRANCH(JetAk04JecUncUp);
   ADD_BRANCH(JetAk04JecUncDwn);
   ADD_BRANCH(JetAk04ConstId);
