@@ -60,10 +60,43 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan,
 
 #include "TreeHelper.h"
 
+const double pi = 4*atan(1.);
+
 #define QUOTE2(a) #a
 #define QUOTE(a) QUOTE2(a)
 const static char* checksum = QUOTE(MYFILE_CHECKSUM);
 
+/** 
+ * Define a bit of a bit field.
+ * 1. Document the bit in the ROOT tree
+ * 2. Set the variable with the bit mask (integer with the relevant bit set)
+ * A field named after label prefixed with a k and with an undercore
+ * appended to it must be defined in the class members. This macro will set it.
+ * @param bitField: name (verbatim string without quotes) of the event tree branch the bit belongs to
+ * @param bitNum: bit position, LSB is 0, MSB is 31
+ * @param label: used to build the class field name (k<label>_) and stored as
+ * description in the ROOT file. Use a verbatim string without quotes.
+ * 
+ *  For long description including spaces please use the DEF_BIT_L version
+ */
+#define DEF_BIT(bitField, bitNum, label) \
+  k ## label ## _ = 1 <<bitNum; \
+  treeHelper_->defineBit(#bitField, bitNum, #label);
+
+/**
+ * See DEF_BIT. Version for long description which can not be used
+ * as variable name. The argument desc must be a c string including
+ * the quotes or a c-string (char*) type variable.
+ */
+#define DEF_BIT_L(bitField, bitNum, label, desc) \
+  k ## label ## _ = 1 <<bitNum; \
+  treeHelper_->defineBit(#bitField, bitNum, desc);
+		       
+//#name -> "name", name ## _ -> name_
+#define ADD_BRANCH_D(name, desc) treeHelper_->addBranch(#name, name ## _, desc)
+#define ADD_BRANCH(name) treeHelper_->addBranch(#name, name ## _)
+#define ADD_MOMENTUM_BRANCH_D(name, desc) treeHelper_->addMomentumBranch(#name, name ## Pt_, name ## Eta_, name ## Phi_, name ## E_, desc)
+#define ADD_MOMENTUM_BRANCH(name) treeHelper_->addMomentumBranch(#name, name ## Pt_, name ## Eta_, name ## Phi_, name ## E_)
 
 
 class TTree;
@@ -76,13 +109,15 @@ public:
   ~Tupel();
 
 private:
-/// everything that needs to be done before the event loop
+/// everything that needs to be done before the EvtNum loop
   virtual void beginJob() ;
-  /// everything that needs to be done during the event loop
+  /// everything that needs to be done during the EvtNum loop
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
-  /// everything that needs to be done after the event loop
+  /// everything that needs to be done after the EvtNum loop
   virtual void endJob() ;
 
+  void defineBitFields();
+  
   //help function to compute pseudo rapidity of a TLorentz without
   //ROOT exception in case of infinite pseudo rapidity
   double eta(TLorentzVector v){
@@ -139,7 +174,7 @@ private:
   edm::InputTag gjetSrc_;
   edm::InputTag metSrc_;
   edm::InputTag mSrcRho_;
-  edm::InputTag CaloJet_;
+  //  edm::InputTag CaloJet_;
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
   std::vector<edm::InputTag> metSources;
@@ -152,14 +187,23 @@ private:
   // ----------member data ---------------------------
   TTree *myTree;
   std::auto_ptr<TreeHelper> treeHelper_;
-  
-  std::auto_ptr<double> MyWeight_;
 
-  std::auto_ptr<unsigned> event_, run_, lumi_;
-  std::auto_ptr<int> realdata_, bxnumber_;
-  std::auto_ptr<float> EvtInfo_NumVtx_, PU_npT_, PU_npIT_, nup_;
+  //Event
+  std::auto_ptr<int> EvtIsRealData_;
+  std::auto_ptr<unsigned> EvtNum_;
+  std::auto_ptr<unsigned> EvtRunNum_;
+  std::auto_ptr<int> EvtLumiNum_;
+  std::auto_ptr<int> EvtBxNum_;
+  std::auto_ptr<float> EvtVtxCnt_;
+  std::auto_ptr<int> EvtPuCnt_;
+  std::auto_ptr<int> EvtPuCntTruth_;
+  std::auto_ptr<std::vector<double> > EvtWeights_;
+  std::auto_ptr<float> EvtFastJetRho_;
   
-  //particles
+  //Trigger
+  std::auto_ptr<unsigned> TrigHlt_;
+  
+  //Missing energy
   std::auto_ptr<std::vector<float> > METPt_;
   std::auto_ptr<std::vector<float> > METPx_;
   std::auto_ptr<std::vector<float> > METPy_;
@@ -169,231 +213,213 @@ private:
   std::auto_ptr<std::vector<float> > METsigxy_;
   std::auto_ptr<std::vector<float> > METsigy2_;   
   std::auto_ptr<std::vector<float> > METsig_;
-  std::auto_ptr<std::vector<float> > Dr01LepPt_;
-  std::auto_ptr<std::vector<float> > Dr01LepEta_;
-  std::auto_ptr<std::vector<float> > Dr01LepPhi_;
-  std::auto_ptr<std::vector<float> > Dr01LepE_;
-  std::auto_ptr<std::vector<float> > Dr01LepM_;
-  std::auto_ptr<std::vector<float> > Dr01LepId_;
-  std::auto_ptr<std::vector<float> > Dr01LepStatus_;
-  std::auto_ptr<std::vector<float> > Dr01LepMomId_;
-  std::auto_ptr<std::vector<float> > Bare01LepPt_;
-  std::auto_ptr<std::vector<float> > Bare01LepEta_;
-  std::auto_ptr<std::vector<float> > Bare01LepPhi_;
-  std::auto_ptr<std::vector<float> > Bare01LepE_;
-  std::auto_ptr<std::vector<float> > Bare01LepM_;
-  std::auto_ptr<std::vector<float> > Bare01LepId_;
-  std::auto_ptr<std::vector<float> > Bare01LepStatus_;
-  std::auto_ptr<std::vector<float> > Bare01LepMomId_;
-  std::auto_ptr<std::vector<float> > St03Pt_;
-  std::auto_ptr<std::vector<float> > St03Eta_;
-  std::auto_ptr<std::vector<float> > St03Phi_;
-  std::auto_ptr<std::vector<float> > St03E_;
-  std::auto_ptr<std::vector<float> > St03M_;
-  std::auto_ptr<std::vector<float> > St03Id_;
-  std::auto_ptr<std::vector<float> > St03Status_;
-  std::auto_ptr<std::vector<float> > St03MotherId_;
-  std::auto_ptr<std::vector<float> > St03NumberMom_;
 
-  std::auto_ptr<std::vector<float> > St01PhotonPt_;
-  std::auto_ptr<std::vector<float> > St01PhotonEta_;
-  std::auto_ptr<std::vector<float> > St01PhotonPhi_;
-  std::auto_ptr<std::vector<float> > St01PhotonE_;
-  std::auto_ptr<std::vector<float> > St01PhotonM_;
-  std::auto_ptr<std::vector<float> > St01PhotonId_;
-  std::auto_ptr<std::vector<float> > St01PhotonMomId_;
-  std::auto_ptr<std::vector<float> > St01PhotonNumberMom_;
-  std::auto_ptr<std::vector<float> > St01PhotonStatus_;
+  //Generator level leptons, dressed
+  std::auto_ptr<std::vector<float> > GLepDr01Pt_;
+  std::auto_ptr<std::vector<float> > GLepDr01Eta_;
+  std::auto_ptr<std::vector<float> > GLepDr01Phi_;
+  std::auto_ptr<std::vector<float> > GLepDr01E_;
+  std::auto_ptr<std::vector<unsigned> > GLepDr01Id_;
+  std::auto_ptr<std::vector<int> > GLepDr01St_;
+  std::auto_ptr<std::vector<int> > GLepDr01MomId_;
+
+  //Generator level leptons, not-dressed  
+  std::auto_ptr<std::vector<float> > GLepBarePt_;
+  std::auto_ptr<std::vector<float> > GLepBareEta_;
+  std::auto_ptr<std::vector<float> > GLepBarePhi_;
+  std::auto_ptr<std::vector<float> > GLepBareE_;
+  std::auto_ptr<std::vector<unsigned> > GLepBareId_;
+  std::auto_ptr<std::vector<int> > GLepBareSt_;
+  std::auto_ptr<std::vector<int> > GLepBareMomId_;
+
+  //Generator level leptons, status 3
+  std::auto_ptr<std::vector<float> > GLepSt3Pt_;
+  std::auto_ptr<std::vector<float> > GLepSt3Eta_;
+  std::auto_ptr<std::vector<float> > GLepSt3Phi_;
+  std::auto_ptr<std::vector<float> > GLepSt3E_;
+  std::auto_ptr<std::vector<float> > GLepSt3M_;
+  std::auto_ptr<std::vector<int> >   GLepSt3Id_;
+  std::auto_ptr<std::vector<int> >   GLepSt3St_;
+  std::auto_ptr<std::vector<int> >   GLepSt3Mother0Id_;
+  std::auto_ptr<std::vector<int> >   GLepSt3MotherCnt_;
+
+  //Photons in the vicinity of the leptons
+  std::auto_ptr<std::vector<float> > GLepClosePhotPt_;
+  std::auto_ptr<std::vector<float> > GLepClosePhotEta_;
+  std::auto_ptr<std::vector<float> > GLepClosePhotPhi_;
+  std::auto_ptr<std::vector<float> > GLepClosePhotE_;
+  std::auto_ptr<std::vector<float> > GLepClosePhotM_;
+  std::auto_ptr<std::vector<int> >   GLepClosePhotId_;
+  std::auto_ptr<std::vector<int> >   GLepClosePhotMother0Id_;
+  std::auto_ptr<std::vector<int> >   GLepClosePhotMotherCnt_;
+  std::auto_ptr<std::vector<int> >   GLepClosePhotSt_;
+
+  //Gen Jets
+  std::auto_ptr<std::vector<float> > GJetAk04Pt_;
+  std::auto_ptr<std::vector<float> > GJetAk04Eta_;
+  std::auto_ptr<std::vector<float> > GJetAk04Phi_;
+  std::auto_ptr<std::vector<float> > GJetAk04E_;
+  std::auto_ptr<std::vector<float> > GJetAk04Id_;
+  std::auto_ptr<std::vector<float> > GJetAk04PuId_;
+  std::auto_ptr<std::vector<float> > GJetAk04ChFrac_;
+  std::auto_ptr<std::vector<int> >   GJetAk04ConstCnt_;
+  std::auto_ptr<std::vector<int> >   GJetAk04ConstId_;
+  std::auto_ptr<std::vector<float> > GJetAk04ConstPt_;
+  std::auto_ptr<std::vector<float> > GJetAk04ConstEta_;
+  std::auto_ptr<std::vector<float> > GJetAk04ConstPhi_;
+  std::auto_ptr<std::vector<float> > GJetAk04ConstE_;
+
+  //Exta generator information
+  std::auto_ptr<std::vector<float> > GPdfId1_;
+  std::auto_ptr<std::vector<float> > GPdfId2_;
+  std::auto_ptr<std::vector<float> > GPdfx1_;
+  std::auto_ptr<std::vector<float> > GPdfx2_;
+  std::auto_ptr<std::vector<float> > GPdfScale_;
+  std::auto_ptr<float> GBinningValue_;
+  std::auto_ptr<int> GNup_;
 
 
-
-  std::auto_ptr<std::vector<float> > GjPt_;
-  std::auto_ptr<std::vector<float> > Gjeta_;
-  std::auto_ptr<std::vector<float> > Gjphi_;
-  std::auto_ptr<std::vector<float> > GjE_;
-  std::auto_ptr<std::vector<float> > GjPx_;
-  std::auto_ptr<std::vector<float> > GjPy_;
-  std::auto_ptr<std::vector<float> > GjPz_;
-  std::auto_ptr<std::vector<float> > GjChargedFraction_;
-  std::auto_ptr<std::vector<bool> > matchGjet_;
-  std::auto_ptr<std::vector<int> > GjDoughterId_;
-  std::auto_ptr<std::vector<float> > GjDoughterPt_;
-  std::auto_ptr<std::vector<float> > GjDoughterEta_;
-  std::auto_ptr<std::vector<float> > GjDoughterPhi_;
-  std::auto_ptr<std::vector<float> > GjDoughterE_;
-
-
-  std::auto_ptr<std::vector<float> > MGjPt_;
-  std::auto_ptr<std::vector<float> > MGjeta_;
-  std::auto_ptr<std::vector<float> > MGjphi_;
-  std::auto_ptr<std::vector<float> > MGjE_;
-  //CaloJets
-  std::auto_ptr<std::vector<float> > caloJetPt_;
-  std::auto_ptr<std::vector<float> > caloJetRawPt_;
-  std::auto_ptr<std::vector<float> > caloJetEn_;
-  std::auto_ptr<std::vector<float> > caloJetEta_;
-  std::auto_ptr<std::vector<float> > caloJetPhi_;
-  std::auto_ptr<std::vector<float> > caloJetHadEHF_;
-  std::auto_ptr<std::vector<float> > caloJetEmEHF_;
-  std::auto_ptr<std::vector<float> > caloJetEmFrac_;
-  std::auto_ptr<std::vector<float> > caloJetn90_;
-  ///pfjets
-  std::auto_ptr<std::vector<float> > patJetPfAk05En_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05Pt_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05Eta_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05Phi_;
-  //std::auto_ptr<std::vector<float> > patJetPfAk05JesUncert_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05LooseId_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05Et_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05RawPt_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05RawEn_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05HadEHF_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05EmEHF_;
-  //std::auto_ptr<std::vector<float> > patJetPfAk05jetBSZ_;
-  //std::auto_ptr<std::vector<float> > patJetPfAk05jetBZ_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05jetBetaClassic_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05jetBeta_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05jetBetaStar_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05jetBetaStarClassic_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05jetpuMVA_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05chf_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05nhf_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05cemf_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05nemf_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05cmult_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05nconst_;
-  std::auto_ptr<std::vector<bool> > patJetPfAk05jetpukLoose_;
-  std::auto_ptr<std::vector<bool> > patJetPfAk05jetpukMedium_;
-  std::auto_ptr<std::vector<bool> > patJetPfAk05jetpukTight_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05PtUp_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05PtDn_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05BDiscCSV_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05BDiscCSVV1_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05BDiscCSVSLV1_;
-  std::auto_ptr<std::vector<int> > patJetPfAk05DoughterId_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05DoughterPt_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05DoughterEta_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05DoughterPhi_;
-  std::auto_ptr<std::vector<float> > patJetPfAk05DoughterE_;
-
-  std::auto_ptr<std::vector<float> > unc_;
   ///Muons
-  std::auto_ptr<std::vector<float> > patMuonPt_;
-  std::auto_ptr<std::vector<float> > patMuonEta_;
-  std::auto_ptr<std::vector<float> > patMuonPhi_;
-  std::auto_ptr<std::vector<float> > patMuonVtxZ_;
-  std::auto_ptr<std::vector<float> > patMuonEn_;
-  std::auto_ptr<std::vector<float> > patMuonCharge_;
-  std::auto_ptr<std::vector<float> > patMuonDxy_;
-  std::auto_ptr<std::vector<float> > patMuonCombId_;
-  std::auto_ptr<std::vector<float> > patMuonTrig_;
-  std::auto_ptr<std::vector<float> > patMuonDetIsoRho_;
-  std::auto_ptr<std::vector<float> > patMuonPfIsoDbeta_;
-  std::auto_ptr<std::vector<float> > patMuonM_;
-  std::auto_ptr<std::vector<float> > patMuonPx_;
-  std::auto_ptr<std::vector<float> > patMuonPy_;
-  std::auto_ptr<std::vector<float> > patMuonPz_;
-  std::auto_ptr<std::vector<float> > patMuonGlobalType_;
-  std::auto_ptr<std::vector<float> > patMuonTrackerType_;
-  std::auto_ptr<std::vector<float> > patMuonPFType_;
-  std::auto_ptr<std::vector<float> > patMuonIsoSumPt_;
-  std::auto_ptr<std::vector<float> > patMuonIsoRelative_;
-  std::auto_ptr<std::vector<float> > patMuonIsoCalComb_;
-  std::auto_ptr<std::vector<float> > patMuonIsoDY_;
-  std::auto_ptr<std::vector<float> > patMuonChi2Ndoff_;
-  std::auto_ptr<std::vector<float> > patMuonNhits_;
-  std::auto_ptr<std::vector<float> > patMuonNMatches_;
-  std::auto_ptr<std::vector<float> > patMuonDz_;
-  std::auto_ptr<std::vector<float> > patMuonPhits_;
-  std::auto_ptr<std::vector<float> > patMuonTkLayers_;
-  std::auto_ptr<std::vector<float> > patMuon_PF_IsoSumChargedHadronPt_;
-  std::auto_ptr<std::vector<float> > patMuon_PF_IsoSumNeutralHadronEt_;
-  std::auto_ptr<std::vector<float> > patMuon_PF_IsoDY_;
-  std::auto_ptr<std::vector<float> > patMuon_Mu17_Mu8_Matched_;
-  std::auto_ptr<std::vector<float> > patMuon_Mu17_TkMu8_Matched_;
-  std::auto_ptr<std::vector<bool> >   patMuonIdLoose_;
-  std::auto_ptr<std::vector<bool> >   patMuonIdMedium_;
-  std::auto_ptr<std::vector<unsigned> > patMuonIdTight_;
+  std::auto_ptr<std::vector<float> > MuPt_;
+  std::auto_ptr<std::vector<float> > MuEta_;
+  std::auto_ptr<std::vector<float> > MuPhi_;
+  std::auto_ptr<std::vector<float> > MuE_;
+  std::auto_ptr<std::vector<int> >   MuId_;
+  std::auto_ptr<std::vector<unsigned> > MuIdTight_;
+  std::auto_ptr<std::vector<float> > MuCh_;
+  std::auto_ptr<std::vector<float> > MuVtxZ_;
+  std::auto_ptr<std::vector<float> > MuDxy_;
+  std::auto_ptr<std::vector<float> > MuIsoRho_;
+  std::auto_ptr<std::vector<float> > MuPfIso_;
+  std::auto_ptr<std::vector<float> > MuType_;
+  std::auto_ptr<std::vector<float> > MuIsoTkIsoAbs_;
+  std::auto_ptr<std::vector<float> > MuIsoTkIsoRel_;
+  std::auto_ptr<std::vector<float> > MuIsoCalAbs_;
+  std::auto_ptr<std::vector<float> > MuIsoCombRel_;
+  std::auto_ptr<std::vector<float> > MuTkNormChi2_;
+  std::auto_ptr<std::vector<float> > MuTkHitCnt_;
+  std::auto_ptr<std::vector<float> > MuMatchedStationCnt_;
+  std::auto_ptr<std::vector<float> > MuDz_;
+  std::auto_ptr<std::vector<float> > MuPixelHitCnt_;
+  std::auto_ptr<std::vector<float> > MuTkLayerCnt_;
+  std::auto_ptr<std::vector<float> > MuPfIsoChHad_;
+  std::auto_ptr<std::vector<float> > MuPfIsoNeutralHad_;
+  std::auto_ptr<std::vector<float> > MuPfIsoRawRel_;
+  std::auto_ptr<std::vector<float> > MuHltMatch_;
 
+  //Electrons
+  std::auto_ptr<std::vector<float> > ElPt_;
+  std::auto_ptr<std::vector<float> > ElEta_;
+  std::auto_ptr<std::vector<float> > ElEtaSc_;
+  std::auto_ptr<std::vector<float> > ElPhi_;
+  std::auto_ptr<std::vector<float> > ElE_;
+  std::auto_ptr<std::vector<float> > ElCh_;  
+  std::auto_ptr<std::vector<unsigned> >  ElId_;
+  std::auto_ptr<std::vector<float> > ElMvaTrig_;
+  std::auto_ptr<std::vector<float> > ElMvaNonTrig_;
+  std::auto_ptr<std::vector<float> > ElMvaPresel_;
+  std::auto_ptr<std::vector<float> > ElDEtaTkScAtVtx_;
+  std::auto_ptr<std::vector<float> > ElDPhiTkScAtVtx_;
+  std::auto_ptr<std::vector<float> > ElHoE_;
+  std::auto_ptr<std::vector<float> > ElSigmaIetaIeta_;
+  std::auto_ptr<std::vector<float> > ElSigmaIetaIetaFull5x5_;
+  std::auto_ptr<std::vector<float> > ElEinvMinusPinv_;
+  std::auto_ptr<std::vector<float> > ElD0_;
+  std::auto_ptr<std::vector<float> > ElDz_;
+  std::auto_ptr<std::vector<int> >   ElExpectedMissingInnerHitCnt_;
+  std::auto_ptr<std::vector<int> >   ElPassConvVeto_;
+  std::auto_ptr<std::vector<float> > ElHltMatch_;
+  std::auto_ptr<std::vector<float> > ElPfIsoChHad_;
+  std::auto_ptr<std::vector<float> > ElPfIsoNeutralHad_;
+  std::auto_ptr<std::vector<float> > ElPfIsoIso_;
+  std::auto_ptr<std::vector<float> > ElPfIsoPuChHad_;
+  std::auto_ptr<std::vector<float> > ElPfIsoRaw_;
+  std::auto_ptr<std::vector<float> > ElPfIsoDbeta_;
+  std::auto_ptr<std::vector<float> > ElPfIsoRho_;
+  std::auto_ptr<std::vector<float> > ElAEff_;
   
-
-  std::auto_ptr<std::vector<float> > patElecdEtaIn_;
-  std::auto_ptr<std::vector<float> > patElecdPhiIn_;
-  std::auto_ptr<std::vector<float> > patElechOverE_;
-  std::auto_ptr<std::vector<float> > patElecsigmaIetaIeta_;
-  std::auto_ptr<std::vector<float> > patElecfull5x5_sigmaIetaIeta_;
-  std::auto_ptr<std::vector<float> > patElecooEmooP_;
-  std::auto_ptr<std::vector<float> > patElecd0_;
-  std::auto_ptr<std::vector<float> > patElecdz_;
-  std::auto_ptr<std::vector<int> >    patElecexpectedMissingInnerHits_;
-  std::auto_ptr<std::vector<int> >    patElecpassConversionVeto_;     
-  std::auto_ptr<std::vector<float> > patElecTrig_;
-  std::auto_ptr<std::vector<float> > patElecDz_;
-  std::auto_ptr<std::vector<float> > patElecMVATrigId_;
-  std::auto_ptr<std::vector<float> > patElecMVANonTrigId_;
-  std::auto_ptr<std::vector<float> > patElecPt_;
-  std::auto_ptr<std::vector<float> > patElecEta_;
-  std::auto_ptr<std::vector<float> > patElecScEta_;
-  std::auto_ptr<std::vector<float> > patElecPhi_;
-  std::auto_ptr<std::vector<float> > patElecEnergy_;
-  std::auto_ptr<std::vector<float> > patElecCharge_;
-  std::auto_ptr<std::vector<float> > patElecMediumIDOff_;
-  std::auto_ptr<std::vector<float> > patElecMediumIDOff_Tom_;
-  
-  std::auto_ptr<std::vector<float> > patElecchIso03_;
-  std::auto_ptr<std::vector<float> > patElecnhIso03_;
-  std::auto_ptr<std::vector<float> > patElecphIso03_;
-  std::auto_ptr<std::vector<float> > patElecpuChIso03_;
-  std::auto_ptr<std::vector<float> > patElecPfIso_;
-  std::auto_ptr<std::vector<float> > patElecPfIsodb_;
-  std::auto_ptr<std::vector<float> > patElecPfIsoRho_;
-  std::auto_ptr<std::vector<unsigned> >  patElecId_;
   std::auto_ptr<std::vector<float> > charged_;
   std::auto_ptr<std::vector<float> > photon_;
   std::auto_ptr<std::vector<float> > neutral_;
   std::auto_ptr<std::vector<float> > charged_Tom_;
   std::auto_ptr<std::vector<float> > photon_Tom_;
   std::auto_ptr<std::vector<float> > neutral_Tom_;
-  std::auto_ptr<std::vector<float> > patElec_mva_presel_;
 
   //Photons
   //photon momenta
-  std::auto_ptr<std::vector<float> > PhotonPt_;
-  std::auto_ptr<std::vector<float> > PhotonEta_;
-  std::auto_ptr<std::vector<float> > PhotonPhi_;
+  std::auto_ptr<std::vector<float> > PhotPt_;
+  std::auto_ptr<std::vector<float> > PhotEta_;
+  std::auto_ptr<std::vector<float> > PhotPhi_;
   
   //photon isolations
-  std::auto_ptr<std::vector<float> > PhotonIsoEcal_;
-  std::auto_ptr<std::vector<float> > PhotonIsoHcal_;
-  std::auto_ptr<std::vector<float> > PhotonPfIsoChargdH_;
-  std::auto_ptr<std::vector<float> > PhotonPfIsoNeutralH_;
-  std::auto_ptr<std::vector<float> > PhotonPfIsoPhoton_;
-  std::auto_ptr<std::vector<float> > PhotonPfIsoPuChargedH_;
-  std::auto_ptr<std::vector<float> > PhotonPfIsoEcalCluster_;
-  std::auto_ptr<std::vector<float> > PhotonPfIsoHcalCluster_;
+  std::auto_ptr<std::vector<float> > PhotIsoEcal_;
+  std::auto_ptr<std::vector<float> > PhotIsoHcal_;
+  std::auto_ptr<std::vector<float> > PhotIsoTk_;
+  std::auto_ptr<std::vector<float> > PhotPfIsoChHad_;
+  std::auto_ptr<std::vector<float> > PhotPfIsoNeutralHad_;
+  std::auto_ptr<std::vector<float> > PhotPfIsoPhot_;
+  std::auto_ptr<std::vector<float> > PhotPfIsoPuChHad_;
+  std::auto_ptr<std::vector<float> > PhotPfIsoEcalClus_;
+  std::auto_ptr<std::vector<float> > PhotPfIsoHcalClus_;
   
   //photon cluster shapes
-  std::auto_ptr<std::vector<float> > PhotonE3x3_;
-  std::auto_ptr<std::vector<float> > PhotonSigmaIetaIeta_;
+  std::auto_ptr<std::vector<float> > PhotE3x3_;
+  std::auto_ptr<std::vector<float> > PhotSigmaIetaIeta_;
 
   //photon id (bit field)
-  std::auto_ptr<std::vector<unsigned> > PhotonId_;
-  std::auto_ptr<std::vector<float> > PhotonHoE_;
-  std::auto_ptr<std::vector<bool> > PhotonHasPixelSeed_;
+  std::auto_ptr<std::vector<unsigned> > PhotId_;
+  std::auto_ptr<std::vector<float> > PhotHoE_;
+  std::auto_ptr<std::vector<bool> > PhotHasPixelSeed_;
   
-  std::auto_ptr<std::vector<float> > id1_pdfInfo_;
-  std::auto_ptr<std::vector<float> > id2_pdfInfo_;
-  std::auto_ptr<std::vector<float> > x1_pdfInfo_;
-  std::auto_ptr<std::vector<float> > x2_pdfInfo_;
-  std::auto_ptr<std::vector<float> > scalePDF_pdfInfo_;
-  std::auto_ptr<float> ptHat_;
-  std::auto_ptr<double> mcWeight_;
-  std::auto_ptr<std::vector<double> > mcWeights_;
-  std::auto_ptr<float> rhoPrime_, AEff_;
-  //HLT
-  std::auto_ptr<int> HLT_Mu17_Mu8_, HLT_Mu17_TkMu8_;
-  std::auto_ptr<int> HLT_Elec17_Elec8_;
 
+  ///PF Jets
+  std::auto_ptr<std::vector<float> > JetAk04Pt_;
+  std::auto_ptr<std::vector<float> > JetAk04Eta_;
+  std::auto_ptr<std::vector<float> > JetAk04Phi_;
+  std::auto_ptr<std::vector<float> > JetAk04E_;
+  std::auto_ptr<std::vector<float> > JetAk04Id_;
+  std::auto_ptr<std::vector<bool> > JetAk04PuId_;
+  std::auto_ptr<std::vector<float> > JetAk04PuMva_;
+  std::auto_ptr<std::vector<float> > JetAk04RawPt_;
+  std::auto_ptr<std::vector<float> > JetAk04RawE_;
+  std::auto_ptr<std::vector<float> > JetAk04HfHadE_;
+  std::auto_ptr<std::vector<float> > JetAk04HfEmE_;
+  std::auto_ptr<std::vector<float> > JetAk04JetBetaClassic_;
+  std::auto_ptr<std::vector<float> > JetAk04JetBeta_;
+  std::auto_ptr<std::vector<float> > JetAk04JetBetaStar_;
+  std::auto_ptr<std::vector<float> > JetAk04JetBetaStarClassic_;
+  std::auto_ptr<std::vector<float> > JetAk04ChHadFrac_;
+  std::auto_ptr<std::vector<float> > JetAk04NeutralHadAndHfFrac_;
+  std::auto_ptr<std::vector<float> > JetAk04ChEmFrac_;
+  std::auto_ptr<std::vector<float> > JetAk04NeutralEmFrac_;
+  std::auto_ptr<std::vector<float> > JetAk04ChMult_;
+  std::auto_ptr<std::vector<float> > JetAk04ConstCnt_;
+  std::auto_ptr<std::vector<float> > JetAk04BTagCsv_;
+  std::auto_ptr<std::vector<float> > JetAk04BTagCsvV1_;
+  std::auto_ptr<std::vector<float> > JetAk04BTagCsvSLV1_;
+  std::auto_ptr<std::vector<float> > JetAk04JecUncUp_;
+  std::auto_ptr<std::vector<float> > JetAk04JecUncDwn_;
+  std::auto_ptr<std::vector<int> > JetAk04ConstId_;
+  std::auto_ptr<std::vector<float> > JetAk04ConstPt_;
+  std::auto_ptr<std::vector<float> > JetAk04ConstEta_;
+  std::auto_ptr<std::vector<float> > JetAk04ConstPhi_;
+  std::auto_ptr<std::vector<float> > JetAk04ConstE_;
+  std::auto_ptr<std::vector<int> > JetAk04GenJet_;
+  
+  //bits
+  unsigned kMuIdLoose_;
+  unsigned kMuIdCustom_;
+  unsigned kGlobMu_;
+  unsigned kTkMu_;
+  unsigned kPfMu_;
+
+  unsigned kElec17_Elec8_;
+
+  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_veto_;
+  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_loose_;
+  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_medium_;
+  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_tight_;
+  
 //  JetCorrectionUncertainty *jecUnc;
 
 
@@ -417,6 +443,7 @@ private:
   edm::Handle<reco::BeamSpot> beamSpotHandle;
   reco::BeamSpot beamSpot;
   edm::Handle<double> rho;
+  edm::Handle<reco::GenJetCollection> genjetColl_;
 ///
 };
 
@@ -438,7 +465,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
   metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
   mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
-  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
+  //  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
 genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
   metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
@@ -455,18 +482,33 @@ Tupel::~Tupel()
 {
 }
 
-//#name -> "name", name ## _ -> name_
-#define ADD_BRANCH_D(name, desc) treeHelper_->addBranch(#name, name ## _, desc)
-#define ADD_BRANCH(name) treeHelper_->addBranch(#name, name ## _)
-#define ADD_MOMENTUM_BRANCH_D(name, desc) treeHelper_->addMomentumBranch(#name, name ## Pt_, name ## Eta_, name ## Phi_, name ## E_, desc)
-#define ADD_MOMENTUM_BRANCH(name) treeHelper_->addMomentumBranch(#name, name ## Pt_, name ## Eta_, name ## Phi_, name ## E_)
+void Tupel::defineBitFields(){
+  DEF_BIT(TrigHlt, 0, Elec17_Elec8);
+  
+  DEF_BIT(MuId, 0, MuIdLoose);
+  DEF_BIT_L(MuId, 3, MuIdCustom, "Mu Id: isGlobalMuon\n"
+			  "&& isPFMuon\n"
+			  "&& normChi2 < 10\n"
+			  "&& muonHits > 0 && nMatches > \n"
+			  "&& dB < 0.2 && dZ < 0.5\n"
+			  "&& pixelHits > 0 && trkLayers > 5");
+  DEF_BIT(MuType, 0, GlobMu);
+  DEF_BIT(MuType, 1, TkMu);
+  DEF_BIT(MuType, 2, PfMu);
+
+  DEF_BIT(ElId, 0, CutBasedElId_CSA14_50ns_V1_standalone_veto);
+  DEF_BIT(ElId, 1, CutBasedElId_CSA14_50ns_V1_standalone_loose);
+  DEF_BIT(ElId, 2, CutBasedElId_CSA14_50ns_V1_standalone_medium);
+  DEF_BIT(ElId, 3, CutBasedElId_CSA14_50ns_V1_standalone_tight);
+
+}
 
 void Tupel::readEvent(const edm::Event& iEvent){
-  *event_ = iEvent.id().event();
-  *run_ = iEvent.id().run();
-  *lumi_ = iEvent.luminosityBlock();
-  *bxnumber_ = iEvent.bunchCrossing();
-  *realdata_ = iEvent.isRealData();
+  *EvtNum_        = iEvent.id().event();
+  *EvtRunNum_     = iEvent.id().run();
+  *EvtLumiNum_    = iEvent.luminosityBlock();
+  *EvtBxNum_      = iEvent.bunchCrossing();
+  *EvtIsRealData_ = iEvent.isRealData();
 
   const pat::helper::TriggerMatchHelper matchHelper;	
   iEvent.getByLabel(genParticleSrc_, genParticles_h);
@@ -499,6 +541,9 @@ void Tupel::readEvent(const edm::Event& iEvent){
   edm::Handle<edm::View<pat::Photon> > hPhotons;
   iEvent.getByLabel(photonSrc_, hPhotons);
   photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
+
+  //get Gen jets
+  iEvent.getByLabel(gjetSrc_, genjetColl_);
   
   iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
   vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
@@ -547,14 +592,14 @@ void Tupel::processMET(const edm::Event& iEvent){
     //met.sigy2 = metH->ptrAt(0)->getSignificanceMatrix()(1,1);
     //met.sig   = metH->ptrAt(0)->significance();
 
-    //iEvent.put(metOut, metSources[imet].label()); //save the object to the event here, to keep it in the loop
+    //iEvent.put(metOut, metSources[imet].label()); //save the object to the EvtNum here, to keep it in the loop
   }
 }
 
 void Tupel::processVtx(){
   if(vtxx){
     for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
-      if (vtx->isValid() && !vtx->isFake()) ++(*EvtInfo_NumVtx_);
+      if (vtx->isValid() && !vtx->isFake()) ++(*EvtVtxCnt_);
     }
   }
 }
@@ -576,12 +621,13 @@ void Tupel::processPu(const edm::Event& iEvent){
 	npIT = PVI->getPU_NumInteractions();
       }
     }
-    *PU_npT_ = npT;
-    *PU_npIT_ =npIT;
+    //////TO CHECK
+    *EvtPuCntTruth_ = npT;
+    *EvtPuCnt_      = npIT;
   }
   else {
-    *PU_npT_ = -2.; 
-    *PU_npIT_ = -2.;
+    *EvtPuCntTruth_ = -2.; 
+    *EvtPuCnt_ = -2.;
   }
 }
 
@@ -601,16 +647,15 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	TLorentzVector genLep3(0,0,0,0);
 	if(abs(st)!=21)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
 	if(abs(st)==21)genLep3.SetPxPyPzE(0.001,0.001,gen[i].pz(),gen[i].energy());
-	St03Pt_->push_back(genLep3.Pt());
-	St03Eta_->push_back(eta(genLep3));
-	St03Phi_->push_back(genLep3.Phi());
-	St03E_->push_back(genLep3.Energy());
-	St03M_->push_back(genLep3.M());
-	St03MotherId_->push_back(gen[i].mother()->pdgId());
-	St03NumberMom_->push_back(gen[i].numberOfMothers());
-	St03Id_->push_back(id);
-	St03Status_->push_back(st);
+	GLepSt3Pt_->push_back(genLep3.Pt());
+	GLepSt3Eta_->push_back(eta(genLep3));
+	GLepSt3Phi_->push_back(genLep3.Phi());
+	GLepSt3E_->push_back(genLep3.Energy());
+	GLepSt3Mother0Id_->push_back(gen[i].mother()->pdgId());
+	GLepSt3Id_->push_back(id);
+	GLepSt3St_->push_back(st);
       }
+      GLepSt3MotherCnt_->push_back(gen[i].numberOfMothers());
       /* if(abs(id)==15){
       //cout<<gen[i].numberOfMothers() <<"  "<< gen[i].mother()->pdgId()<<"  "<< gen[i].pdgId()<<"  "<<st<<endl;
       n_tau++;
@@ -641,38 +686,35 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	      }
 
 	      if(dR<0.2){
-		St01PhotonPt_->push_back(thisPho1.Pt());
-		St01PhotonEta_->push_back(thisPho1.Eta());
-		St01PhotonPhi_->push_back(thisPho1.Phi());
-		St01PhotonE_->push_back(thisPho1.Energy());
-		St01PhotonM_->push_back(thisPho1.M());
-		St01PhotonId_->push_back(gen2[j].pdgId());
-		St01PhotonMomId_->push_back(fabs(gen2[j].mother()->pdgId()));
-		St01PhotonNumberMom_->push_back(gen2[j].numberOfMothers());
-		St01PhotonStatus_->push_back(gen2[j].status());
+		GLepClosePhotPt_->push_back(thisPho1.Pt());
+		GLepClosePhotEta_->push_back(thisPho1.Eta());
+		GLepClosePhotPhi_->push_back(thisPho1.Phi());
+		GLepClosePhotE_->push_back(thisPho1.Energy());
+		GLepClosePhotId_->push_back(gen2[j].pdgId());
+		GLepClosePhotMother0Id_->push_back(fabs(gen2[j].mother()->pdgId()));
+		GLepClosePhotMotherCnt_->push_back(gen2[j].numberOfMothers());
+		GLepClosePhotSt_->push_back(gen2[j].status());
 	      }
 	    }
 	  }
 	}
 
-	genR1DressLep1=genLep1+genR1Pho1;
-	Dr01LepPt_->push_back(genR1DressLep1.Pt());
-	Dr01LepEta_->push_back(genR1DressLep1.Eta());
-	Dr01LepPhi_->push_back(genR1DressLep1.Phi());
-	Dr01LepE_->push_back(genR1DressLep1.Energy());
-	Dr01LepM_->push_back(genR1DressLep1.M());
-	Dr01LepId_->push_back(id);
-	Dr01LepMomId_->push_back(id);
-	Dr01LepStatus_->push_back(st);
+	genR1DressLep1 = genLep1+genR1Pho1;
+	GLepDr01Pt_->push_back(genR1DressLep1.Pt());
+	GLepDr01Eta_->push_back(genR1DressLep1.Eta());
+	GLepDr01Phi_->push_back(genR1DressLep1.Phi());
+	GLepDr01E_->push_back(genR1DressLep1.Energy());
+	GLepDr01Id_->push_back(id);
+	GLepDr01MomId_->push_back(id);
+	GLepDr01St_->push_back(st);
 
-	Bare01LepPt_->push_back(genLep1.Pt());
-	Bare01LepEta_->push_back(genLep1.Eta());
-	Bare01LepPhi_->push_back(genLep1.Phi());
-	Bare01LepE_->push_back(genLep1.Energy());
-	Bare01LepM_->push_back(genLep1.M());
-	Bare01LepId_->push_back(id);
-	Bare01LepMomId_->push_back(id);
-	Bare01LepStatus_->push_back(st);
+	GLepBarePt_->push_back(genLep1.Pt());
+	GLepBareEta_->push_back(genLep1.Eta());
+	GLepBarePhi_->push_back(genLep1.Phi());
+	GLepBareE_->push_back(genLep1.Energy());
+	GLepBareId_->push_back(id);
+	GLepBareMomId_->push_back(id);
+	GLepBareSt_->push_back(st);
       }
     }
   }
@@ -682,20 +724,14 @@ void Tupel::processGenJets(const edm::Event& iEvent){
   //matrix element info
   Handle<LHEEventProduct> lheH;
   iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
-  if(lheH.isValid()) *nup_ = lheH->hepeup().NUP;
-  edm::Handle<reco::GenJetCollection> genjetColl;
-  //iEvent.getByLabel("ak5GenJets", genjetColl);
-  iEvent.getByLabel(gjetSrc_, genjetColl);
-  if(!genjetColl.failedToGet()){
-    const reco::GenJetCollection & genjet = *genjetColl;
-    for(unsigned int k=0; k<genjetColl->size(); ++k){
-      GjPt_->push_back(genjet[k].pt());
-      Gjeta_->push_back(genjet[k].eta());
-      Gjphi_->push_back(genjet[k].phi());
-      GjE_->push_back(genjet[k].energy());
-      GjPx_->push_back(genjet[k].px());
-      GjPy_->push_back(genjet[k].py());
-      GjPz_->push_back(genjet[k].pz());
+  if(lheH.isValid()) *GNup_ = lheH->hepeup().NUP;
+  if(!genjetColl_.failedToGet()){
+    const reco::GenJetCollection & genjet = *genjetColl_;
+    for(unsigned int k=0; k < genjet.size(); ++k){
+      GJetAk04Pt_->push_back(genjet[k].pt());
+      GJetAk04Eta_->push_back(genjet[k].eta());
+      GJetAk04Phi_->push_back(genjet[k].phi());
+      GJetAk04E_->push_back(genjet[k].energy());
       //double isChargedJet=false;
       //double chargedFraction = 0.;
       //std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
@@ -706,15 +742,16 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       //  }
       //}
       //if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
-      //GjChargedFraction_->push_back(chargedFraction/genjet[k].pt());
+      //GJetAk04ChargedFraction_->push_back(chargedFraction/genjet[k].pt());
+      GJetAk04ConstCnt_->push_back(genjet[k].numberOfDaughters());
       /*if(genjet[k].numberOfDaughters()>0){
 	for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
 	//cout<<genjet[k].numberOfDaughters()<<" GEN AHMEEEEET "<<idx<<"  "<<genjet[k].daughter(idx)->pdgId()<<"  "<<endl;
-	GjDoughterId_->push_back(genjet[k].daughter(idx)->pdgId());
-	GjDoughterPt_->push_back(genjet[k].daughter(idx)->pt());
-	GjDoughterEta_->push_back(genjet[k].daughter(idx)->eta());
-	GjDoughterPhi_->push_back(genjet[k].daughter(idx)->phi());
-	GjDoughterE_->push_back(genjet[k].daughter(idx)->energy());
+	GJetAk04ConstId->push_back(genjet[k].daughter(idx)->pdgId());
+	GJetAk04ConstPt->push_back(genjet[k].daughter(idx)->pt());
+	GJetAk04ConstEta->push_back(genjet[k].daughter(idx)->eta());
+	GJetAk04ConstPhi->push_back(genjet[k].daughter(idx)->phi());
+	GJetAk04ConstE->push_back(genjet[k].daughter(idx)->energy();)
 	}
 	}*/
     }
@@ -725,31 +762,30 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
   edm::Handle<GenEventInfoProduct> genEventInfoProd;
   if (iEvent.getByLabel("generator", genEventInfoProd)) {
     if (genEventInfoProd->hasBinningValues()){
-      *ptHat_ = genEventInfoProd->binningValues()[0];
+      *GBinningValue_ = genEventInfoProd->binningValues()[0];
     }
-    *mcWeight_  = genEventInfoProd->weight();
-    *mcWeights_ = genEventInfoProd->weights();
+    *EvtWeights_ = genEventInfoProd->weights();
   }
   /// now get the PDF information
   edm::Handle<GenEventInfoProduct> pdfInfoHandle;
   if (iEvent.getByLabel("generator", pdfInfoHandle)) {
     if (pdfInfoHandle->pdf()) {
-      id1_pdfInfo_->push_back(pdfInfoHandle->pdf()->id.first);
-      id2_pdfInfo_->push_back(pdfInfoHandle->pdf()->id.second);
-      x1_pdfInfo_->push_back(pdfInfoHandle->pdf()->x.first);
-      x2_pdfInfo_->push_back(pdfInfoHandle->pdf()->x.second);
+      GPdfId1_->push_back(pdfInfoHandle->pdf()->id.first);
+      GPdfId2_->push_back(pdfInfoHandle->pdf()->id.second);
+      GPdfx1_->push_back(pdfInfoHandle->pdf()->x.first);
+      GPdfx2_->push_back(pdfInfoHandle->pdf()->x.second);
       //pdfInfo_->push_back(pdfInfoHandle->pdf()->xPDF.first);
       //dfInfo_->push_back(pdfInfoHandle->pdf()->xPDF.second);
-      scalePDF_pdfInfo_->push_back(pdfInfoHandle->pdf()->scalePDF);
+      GPdfScale_->push_back(pdfInfoHandle->pdf()->scalePDF);
     }   
   }   
 }
 
 void Tupel::processTrigger(const edm::Event& iEvent){
 
-  int Mu17_Mu8=0;
-  int Mu17_TkMu8=0;
-  int Elec17_Elec8=0;
+  int Mu17_Mu8 = 0;
+  int Mu17_TkMu8 = 0;
+  //  int Elec17_Elec8 = 0;
   
   int ntrigs;
   vector<string> trigname;
@@ -764,23 +800,16 @@ void Tupel::processTrigger(const edm::Event& iEvent){
       trigname.push_back(trigNames->triggerName(i));
       trigaccept.push_back(HLTResHandle->accept(i));
       if (trigaccept[i]){
-	if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) Mu17_Mu8=1;
-	if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) Mu17_TkMu8=1;
-	if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) Elec17_Elec8=1;
+	if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) *TrigHlt_ |= Mu17_Mu8;
+	if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) *TrigHlt_ |= Mu17_TkMu8;
+	if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
       }
     }
-    }
-
-  *HLT_Mu17_Mu8_ = Mu17_Mu8;
-  *HLT_Mu17_TkMu8_ = Mu17_TkMu8;
-  *HLT_Elec17_Elec8_ = Elec17_Elec8;
-  
+  }
 }
 
 void Tupel::processMuons(){
   double MuFill = 0;
-  double Mu17_Mu8_Matched = 0;
-  double Mu17_TkMu8_Matched = 0;
   
   for (unsigned int j = 0; j < muons->size(); ++j){
     const edm::View<pat::Muon> & mu = *muons;
@@ -793,10 +822,7 @@ void Tupel::processMuons(){
       //	if ( trigRef2.isAvailable() && trigRef2.isNonnull() ) {
       //	  Mu17_TkMu8_Matched=1;
       //	}
-      patMuon_Mu17_Mu8_Matched_->push_back(Mu17_Mu8_Matched);
-      patMuon_Mu17_TkMu8_Matched_->push_back(Mu17_TkMu8_Matched);
-	  
-      patMuonIdLoose_->push_back(mu[j].isLooseMuon());
+	    //TODO: filled MuHltMatch
       //patMuonIdMedium_->push_back(mu[j].isMediumMuon()); Requires CMSSW >= 4_7_2
       if(vtxx){
 	unsigned bit = 0;
@@ -808,23 +834,19 @@ void Tupel::processMuons(){
 	  ++bit;
 	  if(bit > 31) break;
 	}
-	patMuonIdTight_->push_back(muonTightIds);
+	MuIdTight_->push_back(muonTightIds);
       }
 	  
 	  
       //MuFill=1;
-      patMuonPt_->push_back(mu[j].pt());
-      patMuonEta_->push_back(mu[j].eta());
-      patMuonPhi_->push_back(mu[j].phi());
-      patMuonEn_->push_back(mu[j].energy());
-      patMuonCharge_->push_back(mu[j].charge());
-      patMuonVtxZ_->push_back(mu[j].vz());
-      patMuonM_->push_back(mu[j].mass());
-      patMuonPx_->push_back(mu[j].px());
-      patMuonPy_->push_back(mu[j].py());
-      patMuonPz_->push_back(mu[j].pz());
-      patMuonDxy_->push_back(mu[j].dB());
-	
+      MuPt_->push_back(mu[j].pt());
+      MuEta_->push_back(mu[j].eta());
+      MuPhi_->push_back(mu[j].phi());
+      MuE_->push_back(mu[j].energy());
+      MuCh_->push_back(mu[j].charge());
+      MuVtxZ_->push_back(mu[j].vz());
+      MuDxy_->push_back(mu[j].dB());
+      
       double trkLayers = -99999;
       double pixelHits = -99999;
       double muonHits  = -99999;
@@ -844,19 +866,26 @@ void Tupel::processMuons(){
 	  dZ= mu[j].muonBestTrack()->dz(vtx.position());
 	}
       }
-      patMuonChi2Ndoff_->push_back(normChi2);
-      patMuonNhits_->push_back(muonHits);
-      patMuonNMatches_->push_back(nMatches);
-      patMuonDz_->push_back(dZ);
-      patMuonPhits_->push_back(pixelHits);
-      patMuonTkLayers_->push_back(trkLayers);
+      MuTkNormChi2_->push_back(normChi2);
+      MuTkHitCnt_->push_back(muonHits);
+      MuMatchedStationCnt_->push_back(nMatches);
+      MuDz_->push_back(dZ);
+      MuPixelHitCnt_->push_back(pixelHits);
+      MuTkLayerCnt_->push_back(trkLayers);
 	
-      int idpass=0;
-      if(mu[j].isGlobalMuon() && mu[j].isPFMuon() && normChi2<10 && muonHits>0 && nMatches>1 && mu[j].dB()<0.2 && dZ<0.5 && pixelHits>0 && trkLayers>5)idpass=1;
-      patMuonCombId_->push_back(idpass);
-      int TrigSum=0;
-      if(Mu17_Mu8_Matched==1) TrigSum=1;
-      patMuonTrig_->push_back(TrigSum);
+      bool customMuId =	( mu[j].isGlobalMuon()
+			  && mu[j].isPFMuon()
+			  && normChi2<10
+			  && muonHits>0 && nMatches>1
+			  && mu[j].dB()<0.2 && dZ<0.5
+			  && pixelHits>0 && trkLayers>5 );
+      unsigned muId = 0;
+      if(mu[j].isLooseMuon()) muId |= kMuIdLoose_;
+      //if(mu[j].isMediumMuon()) muId |= kMuIdMedium_;
+      if(customMuId) muId |= kMuIdCustom_;
+      MuId_->push_back(muId);
+      
+      //      unsigned muHltMath = 0;
       float muEta = mu[j].eta(); // essentially track direction at Vtx (recommended prescription)
       float Aecal=0.041; // initiallize with EE value
       float Ahcal=0.032; // initiallize with HE value
@@ -867,7 +896,7 @@ void Tupel::processMuons(){
       double theRho = *rho;
       float muonIsoRho = mu[j].isolationR03().sumPt + std::max(0.,(mu[j].isolationR03().emEt -Aecal*(theRho))) + std::max(0.,(mu[j].isolationR03().hadEt-Ahcal*(theRho)));
       double dbeta = muonIsoRho/mu[j].pt();
-      patMuonDetIsoRho_->push_back(dbeta);
+      MuIsoRho_->push_back(dbeta);
 	  
       // pf Isolation variables
       double chargedHadronIso = mu[j].pfIsolationR04().sumChargedHadronPt;
@@ -877,17 +906,18 @@ void Tupel::processMuons(){
       double a=0.5;  
       // OPTION 1: DeltaBeta corrections for iosolation
       float RelativeIsolationDBetaCorr = (chargedHadronIso + std::max(photonIso+neutralHadronIso - 0.5*chargedHadronIsoPU,0.))/std::max(a, mu[j].pt());
-      patMuonPfIsoDbeta_->push_back(RelativeIsolationDBetaCorr);
-      patMuonGlobalType_->push_back(mu[j].isGlobalMuon());
-      patMuonTrackerType_->push_back(mu[j].isTrackerMuon());
-      patMuonPFType_->push_back(mu[j].isPFMuon());
-      patMuonIsoSumPt_->push_back(mu[j].isolationR03().sumPt);
-      patMuonIsoRelative_->push_back(mu[j].isolationR03().sumPt/mu[j].pt());
-      patMuonIsoCalComb_->push_back(mu[j].isolationR03().emEt + mu[j].isolationR03().hadEt);
-      patMuonIsoDY_->push_back((mu[j].isolationR03().sumPt+mu[j].isolationR03().hadEt)/mu[j].pt());
-      patMuon_PF_IsoSumChargedHadronPt_->push_back(mu[j].pfIsolationR03().sumChargedHadronPt);
-      patMuon_PF_IsoSumNeutralHadronEt_->push_back(mu[j].pfIsolationR03().sumNeutralHadronEt);
-      patMuon_PF_IsoDY_->push_back((mu[j].pfIsolationR03().sumChargedHadronPt+mu[j].pfIsolationR03().sumNeutralHadronEt)/mu[j].pt());
+      MuPfIso_->push_back(RelativeIsolationDBetaCorr);
+      unsigned muType = 0;
+      if(mu[j].isGlobalMuon()) muType |= kGlobMu_;
+      if(mu[j].isTrackerMuon()) muType |= kTkMu_;
+      if(mu[j].isPFMuon()) muType |= kPfMu_;
+      MuIsoTkIsoAbs_->push_back(mu[j].isolationR03().sumPt);
+      MuIsoTkIsoRel_->push_back(mu[j].isolationR03().sumPt/mu[j].pt());
+      MuIsoCalAbs_->push_back(mu[j].isolationR03().emEt + mu[j].isolationR03().hadEt);
+      MuIsoCombRel_->push_back((mu[j].isolationR03().sumPt+mu[j].isolationR03().hadEt)/mu[j].pt());
+      MuPfIsoChHad_->push_back(mu[j].pfIsolationR03().sumChargedHadronPt);
+      MuPfIsoNeutralHad_->push_back(mu[j].pfIsolationR03().sumNeutralHadronEt);
+      MuPfIsoRawRel_->push_back((mu[j].pfIsolationR03().sumChargedHadronPt+mu[j].pfIsolationR03().sumNeutralHadronEt)/mu[j].pt());
       MuFill++;
     }
   }
@@ -922,11 +952,11 @@ void Tupel::processElectrons(){
     }
     unsigned elecid = 0;
       
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= 1;
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= 2;
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-medium"))) elecid |= 4;
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-tight"))) elecid |= 8;
-    patElecId_->push_back(elecid);
+    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_veto_;
+    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_loose_;
+    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-medium"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_medium_;
+    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-tight"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_tight_;
+    ElId_->push_back(elecid);
       
     dEtaIn_ = el.deltaEtaSuperClusterTrackAtVtx();
     dPhiIn_ = el.deltaPhiSuperClusterTrackAtVtx();
@@ -960,48 +990,49 @@ void Tupel::processElectrons(){
 
     //cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
 
-    patElecdEtaIn_->push_back(dEtaIn_);
-    patElecdPhiIn_->push_back(dPhiIn_);
-    patElechOverE_->push_back(hOverE_);
-    patElecsigmaIetaIeta_->push_back(sigmaIetaIeta_);
-    patElecfull5x5_sigmaIetaIeta_->push_back(full5x5_sigmaIetaIeta_);
-    patElecooEmooP_->push_back(ooEmooP_);
-    patElecd0_->push_back(d0_);
-    patElecdz_->push_back(dz_);
-    patElecexpectedMissingInnerHits_->push_back(expectedMissingInnerHits_);
-    patElecpassConversionVeto_->push_back(passConversionVeto_);     
+    ElDEtaTkScAtVtx_->push_back(dEtaIn_);
+    ElDPhiTkScAtVtx_->push_back(dPhiIn_);
+    ElHoE_->push_back(hOverE_);
+    ElSigmaIetaIeta_->push_back(sigmaIetaIeta_);
+    ElSigmaIetaIetaFull5x5_->push_back(full5x5_sigmaIetaIeta_);
+    ElEinvMinusPinv_->push_back(ooEmooP_);
+    ElD0_->push_back(d0_);
+    ElDz_->push_back(dz_);
+    ElExpectedMissingInnerHitCnt_->push_back(expectedMissingInnerHits_);
+    ElExpectedMissingInnerHitCnt_->push_back(passConversionVeto_);     
 
-    double Elec17_Elec8_Matched=0;
+    int hltMatch = 0;
       
-    patElecTrig_->push_back(Elec17_Elec8_Matched);//no matching yet...BB 
-    reco::Vertex::Point pos(0,0,0);
-    if(vtx_h->size() > 0) pos = vtx_h->at(0).position();
-    patElecDz_->push_back(el.gsfTrack()->dz(pos));
+    ElHltMatch_->push_back(hltMatch);//no matching yet...BB 
     const string mvaTrigV0 = "mvaTrigV0";
     const string mvaNonTrigV0 = "mvaNonTrigV0";
       
-    patElecPt_->push_back(el.pt());
-    patElecEta_->push_back(el.eta());
+    ElPt_->push_back(el.pt());
+    ElEta_->push_back(el.eta());
       
-    patElecScEta_->push_back(el.superCluster()->eta());
-    patElecPhi_->push_back(el.phi());	
-    patElecEnergy_->push_back(el.energy());
-    patElecCharge_->push_back(el.charge());
-      
-    *AEff_ = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, el.superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012);
-    *rhoPrime_ = std::max(rhoIso, 0.0);
+    ElEtaSc_->push_back(el.superCluster()->eta());
+    ElPhi_->push_back(el.phi());	
+    ElE_->push_back(el.energy());
+    ElCh_->push_back(el.charge());
+
+    double aeff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, el.superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012);
+    ElAEff_->push_back(aeff);
       
     const double chIso03_ = el.chargedHadronIso();
     const double nhIso03_ = el.neutralHadronIso();
     const double phIso03_ = el.photonIso();
     const double puChIso03_= el.puChargedHadronIso();
-    patElecchIso03_->push_back(chIso03_);
-    patElecnhIso03_->push_back(nhIso03_);
-    patElecphIso03_->push_back(phIso03_);
-    patElecpuChIso03_->push_back(puChIso03_);
-    patElecPfIso_->push_back(( chIso03_ + nhIso03_ + phIso03_ ) / el.pt());
-    patElecPfIsodb_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - 0.5*puChIso03_) )/ el.pt());
-    patElecPfIsoRho_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - (*rhoPrime_)*(*AEff_)) )/ el.pt());
+    ElPfIsoChHad_->push_back(chIso03_);
+    ElPfIsoNeutralHad_->push_back(nhIso03_);
+    ElPfIsoIso_->push_back(phIso03_);
+    ElPfIsoPuChHad_->push_back(puChIso03_);
+    ElPfIsoRaw_->push_back(( chIso03_ + nhIso03_ + phIso03_ ) / el.pt());
+    ElPfIsoDbeta_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - 0.5*puChIso03_) )/ el.pt());
+
+    *EvtFastJetRho_ =  rhoIso;
+    double rhoPrime = std::max(0., rhoIso);
+    
+    ElPfIsoRho_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - rhoPrime*(aeff)) )/ el.pt());
       
     bool myTrigPresel = false;
     if(fabs(el.superCluster()->eta()) < 1.479){
@@ -1022,7 +1053,7 @@ void Tupel::processElectrons(){
 						 el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits() == 0*/)
 	myTrigPresel = true;
     }     
-    patElec_mva_presel_->push_back(myTrigPresel);
+    ElMvaPresel_->push_back(myTrigPresel);
     ElecFill++; 
   }
 }    
@@ -1040,7 +1071,7 @@ void Tupel::processJets(){
   for ( unsigned int i=0; i<jets->size(); ++i ) {
     const pat::Jet & jet = jets->at(i);
        
-    patJetPfAk05jetpuMVA_->push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
+    JetAk04PuMva_->push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
     chf = jet.chargedHadronEnergyFraction();
     nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
     cemf = jet.chargedEmEnergyFraction();
@@ -1051,42 +1082,39 @@ void Tupel::processJets(){
     //  cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
     //  cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
     //  cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
-    patJetPfAk05BDiscCSV_->push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
-    patJetPfAk05BDiscCSVV1_->push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
-    patJetPfAk05BDiscCSVSLV1_->push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
+    JetAk04BTagCsv_->push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
+    JetAk04BTagCsvV1_->push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
+    JetAk04BTagCsvSLV1_->push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
       
-    patJetPfAk05En_->push_back(jet.energy());
-    patJetPfAk05Pt_->push_back(jet.pt());
-    patJetPfAk05Eta_->push_back(jet.eta());
-    patJetPfAk05Phi_->push_back(jet.phi());
-    patJetPfAk05Et_->push_back(jet.et());
-    patJetPfAk05RawPt_->push_back(jet.correctedJet(0).pt());
-    patJetPfAk05RawEn_->push_back(jet.correctedJet(0).energy());
-    patJetPfAk05HadEHF_->push_back(jet.HFHadronEnergy());
-    patJetPfAk05EmEHF_->push_back(jet.HFEMEnergy());
-    patJetPfAk05chf_->push_back(chf);
-    patJetPfAk05nhf_->push_back(nhf);
-    patJetPfAk05cemf_->push_back(cemf);
-    patJetPfAk05nemf_->push_back(nemf);
-    patJetPfAk05cmult_->push_back(cmult);
-    patJetPfAk05nconst_->push_back(nconst);
+    JetAk04E_->push_back(jet.energy());
+    JetAk04Pt_->push_back(jet.pt());
+    JetAk04Eta_->push_back(jet.eta());
+    JetAk04Phi_->push_back(jet.phi());
+    JetAk04RawPt_->push_back(jet.correctedJet(0).pt());
+    JetAk04RawE_->push_back(jet.correctedJet(0).energy());
+    JetAk04HfHadE_->push_back(jet.HFHadronEnergy());
+    JetAk04HfEmE_->push_back(jet.HFEMEnergy());
+    JetAk04ChHadFrac_->push_back(chf);
+    JetAk04NeutralHadAndHfFrac_->push_back(nhf);
+    JetAk04ChEmFrac_->push_back(cemf);
+    JetAk04NeutralEmFrac_->push_back(nemf);
+    JetAk04ChMult_->push_back(cmult);
+    JetAk04ConstCnt_->push_back(nconst);
   
     for(unsigned int idx =0; idx<jet.numberOfDaughters();idx++){
       // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
-      patJetPfAk05DoughterId_->push_back(jet.daughter(idx)->pdgId());
-      patJetPfAk05DoughterPt_->push_back(jet.daughter(idx)->pt());
-      patJetPfAk05DoughterEta_->push_back(jet.daughter(idx)->eta());
-      patJetPfAk05DoughterPhi_->push_back(jet.daughter(idx)->phi());
-      patJetPfAk05DoughterE_->push_back(jet.daughter(idx)->energy());
+      JetAk04ConstId_->push_back(jet.daughter(idx)->pdgId());
+      JetAk04ConstPt_->push_back(jet.daughter(idx)->pt());
+      JetAk04ConstEta_->push_back(jet.daughter(idx)->eta());
+      JetAk04ConstPhi_->push_back(jet.daughter(idx)->phi());
+      JetAk04ConstE_->push_back(jet.daughter(idx)->energy());
 
 
     }
+    //TODO: insert correct value
     double unc = 1.;
-    unc_->push_back(unc);
-    double up = (1+unc)*jet.pt();
-    double down = (1-unc)*jet.pt();
-    patJetPfAk05PtUp_->push_back(up);
-    patJetPfAk05PtDn_->push_back(down);
+    JetAk04JecUncUp_->push_back(unc);
+    JetAk04JecUncDwn_->push_back(unc);
     double tempJetID=0;
     if( abs(jet.eta())<2.4){
       if(chf>0 && nhf<0.99 && cmult>0.0 && cemf<0.99 && nemf<0.99 && nconst>1) tempJetID=1;
@@ -1098,19 +1126,39 @@ void Tupel::processJets(){
       if ((nhf<0.95)&&(nemf<0.95)&&(nconst>1))tempJetID=2; 
       if ((nhf<0.9)&&(nemf<0.9)&&(nconst>1))tempJetID=3;
     }
-    patJetPfAk05LooseId_->push_back(tempJetID);//ala 
+    JetAk04Id_->push_back(tempJetID);//ala 
     //PFjetFill++;
       
-    if(!*realdata_){
-      bool matchGen=false;
+    if(!*EvtIsRealData_){
+      int genJetIdx = -1; //code for not matched jets
       if (jet.genJet()){
-	matchGen=true;
-	MGjPt_->push_back(jet.genJet()->pt());
-	MGjeta_->push_back(jet.genJet()->eta());
-	MGjphi_->push_back(jet.genJet()->phi());
-	MGjE_->push_back(jet.genJet()->energy());
+	//	genJetIdx = jet.genJetFwdRef().key();
+	for(genJetIdx = 0; (unsigned) genJetIdx < genjetColl_->size();++genJetIdx){
+	  if(&(*genjetColl_)[genJetIdx] == jet.genJet()) break; 
+	}
+	genJetIdx = jet.genJetFwdRef().backRef().key();
+	assert(jet.genJet() == &(*genjetColl_)[genJetIdx]);
+	//	if((unsigned)genJetIdx == genjetColl_->size()){
+	//	  genJetIdx = -2;
+	//	  std::cerr << "Matched gen jet not found!\n";
+	//	} else{
+	//	  double dphi = fabs(jet.phi()-(*genjetColl_)[genJetIdx].phi());
+	//	  if(dphi > pi ) dphi = 2*pi - dphi;
+	//	  std::cout << "Jet matching check: R = "
+	//		    << sqrt(std::pow(jet.eta()-(*genjetColl_)[genJetIdx].eta(),2)
+	//			    + std::pow(dphi,2))
+	//		    << "\tPt ratio = "
+	//		    << jet.pt() / (*genjetColl_)[genJetIdx].pt()
+	//		    << "\t" << jet.pt() / jet.genJet()->pt()
+	//		    << "\t key: " << genJetIdx
+	//		    << "\t coll size: " <<  genjetColl_->size()
+	//		    << "\t" << hex << jet.genJet()
+	//		    << "\t" << &((*genjetColl_)[genJetIdx]) << dec
+	//		    << "\tIndices: " << genJetIdx << ", " << jet.genJetFwdRef().backRef().key() << ", " << jet.genJetFwdRef().ref().key() << ", " << jet.genJetFwdRef().key()
+	//		    << "\n";
+	//}
       }
-      matchGjet_->push_back(matchGen);
+      JetAk04GenJet_->push_back(genJetIdx);
     }
   }
 }
@@ -1119,23 +1167,24 @@ void Tupel::processPhotons(){
   for (unsigned j = 0; j < photons->size(); ++j){
     const pat::Photon& photon = (*photons)[j];
     //photon momentum
-    PhotonPt_->push_back(photon.pt());
-    PhotonEta_->push_back(photon.eta());
-    PhotonPhi_->push_back(photon.phi());
+    PhotPt_->push_back(photon.pt());
+    PhotEta_->push_back(photon.eta());
+    PhotPhi_->push_back(photon.phi());
 
     //photon isolation
-    PhotonIsoEcal_->push_back(photon.ecalIso());
-    PhotonIsoHcal_->push_back(photon.hcalIso());
-    PhotonPfIsoChargdH_->push_back(photon.chargedHadronIso());
-    PhotonPfIsoNeutralH_->push_back(photon.neutralHadronIso());
-    PhotonPfIsoPhoton_->push_back(photon.photonIso());
-    PhotonPfIsoPuChargedH_->push_back(photon.puChargedHadronIso());
-    PhotonPfIsoEcalCluster_->push_back(photon.ecalPFClusterIso());
-    PhotonPfIsoHcalCluster_->push_back(photon.hcalPFClusterIso());
+    PhotIsoEcal_->push_back(photon.ecalIso());
+    PhotIsoHcal_->push_back(photon.hcalIso());
+    PhotIsoTk_->push_back(photon.trackIso());
+    PhotPfIsoChHad_->push_back(photon.chargedHadronIso());
+    PhotPfIsoNeutralHad_->push_back(photon.neutralHadronIso());
+    PhotPfIsoPhot_->push_back(photon.photonIso());
+    PhotPfIsoPuChHad_->push_back(photon.puChargedHadronIso());
+    PhotPfIsoEcalClus_->push_back(photon.ecalPFClusterIso());
+    PhotPfIsoHcalClus_->push_back(photon.hcalPFClusterIso());
       
     //photon cluster shape
-    PhotonE3x3_->push_back(photon.e3x3());
-    PhotonSigmaIetaIeta_->push_back(photon.sigmaIetaIeta());
+    PhotE3x3_->push_back(photon.e3x3());
+    PhotSigmaIetaIeta_->push_back(photon.sigmaIetaIeta());
 
     //photon ids:
     std::vector<std::pair<std::string,Bool_t> > idlist = photon.photonIDs();
@@ -1151,9 +1200,9 @@ void Tupel::processPhotons(){
     int photonId = 0;
     if(photon.photonID(std::string("PhotonCutBasedIDLoose"))) photonId |= 1;
     if(photon.photonID(std::string("PhotonCutBasedIDTight"))) photonId |= 4;
-    PhotonId_->push_back(photonId);
-    PhotonHoE_->push_back(photon.hadronicOverEm()); 
-    PhotonHasPixelSeed_->push_back(photon.hasPixelSeed());
+    PhotId_->push_back(photonId);
+    PhotHoE_->push_back(photon.hadronicOverEm()); 
+    PhotHasPixelSeed_->push_back(photon.hasPixelSeed());
   }
 }
 
@@ -1163,7 +1212,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
   readEvent(iEvent);
 
-  // PAT trigger event
+  // PAT trigger EvtNum
   //edm::Handle<pat::TriggerEvent>  triggerEvent;
   //iEvent.getByLabel( triggerEvent_, triggerEvent );
   
@@ -1175,7 +1224,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
   processVtx();
 
-  if (!*realdata_){
+  if (!*EvtIsRealData_){
     processPu(iEvent);
     if (genParticles) processGenParticles(iEvent);
     processGenJets(iEvent);
@@ -1194,7 +1243,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   //photons. Ph. G.
   if(photons) processPhotons();
 
-  //Stores the event in the output tree
+  //Stores the EvtNum in the output tree
   treeHelper_->fill();
   
 }
@@ -1220,9 +1269,25 @@ Tupel::beginJob()
 
   myTree = new TTree("EventTree"," EventTree");
   treeHelper_ = std::auto_ptr<TreeHelper>(new TreeHelper(myTree, new TTree("Description", "Description")));
-			      
-  ADD_BRANCH(METPt);
+
+  //Event
+  ADD_BRANCH_D(EvtIsRealData, "True if real data, false if MC");
+  ADD_BRANCH_D(EvtNum, "Event number");
+  ADD_BRANCH_D(EvtRunNum, "Run number");
+  ADD_BRANCH_D(EvtLumiNum, "Luminosity block number");
+  ADD_BRANCH_D(EvtBxNum, "Bunch crossing number");
+  ADD_BRANCH_D(EvtVtxCnt, "Number of reconstructed primary vertices");
+  ADD_BRANCH_D(EvtPuCnt, "Number of measured pile-up events");
+  ADD_BRANCH_D(EvtPuCntTruth, "True number of pile-up events");
+  ADD_BRANCH_D(EvtWeights, "List of event weights. First element of the list should be used as default to fill histograms.");
+  ADD_BRANCH_D(EvtFastJetRho, "Fastjet pile-up variable \\rho");
+  
+  //Trigger
+  ADD_BRANCH_D(TrigHlt, "HLT triggger bits. See BitField.TrigHlt for bit description.");
+
+  //Missing Energy
   treeHelper_->addDescription("MET", "PF MET");
+  ADD_BRANCH(METPt);
   ADD_BRANCH(METPx);
   ADD_BRANCH(METPy);
   ADD_BRANCH(METPz);
@@ -1231,241 +1296,198 @@ Tupel::beginJob()
   ADD_BRANCH(METsigxy);
   ADD_BRANCH(METsigy2);
   ADD_BRANCH(METsig);
-  ADD_BRANCH_D(event, "Event number");
-  ADD_BRANCH_D(realdata, "True if real data, false if MC");
-  ADD_BRANCH_D(run, "Run number");
-  ADD_BRANCH_D(lumi, "Luminosity block number");
-  ADD_BRANCH_D(bxnumber, "Bunch crossing number");
-  ADD_BRANCH(EvtInfo_NumVtx);
-  ADD_BRANCH(PU_npT);
-  ADD_BRANCH(PU_npIT);
-  ADD_BRANCH(MyWeight);
-  ADD_BRANCH(Dr01LepPt);
-  ADD_BRANCH(Dr01LepEta);
-  ADD_BRANCH(Dr01LepPhi);
-  ADD_BRANCH(Dr01LepE);
-  ADD_BRANCH(Dr01LepM);
-  ADD_BRANCH(Dr01LepId);
-  ADD_BRANCH(Dr01LepStatus);
-  ADD_BRANCH(Dr01LepMomId);
-  ADD_BRANCH(Bare01LepPt);
-  ADD_BRANCH(Bare01LepEta);
-  ADD_BRANCH(Bare01LepPhi);
-  ADD_BRANCH(Bare01LepE);
-  ADD_BRANCH(Bare01LepM);
-  ADD_BRANCH(Bare01LepId);
-  ADD_BRANCH(Bare01LepStatus);
-  ADD_BRANCH(Bare01LepMomId);      
-  ADD_BRANCH(St03Pt);
-  ADD_BRANCH(St03Eta);
-  ADD_BRANCH(St03Phi);
-  ADD_BRANCH(St03E);
-  ADD_BRANCH(St03M);
-  ADD_BRANCH(St03Id);
-  ADD_BRANCH(St03Status);
-  ADD_BRANCH(St03MotherId);
-  ADD_BRANCH(St03NumberMom);    
 
+  //Generator level leptons.
+  treeHelper_->addDescription("GLepDr01", "Generator-level leptons. Muons and electrons and their antiparticles are dressed using a cone of radius R = 0.1");
+  ADD_BRANCH(GLepDr01Pt);
+  ADD_BRANCH(GLepDr01Eta);
+  ADD_BRANCH(GLepDr01Phi);
+  ADD_BRANCH(GLepDr01E);
+  ADD_BRANCH(GLepDr01Id);
+  ADD_BRANCH(GLepDr01St);
+  ADD_BRANCH(GLepDr01MomId);
+  treeHelper_->addDescription("GLepBare", "Generator-level leptons, status 1 without dressing.");
+  ADD_BRANCH(GLepBarePt);
+  ADD_BRANCH(GLepBareEta);
+  ADD_BRANCH(GLepBarePhi);
+  ADD_BRANCH(GLepBareE);
+  ADD_BRANCH(GLepBareId);
+  ADD_BRANCH(GLepBareSt);
+  ADD_BRANCH(GLepBareMomId);
+  treeHelper_->addDescription("GLepDr01", "Status 3 generator-level leptons.");
+  ADD_BRANCH(GLepSt3Pt);
+  ADD_BRANCH(GLepSt3Eta);
+  ADD_BRANCH(GLepSt3Phi);
+  ADD_BRANCH(GLepSt3E);
+  ADD_BRANCH(GLepSt3Id);
+  ADD_BRANCH(GLepSt3St);
+  ADD_BRANCH_D(GLepSt3Mother0Id, "Lepton mother PDG Id. Filled only for first mother. Number of mothers can be checked in GLepoSt3MotherCnt.");
+  ADD_BRANCH(GLepSt3MotherCnt);
 
-  ADD_BRANCH(St01PhotonPt);
-  ADD_BRANCH(St01PhotonEta);
-  ADD_BRANCH(St01PhotonPhi);
-  ADD_BRANCH(St01PhotonE);
-  ADD_BRANCH(St01PhotonM);
-  ADD_BRANCH(St01PhotonId);
-  ADD_BRANCH(St01PhotonMomId);
-  ADD_BRANCH(St01PhotonNumberMom);
-  ADD_BRANCH(St01PhotonStatus);
-    
-  ADD_BRANCH(GjPt);
-  ADD_BRANCH(Gjeta);
-  ADD_BRANCH(Gjphi);
-  ADD_BRANCH(GjE);
-  ADD_BRANCH(GjPx);
-  ADD_BRANCH(GjPy);
-  ADD_BRANCH(GjPz);
-  ADD_BRANCH(GjChargedFraction);
-  ADD_BRANCH(matchGjet);
+  //Photons in the vicinity of the leptons
+  treeHelper_->addDescription("GLepClosePhot", "Photons aroud leptons. Selection cone size: R = 0.2");
+  ADD_BRANCH(GLepClosePhotPt);
+  ADD_BRANCH(GLepClosePhotEta);
+  ADD_BRANCH(GLepClosePhotPhi);
+  ADD_BRANCH(GLepClosePhotE);
+  ADD_BRANCH(GLepClosePhotId);
+  ADD_BRANCH_D(GLepClosePhotMother0Id, "Photon mother PDG Id. Filled only for first mother. Number of mothers can be checked in GLepoSt3MotherCnt.");
+  ADD_BRANCH(GLepClosePhotMotherCnt);
+  ADD_BRANCH(GLepClosePhotSt);
 
-  ADD_BRANCH(GjDoughterId);
-  ADD_BRANCH(GjDoughterPt);
-  ADD_BRANCH(GjDoughterEta);
-  ADD_BRANCH(GjDoughterPhi);
-  ADD_BRANCH(GjDoughterE);
+  //Gen Jets
+  treeHelper_->addDescription("GJetAk04", "Generator-level reconstructed with the anti-kt algorithm with distance parameter R = 0.4");
+  ADD_BRANCH(GJetAk04Pt);
+  ADD_BRANCH(GJetAk04Eta);
+  ADD_BRANCH(GJetAk04Phi);
+  ADD_BRANCH(GJetAk04E);
+  ADD_BRANCH(GJetAk04ChFrac);
+  ADD_BRANCH(GJetAk04ConstCnt);
+  ADD_BRANCH(GJetAk04ConstId);
+  ADD_BRANCH(GJetAk04ConstPt);
+  ADD_BRANCH(GJetAk04ConstEta);
+  ADD_BRANCH(GJetAk04ConstPhi);
+  ADD_BRANCH(GJetAk04ConstE);
 
-  ADD_BRANCH(MGjPt);
-  ADD_BRANCH(MGjeta);
-  ADD_BRANCH(MGjphi);
-  ADD_BRANCH(MGjE); 
-    
-  //HLT
-  ADD_BRANCH(HLT_Mu17_Mu8);
-  ADD_BRANCH(HLT_Mu17_TkMu8);
-  ADD_BRANCH(HLT_Elec17_Elec8);
-    
+  //Exta generator information
+  ADD_BRANCH_D(GPdfId1, "PDF Id for beam 1");
+  ADD_BRANCH_D(GPdfId2, "PDF Id for beam 2");
+  ADD_BRANCH_D(GPdfx1, "PDF x for beam 1");
+  ADD_BRANCH_D(GPdfx2, "PDF x for beam 1");
+  ADD_BRANCH_D(GPdfScale, "PDF energy scale");
+  ADD_BRANCH_D(GBinningValue, "Value of the observable used to split the MC sample generation (e.g. pt_hat for a pt_hat binned MC sample).");
+  ADD_BRANCH_D(GNup, "Number of particles/partons included in the matrix element.");   
+  
   //Muons
-  ADD_BRANCH(patMuonPt);
-  ADD_BRANCH(patMuonEta);
-  ADD_BRANCH(patMuonPhi);
-  ADD_BRANCH(patMuonVtxZ);
-  ADD_BRANCH(patMuonEn);
-  ADD_BRANCH(patMuonCharge);
-  ADD_BRANCH(patMuonDxy);
-  ADD_BRANCH(patMuonCombId);
-  ADD_BRANCH(patMuonTrig);
-  ADD_BRANCH(patMuonDetIsoRho);
-  ADD_BRANCH(patMuonPfIsoDbeta);
-  ADD_BRANCH(patMuonM);
-  ADD_BRANCH(patMuonPx);
-  ADD_BRANCH(patMuonPy);
-  ADD_BRANCH(patMuonPz);
-  ADD_BRANCH(patMuonGlobalType);
-  ADD_BRANCH(patMuonTrackerType);
-  ADD_BRANCH(patMuonPFType);
-  ADD_BRANCH(patMuonIsoSumPt);
-  ADD_BRANCH(patMuonIsoRelative);
-  ADD_BRANCH(patMuonIsoCalComb);
-  ADD_BRANCH(patMuonIsoDY);
-  ADD_BRANCH(patMuonChi2Ndoff);
-  ADD_BRANCH(patMuonNhits);
-  ADD_BRANCH(patMuonNMatches);
-  ADD_BRANCH(patMuonDz);
-  ADD_BRANCH(patMuonPhits);
-  ADD_BRANCH(patMuonTkLayers);
-  ADD_BRANCH(patMuon_PF_IsoSumChargedHadronPt);
-  ADD_BRANCH(patMuon_PF_IsoSumNeutralHadronEt);
-  ADD_BRANCH(patMuon_PF_IsoDY);
-  ADD_BRANCH(patMuon_Mu17_Mu8_Matched);
-  ADD_BRANCH(patMuon_Mu17_TkMu8_Matched);
-  ADD_BRANCH(patMuonIdLoose);
-  ADD_BRANCH(patMuonIdMedium);
-  ADD_BRANCH(patMuonIdTight);
+  treeHelper_->addDescription("Mu", "PF reconstruced muons.");
+  ADD_BRANCH(MuPt);
+  ADD_BRANCH(MuEta);
+  ADD_BRANCH(MuPhi);
+  ADD_BRANCH(MuE);
+  ADD_BRANCH(MuId);
+  ADD_BRANCH_D(MuIdTight, "Muon tight id. Bit field, one bit per primary vertex hypothesis. Bit position corresponds to index in EvtVtx");
+  ADD_BRANCH(MuCh);  
+  ADD_BRANCH(MuVtxZ);
+  ADD_BRANCH(MuDxy);
+  ADD_BRANCH(MuIsoRho);
+  ADD_BRANCH(MuPfIso);
+  ADD_BRANCH(MuType);
+  ADD_BRANCH(MuIsoTkIsoAbs);
+  ADD_BRANCH(MuIsoTkIsoRel);
+  ADD_BRANCH(MuIsoCalAbs);
+  ADD_BRANCH(MuIsoCombRel);
+  ADD_BRANCH(MuTkNormChi2);
+  ADD_BRANCH(MuTkHitCnt);
+  ADD_BRANCH(MuMatchedStationCnt);
+  ADD_BRANCH(MuDz);
+  ADD_BRANCH(MuPixelHitCnt);
+  ADD_BRANCH(MuTkLayerCnt);
+  ADD_BRANCH(MuPfIsoChHad);
+  ADD_BRANCH(MuPfIsoNeutralHad);
+  ADD_BRANCH(MuPfIsoRawRel);
+  ADD_BRANCH(MuHltMatch);
 
+  //Electrons
+  treeHelper_->addDescription("El", "PF reconstructed electrons");
+  ADD_BRANCH(ElPt);
+  ADD_BRANCH(ElEta);
+  ADD_BRANCH(ElEtaSc);
+  ADD_BRANCH(ElPhi);
+  ADD_BRANCH(ElE);
+  ADD_BRANCH(ElId);
+  ADD_BRANCH(ElCh);
+  ADD_BRANCH(ElMvaTrig);
+  ADD_BRANCH(ElMvaNonTrig);
+  ADD_BRANCH(ElMvaPresel);
+  ADD_BRANCH(ElDEtaTkScAtVtx);
+  ADD_BRANCH(ElDPhiTkScAtVtx);
+  ADD_BRANCH(ElHoE);
+  ADD_BRANCH(ElSigmaIetaIeta);
+  ADD_BRANCH(ElSigmaIetaIetaFull5x5);
+  ADD_BRANCH(ElEinvMinusPinv);
+  ADD_BRANCH(ElD0);
+  ADD_BRANCH(ElDz);
+  ADD_BRANCH(ElExpectedMissingInnerHitCnt);
+  ADD_BRANCH(ElPassConvVeto);
+  ADD_BRANCH(ElHltMatch);
+  ADD_BRANCH(ElPfIsoChHad);
+  ADD_BRANCH(ElPfIsoNeutralHad);
+  ADD_BRANCH(ElPfIsoIso);
+  ADD_BRANCH(ElPfIsoPuChHad);
+  ADD_BRANCH(ElPfIsoRaw);
+  ADD_BRANCH(ElPfIsoDbeta);
+  ADD_BRANCH(ElPfIsoRho);
+  ADD_BRANCH_D(ElAEff, "Electron effecive area");
 
-  ADD_BRANCH(patElecdEtaIn);
-  ADD_BRANCH(patElecdPhiIn);
-  ADD_BRANCH(patElechOverE);
-  ADD_BRANCH(patElecsigmaIetaIeta);
-  ADD_BRANCH(patElecfull5x5_sigmaIetaIeta);
-  ADD_BRANCH(patElecooEmooP);
-  ADD_BRANCH(patElecd0);
-  ADD_BRANCH(patElecdz);
-  ADD_BRANCH(patElecexpectedMissingInnerHits);
-  ADD_BRANCH(patElecpassConversionVeto);     
-  ADD_BRANCH(patElecTrig);
-  ADD_BRANCH(patElecDz);
-  ADD_BRANCH(patElecMVATrigId);
-  ADD_BRANCH(patElecMVANonTrigId);
-  ADD_BRANCH(patElecPt);
-  ADD_BRANCH(patElecEta);
-  ADD_BRANCH(patElecScEta);
-  ADD_BRANCH(patElecPhi);
-  ADD_BRANCH(patElecEnergy);
-  ADD_BRANCH(patElecCharge);
-  ADD_BRANCH(patElecMediumIDOff);
-  ADD_BRANCH(patElecMediumIDOff_Tom);
-
-  ADD_BRANCH(patElecchIso03);
-  ADD_BRANCH(patElecnhIso03);
-  ADD_BRANCH(patElecphIso03);
-  ADD_BRANCH(patElecpuChIso03);
-  ADD_BRANCH(patElecPfIso);
-  ADD_BRANCH(patElecPfIsodb);
-  ADD_BRANCH(patElecPfIsoRho);
-  ADD_BRANCH(patElecId);
-  ADD_BRANCH(rhoPrime);
-  ADD_BRANCH(neutral);
-  ADD_BRANCH(photon);
   ADD_BRANCH(charged);
-  ADD_BRANCH(neutral_Tom);
-  ADD_BRANCH(photon_Tom);
+  ADD_BRANCH(photon);
+  ADD_BRANCH(neutral);
   ADD_BRANCH(charged_Tom);
-  ADD_BRANCH(AEff);
-  ADD_BRANCH(patElec_mva_presel);
-    
-  //PFJet
-  ADD_BRANCH(patJetPfAk05En);
-  ADD_BRANCH(patJetPfAk05Pt);
-  ADD_BRANCH(patJetPfAk05Eta);
-  ADD_BRANCH(patJetPfAk05Phi);
-  ADD_BRANCH(patJetPfAk05LooseId);
-  ADD_BRANCH(patJetPfAk05Et);
-  ADD_BRANCH(patJetPfAk05RawPt);
-  ADD_BRANCH(patJetPfAk05RawEn);
-  ADD_BRANCH(patJetPfAk05HadEHF);
-  ADD_BRANCH(patJetPfAk05EmEHF);
-  ADD_BRANCH(patJetPfAk05chf);
-  ADD_BRANCH(patJetPfAk05nhf);
-  ADD_BRANCH(patJetPfAk05cemf);
-  ADD_BRANCH(patJetPfAk05nemf);
-  ADD_BRANCH(patJetPfAk05cmult);
-  ADD_BRANCH(patJetPfAk05nconst);
-  ADD_BRANCH(patJetPfAk05jetBeta);
-  ADD_BRANCH(patJetPfAk05jetBetaClassic);
-  ADD_BRANCH(patJetPfAk05jetBetaStar);
-  ADD_BRANCH(patJetPfAk05jetBetaStarClassic);
-  ADD_BRANCH(patJetPfAk05jetpuMVA);
-  ADD_BRANCH(patJetPfAk05jetpukLoose);
-  ADD_BRANCH(patJetPfAk05jetpukMedium);
-  ADD_BRANCH(patJetPfAk05jetpukTight);
-  ADD_BRANCH(patJetPfAk05BDiscCSV);
-  ADD_BRANCH(patJetPfAk05BDiscCSVV1);
-  ADD_BRANCH(patJetPfAk05BDiscCSVSLV1);
-  ADD_BRANCH(unc);
-  ADD_BRANCH(patJetPfAk05DoughterId);
-  ADD_BRANCH(patJetPfAk05DoughterPt);
-  ADD_BRANCH(patJetPfAk05DoughterEta);
-  ADD_BRANCH(patJetPfAk05DoughterPhi);
-  ADD_BRANCH(patJetPfAk05DoughterE);
-
-  ADD_BRANCH(patJetPfAk05PtUp);
-  ADD_BRANCH(patJetPfAk05PtDn); 
-
-  //CaloJets
-  ADD_BRANCH(caloJetPt);
-  ADD_BRANCH(caloJetRawPt);
-  ADD_BRANCH(caloJetEn);
-  ADD_BRANCH(caloJetEta);
-  ADD_BRANCH(caloJetPhi);
-  ADD_BRANCH(caloJetHadEHF);
-  ADD_BRANCH(caloJetEmEHF);
-  ADD_BRANCH(caloJetEmFrac);
-  ADD_BRANCH(caloJetn90);
+  ADD_BRANCH(photon_Tom);
+  ADD_BRANCH(neutral_Tom);
 
 
   //photon momenta
-  ADD_BRANCH(PhotonPt);;
-  ADD_BRANCH(PhotonEta);;
-  ADD_BRANCH(PhotonPhi);;
-  
+  treeHelper_->addDescription("Phot", "Particle flow photons");
+  ADD_BRANCH(PhotPt);;
+  ADD_BRANCH(PhotEta);;
+  ADD_BRANCH(PhotPhi);;
+
   //photon isolations
-  ADD_BRANCH(PhotonIsoEcal);
-  ADD_BRANCH(PhotonIsoHcal);
-  ADD_BRANCH(PhotonPfIsoChargdH);
-  ADD_BRANCH(PhotonPfIsoNeutralH);
-  ADD_BRANCH(PhotonPfIsoPhoton);
-  ADD_BRANCH(PhotonPfIsoPuChargedH);
-  ADD_BRANCH(PhotonPfIsoEcalCluster);
-  ADD_BRANCH(PhotonPfIsoHcalCluster);
+  ADD_BRANCH(PhotIsoEcal);
+  ADD_BRANCH(PhotIsoHcal);
+  ADD_BRANCH(PhotIsoTk);
+  ADD_BRANCH(PhotPfIsoChHad);
+  ADD_BRANCH(PhotPfIsoNeutralHad);
+  ADD_BRANCH(PhotPfIsoPhot);
+  ADD_BRANCH(PhotPfIsoPuChHad);
+  ADD_BRANCH(PhotPfIsoEcalClus);
+  ADD_BRANCH(PhotPfIsoHcalClus);
   
   //photon cluster shapes
-  ADD_BRANCH(PhotonE3x3);
-  ADD_BRANCH(PhotonSigmaIetaIeta);
-  ADD_BRANCH(PhotonHoE);
+  ADD_BRANCH(PhotE3x3);
+  ADD_BRANCH(PhotSigmaIetaIeta);
+  ADD_BRANCH(PhotHoE);
 
   //photon ID
-  ADD_BRANCH(PhotonId);
-  ADD_BRANCH(PhotonHasPixelSeed);
-  
-  ADD_BRANCH(id1_pdfInfo);
-  ADD_BRANCH(id2_pdfInfo);
-  ADD_BRANCH(x1_pdfInfo);
-  ADD_BRANCH(x2_pdfInfo);
-  ADD_BRANCH(scalePDF_pdfInfo);
-  ADD_BRANCH(ptHat);
-  ADD_BRANCH(mcWeight);
-  ADD_BRANCH(mcWeights);
-  ADD_BRANCH(nup);   
+  ADD_BRANCH_D(PhotId, "Photon Id. Field of bits described in BitFields.PhotId");
+  ADD_BRANCH_D(PhotHasPixelSeed, "Pixel and tracker based variable to discreminate photons from electrons");
+
+  //PF Jets
+  treeHelper_->addDescription("JetAk04", "Reconstricuted jets clustered with the anti-ket algorithm with distance parameter R = 0.4");
+  ADD_BRANCH(JetAk04Pt);
+  ADD_BRANCH(JetAk04Eta);
+  ADD_BRANCH(JetAk04Phi);
+  ADD_BRANCH(JetAk04E);
+  ADD_BRANCH_D(JetAk04Id, "Id to reject fake jets from electronic noice");
+  ADD_BRANCH_D(JetAk04PuId, "Id to reject jets from pile-up events");
+  ADD_BRANCH_D(JetAk04PuMva, "MVA based descriminant for PU jets");
+  ADD_BRANCH_D(JetAk04RawPt, "Jet Pt before corrections");
+  ADD_BRANCH_D(JetAk04RawE, "Jet energy before corrections");
+  ADD_BRANCH_D(JetAk04HfHadE, "Jet hadronic energy deposited in HF");
+  ADD_BRANCH_D(JetAk04HfEmE, "Jet electromagnetic energy deposited in HF");
+  ADD_BRANCH(JetAk04ChHadFrac);
+  ADD_BRANCH(JetAk04NeutralHadAndHfFrac);
+  ADD_BRANCH(JetAk04ChEmFrac);
+  ADD_BRANCH(JetAk04NeutralEmFrac);
+  ADD_BRANCH(JetAk04ChMult);
+  ADD_BRANCH(JetAk04ConstCnt);
+  ADD_BRANCH(JetAk04JetBeta);
+  ADD_BRANCH(JetAk04JetBetaClassic);
+  ADD_BRANCH(JetAk04JetBetaStar);
+  ADD_BRANCH(JetAk04JetBetaStarClassic);
+  ADD_BRANCH(JetAk04BTagCsv);
+  ADD_BRANCH(JetAk04BTagCsvV1);
+  ADD_BRANCH(JetAk04BTagCsvSLV1);
+  ADD_BRANCH(JetAk04JecUncUp);
+  ADD_BRANCH(JetAk04JecUncDwn);
+  ADD_BRANCH(JetAk04ConstId);
+  ADD_BRANCH(JetAk04ConstPt);
+  ADD_BRANCH(JetAk04ConstEta);
+  ADD_BRANCH(JetAk04ConstPhi);
+  ADD_BRANCH(JetAk04ConstE);
+  ADD_BRANCH(JetAk04GenJet);
+
 }
 
 void 

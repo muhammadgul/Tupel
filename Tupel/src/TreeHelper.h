@@ -22,9 +22,14 @@ public:
    * @param tree ROOT tree to store the events
    * @param descTree secondary ROOT tree to store the description of the
    * branches of the first tree. This tree will be filled with one entry
-   * only. It is ignored if the pointer is null*/
-  TreeHelper(TTree* tree, TTree* descTree = 0):
-    tree_(tree), descTree_(descTree){
+   * only. It is ignored if the pointer is null
+   * @param bitFiledTree secondary ROOT tree to store the description of 
+   * the individual bits of bit field branches contained in the first tree.
+   * This tree will be filled with one entry only. It is ignored if the pointer
+   * is null
+   */
+  TreeHelper(TTree* tree, TTree* descTree = 0, TTree* bitFieldTree = 0):
+    tree_(tree), descTree_(descTree), bitFieldTree_(bitFieldTree){
   }
 
   /** Destructor
@@ -63,6 +68,8 @@ public:
     addDescription(branchName, branchDescription);
   }
 
+  void defineBit(const char* branchName, int bit, const char* bitDescription);
+
   /** Reset the variables attached to the tree branches
    */
   void clear();
@@ -88,7 +95,7 @@ public:
     if(descTree_ && description){
       descriptions_.push_back(new char[strlen(description) + 1]);
       strcpy(descriptions_.back(), description);
-      descTree_->Branch(branchName, descriptions_.back(), (std::string(description) + "/C").c_str());
+      descTree_->Branch(branchName, descriptions_.back(), (std::string(branchName) + "/C").c_str());
     }
   }
  
@@ -161,6 +168,7 @@ private:
   
   TTree* tree_;
   TTree* descTree_;
+  TTree* bitFieldTree_;
 };
   
 
