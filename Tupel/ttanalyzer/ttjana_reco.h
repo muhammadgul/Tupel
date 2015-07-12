@@ -10,11 +10,8 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-
+using namespace std;
 // Header file for the classes stored in the TTree if any.
-#include "vector"
-#include "vector"
-#include "vector"
 #include "vector"
 
 class ttjana_reco {
@@ -587,7 +584,9 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual double    DeltaR(double entry1, double entry2, double entry3, double entry4);
    virtual double    DeltaPhi(double entry1, double entry2);
-
+   TString name;
+   bool dottother=false;
+   bool dosignal=false;
 };
 
 #endif
@@ -613,11 +612,49 @@ ttjana_reco::ttjana_reco(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("tupel/MuonTree","");
-/*      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_100.root/tupel/MuonTree");
-      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_101.root/tupel/MuonTree");
-      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_102.root/tupel/MuonTree");
-*/      chain->Add("/afs/cern.ch/user/b/bbilin/eo/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_103.root/tupel/MuonTree");
-//#include "inlist.h"
+/* chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_100.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_101.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_102.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_103.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_104.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_105.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_106.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_107.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_108.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_109.root");
+ */
+
+/*
+  chain->Add("/home/bugra/SingleMuon/SingleMuon_Run2015B-PromptReco-v1/150711_092320/0000/DYJetsToLL_ntuple_1.root");
+  chain->Add("/home/bugra/SingleMuon/SingleMuon_Run2015B-PromptReco-v1/150711_092320/0000/DYJetsToLL_ntuple_2.root");
+ name="data.root";
+*/
+
+
+#include "inlist.h" //Powheg signal sample
+dosignal=true;
+name="mc_signal.root";
+/*
+#include "inlist.h" //Powheg signal sample
+dottother=true;
+name="mc_other.root";
+*/
+/*#include "inlist_ST_tWch_t.h"
+name="ST_tWch_t.root";
+*/
+/*#include "inlist_ST_tWch_tbar.h"
+name="ST_tWch_tbar.root";
+*/
+/*#include "inlist_ST_tch_t.h"
+name="ST_tch_t.root";
+*/
+/*#include "inlist_ST_tch_tbar.h"
+name="ST_tch_tbar.root";
+*/
+/*#include "inlist_WJet.h"
+name="ST_WJet.root";
+*/
+
       tree = chain;
 #endif // SINGLE_TREE
 

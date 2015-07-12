@@ -54,7 +54,7 @@ TH1D * calculate_asym(TH1D* h1, TH1D* h2, double MyWeight, int nrebin){
   e_plus->Scale(244.9/MyWeight);
   e_minus->Scale(244.9/MyWeight);
 
-  TH1D* delta=(TH1D*) e_plus->Clone("delta");
+  TH1D* delta= (TH1D*)e_plus->Clone("delta");
   delta->Add(e_minus,-1);
 
   return delta;
