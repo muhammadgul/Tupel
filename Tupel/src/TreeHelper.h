@@ -10,6 +10,8 @@
 #include <vector>
 #include <map>
 
+#include <iostream> //for debug messages
+
 /** Helper class for TTree. This helper takes care of resetting
  * the variable storage after a tree fill. The values of the simple
  * type variable are set to 0 and the vectors are empty.
@@ -40,9 +42,9 @@ public:
       descriptions_.pop_back();
     }
     
-    while(!vDescriptions_.empty()){
-      delete vDescriptions_.back();
-      vDescriptions_.pop_back();
+    while(!allocatedStringVectors_.empty()){
+      delete allocatedStringVectors_.back();
+      allocatedStringVectors_.pop_back();
     }
   }
   
@@ -83,9 +85,6 @@ public:
    * The description tree is filled at the first call.
    */
   void fill(){
-    if(descTree_ && descTree_->GetEntries() < 1){
-      fillDescriptionTree();
-    }
     tree_->Fill();
     clear();
   }
@@ -104,19 +103,18 @@ public:
     }
   }
 
-  /** Add a description branch to descibe each elements of a vector type branch
+
+  /** To be called once all descriptionshave been entered
+   * with the addDescription() and defineBit() methods.
    */
-  void addDescription(const char* branchName, const std::vector<std::string>& descriptions){
+  void fillDescriptionTree(){
     if(descTree_){
-      std::vector<TString>* var = new std::vector<TString>(descriptions.size());
-      for(unsigned i = 0; i < descriptions.size(); ++i){
-	var->push_back(TString(descriptions[i]));
-      }
-      vDescriptions_.push_back(var);
-      descTree_->Branch(branchName, var);
+      descTree_->Fill();
+    }
+    if(bitFieldTree_){
+      bitFieldTree_->Fill();
     }
   }
- 
   
 private:
 
@@ -166,12 +164,6 @@ private:
     doubleList_.push_back(a);
   }
 
-  void fillDescriptionTree(){
-    if(descTree_){
-      descTree_->Fill();
-    }
-  }
-  
 private:
   std::vector<int*> intList_;
   std::vector<unsigned*> unsignedList_;
@@ -183,7 +175,7 @@ private:
   std::vector<std::vector<double>*> doubleVectorList_;
   std::vector<std::vector<bool>*> boolVectorList_;
   std::vector<char*> descriptions_;
-  std::vector<std::vector<TString>*> vDescriptions_;
+  std::vector<std::vector<std::string>*> allocatedStringVectors_;
   
   TTree* tree_;
   TTree* descTree_;
