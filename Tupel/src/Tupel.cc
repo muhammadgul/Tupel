@@ -71,18 +71,27 @@ const static char* checksum = QUOTE(MYFILE_CHECKSUM);
 /** 
  * Define a bit of a bit field.
  * 1. Document the bit in the ROOT tree
- * 2. Set the variable with the bit mask (integer with the relevant bit set)
+ * 2. Set the variable with the bit mask (integer with the relevant bit set).
+ * The second version DEF_BIT2 omits this setting. It can be useful when we
+ * want to avoid defining the variable.
+ * 3. Set a map to match bit name to bit mask
  * A field named after label prefixed with a k and with an undercore
  * appended to it must be defined in the class members. This macro will set it.
  * @param bitField: name (verbatim string without quotes) of the event tree branch the bit belongs to
  * @param bitNum: bit position, LSB is 0, MSB is 31
- * @param label: used to build the class field name (k<label>_) and stored as
+ * @param label: used to build the class field names (k<label>_ for the mask
+ * and <label>Map_ for the name->mask map). The label is stored as
  * description in the ROOT file. Use a verbatim string without quotes.
  * 
  *  For long description including spaces please use the DEF_BIT_L version
  */
 #define DEF_BIT(bitField, bitNum, label) \
   k ## label ## _ = 1 <<bitNum; \
+  bitField ## Map ## _[#label] = 1LL <<bitNum;		\
+  treeHelper_->defineBit(#bitField, bitNum, #label);
+
+#define DEF_BIT2(bitField, bitNum, label) \
+  bitField ## Map ## _[#label] = 1LL <<bitNum; \
   treeHelper_->defineBit(#bitField, bitNum, #label);
 
 /**
@@ -92,8 +101,14 @@ const static char* checksum = QUOTE(MYFILE_CHECKSUM);
  */
 #define DEF_BIT_L(bitField, bitNum, label, desc) \
   k ## label ## _ = 1 <<bitNum; \
+  bitField ## Map ## _[#label] = 1 <<bitNum; \
   treeHelper_->defineBit(#bitField, bitNum, desc);
-		       
+
+#define DEF_BIT2_L(bitField, bitNum, label, desc) \
+  bitField ## Map ## _[#label] = 1 <<bitNum; \
+  treeHelper_->defineBit(#bitField, bitNum, desc);
+
+
 //#name -> "name", name ## _ -> name_
 #define ADD_BRANCH_D(name, desc) treeHelper_->addBranch(#name, name ## _, desc)
 #define ADD_BRANCH(name) treeHelper_->addBranch(#name, name ## _)
@@ -162,6 +177,12 @@ private:
   void processJets();
   
   void processPhotons();
+
+  /** Check if the argument is one of the photon
+   * HLT trigger considered for TrigHltPhot and if it is set
+   * the corresponding bit.
+   */
+  void fillPhotTrig(const std::string& trigname);
   
   // input tags
   //edm::InputTag trigger_;
@@ -206,6 +227,9 @@ private:
   
   //Trigger
   std::auto_ptr<unsigned> TrigHlt_;
+  std::map<std::string, unsigned> TrigHltMap_; //bit assignment
+  std::auto_ptr<ULong64_t> TrigHltPhot_;
+  std::map<std::string, ULong64_t> TrigHltPhotMap_; //bit assignment
   
   //Missing energy
   std::auto_ptr<std::vector<float> > METPt_;
@@ -289,13 +313,16 @@ private:
   std::auto_ptr<std::vector<float> > MuPhi_;
   std::auto_ptr<std::vector<float> > MuE_;
   std::auto_ptr<std::vector<int> >   MuId_;
+  std::map<std::string, unsigned>    MuIdMap_; //bit assignment
   std::auto_ptr<std::vector<unsigned> > MuIdTight_;
+  std::map<std::string, unsigned>    MuIdTightMap_; //bit assignment
   std::auto_ptr<std::vector<float> > MuCh_;
   std::auto_ptr<std::vector<float> > MuVtxZ_;
   std::auto_ptr<std::vector<float> > MuDxy_;
   std::auto_ptr<std::vector<float> > MuIsoRho_;
   std::auto_ptr<std::vector<float> > MuPfIso_;
   std::auto_ptr<std::vector<float> > MuType_;
+  std::map<std::string, unsigned>    MuTypeMap_; //bit assignment
   std::auto_ptr<std::vector<float> > MuIsoTkIsoAbs_;
   std::auto_ptr<std::vector<float> > MuIsoTkIsoRel_;
   std::auto_ptr<std::vector<float> > MuIsoCalAbs_;
@@ -319,6 +346,7 @@ private:
   std::auto_ptr<std::vector<float> > ElE_;
   std::auto_ptr<std::vector<float> > ElCh_;  
   std::auto_ptr<std::vector<unsigned> >  ElId_;
+  std::map<std::string, unsigned>    ElIdMap_; //bit assignment
   std::auto_ptr<std::vector<float> > ElMvaTrig_;
   std::auto_ptr<std::vector<float> > ElMvaNonTrig_;
   std::auto_ptr<std::vector<float> > ElMvaPresel_;
@@ -354,6 +382,10 @@ private:
   std::auto_ptr<std::vector<float> > PhotPt_;
   std::auto_ptr<std::vector<float> > PhotEta_;
   std::auto_ptr<std::vector<float> > PhotPhi_;
+  std::auto_ptr<std::vector<float> > PhotScRawE_;
+  std::auto_ptr<std::vector<float> > PhotScEta_;
+  std::auto_ptr<std::vector<float> > PhotScPhi_;
+  
   
   //photon isolations
   std::auto_ptr<std::vector<float> > PhotIsoEcal_;
@@ -368,21 +400,38 @@ private:
   
   //photon cluster shapes
   std::auto_ptr<std::vector<float> > PhotE3x3_;
+  std::auto_ptr<std::vector<float> > PhotE1x5_;
+  std::auto_ptr<std::vector<float> > PhotE1x3_;
+  std::auto_ptr<std::vector<float> > PhotE2x2_;
+  std::auto_ptr<std::vector<float> > PhotE2x5_;
+  std::auto_ptr<std::vector<float> > PhotE5x5_;
   std::auto_ptr<std::vector<float> > PhotSigmaIetaIeta_;
+  std::auto_ptr<std::vector<float> > PhotSigmaIetaIphi_;
+  std::auto_ptr<std::vector<float> > PhotSigmaIphiIphi_;
+  std::auto_ptr<std::vector<float> > PhotEtaWidth_;
+  std::auto_ptr<std::vector<float> > PhotPhiWidth_;
 
+  //photon preshower
+  std::auto_ptr<std::vector<float> > PhotEsE_;
+  std::auto_ptr<std::vector<float> > PhotEsSigmaIxIx_;
+  std::auto_ptr<std::vector<float> > PhotEsSigmaIyIy_;
+  std::auto_ptr<std::vector<float> > PhotEsSigmaIrIr_;
+  
   //photon id (bit field)
   std::auto_ptr<std::vector<unsigned> > PhotId_;
-  std::auto_ptr<std::vector<float> > PhotHoE_;
-  std::auto_ptr<std::vector<bool> > PhotHasPixelSeed_;
-  
+  std::auto_ptr<std::vector<float> >    PhotHoE_;
+  std::auto_ptr<std::vector<bool> >     PhotHasPixelSeed_;
 
+  //photon timing
+  std::auto_ptr<std::vector<float> > PhotTime_;
+  
   ///PF Jets
   std::auto_ptr<std::vector<float> > JetAk04Pt_;
   std::auto_ptr<std::vector<float> > JetAk04Eta_;
   std::auto_ptr<std::vector<float> > JetAk04Phi_;
   std::auto_ptr<std::vector<float> > JetAk04E_;
   std::auto_ptr<std::vector<float> > JetAk04Id_;
-  std::auto_ptr<std::vector<bool> > JetAk04PuId_;
+  std::auto_ptr<std::vector<bool> >  JetAk04PuId_;
   std::auto_ptr<std::vector<float> > JetAk04PuMva_;
   std::auto_ptr<std::vector<float> > JetAk04RawPt_;
   std::auto_ptr<std::vector<float> > JetAk04RawE_;
@@ -411,12 +460,12 @@ private:
   std::auto_ptr<std::vector<float> > JetAk04PartFlav_;
   std::auto_ptr<std::vector<float> > JetAk04JecUncUp_;
   std::auto_ptr<std::vector<float> > JetAk04JecUncDwn_;
-  std::auto_ptr<std::vector<int> > JetAk04ConstId_;
+  std::auto_ptr<std::vector<int> >   JetAk04ConstId_;
   std::auto_ptr<std::vector<float> > JetAk04ConstPt_;
   std::auto_ptr<std::vector<float> > JetAk04ConstEta_;
   std::auto_ptr<std::vector<float> > JetAk04ConstPhi_;
   std::auto_ptr<std::vector<float> > JetAk04ConstE_;
-  std::auto_ptr<std::vector<int> > JetAk04GenJet_;
+  std::auto_ptr<std::vector<int> >   JetAk04GenJet_;
   
   //bits
   unsigned kMuIdLoose_;
@@ -426,6 +475,8 @@ private:
   unsigned kPfMu_;
 
   unsigned kElec17_Elec8_;
+  unsigned kMu17_Mu8_;
+  unsigned kMu17_TkMu8_;
 
   unsigned kCutBasedElId_CSA14_50ns_V1_standalone_veto_;
   unsigned kCutBasedElId_CSA14_50ns_V1_standalone_loose_;
@@ -463,7 +514,7 @@ using namespace std;
 using namespace reco;
 int ccnevent=0;
 Tupel::Tupel(const edm::ParameterSet& iConfig):
-//trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
+  //trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
   //triggerEvent_( iConfig.getParameter< edm::InputTag >( "triggerEvent" ) ),
   //triggerSummaryLabel_( iConfig.getParameter< edm::InputTag >( "triggerSummaryLabel" ) ), //added by jyhan
   elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
@@ -479,7 +530,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
   //  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
-genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
+  genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
   metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
   photonIdsListed_(false),
   elecIdsListed_(false)
@@ -496,7 +547,53 @@ Tupel::~Tupel()
 
 void Tupel::defineBitFields(){
   DEF_BIT(TrigHlt, 0, Elec17_Elec8);
-  
+  DEF_BIT(TrigHlt, 1, Mu17_Mu8);
+  DEF_BIT(TrigHlt, 2, Mu17_TkMu8);
+  DEF_BIT2(TrigHltPhot, 1 , Photon26_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon16_AND_HE10_R9Id65_Eta2_Mass60);
+  DEF_BIT2(TrigHltPhot, 2 , Photon36_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon22_AND_HE10_R9Id65_Eta2_Mass15);
+  DEF_BIT2(TrigHltPhot, 3 , Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelSeedMatch_Mass70);
+  DEF_BIT2(TrigHltPhot, 4 , Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95);
+  DEF_BIT2(TrigHltPhot, 5 , Diphoton30_18_Solid_R9Id_AND_IsoCaloId_AND_HE_R9Id_Mass55);
+  DEF_BIT2(TrigHltPhot, 6 , Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55);
+  DEF_BIT2(TrigHltPhot, 7 , Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55);
+  DEF_BIT2(TrigHltPhot, 8 , DoublePhoton85);
+  DEF_BIT2(TrigHltPhot, 9 , Photon120_R9Id90_HE10_Iso40_EBOnly_PFMET40);
+  DEF_BIT2(TrigHltPhot, 10, Photon120_R9Id90_HE10_Iso40_EBOnly_VBF);
+  DEF_BIT2(TrigHltPhot, 11, Photon120_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 12, Photon120);
+  DEF_BIT2(TrigHltPhot, 13, Photon135_PFMET100_NoiseCleaned);
+  DEF_BIT2(TrigHltPhot, 14, Photon165_HE10);
+  DEF_BIT2(TrigHltPhot, 15, Photon165_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 16, Photon175);
+  DEF_BIT2(TrigHltPhot, 17, Photon22_R9Id90_HE10_Iso40_EBOnly_PFMET40);
+  DEF_BIT2(TrigHltPhot, 18, Photon22_R9Id90_HE10_Iso40_EBOnly_VBF);
+  DEF_BIT2(TrigHltPhot, 19, Photon22_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 20, Photon22);
+  DEF_BIT2(TrigHltPhot, 21, Photon250_NoHE);
+  DEF_BIT2(TrigHltPhot, 22, Photon30_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 23, Photon30);
+  DEF_BIT2(TrigHltPhot, 24, Photon300_NoHE);
+  DEF_BIT2(TrigHltPhot, 25, Photon36_R9Id90_HE10_Iso40_EBOnly_PFMET40);
+  DEF_BIT2(TrigHltPhot, 26, Photon36_R9Id90_HE10_Iso40_EBOnly_VBF);
+  DEF_BIT2(TrigHltPhot, 27, Photon36_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 28, Photon36);
+  DEF_BIT2(TrigHltPhot, 29, Photon42_R9Id85_OR_CaloId24b40e_Iso50T80L_Photon25_AND_HE10_R9Id65_Eta2_Mass15);
+  DEF_BIT2(TrigHltPhot, 30, Photon50_R9Id90_HE10_Iso40_EBOnly_PFMET40);
+  DEF_BIT2(TrigHltPhot, 31, Photon50_R9Id90_HE10_Iso40_EBOnly_VBF);
+  DEF_BIT2(TrigHltPhot, 32, Photon50_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 33, Photon50);
+  DEF_BIT2(TrigHltPhot, 34, Photon500);
+  DEF_BIT2(TrigHltPhot, 35, Photon600);
+  DEF_BIT2(TrigHltPhot, 36, Photon75_R9Id90_HE10_Iso40_EBOnly_PFMET40);
+  DEF_BIT2(TrigHltPhot, 37, Photon75_R9Id90_HE10_Iso40_EBOnly_VBF);
+  DEF_BIT2(TrigHltPhot, 38, Photon75_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 39, Photon75);
+  DEF_BIT2(TrigHltPhot, 40, Photon90_CaloIdL_PFHT500);
+  DEF_BIT2(TrigHltPhot, 41, Photon90_CaloIdL_PFHT600);
+  DEF_BIT2(TrigHltPhot, 42, Photon90_R9Id90_HE10_Iso40_EBOnly_PFMET40);
+  DEF_BIT2(TrigHltPhot, 43, Photon90_R9Id90_HE10_Iso40_EBOnly_VBF);
+  DEF_BIT2(TrigHltPhot, 44, Photon90_R9Id90_HE10_IsoM);
+  DEF_BIT2(TrigHltPhot, 45, Photon90);
   DEF_BIT(MuId, 0, MuIdLoose);
   DEF_BIT_L(MuId, 3, MuIdCustom, "Mu Id: isGlobalMuon\n"
 			  "&& isPFMuon\n"
@@ -795,13 +892,9 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
 
 void Tupel::processTrigger(const edm::Event& iEvent){
 
-  int Mu17_Mu8 = 0;
-  int Mu17_TkMu8 = 0;
-  //  int Elec17_Elec8 = 0;
-  
   int ntrigs;
-  vector<string> trigname;
-  vector<bool> trigaccept;
+  std::vector<std::string> trigname;
+  std::vector<bool> trigaccept;
   edm::Handle< edm::TriggerResults > HLTResHandle;
   edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
   iEvent.getByLabel(HLTTag, HLTResHandle);
@@ -812,11 +905,21 @@ void Tupel::processTrigger(const edm::Event& iEvent){
       trigname.push_back(trigNames->triggerName(i));
       trigaccept.push_back(HLTResHandle->accept(i));
       if (trigaccept[i]){
-	if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) *TrigHlt_ |= Mu17_Mu8;
-	if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) *TrigHlt_ |= Mu17_TkMu8;
-	if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
+	if(trigname[i].find("HLT_Mu17_Mu8")!=std::string::npos) *TrigHlt_ |= kMu17_Mu8_;
+	if(trigname[i].find("HLT_Mu17_TkMu8")!=std::string::npos) *TrigHlt_ |= kMu17_TkMu8_;
+	if(trigname[i].find(
+			  "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL"
+			    )!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
+	fillPhotTrig(std::string(trigname[i]));
       }
     }
+  }
+}
+
+void Tupel::fillPhotTrig(const std::string& trigname){
+  for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltPhotMap_.begin();
+      it != TrigHltPhotMap_.end(); ++it){
+    if(trigname.find(it->first)!=std::string::npos) *TrigHltPhot_ |= it->second;
   }
 }
 
@@ -1192,7 +1295,10 @@ void Tupel::processPhotons(){
     PhotPt_->push_back(photon.pt());
     PhotEta_->push_back(photon.eta());
     PhotPhi_->push_back(photon.phi());
-
+    PhotScRawE_->push_back(photon.superCluster()->rawEnergy());
+    PhotScEta_->push_back(photon.superCluster()->eta());
+    PhotScPhi_->push_back(photon.superCluster()->phi());
+    
     //photon isolation
     PhotIsoEcal_->push_back(photon.ecalIso());
     PhotIsoHcal_->push_back(photon.hcalIso());
@@ -1206,8 +1312,27 @@ void Tupel::processPhotons(){
       
     //photon cluster shape
     PhotE3x3_->push_back(photon.e3x3());
+    PhotE1x5_->push_back(photon.e1x5());
+    //PhotE1x3_->push_back(...);
+    //PhotE2x2_->push_back(...);
+    PhotE2x5_->push_back(photon.e2x5());
+    PhotE5x5_->push_back(photon.e5x5());
     PhotSigmaIetaIeta_->push_back(photon.sigmaIetaIeta());
+    //PhotSigmaIetaIphi_->push_back(...);
+    //PhotSigmaIphiIphi_->push_back(...);
+    PhotEtaWidth_->push_back(photon.sigmaEtaEta());
+    //PhotPhiWidth_->push_back(...);
 
+    //preshower
+    //PhotEsE_->push_back(...);
+    //PhotEsSigmaIxIx_->push_back(...);
+    //PhotEsSigmaIyIy_->push_back(...);
+    //PhotEsSigmaIrIr_->push_back(sqrt(std::pow(PhotEsSigmaIxIx_, 2)
+    //                                  + std::pow(PhotEsSigmaIyIy_, 2));
+
+    //photon time
+    //PhotTime_->push_back(...);
+    
     //photon ids:
     std::vector<std::pair<std::string,Bool_t> > idlist = photon.photonIDs();
     if(!photonIdsListed_) {
@@ -1310,7 +1435,8 @@ Tupel::beginJob()
   
   //Trigger
   ADD_BRANCH_D(TrigHlt, "HLT triggger bits. See BitField.TrigHlt for bit description.");
-
+  ADD_BRANCH_D(TrigHltPhot, "HLT Photon triggger bits. See BitField.TrigHltPhot for bit description.");
+  
   //Missing Energy
   treeHelper_->addDescription("MET", "PF MET");
   ADD_BRANCH(METPt);
@@ -1458,6 +1584,9 @@ Tupel::beginJob()
   ADD_BRANCH(PhotPt);;
   ADD_BRANCH(PhotEta);;
   ADD_BRANCH(PhotPhi);;
+  ADD_BRANCH_D(PhotScRawE, "Photon Supercluster uncorrected energy");
+  ADD_BRANCH_D(PhotScEta, "Photon Supercluster eta");
+  ADD_BRANCH_D(PhotScPhi, "Photon Supercluster phi");
 
   //photon isolations
   ADD_BRANCH(PhotIsoEcal);
@@ -1471,14 +1600,32 @@ Tupel::beginJob()
   ADD_BRANCH(PhotPfIsoHcalClus);
   
   //photon cluster shapes
-  ADD_BRANCH(PhotE3x3);
+  ADD_BRANCH_D(PhotE3x3, "Photon energy deposited in 3x3 ECAL crystal array. Divide this quantity by PhotScRawE to obtain the R9 variable.");
+  ADD_BRANCH(PhotE1x5);
+  //ADD_BRANCH(PhotE1x3);
+  //ADD_BRANCH(PhotE2x2);
+  ADD_BRANCH(PhotE2x5);
+  ADD_BRANCH(PhotE5x5);
   ADD_BRANCH(PhotSigmaIetaIeta);
+  //ADD_BRANCH(PhotSigmaIetaIphi);
+  //ADD_BRANCH(PhotSigmaIphiIphi);
+  ADD_BRANCH(PhotEtaWidth);
+  ADD_BRANCH(PhotPhiWidth);
   ADD_BRANCH(PhotHoE);
 
+  //photon ES
+  //ADD_BRANCH_D(PhotEsE, "Photon. Energy deposited in the preshower");
+  //ADD_BRANCH_D(PhotEsSigmaIxIx, "Photon. Preshower cluster extend along x-axis");
+  //ADD_BRANCH_D(PhotEsSigmaIyIy, "Photon. Preshower cluster extend along y-axis");
+  //ADD_BRANCH_D(PhotEsSigmaIrIr, "Photon. \\sqrt(PhotEsSigmaIxIx**2+PhotEsSigmaIyIy**2)");
+  
   //photon ID
   ADD_BRANCH_D(PhotId, "Photon Id. Field of bits described in BitFields.PhotId");
   ADD_BRANCH_D(PhotHasPixelSeed, "Pixel and tracker based variable to discreminate photons from electrons");
 
+  //photon timing
+  //ADD_BRANCH_D(PhotTime, "Photon. Timing from ECAL");
+  
   //PF Jets
   treeHelper_->addDescription("JetAk04", "Reconstricuted jets clustered with the anti-ket algorithm with distance parameter R = 0.4");
   ADD_BRANCH(JetAk04Pt);

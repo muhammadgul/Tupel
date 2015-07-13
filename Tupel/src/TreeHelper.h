@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "Rtypes.h"
 
 #include <iostream> //for debug messages
 
@@ -142,6 +143,9 @@ private:
   void addVar(std::vector<unsigned>* v){
     unsignedVectorList_.push_back(v);
   }
+  void addVar(std::vector<ULong64_t>* v){
+    unsigned64VectorList_.push_back(v);
+  }
   void addVar(std::vector<float>* v){
     floatVectorList_.push_back(v);
   }
@@ -157,6 +161,9 @@ private:
   void addVar(unsigned* a){
     unsignedList_.push_back(a);
   }
+  void addVar(ULong64_t* a){
+    unsigned64List_.push_back(a);
+  }
   void addVar(float* a){
     floatList_.push_back(a);
   }
@@ -167,10 +174,12 @@ private:
 private:
   std::vector<int*> intList_;
   std::vector<unsigned*> unsignedList_;
+  std::vector<ULong64_t*> unsigned64List_;
   std::vector<float*> floatList_;
   std::vector<double*> doubleList_;
   std::vector<std::vector<int>*> intVectorList_;
   std::vector<std::vector<unsigned>*> unsignedVectorList_;
+  std::vector<std::vector<ULong64_t>*> unsigned64VectorList_;
   std::vector<std::vector<float>*> floatVectorList_;
   std::vector<std::vector<double>*> doubleVectorList_;
   std::vector<std::vector<bool>*> boolVectorList_;
