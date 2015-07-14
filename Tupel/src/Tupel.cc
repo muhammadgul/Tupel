@@ -298,8 +298,8 @@ private:
   std::auto_ptr<std::vector<float> > GJetAk04ConstE_;
 
   //Exta generator information
-  std::auto_ptr<std::vector<float> > GPdfId1_;
-  std::auto_ptr<std::vector<float> > GPdfId2_;
+  std::auto_ptr<std::vector<int> > GPdfId1_;
+  std::auto_ptr<std::vector<int> > GPdfId2_;
   std::auto_ptr<std::vector<float> > GPdfx1_;
   std::auto_ptr<std::vector<float> > GPdfx2_;
   std::auto_ptr<std::vector<float> > GPdfScale_;
