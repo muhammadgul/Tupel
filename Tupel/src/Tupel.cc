@@ -312,7 +312,7 @@ private:
   std::auto_ptr<std::vector<float> > MuEta_;
   std::auto_ptr<std::vector<float> > MuPhi_;
   std::auto_ptr<std::vector<float> > MuE_;
-  std::auto_ptr<std::vector<int> >   MuId_;
+  std::auto_ptr<std::vector<unsigned> >   MuId_;
   std::map<std::string, unsigned>    MuIdMap_; //bit assignment
   std::auto_ptr<std::vector<unsigned> > MuIdTight_;
   std::map<std::string, unsigned>    MuIdTightMap_; //bit assignment
