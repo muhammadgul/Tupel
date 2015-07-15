@@ -144,7 +144,7 @@ private:
     else if(v.Pz() > 0) return 10e10;
     else return -10e10;
   }
-  
+
   //Write Job information tree in the output. The tree
   //contains one event, with general information
   void writeHeader();
@@ -214,21 +214,21 @@ private:
   std::auto_ptr<TreeHelper> treeHelper_;
 
   //Event
-  std::auto_ptr<int> EvtIsRealData_;
+  std::auto_ptr<int>      EvtIsRealData_;
   std::auto_ptr<unsigned> EvtNum_;
   std::auto_ptr<unsigned> EvtRunNum_;
-  std::auto_ptr<int> EvtLumiNum_;
-  std::auto_ptr<int> EvtBxNum_;
-  std::auto_ptr<float> EvtVtxCnt_;
-  std::auto_ptr<int> EvtPuCnt_;
-  std::auto_ptr<int> EvtPuCntTruth_;
+  std::auto_ptr<int> 	  EvtLumiNum_;
+  std::auto_ptr<int> 	  EvtBxNum_;
+  std::auto_ptr<int> 	  EvtVtxCnt_;
+  std::auto_ptr<int> 	  EvtPuCnt_;
+  std::auto_ptr<int> 	  EvtPuCntTruth_;
   std::auto_ptr<std::vector<double> > EvtWeights_;
-  std::auto_ptr<float> EvtFastJetRho_;
+  std::auto_ptr<float>    EvtFastJetRho_;
   
   //Trigger
-  std::auto_ptr<unsigned> TrigHlt_;
-  std::map<std::string, unsigned> TrigHltMap_; //bit assignment
-  std::auto_ptr<ULong64_t> TrigHltPhot_;
+  std::auto_ptr<unsigned>          TrigHlt_;
+  std::map<std::string, unsigned>  TrigHltMap_; //bit assignment
+  std::auto_ptr<ULong64_t>         TrigHltPhot_;
   std::map<std::string, ULong64_t> TrigHltPhotMap_; //bit assignment
   
   //Missing energy
@@ -243,22 +243,22 @@ private:
   std::auto_ptr<std::vector<float> > METsig_;
 
   //Generator level leptons, dressed
-  std::auto_ptr<std::vector<float> > GLepDr01Pt_;
-  std::auto_ptr<std::vector<float> > GLepDr01Eta_;
-  std::auto_ptr<std::vector<float> > GLepDr01Phi_;
-  std::auto_ptr<std::vector<float> > GLepDr01E_;
+  std::auto_ptr<std::vector<float> > 	GLepDr01Pt_;
+  std::auto_ptr<std::vector<float> > 	GLepDr01Eta_;
+  std::auto_ptr<std::vector<float> > 	GLepDr01Phi_;
+  std::auto_ptr<std::vector<float> > 	GLepDr01E_;
   std::auto_ptr<std::vector<unsigned> > GLepDr01Id_;
-  std::auto_ptr<std::vector<int> > GLepDr01St_;
-  std::auto_ptr<std::vector<int> > GLepDr01MomId_;
+  std::auto_ptr<std::vector<int> >      GLepDr01St_;
+  std::auto_ptr<std::vector<int> >      GLepDr01MomId_;
 
   //Generator level leptons, not-dressed  
-  std::auto_ptr<std::vector<float> > GLepBarePt_;
-  std::auto_ptr<std::vector<float> > GLepBareEta_;
-  std::auto_ptr<std::vector<float> > GLepBarePhi_;
-  std::auto_ptr<std::vector<float> > GLepBareE_;
+  std::auto_ptr<std::vector<float> > 	GLepBarePt_;
+  std::auto_ptr<std::vector<float> > 	GLepBareEta_;
+  std::auto_ptr<std::vector<float> > 	GLepBarePhi_;
+  std::auto_ptr<std::vector<float> > 	GLepBareE_;
   std::auto_ptr<std::vector<unsigned> > GLepBareId_;
-  std::auto_ptr<std::vector<int> > GLepBareSt_;
-  std::auto_ptr<std::vector<int> > GLepBareMomId_;
+  std::auto_ptr<std::vector<int> > 	GLepBareSt_;
+  std::auto_ptr<std::vector<int> > 	GLepBareMomId_;
 
   //Generator level leptons, status 3
   std::auto_ptr<std::vector<float> > GLepSt3Pt_;
@@ -298,84 +298,84 @@ private:
   std::auto_ptr<std::vector<float> > GJetAk04ConstE_;
 
   //Exta generator information
-  std::auto_ptr<std::vector<int> > GPdfId1_;
-  std::auto_ptr<std::vector<int> > GPdfId2_;
+  std::auto_ptr<std::vector<int> >   GPdfId1_;
+  std::auto_ptr<std::vector<int> >   GPdfId2_;
   std::auto_ptr<std::vector<float> > GPdfx1_;
   std::auto_ptr<std::vector<float> > GPdfx2_;
   std::auto_ptr<std::vector<float> > GPdfScale_;
-  std::auto_ptr<float> GBinningValue_;
-  std::auto_ptr<int> GNup_;
+  std::auto_ptr<float>               GBinningValue_;
+  std::auto_ptr<int>                 GNup_;
 
 
   ///Muons
-  std::auto_ptr<std::vector<float> > MuPt_;
-  std::auto_ptr<std::vector<float> > MuEta_;
-  std::auto_ptr<std::vector<float> > MuPhi_;
-  std::auto_ptr<std::vector<float> > MuE_;
-  std::auto_ptr<std::vector<unsigned> >   MuId_;
-  std::map<std::string, unsigned>    MuIdMap_; //bit assignment
+  std::auto_ptr<std::vector<float> > 	MuPt_;
+  std::auto_ptr<std::vector<float> > 	MuEta_;
+  std::auto_ptr<std::vector<float> > 	MuPhi_;
+  std::auto_ptr<std::vector<float> > 	MuE_;
+  std::auto_ptr<std::vector<unsigned> > MuId_;
+  std::map<std::string, unsigned>       MuIdMap_; //bit assignment
   std::auto_ptr<std::vector<unsigned> > MuIdTight_;
-  std::map<std::string, unsigned>    MuIdTightMap_; //bit assignment
-  std::auto_ptr<std::vector<float> > MuCh_;
-  std::auto_ptr<std::vector<float> > MuVtxZ_;
-  std::auto_ptr<std::vector<float> > MuDxy_;
-  std::auto_ptr<std::vector<float> > MuIsoRho_;
-  std::auto_ptr<std::vector<float> > MuPfIso_;
-  std::auto_ptr<std::vector<float> > MuType_;
-  std::map<std::string, unsigned>    MuTypeMap_; //bit assignment
-  std::auto_ptr<std::vector<float> > MuIsoTkIsoAbs_;
-  std::auto_ptr<std::vector<float> > MuIsoTkIsoRel_;
-  std::auto_ptr<std::vector<float> > MuIsoCalAbs_;
-  std::auto_ptr<std::vector<float> > MuIsoCombRel_;
-  std::auto_ptr<std::vector<float> > MuTkNormChi2_;
-  std::auto_ptr<std::vector<float> > MuTkHitCnt_;
-  std::auto_ptr<std::vector<float> > MuMatchedStationCnt_;
-  std::auto_ptr<std::vector<float> > MuDz_;
-  std::auto_ptr<std::vector<float> > MuPixelHitCnt_;
-  std::auto_ptr<std::vector<float> > MuTkLayerCnt_;
-  std::auto_ptr<std::vector<float> > MuPfIsoChHad_;
-  std::auto_ptr<std::vector<float> > MuPfIsoNeutralHad_;
-  std::auto_ptr<std::vector<float> > MuPfIsoRawRel_;
-  std::auto_ptr<std::vector<float> > MuHltMatch_;
+  std::map<std::string, unsigned>    	MuIdTightMap_; //bit assignment
+  std::auto_ptr<std::vector<float> > 	MuCh_;
+  std::auto_ptr<std::vector<float> > 	MuVtxZ_;
+  std::auto_ptr<std::vector<float> > 	MuDxy_;
+  std::auto_ptr<std::vector<float> > 	MuIsoRho_;
+  std::auto_ptr<std::vector<float> > 	MuPfIso_;
+  std::auto_ptr<std::vector<float> > 	MuType_;
+  std::map<std::string, unsigned>    	MuTypeMap_; //bit assignment
+  std::auto_ptr<std::vector<float> > 	MuIsoTkIsoAbs_;
+  std::auto_ptr<std::vector<float> > 	MuIsoTkIsoRel_;
+  std::auto_ptr<std::vector<float> > 	MuIsoCalAbs_;
+  std::auto_ptr<std::vector<float> > 	MuIsoCombRel_;
+  std::auto_ptr<std::vector<float> > 	MuTkNormChi2_;
+  std::auto_ptr<std::vector<int> > 	MuTkHitCnt_;
+  std::auto_ptr<std::vector<int> > 	MuMatchedStationCnt_;
+  std::auto_ptr<std::vector<float> > 	MuDz_;
+  std::auto_ptr<std::vector<int> > 	MuPixelHitCnt_;
+  std::auto_ptr<std::vector<int> > 	MuTkLayerCnt_;
+  std::auto_ptr<std::vector<float> > 	MuPfIsoChHad_;
+  std::auto_ptr<std::vector<float> > 	MuPfIsoNeutralHad_;
+  std::auto_ptr<std::vector<float> > 	MuPfIsoRawRel_;
+  std::auto_ptr<std::vector<unsigned> > MuHltMatch_;
 
   //Electrons
-  std::auto_ptr<std::vector<float> > ElPt_;
-  std::auto_ptr<std::vector<float> > ElEta_;
-  std::auto_ptr<std::vector<float> > ElEtaSc_;
-  std::auto_ptr<std::vector<float> > ElPhi_;
-  std::auto_ptr<std::vector<float> > ElE_;
-  std::auto_ptr<std::vector<float> > ElCh_;  
-  std::auto_ptr<std::vector<unsigned> >  ElId_;
-  std::map<std::string, unsigned>    ElIdMap_; //bit assignment
-  std::auto_ptr<std::vector<float> > ElMvaTrig_;
-  std::auto_ptr<std::vector<float> > ElMvaNonTrig_;
-  std::auto_ptr<std::vector<float> > ElMvaPresel_;
-  std::auto_ptr<std::vector<float> > ElDEtaTkScAtVtx_;
-  std::auto_ptr<std::vector<float> > ElDPhiTkScAtVtx_;
-  std::auto_ptr<std::vector<float> > ElHoE_;
-  std::auto_ptr<std::vector<float> > ElSigmaIetaIeta_;
-  std::auto_ptr<std::vector<float> > ElSigmaIetaIetaFull5x5_;
-  std::auto_ptr<std::vector<float> > ElEinvMinusPinv_;
-  std::auto_ptr<std::vector<float> > ElD0_;
-  std::auto_ptr<std::vector<float> > ElDz_;
-  std::auto_ptr<std::vector<int> >   ElExpectedMissingInnerHitCnt_;
-  std::auto_ptr<std::vector<int> >   ElPassConvVeto_;
-  std::auto_ptr<std::vector<float> > ElHltMatch_;
-  std::auto_ptr<std::vector<float> > ElPfIsoChHad_;
-  std::auto_ptr<std::vector<float> > ElPfIsoNeutralHad_;
-  std::auto_ptr<std::vector<float> > ElPfIsoIso_;
-  std::auto_ptr<std::vector<float> > ElPfIsoPuChHad_;
-  std::auto_ptr<std::vector<float> > ElPfIsoRaw_;
-  std::auto_ptr<std::vector<float> > ElPfIsoDbeta_;
-  std::auto_ptr<std::vector<float> > ElPfIsoRho_;
-  std::auto_ptr<std::vector<float> > ElAEff_;
+  std::auto_ptr<std::vector<float> > 	ElPt_;
+  std::auto_ptr<std::vector<float> > 	ElEta_;
+  std::auto_ptr<std::vector<float> > 	ElEtaSc_;
+  std::auto_ptr<std::vector<float> > 	ElPhi_;
+  std::auto_ptr<std::vector<float> > 	ElE_;
+  std::auto_ptr<std::vector<float> > 	ElCh_;  
+  std::auto_ptr<std::vector<unsigned> > ElId_;
+  std::map<std::string, unsigned>    	ElIdMap_; //bit assignment
+  std::auto_ptr<std::vector<float> > 	ElMvaTrig_;
+  std::auto_ptr<std::vector<float> > 	ElMvaNonTrig_;
+  std::auto_ptr<std::vector<float> > 	ElMvaPresel_;
+  std::auto_ptr<std::vector<float> > 	ElDEtaTkScAtVtx_;
+  std::auto_ptr<std::vector<float> > 	ElDPhiTkScAtVtx_;
+  std::auto_ptr<std::vector<float> > 	ElHoE_;
+  std::auto_ptr<std::vector<float> > 	ElSigmaIetaIeta_;
+  std::auto_ptr<std::vector<float> > 	ElSigmaIetaIetaFull5x5_;
+  std::auto_ptr<std::vector<float> > 	ElEinvMinusPinv_;
+  std::auto_ptr<std::vector<float> > 	ElD0_;
+  std::auto_ptr<std::vector<float> > 	ElDz_;
+  std::auto_ptr<std::vector<int> >   	ElExpectedMissingInnerHitCnt_;
+  std::auto_ptr<std::vector<int> >   	ElPassConvVeto_;
+  std::auto_ptr<std::vector<unsigned> > ElHltMatch_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoChHad_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoNeutralHad_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoIso_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoPuChHad_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoRaw_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoDbeta_;
+  std::auto_ptr<std::vector<float> > 	ElPfIsoRho_;
+  std::auto_ptr<std::vector<float> > 	ElAEff_;
   
-  std::auto_ptr<std::vector<float> > charged_;
-  std::auto_ptr<std::vector<float> > photon_;
-  std::auto_ptr<std::vector<float> > neutral_;
-  std::auto_ptr<std::vector<float> > charged_Tom_;
-  std::auto_ptr<std::vector<float> > photon_Tom_;
-  std::auto_ptr<std::vector<float> > neutral_Tom_;
+  std::auto_ptr<std::vector<float> > 	 charged_;
+  std::auto_ptr<std::vector<float> > 	 photon_;
+  std::auto_ptr<std::vector<float> > 	 neutral_;
+  std::auto_ptr<std::vector<float> > 	 charged_Tom_;
+  std::auto_ptr<std::vector<float> > 	 photon_Tom_;
+  std::auto_ptr<std::vector<float> > 	 neutral_Tom_;
 
   //Photons
   //photon momenta
@@ -1386,7 +1386,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
   //electrons B.B.
   if(electron) processElectrons();
-
+  
+  //jets
   if(jettt) processJets();
 
   //photons. Ph. G.
