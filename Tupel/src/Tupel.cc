@@ -1051,8 +1051,8 @@ void Tupel::processElectrons(){
     double full5x5_sigmaIetaIeta_;
     //double relIsoWithDBeta_;
     double ooEmooP_;
-    double d0_;
-    double dz_;
+    double d0_ = -99.;
+    double dz_ = -99.;
     int   expectedMissingInnerHits_;
     int   passConversionVeto_;     
 
@@ -1090,8 +1090,10 @@ void Tupel::processElectrons(){
       ooEmooP_ = fabs(1.0/el.ecalEnergy() - el.eSuperClusterOverP()/el.ecalEnergy() );
     }
 
-    d0_ = (-1) * el.gsfTrack()->dxy(vtx_h->at(0).position() );
-    dz_ = el.gsfTrack()->dz( vtx_h->at(0).position() );
+    if(vtx_h->size() > 0){
+      d0_ = (-1) * el.gsfTrack()->dxy((*vtx_h)[0].position() );
+      dz_ = el.gsfTrack()->dz( (*vtx_h)[0].position() );
+    }
 
 
 
