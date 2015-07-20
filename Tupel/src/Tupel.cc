@@ -11,15 +11,18 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan,
 #include <vector>
 #include <memory>
 #include <TLorentzVector.h>
+#include <stdlib.h>
 #include "TH1.h"
 #include "TH2.h"
 #include "TTree.h"
+#include "FWCore/Utilities/interface/TimeOfDay.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "FWCore/Version/interface/GetReleaseVersion.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -131,6 +134,7 @@ private:
   /// everything that needs to be done during the event loop
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   /// everything that needs to be done after the event loop
+
   virtual void endJob();
 
   virtual void endRun(edm::Run const& iRun, edm::EventSetup const&);
@@ -212,7 +216,7 @@ private:
   // ----------member data ---------------------------
   TTree *myTree;
   std::auto_ptr<TreeHelper> treeHelper_;
-
+  
   //Event
   std::auto_ptr<int>      EvtIsRealData_;
   std::auto_ptr<unsigned> EvtNum_;
@@ -1405,13 +1409,28 @@ Tupel::writeHeader(){
   TTree* t = new TTree("Header", "Header");
   TString checksum_(checksum);
   t->Branch("Tupel_cc_githash", &checksum_);
+
+  TString cmssw_release(edm::getReleaseVersion().c_str());
+  t->Branch("CMSSW_RELEASE", &cmssw_release);
+
+  char hostname[256];
+  gethostname(hostname, sizeof(hostname));
+  hostname[sizeof(hostname)-1] = 0;
+  TString hostname_(hostname);
+  t->Branch("Hostname", &hostname_);
+  
+  edm::TimeOfDay ts;
+  stringstream s;
+  s << setprecision(0) << ts;
+  TString ts_(s.str().c_str());
+  t->Branch("CreationTime", &ts_);
+
   t->Fill();
 }
 
 void 
 Tupel::beginJob()
 {
-  
   //  jecUnc = new JetCorrectionUncertainty("Fall12_V7_DATA_Uncertainty_AK5PFchs.txt");
   // register to the TFileService
   edm::Service<TFileService> fs;
