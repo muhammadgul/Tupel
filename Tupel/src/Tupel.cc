@@ -186,7 +186,7 @@ private:
    * HLT trigger considered for TrigHltPhot and if it is set
    * the corresponding bit.
    */
-  void fillPhotTrig(const std::string& trigname);
+  void fillTrig(const std::string& trigname);
   
   // input tags
   //edm::InputTag trigger_;
@@ -210,6 +210,7 @@ private:
 
   bool photonIdsListed_;
   bool elecIdsListed_;
+  bool hltListed_;
 
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
 
@@ -234,6 +235,10 @@ private:
   std::map<std::string, unsigned>  TrigHltMap_; //bit assignment
   std::auto_ptr<ULong64_t>         TrigHltPhot_;
   std::map<std::string, ULong64_t> TrigHltPhotMap_; //bit assignment
+  std::auto_ptr<ULong64_t>         TrigHltMu_;
+  std::map<std::string, ULong64_t> TrigHltMuMap_; //bit assignment
+  std::auto_ptr<ULong64_t>         TrigHltDiMu_;
+  std::map<std::string, ULong64_t> TrigHltDiMuMap_; //bit assignment
   
   //Missing energy
   std::auto_ptr<std::vector<float> > METPt_;
@@ -537,7 +542,8 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
   metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
   photonIdsListed_(false),
-  elecIdsListed_(false)
+  elecIdsListed_(false),
+  hltListed_(false)
 
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
 
@@ -598,6 +604,78 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltPhot, 43, Photon90_R9Id90_HE10_Iso40_EBOnly_VBF);
   DEF_BIT2(TrigHltPhot, 44, Photon90_R9Id90_HE10_IsoM);
   DEF_BIT2(TrigHltPhot, 45, Photon90);
+
+  DEF_BIT2(TrigHltDiMu, 1 ,HLT_DoubleMu33NoFiltersNoVtx_v1);
+  DEF_BIT2(TrigHltDiMu, 2 ,HLT_DoubleMu38NoFiltersNoVtx_v1);
+  DEF_BIT2(TrigHltDiMu, 3 ,HLT_DoubleMu23NoFiltersNoVtxDisplaced_v1);
+  DEF_BIT2(TrigHltDiMu, 4 ,HLT_DoubleMu28NoFiltersNoVtxDisplaced_v1);
+  DEF_BIT2(TrigHltDiMu, 5 ,HLT_DoubleIsoMu17_eta2p1_v2);
+  DEF_BIT2(TrigHltDiMu, 6 ,HLT_L2DoubleMu23_NoVertex_v1);
+  DEF_BIT2(TrigHltDiMu, 7 ,HLT_L2DoubleMu28_NoVertex_2Cha_Angle2p5_Mass10_v1);
+  DEF_BIT2(TrigHltDiMu, 8 ,HLT_L2DoubleMu38_NoVertex_2Cha_Angle2p5_Mass10_v1);
+  DEF_BIT2(TrigHltDiMu, 9 ,HLT_Mu17_Mu8_DZ_v1);
+  DEF_BIT2(TrigHltDiMu, 10,HLT_Mu17_Mu8_SameSign_DZ_v1);
+  DEF_BIT2(TrigHltDiMu, 11,HLT_Mu20_Mu10_v1);
+  DEF_BIT2(TrigHltDiMu, 12,HLT_Mu20_Mu10_DZ_v1);
+  DEF_BIT2(TrigHltDiMu, 13,HLT_Mu20_Mu10_SameSign_DZ_v1);
+  DEF_BIT2(TrigHltDiMu, 14,HLT_Mu27_TkMu8_v2);
+  DEF_BIT2(TrigHltDiMu, 15,HLT_Mu30_TkMu11_v2);
+  DEF_BIT2(TrigHltDiMu, 16,HLT_Mu40_TkMu11_v2);
+  DEF_BIT2(TrigHltDiMu, 17,HLT_Mu17_TkMu8_DZ_v2);
+  DEF_BIT2(TrigHltDiMu, 18,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v2);
+  DEF_BIT2(TrigHltDiMu, 19,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v2);
+  DEF_BIT2(TrigHltDiMu, 20,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v2);
+  DEF_BIT2(TrigHltDiMu, 21,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v2);
+  DEF_BIT2(TrigHltDiMu, 22,HLT_DoubleMu18NoFiltersNoVtx_v1);
+  DEF_BIT2(TrigHltDiMu, 23,HLT_TrkMu15_DoubleTrkMu5NoFiltersNoVtx_v2);
+  DEF_BIT2(TrigHltDiMu, 24,HLT_TrkMu17_DoubleTrkMu8NoFiltersNoVtx_v2);
+  
+  DEF_BIT2(TrigHltMu, 1 , HLT_Mu16_eta2p1_CaloMET30_v2);
+  DEF_BIT2(TrigHltMu, 2 , HLT_IsoMu16_eta2p1_CaloMET30_v2);
+  DEF_BIT2(TrigHltMu, 3 , HLT_IsoMu16_eta2p1_CaloMET30_LooseIsoPFTau50_Trk30_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 4 , HLT_IsoMu17_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 5 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2);
+  DEF_BIT2(TrigHltMu, 6 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v2);
+  DEF_BIT2(TrigHltMu, 7 , HLT_IsoMu17_eta2p1_MediumIsoPFTau40_Trk1_eta2p1_Reg_v2);
+  DEF_BIT2(TrigHltMu, 8 , HLT_IsoMu24_eta2p1_LooseIsoPFTau20_v2);
+  DEF_BIT2(TrigHltMu, 9 , HLT_IsoMu20_eta2p1_CentralPFJet30_BTagCSV07_v2);
+  DEF_BIT2(TrigHltMu, 10, HLT_IsoMu20_eta2p1_TriCentralPFJet30_v2);
+  DEF_BIT2(TrigHltMu, 11, HLT_IsoMu20_eta2p1_TriCentralPFJet50_40_30_v2);
+  DEF_BIT2(TrigHltMu, 12, HLT_IsoMu20_v2);
+  DEF_BIT2(TrigHltMu, 13, HLT_IsoMu20_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 14, HLT_IsoMu24_eta2p1_CentralPFJet30_BTagCSV07_v2);
+  DEF_BIT2(TrigHltMu, 15, HLT_IsoMu24_eta2p1_TriCentralPFJet30_v2);
+  DEF_BIT2(TrigHltMu, 16, HLT_IsoMu24_eta2p1_TriCentralPFJet50_40_30_v2);
+  DEF_BIT2(TrigHltMu, 17, HLT_IsoMu24_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 18, HLT_IsoMu27_v2);
+  DEF_BIT2(TrigHltMu, 19, HLT_IsoTkMu20_v2);
+  DEF_BIT2(TrigHltMu, 20, HLT_IsoTkMu20_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 21, HLT_IsoTkMu24_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 22, HLT_IsoTkMu27_v2);
+  DEF_BIT2(TrigHltMu, 23, HLT_L2Mu10_v1);
+  DEF_BIT2(TrigHltMu, 24, HLT_L2Mu10_NoVertex_NoBPTX3BX_NoHalo_v1);
+  DEF_BIT2(TrigHltMu, 25, HLT_L2Mu10_NoVertex_NoBPTX_v1);
+  DEF_BIT2(TrigHltMu, 26, HLT_L2Mu35_NoVertex_3Sta_NoBPTX3BX_NoHalo_v1);
+  DEF_BIT2(TrigHltMu, 27, HLT_L2Mu40_NoVertex_3Sta_NoBPTX3BX_NoHalo_v1);
+  DEF_BIT2(TrigHltMu, 28, HLT_Mu20_v1);
+  DEF_BIT2(TrigHltMu, 29, HLT_TkMu20_v2);
+  DEF_BIT2(TrigHltMu, 30, HLT_Mu24_eta2p1_v1);
+  DEF_BIT2(TrigHltMu, 31, HLT_TkMu24_eta2p1_v2);
+  DEF_BIT2(TrigHltMu, 32, HLT_Mu27_v1);
+  DEF_BIT2(TrigHltMu, 33, HLT_TkMu27_v2);
+  DEF_BIT2(TrigHltMu, 34, HLT_Mu50_v1);
+  DEF_BIT2(TrigHltMu, 35, HLT_Mu55_v1);
+  DEF_BIT2(TrigHltMu, 36, HLT_Mu45_eta2p1_v1);
+  DEF_BIT2(TrigHltMu, 37, HLT_Mu50_eta2p1_v1);
+  DEF_BIT2(TrigHltMu, 38, HLT_Mu8_TrkIsoVVL_v2);
+  DEF_BIT2(TrigHltMu, 39, HLT_Mu17_TrkIsoVVL_v2);
+  DEF_BIT2(TrigHltMu, 40, HLT_Mu24_TrkIsoVVL_v2);
+  DEF_BIT2(TrigHltMu, 41, HLT_Mu34_TrkIsoVVL_v2);
+  DEF_BIT2(TrigHltMu, 42, HLT_Mu8_v1);
+  DEF_BIT2(TrigHltMu, 43, HLT_Mu17_v1);
+  DEF_BIT2(TrigHltMu, 44, HLT_Mu24_v1);
+  DEF_BIT2(TrigHltMu, 45, HLT_Mu34_v1);	 
+  
   DEF_BIT(MuId, 0, MuIdLoose);
   DEF_BIT_L(MuId, 3, MuIdCustom, "Mu Id: isGlobalMuon\n"
 			  "&& isPFMuon\n"
@@ -914,16 +992,33 @@ void Tupel::processTrigger(const edm::Event& iEvent){
 	if(trigname[i].find(
 			  "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL"
 			    )!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
-	fillPhotTrig(std::string(trigname[i]));
+	fillTrig(std::string(trigname[i]));
       }
+    }
+    if(!hltListed_){
+      std::ofstream f("trigger_list.txt");
+      for (int i = 0; i < ntrigs; i++) {
+	f << trigname[i] << "\n";
+      }
+      hltListed_ = true;
     }
   }
 }
 
-void Tupel::fillPhotTrig(const std::string& trigname){
+void Tupel::fillTrig(const std::string& trigname){
   for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltPhotMap_.begin();
       it != TrigHltPhotMap_.end(); ++it){
     if(trigname.find(it->first)!=std::string::npos) *TrigHltPhot_ |= it->second;
+  }
+  
+  for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltMuMap_.begin();
+      it != TrigHltMuMap_.end(); ++it){
+    if(trigname.find(it->first)!=std::string::npos) *TrigHltMu_ |= it->second;
+  }
+
+  for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltDiMuMap_.begin();
+      it != TrigHltDiMuMap_.end(); ++it){
+    if(trigname.find(it->first)!=std::string::npos) *TrigHltDiMu_ |= it->second;
   }
 }
 
@@ -1458,6 +1553,8 @@ Tupel::beginJob()
   //Trigger
   ADD_BRANCH_D(TrigHlt, "HLT triggger bits. See BitField.TrigHlt for bit description.");
   ADD_BRANCH_D(TrigHltPhot, "HLT Photon triggger bits. See BitField.TrigHltPhot for bit description.");
+  ADD_BRANCH_D(TrigHltMu, "HLT Muon triggger bits. See BitField.TrigHltMu for bit description.");
+  ADD_BRANCH_D(TrigHltDiMu, "HLT Dimuon triggger bits. See BitField.TrigHltDiMu for bit description.");
   
   //Missing Energy
   treeHelper_->addDescription("MET", "PF MET");
