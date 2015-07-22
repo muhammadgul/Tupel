@@ -80,6 +80,8 @@ void ttjana_reco::Loop()
 
    TFile* file_out = new TFile(name,"RECREATE"); 
    file_out->cd();	
+   TH1* h_deltaY_reco= new TH1D("deltaY_reco","deltaY_reco",100,-10,10);
+   TH1* h_deltaY_gen= new TH1D("deltaY_gen","deltaY_gen",100,-10,10);
    TH1* h_number_st3 = new TH1D ("number_st3","number_st3",20,-0.5,19.5);
    TH1* h_number_b = new TH1D ("number_b","number_b",20,-0.5,19.5);
    TH1* h_number_decay = new TH1D ("number_decay","number_decay",20,-0.5,19.5);
@@ -160,6 +162,20 @@ void ttjana_reco::Loop()
      TH1*   h_gen_ttjY= new TH1D ("gen_ttjY","gen_ttjY",50,-5,5);
      TH1*   h_rec_ttjY= new TH1D ("rec_ttjY","rec_ttjY",50,-5,5);
 
+   TH1* h_m_ttbar= new TH1D ("m_ttbar","m_ttbar",100,0,1000);
+   TH1* h_y_ttbar= new TH1D ("y_ttbar","y_ttbar",100,-5.,5.);
+   TH1* h_pt_ttbar= new TH1D ("pt_ttbar","pt_ttbar",100,0,1000);
+   TH1* h_njet_ttbar= new TH1D ("njet_ttbar","njet_ttbar",15,-0.5,14.5);
+
+   TH1* h_pt_top= new TH1D ("pt_top","pt_top",100,0,1000);
+   TH1* h_pt_atop= new TH1D ("pt_atop","pt_atop",100,0,1000);
+
+   TH1* h_y_top= new TH1D ("y_top","y_top",100,-5.,5.);
+   TH1* h_y_atop= new TH1D ("y_atop","y_atop",100,-5.,5.);
+
+
+
+
    TH1* h_jettheta[10][2][2][3][3];
    TH1* h_gen_jettheta[10][2][2][3][3];
    double cut_rapidity[]={0,0.5,1.0};
@@ -188,7 +204,7 @@ void ttjana_reco::Loop()
    double fake=0;
    double miss=0;
 
-   nentries=2000000;
+   //nentries=2000000;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
       bool gen_sel=false;
@@ -208,7 +224,7 @@ void ttjana_reco::Loop()
            if (fabs(St03Id->at(st3_ind))==24)contw++;
            if(fabs(St03Id->at(st3_ind))!=5 &&fabs(St03Id->at(st3_ind))!=24&& contb>=2&& contw>=2){
              n_decay++; 
-             if(fabs(St03Id->at(st3_ind))==13)n_mu++;
+             if(fabs(St03Id->at(st3_ind))==idd)n_mu++;
            }
         }
 
@@ -221,19 +237,22 @@ void ttjana_reco::Loop()
         }
         cout<<contb<<"  "<<n_decay<<"========================================"<<endl;
         }*/
-      if(dosignal && n_mu!=1 ) continue;
-      if(dottother && n_mu==1 ) continue;
+      if(dosignal &&  (n_mu!=1 ||n_decay!=4) ) continue;
+//      if(dosignal &&  (n_mu!=1) ) continue; //test for proper normalization
+
+      if(dottother && (n_mu==1 ||n_decay!=4) ) continue;
       h_number_st3->Fill(St03Pt->size()); 
       h_number_b->Fill(contb); 
       h_number_decay->Fill(n_decay); 
       int ind_parton1=-99, ind_parton2=-99;
       //cout<<St03Id->at(0)<<"  "<<St03MotherId->at(0)<<"  "<<St03Id->at(1)<<"  "<<St03MotherId->at(1)<<endl;
+      if(dosignal ||dottother){
       if(St03Id->at(0)==21)ind_parton1=0;
       if(St03Id->at(0)<0 &&fabs(St03Id->at(0))<6 )ind_parton1=-1;
       if(St03Id->at(0)>0 &&fabs(St03Id->at(0))<6 )ind_parton1=1;
       if(St03Id->at(1)==21)ind_parton2=0;
       if(St03Id->at(1)<0 &&fabs(St03Id->at(1))<6 )ind_parton2=-1;
-      if(St03Id->at(1)>0 &&fabs(St03Id->at(1))<6 )ind_parton2=1;
+      if(St03Id->at(1)>0 &&fabs(St03Id->at(1))<6 )ind_parton2=1; }
       //cout<<ind_parton1<<"  "<<ind_parton2<<endl;
       vector<int> plot_inda;
       plot_inda.push_back(0);
@@ -283,7 +302,7 @@ void ttjana_reco::Loop()
           TLorentzVector nu_tmp;
           nu_tmp.SetPtEtaPhiE(Bare01LepPt->at(st1_ind_2),Bare01LepEta->at(st1_ind_2),Bare01LepPhi->at(st1_ind_2),Bare01LepE->at(st1_ind_2));
           int nu_id= Bare01LepId->at(st1_ind_2);
-          if( fabs(lep_id)==13 &&lep_id*nu_id<0 && (fabs(nu_id)-fabs(lep_id))==1&&lep_tmp.Pt()>20 && lep_tmp.Eta()<2.4){
+          if( fabs(lep_id)==idd &&lep_id*nu_id<0 && (fabs(nu_id)-fabs(lep_id))==1&&lep_tmp.Pt()>30 && lep_tmp.Eta()<2.4){
             gen_lepton_id.push_back(lep_id);
             gen_lepton_vector.push_back(lep_tmp);
             gen_nu_vector.push_back(nu_tmp);
@@ -291,7 +310,7 @@ void ttjana_reco::Loop()
             if(lep_tmp.Pt()>30)n_gen_lep_30++;
             break;
           }
-         if( fabs(lep_id)==14 &&lep_id*nu_id<0 && (fabs(lep_id)-fabs(nu_id))==1&&nu_tmp.Pt()>20 && nu_tmp.Eta()<2.4){
+         if( fabs(lep_id)==14 &&lep_id*nu_id<0 && (fabs(lep_id)-fabs(nu_id))==1&&nu_tmp.Pt()>30 && nu_tmp.Eta()<2.4){
             gen_lepton_id.push_back(nu_id);
             gen_lepton_vector.push_back(nu_tmp);
             gen_nu_vector.push_back(lep_tmp);
@@ -371,22 +390,22 @@ void ttjana_reco::Loop()
         h_gen_dijet_mass->Fill(gen_mmin);
         if(gen_lepton_id[0]>0){
           if(gen_b_jet_id[0]<0){
-            gen_top_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[0];
-            gen_atop_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[1];
+            gen_atop_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[0];
+            gen_top_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[1];
           }
           if(gen_b_jet_id[0]>0){
-            gen_top_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[1];
-            gen_atop_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[0];
+            gen_atop_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[1];
+            gen_top_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[0];
           }
         }
         if(gen_lepton_id[0]<0){
           if(gen_b_jet_id[0]<0){
-            gen_atop_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[1];
-            gen_top_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[0];
+            gen_top_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[1];
+            gen_atop_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[0];
           }
           if(gen_b_jet_id[0]>0){
-            gen_atop_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[0];
-            gen_top_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[1];
+            gen_top_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[0];
+            gen_atop_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[1];
           }
         }
         h_gen_m_top->Fill(gen_top_vector.M());
@@ -394,6 +413,11 @@ void ttjana_reco::Loop()
         gen_sel=true;
         TLorentzVector gen_extra_jet_vector;
         TLorentzVector gen_sum_ttj_vector;
+
+        double deltaY=fabs(gen_top_vector.Rapidity())- fabs(gen_atop_vector.Rapidity());
+
+        h_deltaY_gen->Fill(deltaY);
+
         if(gen_extra_light_index!=-99){
           gen_extra_jet_vector=gen_light_jet_vector[gen_extra_light_index];
           gen_sum_ttj_vector=gen_top_vector+ gen_atop_vector + gen_extra_jet_vector;
@@ -404,7 +428,8 @@ void ttjana_reco::Loop()
           h_gen_deltaE->Fill(dE);
           double ttj_Y=gen_sum_ttj_vector.Rapidity();
           h_gen_ttjY->Fill(ttj_Y);
-          double Jettheta_gen=2*atan(exp(-1*gen_extra_jet_vector.Eta()));          
+          double Jettheta_gen=2*atan(exp(-1*gen_extra_jet_vector.Eta()));   
+          //if(ttj_Y<0)Jettheta_gen=pi- Jettheta_gen;         
           double rap=gen_extra_jet_vector.Rapidity();
 
           vector<int> plot_indb;
@@ -449,7 +474,7 @@ void ttjana_reco::Loop()
 
 
 
-
+     if(!doe){
       for(unsigned int mu_ind=0; mu_ind<patMuonPt_->size();mu_ind++){
         if(patMuonPt_->at(mu_ind)>30 && fabs(patMuonEta_->at(mu_ind))<2.4 &&patMuonCombId_->at(mu_ind)>0){
 //          cout<<patMuonPt_->size()<<"  " <<mu_ind<<"  "<<patMuonPt_->at(mu_ind)<<endl;
@@ -463,7 +488,22 @@ void ttjana_reco::Loop()
           mu_index20++;
        }
      }
+    }
 
+     if(doe){
+      for(unsigned int e_ind=0; e_ind<patElecPt_->size();e_ind++){
+        if(patElecPt_->at(e_ind)>30 && fabs(patElecEta_->at(e_ind))<2.4 &&patElecId_->at(e_ind)>4){
+          TLorentzVector tmp;
+          tmp.SetPtEtaPhiE(patElecPt_->at(e_ind),patElecEta_->at(e_ind),patElecPhi_->at(e_ind),patElecEnergy_->at(e_ind));
+          mu_vector.push_back(tmp);
+          mu_charge.push_back(patElecCharge_->at(e_ind));
+          mu_index++;
+       }
+        if(patElecPt_->at(e_ind)>10 && fabs(patElecEta_->at(e_ind))<2.4){
+          mu_index20++;
+       }
+     }
+    }
 
 
       for(unsigned int jet_ind=0; jet_ind<patJetPfAk05Pt_->size();jet_ind++){
@@ -472,10 +512,12 @@ void ttjana_reco::Loop()
           //cout<<patJetPfAk05Pt_->size()<<"  " <<jet_ind<<"  "<<patJetPfAk05Pt_->at(jet_ind)<<endl;
         TLorentzVector tmp;
         tmp.SetPtEtaPhiE(patJetPfAk05Pt_->at(jet_ind),patJetPfAk05Eta_->at(jet_ind),patJetPfAk05Phi_->at(jet_ind),patJetPfAk05En_->at(jet_ind));
-        jet_vector.push_back(tmp);
+
         double dr_j_l=99;
         if(mu_index>0) dr_j_l=DeltaR(tmp.Eta(),mu_vector[0].Eta(),tmp.Phi(),mu_vector[0].Phi());
+
         if(dr_j_l<0.4)continue;
+        jet_vector.push_back(tmp);
         if(patJetPfAk05BDiscCSV_->at(jet_ind)>0.697)b_jet_index.push_back(jet_index);//cut value 0.697
         //else l_jet_index.push_back(jet_index);
         jet_index++;
@@ -582,9 +624,10 @@ void ttjana_reco::Loop()
         ////cout<<MTW<<endl;
         h_MTW->Fill(MTW);
         TLorentzVector nu_complex;
+        bool found=false;  
         if((B-C)<0){
         //cout<<"new complex event "<<MTW<<endl;
-        bool found=false;  
+
         double min_i=0;
         double max_i=80;
         
@@ -760,11 +803,12 @@ void ttjana_reco::Loop()
         if((B-C)>=0)real_count++;
         pz1= A+D;
         pz2=A-D;
-
+        if((B-C<0) && !found)continue;
         TLorentzVector nu_vector1;
         TLorentzVector nu_vector2;
         TLorentzVector tlep;
         TLorentzVector thad;
+
         if((B-C)>=0){
           double new_E1=sqrt(METPx->at(0)*METPx->at(0) +METPy->at(0)*METPy->at(0) +pz1*pz1);
           nu_vector1.SetPxPyPzE(METPx->at(0),METPy->at(0),pz1,new_E1);
@@ -880,7 +924,7 @@ void ttjana_reco::Loop()
         thad=jet_vector[ljet_ind1]+jet_vector[ljet_ind2] +jet_vector[ind2];
 
      //   cout<<m1<<"  "<<m2<<"  "<<m3<<"  "<<m4<<"  "<<endl;
-       
+
      //   cout<<tlep.M()<<" "<<thad.M()<<endl;
         h_m_thad->Fill(thad.M()); 
         h_m_tlep->Fill(tlep.M());       
@@ -900,12 +944,44 @@ void ttjana_reco::Loop()
           atop_vector=tlep;
           top_vector=thad;
         }
+        //cout<<thad.M()<<"  "<<tlep.M()<<endl;
+ /*       double ptSumttbar=sqrt(jet_vector[ljet_ind1].Pt()*jet_vector[ljet_ind1].Pt() + jet_vector[ljet_ind2].Pt()*jet_vector[ljet_ind2].Pt() +jet_vector[b_jet_index[0]].Pt()*jet_vector[b_jet_index[0]].Pt()+ jet_vector[b_jet_index[1]].Pt()*jet_vector[b_jet_index[1]].Pt() +mu_vector[0].Pt()*mu_vector[0].Pt());
+
+       double deltaphi_ttbar_exjet=DeltaPhi((top_vector+atop_vector).Phi(),jet_vector[0].Phi());
+       if(event==85041479)cout<<event<<"  "<<jet_vector[ljet_ind1].Pt()<<"  "<<jet_vector[ljet_ind2].Pt()<<"  "<<jet_vector[b_jet_index[0]].Pt()<<"  "<<jet_vector[b_jet_index[1]].Pt()<<"  "<<(jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M()<<"  "<<thad.M()<<"  "<<tlep.M()<<"  "<<ptSumttbar<<"  "<<jet_vector[0].Pt()<<"  "<<deltaphi_ttbar_exjet<<"  "<<patJetPfAk05BDiscCSV_->at(b_jet_index[0])<<"  "<<patJetPfAk05BDiscCSV_->at(b_jet_index[1])<<"  "<<mu_charge[0]<<"  "<<METPt->at(0)<<endl;  
+   
+   double deta2= fabs(     jet_vector[ljet_ind1].Eta())- fabs(     jet_vector[ljet_ind2].Eta())*     jet_vector[ljet_ind1].Eta()*     jet_vector[ljet_ind2].Eta()/(fabs(     jet_vector[ljet_ind1].Eta()*     jet_vector[ljet_ind2].Eta()));
+   double deta3= fabs(     jet_vector[ljet_ind1].Eta())- fabs(jet_vector[b_jet_index[0]].Eta())*     jet_vector[ljet_ind1].Eta()*jet_vector[b_jet_index[0]].Eta()/(fabs(     jet_vector[ljet_ind1].Eta()*jet_vector[b_jet_index[0]].Eta()));
+   double deta4= fabs(     jet_vector[ljet_ind1].Eta())- fabs(jet_vector[b_jet_index[1]].Eta())*     jet_vector[ljet_ind1].Eta()*jet_vector[b_jet_index[1]].Eta()/(fabs(     jet_vector[ljet_ind1].Eta()*jet_vector[b_jet_index[1]].Eta()));
+   double deta5= fabs(     jet_vector[ljet_ind2].Eta())- fabs(jet_vector[b_jet_index[0]].Eta())*     jet_vector[ljet_ind2].Eta()*jet_vector[b_jet_index[0]].Eta()/(fabs(     jet_vector[ljet_ind2].Eta()*jet_vector[b_jet_index[0]].Eta()));
+   double deta6= fabs(     jet_vector[ljet_ind2].Eta())- fabs(jet_vector[b_jet_index[1]].Eta())*     jet_vector[ljet_ind2].Eta()*jet_vector[b_jet_index[1]].Eta()/(fabs(     jet_vector[ljet_ind2].Eta()*jet_vector[b_jet_index[1]].Eta()));
+   double deta7= fabs(jet_vector[b_jet_index[0]].Eta())- fabs(jet_vector[b_jet_index[1]].Eta())*jet_vector[b_jet_index[0]].Eta()*jet_vector[b_jet_index[1]].Eta()/(fabs(jet_vector[b_jet_index[0]].Eta()*jet_vector[b_jet_index[1]].Eta()));
+        //if(thad.M()>160 &&thad.M()<180 && tlep.M()>160 &&tlep.M()<180)cout<<run<<":"<<lumi<<":"<<event<<endl;
+        //if(thad.M()>160 &&thad.M()<180 && tlep.M()>160 &&tlep.M()<180)cout<<deta2<<	" "<<deta3<<" "<<deta4<<"  "<<deta5<<"  "<<deta6<<"   "<<deta7<<endl;
+*/
+        h_m_ttbar->Fill((top_vector+atop_vector).M());
+        h_y_ttbar->Fill((top_vector+atop_vector).Rapidity());
+        h_pt_ttbar->Fill((top_vector+atop_vector).Pt());
+        h_njet_ttbar->Fill(jet_vector.size());
+        if((top_vector+atop_vector).M()>1000)cout<<"Mttbar "<<(top_vector+atop_vector).M()<<endl;
+        h_pt_top->Fill(top_vector.Pt());
+        h_pt_atop->Fill(atop_vector.Pt());
+
+        h_y_top->Fill(top_vector.Rapidity());
+        h_y_atop->Fill(atop_vector.Rapidity());
+
 
         rec_sel=true;  
         
         //Boosting to ttj CM frame for tt+>=1j
         TLorentzVector sum_ttj_vector;
         TLorentzVector extra_jet_vector;
+
+        double deltaY=fabs(top_vector.Rapidity())- fabs(atop_vector.Rapidity());
+
+        h_deltaY_reco->Fill(deltaY);
+
+
         if(extra_jet_index!=-99){
            extra_jet_vector=jet_vector[extra_jet_index];
           sum_ttj_vector=(top_vector+atop_vector+extra_jet_vector);
@@ -919,7 +995,8 @@ void ttjana_reco::Loop()
           h_rec_deltaE->Fill(dE);
           double ttj_Y=sum_ttj_vector.Rapidity();
           h_rec_ttjY->Fill(ttj_Y);
-          double Jettheta_gen=2*atan(exp(-1*extra_jet_vector.Eta()));          
+          double Jettheta_gen=2*atan(exp(-1*extra_jet_vector.Eta()));  
+          //if(ttj_Y<0)Jettheta_gen=pi- Jettheta_gen;  
           double rap=extra_jet_vector.Rapidity();
 
           vector<int> plot_indb;

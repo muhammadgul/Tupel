@@ -6,7 +6,7 @@
 
 #ifndef ttjana_reco_h
 #define ttjana_reco_h
-
+#include "TMath.h"
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
@@ -59,6 +59,7 @@ public :
    const Int_t kMaxpatMuon_Mu17_Mu8_Matched = 1;
    const Int_t kMaxpatMuon_Mu17_TkMu8_Matched = 1;
    const Int_t kMaxpatElecdEtaIn = 1;
+   const Int_t kMaxpatElecId = 1;
    const Int_t kMaxpatElecdPhiIn = 1;
    const Int_t kMaxpatElechOverE = 1;
    const Int_t kMaxpatElecsigmaIetaIeta = 1;
@@ -254,6 +255,7 @@ public :
    vector<double>  *patMuon_PF_IsoDY_;
    vector<double>  *patMuon_Mu17_Mu8_Matched_;
    vector<double>  *patMuon_Mu17_TkMu8_Matched_;
+   vector<unsigned>  *patElecId_;
    vector<double>  *patElecdEtaIn_;
    vector<double>  *patElecdPhiIn_;
    vector<double>  *patElechOverE_;
@@ -468,6 +470,7 @@ public :
    TBranch        *b_patMuon_Mu17_Mu8_Matched_;   //!
    TBranch        *b_patMuon_Mu17_TkMu8_Matched_;   //!
    TBranch        *b_patElecdEtaIn_;   //!
+   TBranch        *b_patElecId_;   //!
    TBranch        *b_patElecdPhiIn_;   //!
    TBranch        *b_patElechOverE_;   //!
    TBranch        *b_patElecsigmaIetaIeta_;   //!
@@ -587,6 +590,10 @@ public :
    TString name;
    bool dottother=false;
    bool dosignal=false;
+   bool doe=false;
+   int idd=13;
+   double pi = 3.1415926535897932384626433832795028841971693;
+
 };
 
 #endif
@@ -612,52 +619,51 @@ ttjana_reco::ttjana_reco(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("tupel/MuonTree","");
-/* chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_100.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_101.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_102.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_103.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_104.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_105.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_106.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_107.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_108.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1/150701_143431/0000/DYJetsToLL_ntuple_109.root");
- */
+   if(doe)idd=11;
 
-/*
-  chain->Add("/home/bugra/SingleMuon/SingleMuon_Run2015B-PromptReco-v1/150711_092320/0000/DYJetsToLL_ntuple_1.root");
-  chain->Add("/home/bugra/SingleMuon/SingleMuon_Run2015B-PromptReco-v1/150711_092320/0000/DYJetsToLL_ntuple_2.root");
- name="data.root";
+/*#include "datalist_e.h"
+#include "datalist.h"
+ name="data";
 */
-
-
+/*
+#include "datalist_golden.h"
+name="data_golden";
+*/
+/*
 #include "inlist.h" //Powheg signal sample
 dosignal=true;
-name="mc_signal.root";
+name="mc_signal";
+*/
 /*
 #include "inlist.h" //Powheg signal sample
 dottother=true;
-name="mc_other.root";
+name="mc_other";
 */
-/*#include "inlist_ST_tWch_t.h"
-name="ST_tWch_t.root";
+/*
+#include "inlist_ST_tWch_t.h"
+name="ST_tWch_t";
 */
-/*#include "inlist_ST_tWch_tbar.h"
-name="ST_tWch_tbar.root";
+/*
+#include "inlist_ST_tWch_tbar.h"
+name="ST_tWch_tbar";
 */
 /*#include "inlist_ST_tch_t.h"
-name="ST_tch_t.root";
+name="ST_tch_t";
 */
 /*#include "inlist_ST_tch_tbar.h"
 name="ST_tch_tbar.root";
 */
-/*#include "inlist_WJet.h"
-name="ST_WJet.root";
-*/
+
+#include "inlist_WJet.h"
+name="ST_WJet";
+
 
       tree = chain;
 #endif // SINGLE_TREE
 
+name += "_isElec_";
+name += doe;
+name += ".root";
    }
    Init(tree);
 }
@@ -793,6 +799,7 @@ void ttjana_reco::Init(TTree *tree)
    patMuon_Mu17_Mu8_Matched_ = 0;
    patMuon_Mu17_TkMu8_Matched_ = 0;
    patElecdEtaIn_ = 0;
+   patElecId_ = 0;
    patElecdPhiIn_ = 0;
    patElechOverE_ = 0;
    patElecsigmaIetaIeta_ = 0;
@@ -1005,6 +1012,7 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("patMuon_Mu17_Mu8_Matched_", &patMuon_Mu17_Mu8_Matched_, &b_patMuon_Mu17_Mu8_Matched_);
    fChain->SetBranchAddress("patMuon_Mu17_TkMu8_Matched_", &patMuon_Mu17_TkMu8_Matched_, &b_patMuon_Mu17_TkMu8_Matched_);
    fChain->SetBranchAddress("patElecdEtaIn_", &patElecdEtaIn_, &b_patElecdEtaIn_);
+   fChain->SetBranchAddress("patElecId_", &patElecId_, &b_patElecId_);
    fChain->SetBranchAddress("patElecdPhiIn_", &patElecdPhiIn_, &b_patElecdPhiIn_);
    fChain->SetBranchAddress("patElechOverE_", &patElechOverE_, &b_patElechOverE_);
    fChain->SetBranchAddress("patElecsigmaIetaIeta_", &patElecsigmaIetaIeta_, &b_patElecsigmaIetaIeta_);
@@ -1141,14 +1149,14 @@ double ttjana_reco::DeltaR(double eta1, double eta2, double phi1, double phi2)
         {
         double deta = eta2 - eta1;
         double dphi = phi2 - phi1;
-        if (fabs(dphi) > 3.14) dphi = 6.28 - fabs(dphi);
+        if (fabs(dphi) > pi) dphi = 6.28 - fabs(dphi);
         double DELTAR = sqrt(pow(dphi,2)+pow(deta,2))*1.0;
         return DELTAR;
         }
 double ttjana_reco::DeltaPhi(double phi1, double phi2)
        	{
 	double dphi = phi2 - phi1;
-       	if (fabs(dphi) > 3.14) dphi = 6.28 - fabs(dphi);
+       	if (fabs(dphi) > pi) dphi = 6.28 - fabs(dphi);
         return dphi;
         }
 
