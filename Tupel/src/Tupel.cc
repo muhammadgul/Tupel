@@ -1297,7 +1297,7 @@ void Tupel::processJets(){
     cmult = jet.chargedMultiplicity();
     nconst = jet.numberOfDaughters();
       
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+    // cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
     //  cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
     //  cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
     JetAk04BTagCsv_->push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
@@ -1309,7 +1309,7 @@ void Tupel::processJets(){
     JetAk04BDiscTche_->push_back(jet.bDiscriminator("pfTrackCountingHighEffBJetTags"));
     JetAk04BDiscTchp_->push_back(jet.bDiscriminator("pfTrackCountingHighPurBJetTags"));
     JetAk04BDiscSsvhe_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
-    JetAk04BDiscSsvhp_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
+    JetAk04BDiscSsvhp_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighPurBJetTags"));
     JetAk04PartFlav_->push_back(jet.partonFlavour());
       
     JetAk04E_->push_back(jet.energy());
@@ -1328,7 +1328,7 @@ void Tupel::processJets(){
     JetAk04ConstCnt_->push_back(nconst);
   
     for(unsigned int idx =0; idx<jet.numberOfDaughters();idx++){
-      // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
+      //cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
       JetAk04ConstId_->push_back(jet.daughter(idx)->pdgId());
       JetAk04ConstPt_->push_back(jet.daughter(idx)->pt());
       JetAk04ConstEta_->push_back(jet.daughter(idx)->eta());
@@ -1778,7 +1778,7 @@ Tupel::beginJob()
   ADD_BRANCH_D(JetAk04BDiscTche, "pfTrackCountingHighEffBJetTags");
   ADD_BRANCH_D(JetAk04BDiscTchp, "pfTrackCountingHighPurBJetTags");
   ADD_BRANCH_D(JetAk04BDiscSsvhe, "pfSimpleSecondaryVertexHighEffBJetTags");
-  ADD_BRANCH_D(JetAk04BDiscSsvhp, "pfSimpleSecondaryVertexHighEffBJetTags");
+  ADD_BRANCH_D(JetAk04BDiscSsvhp, "pfSimpleSecondaryVertexHighPurBJetTags");
   ADD_BRANCH_D(JetAk04PartFlav, "Quark-based jet.");
   ADD_BRANCH(JetAk04JecUncUp);
   ADD_BRANCH(JetAk04JecUncDwn);
