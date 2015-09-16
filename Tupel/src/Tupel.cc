@@ -256,7 +256,7 @@ private:
   std::auto_ptr<std::vector<float> > 	GLepDr01Eta_;
   std::auto_ptr<std::vector<float> > 	GLepDr01Phi_;
   std::auto_ptr<std::vector<float> > 	GLepDr01E_;
-  std::auto_ptr<std::vector<unsigned> > GLepDr01Id_;
+  std::auto_ptr<std::vector<int> >      GLepDr01Id_;
   std::auto_ptr<std::vector<int> >      GLepDr01St_;
   std::auto_ptr<std::vector<int> >      GLepDr01MomId_;
 
@@ -265,7 +265,7 @@ private:
   std::auto_ptr<std::vector<float> > 	GLepBareEta_;
   std::auto_ptr<std::vector<float> > 	GLepBarePhi_;
   std::auto_ptr<std::vector<float> > 	GLepBareE_;
-  std::auto_ptr<std::vector<unsigned> > GLepBareId_;
+  std::auto_ptr<std::vector<int> >      GLepBareId_;
   std::auto_ptr<std::vector<int> > 	GLepBareSt_;
   std::auto_ptr<std::vector<int> > 	GLepBareMomId_;
 
@@ -851,7 +851,9 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
       //cout<<gen[i].numberOfMothers() <<"  "<< gen[i].mother()->pdgId()<<"  "<< gen[i].pdgId()<<"  "<<st<<endl;
       n_tau++;
       }*/
-      if(gen[i].numberOfMothers() ==1 && gen[i].mother()->pdgId() != id){
+
+      int momId = gen[i].mother()->pdgId();
+      if(gen[i].numberOfMothers() ==1 &&  momId != id){
 	//if(abs(id)==15)cout<<"DEAD"<<endl;
 	continue;
       }
@@ -896,7 +898,7 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	GLepDr01Phi_->push_back(genR1DressLep1.Phi());
 	GLepDr01E_->push_back(genR1DressLep1.Energy());
 	GLepDr01Id_->push_back(id);
-	GLepDr01MomId_->push_back(id);
+	GLepDr01MomId_->push_back(momId);
 	GLepDr01St_->push_back(st);
 
 	GLepBarePt_->push_back(genLep1.Pt());
@@ -904,7 +906,7 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	GLepBarePhi_->push_back(genLep1.Phi());
 	GLepBareE_->push_back(genLep1.Energy());
 	GLepBareId_->push_back(id);
-	GLepBareMomId_->push_back(id);
+	GLepBareMomId_->push_back(momId);
 	GLepBareSt_->push_back(st);
       }
     }
