@@ -3,15 +3,17 @@
 #include <assert.h>
 //Clear event vectors
 void TreeHelper::clear(){
+  clear(intList_);
+  clear(unsignedList_);
+  clear(unsigned64List_);
+  clear(floatList_);
+  clear(doubleList_);
   clear(intVectorList_);
   clear(unsignedVectorList_);
+  clear(unsigned64VectorList_);
   clear(floatVectorList_);
   clear(doubleVectorList_);
   clear(boolVectorList_);
-  clear(intList_);
-  clear(unsignedList_);
-  clear(floatList_);
-  clear(doubleList_);
 }
 
 void TreeHelper::defineBit(const char* branchName, int bit, const char* bitDescription){
