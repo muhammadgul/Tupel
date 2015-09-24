@@ -182,8 +182,8 @@ private:
 
   void processPhotons();
 
-  /** Check if the argument is one of the photon
-   * HLT trigger considered for TrigHltPhot and if it is set
+  /** Check if the argument is one of the 
+   * HLT trigger considered to be stored and if it is set
    * the corresponding bit.
    */
   void fillTrig(const std::string& trigname);
@@ -239,7 +239,23 @@ private:
   std::map<std::string, ULong64_t> TrigHltMuMap_; //bit assignment
   std::auto_ptr<ULong64_t>         TrigHltDiMu_;
   std::map<std::string, ULong64_t> TrigHltDiMuMap_; //bit assignment
-
+  std::auto_ptr<ULong64_t>         TrigHltEl_;
+  std::map<std::string, ULong64_t> TrigHltElMap_; //bit assignment
+  std::auto_ptr<ULong64_t>         TrigHltDiEl_;
+  std::map<std::string, ULong64_t> TrigHltDiElMap_; //bit assignment
+  std::auto_ptr<ULong64_t>         TrigHltElMu_;
+  std::map<std::string, ULong64_t> TrigHltElMuMap_; //bit assignment
+  struct  TrigHltMapRcd {
+    TrigHltMapRcd(): pMap(0), pTrig(0) {}
+    TrigHltMapRcd(std::map<std::string, ULong64_t>* pMap_, ULong64_t* pTrig_): pMap(pMap_), pTrig(pTrig_) {
+      assert(pTrig_);
+    }
+    //    TrigHltMapRcd(const TrigHltMapRcd& a){ this->pMap = a.pMap; this->pTrig = a.pTrig; }
+    std::map<std::string, ULong64_t>* pMap;
+    ULong64_t* pTrig;
+  };
+  std::vector<TrigHltMapRcd> trigHltMapList_; //list of trigger maps.
+  
   //Missing energy
   std::auto_ptr<std::vector<float> > METPt_;
   std::auto_ptr<std::vector<float> > METPx_;
@@ -561,7 +577,6 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
 
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
 
-
 {
 }
 
@@ -570,6 +585,14 @@ Tupel::~Tupel()
 }
 
 void Tupel::defineBitFields(){
+
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltPhotMap_, TrigHltPhot_.get()));
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltMuMap_,   TrigHltMu_.get()));
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltDiMuMap_, TrigHltDiMu_.get()));
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltElMap_,   TrigHltEl_.get()));
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltDiElMap_, TrigHltDiEl_.get()));
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltElMuMap_, TrigHltElMu_.get()));
+  
   DEF_BIT(TrigHlt, 0, Elec17_Elec8);
   DEF_BIT(TrigHlt, 1, Mu17_Mu8);
   DEF_BIT(TrigHlt, 2, Mu17_TkMu8);
@@ -690,22 +713,81 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltMu, 44, HLT_Mu24_v1);
   DEF_BIT2(TrigHltMu, 45, HLT_Mu34_v1);
 
+
+  DEF_BIT2(TrigHltEl,  1, HLT_Ele25WP60_Ele8_Mass55_v2);
+  DEF_BIT2(TrigHltEl,  2, HLT_Ele25WP60_SC4_Mass55_v2);
+  DEF_BIT2(TrigHltEl,  3, HLT_Ele22_eta2p1_WPLoose_Gsf_v1);
+  DEF_BIT2(TrigHltEl,  4, HLT_Ele22_eta2p1_WPTight_Gsf_v1);
+  DEF_BIT2(TrigHltEl,  5, HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1);
+  DEF_BIT2(TrigHltEl,  6, HLT_Ele23_WPLoose_Gsf_v1);
+  DEF_BIT2(TrigHltEl,  7, HLT_Ele27_WPLoose_Gsf_WHbbBoost_v1);
+  DEF_BIT2(TrigHltEl,  8, HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1);
+  DEF_BIT2(TrigHltEl,  9, HLT_Ele27_eta2p1_WPLoose_Gsf_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v1);
+  DEF_BIT2(TrigHltEl, 10, HLT_Ele27_eta2p1_WPLoose_Gsf_CentralPFJet30_BTagCSV07_v1);
+  DEF_BIT2(TrigHltEl, 11, HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v1);
+  DEF_BIT2(TrigHltEl, 12, HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v1);
+  DEF_BIT2(TrigHltEl, 13, HLT_Ele27_eta2p1_WPLoose_Gsf_v1);
+  DEF_BIT2(TrigHltEl, 14, HLT_Ele27_eta2p1_WPTight_Gsf_v1);
+  DEF_BIT2(TrigHltEl, 15, HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1);
+  DEF_BIT2(TrigHltEl, 16, HLT_Ele32_eta2p1_WPLoose_Gsf_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v1);
+  DEF_BIT2(TrigHltEl, 17, HLT_Ele32_eta2p1_WPLoose_Gsf_CentralPFJet30_BTagCSV07_v1);
+  DEF_BIT2(TrigHltEl, 18, HLT_Ele32_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v1);
+  DEF_BIT2(TrigHltEl, 19, HLT_Ele32_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v1);
+  DEF_BIT2(TrigHltEl, 20, HLT_Ele32_eta2p1_WPLoose_Gsf_v1);
+  DEF_BIT2(TrigHltEl, 21, HLT_Ele32_eta2p1_WPTight_Gsf_v1);
+  DEF_BIT2(TrigHltEl, 22, HLT_Ele105_CaloIdVT_GsfTrkIdT_v2);
+  DEF_BIT2(TrigHltEl, 23, HLT_Ele115_CaloIdVT_GsfTrkIdT_v1);
+  DEF_BIT2(TrigHltEl, 24, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 25, HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 26, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 27, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 28, HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v1);
+  DEF_BIT2(TrigHltEl, 29, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltEl, 30, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltEl, 31, HLT_Ele27_eta2p1_WPLoose_Gsf_HT200_v1);
+  DEF_BIT2(TrigHltEl, 32, HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_v2);
+  DEF_BIT2(TrigHltEl, 33, HLT_Ele15_IsoVVVL_BTagCSV0p72_PFHT400_v2);
+  DEF_BIT2(TrigHltEl, 34, HLT_Ele15_IsoVVVL_PFHT350_PFMET70_v1);
+  DEF_BIT2(TrigHltEl, 35, HLT_Ele15_IsoVVVL_PFHT600_v2);
+  DEF_BIT2(TrigHltEl, 36, HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 37, HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 38, HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 39, HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 40, HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v2);
+  DEF_BIT2(TrigHltEl, 41, HLT_Ele15_PFHT300_v2);
+    
+  DEF_BIT2(TrigHltDiEl, 1, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2);
+  DEF_BIT2(TrigHltDiEl, 2, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2);
+  DEF_BIT2(TrigHltDiEl, 3, HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v2);
+  DEF_BIT2(TrigHltDiEl, 4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltDiEl, 5, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltDiEl, 6, HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v2);
+  DEF_BIT2(TrigHltDiEl, 7, HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf_v1);
+  DEF_BIT2(TrigHltDiEl, 8, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW_v2);
+  DEF_BIT2(TrigHltDiEl, 9, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v2);
+
+      
+  DEF_BIT2(TrigHltElMu, 1, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltElMu, 2, HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltElMu, 3, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltElMu, 4, HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
+  DEF_BIT2(TrigHltElMu, 5, HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL_v2);
+    
   DEF_BIT(MuId, 0, MuIdLoose);
   DEF_BIT_L(MuId, 3, MuIdCustom, "Mu Id: isGlobalMuon\n"
-			  "&& isPFMuon\n"
-			  "&& normChi2 < 10\n"
-			  "&& muonHits > 0 && nMatches > \n"
-			  "&& dB < 0.2 && dZ < 0.5\n"
-			  "&& pixelHits > 0 && trkLayers > 5");
+	    "&& isPFMuon\n"
+	    "&& normChi2 < 10\n"
+	    "&& muonHits > 0 && nMatches > \n"
+	    "&& dB < 0.2 && dZ < 0.5\n"
+	    "&& pixelHits > 0 && trkLayers > 5");
   DEF_BIT(MuType, 0, GlobMu);
   DEF_BIT(MuType, 1, TkMu);
   DEF_BIT(MuType, 2, PfMu);
-
+    
   DEF_BIT(ElId, 0, CutBasedElId_CSA14_50ns_V1_standalone_veto);
   DEF_BIT(ElId, 1, CutBasedElId_CSA14_50ns_V1_standalone_loose);
   DEF_BIT(ElId, 2, CutBasedElId_CSA14_50ns_V1_standalone_medium);
   DEF_BIT(ElId, 3, CutBasedElId_CSA14_50ns_V1_standalone_tight);
-
 }
 
 void Tupel::readEvent(const edm::Event& iEvent){
@@ -1074,19 +1156,14 @@ void Tupel::processTrigger(const edm::Event& iEvent){
 }
 
 void Tupel::fillTrig(const std::string& trigname){
-  for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltPhotMap_.begin();
-      it != TrigHltPhotMap_.end(); ++it){
-    if(trigname.find(it->first)!=std::string::npos) *TrigHltPhot_ |= it->second;
-  }
-
-  for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltMuMap_.begin();
-      it != TrigHltMuMap_.end(); ++it){
-    if(trigname.find(it->first)!=std::string::npos) *TrigHltMu_ |= it->second;
-  }
-
-  for(std::map<std::string, ULong64_t>::const_iterator it = TrigHltDiMuMap_.begin();
-      it != TrigHltDiMuMap_.end(); ++it){
-    if(trigname.find(it->first)!=std::string::npos) *TrigHltDiMu_ |= it->second;
+  for(std::vector<TrigHltMapRcd>::iterator itTrigHltMap = trigHltMapList_.begin();
+      itTrigHltMap != trigHltMapList_.end(); ++itTrigHltMap){
+    const std::map<std::string, ULong64_t>& trigHltMap = *(itTrigHltMap->pMap);
+    ULong64_t* pTrig = itTrigHltMap->pTrig;
+    for(std::map<std::string, ULong64_t>::const_iterator it = trigHltMap.begin();
+	it != trigHltMap.end(); ++it){      
+      if(trigname.find(it->first)!=std::string::npos) *pTrig |= it->second;
+    }
   }
 }
 
@@ -1623,7 +1700,10 @@ Tupel::beginJob()
   ADD_BRANCH_D(TrigHltPhot, "HLT Photon triggger bits. See BitField.TrigHltPhot for bit description.");
   ADD_BRANCH_D(TrigHltMu, "HLT Muon triggger bits. See BitField.TrigHltMu for bit description.");
   ADD_BRANCH_D(TrigHltDiMu, "HLT Dimuon triggger bits. See BitField.TrigHltDiMu for bit description.");
-
+  ADD_BRANCH_D(TrigHltEl, "HLT Electron triggger bits. See BitField.TrigHltEl for bit description.");
+  ADD_BRANCH_D(TrigHltDiEl, "HLT Dielecton triggger bits. See BitField.TrigHltDiEl for bit description.");
+  ADD_BRANCH_D(TrigHltElMu, "HLT Muon + Electron triggger bits. See BitField.TrigHltElMu for bit description.");
+  
   //Missing Energy
   treeHelper_->addDescription("MET", "PF MET");
   ADD_BRANCH(METPt);
