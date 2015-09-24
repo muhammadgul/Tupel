@@ -18,11 +18,11 @@ void TreeHelper::clear(){
 
 void TreeHelper::defineBit(const char* branchName, int bit, const char* bitDescription){
   if(!bitFieldTree_) return;
-  if(bit < 0 || bit > 31) return;
+  if(bit < 0 || bit > 63) return;
   TBranch* br = bitFieldTree_->FindBranch(branchName);
   std::vector<std::string>* vec;
   if(!br){
-    vec = new std::vector<std::string>(32);
+    vec = new std::vector<std::string>(64);
     allocatedStringVectors_.push_back(vec);
     bitFieldTree_->Branch(branchName, vec);
   } else{
