@@ -70,8 +70,10 @@ public:
   template<typename T>
   void addBranch(const char* branchName, std::auto_ptr<T>& v,
 		 const char* branchDescription = 0){
-    v = std::auto_ptr<T> (new T);
+    T* p = new T;
+    v = std::auto_ptr<T> (p);
     *v = 0;
+    addVar(p);
     tree_->Branch(branchName, v.get());
     addDescription(branchName, branchDescription);
   }
