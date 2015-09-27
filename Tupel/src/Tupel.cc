@@ -819,7 +819,8 @@ void Tupel::readEvent(const edm::Event& iEvent){
 
   // get jet collection
   iEvent.getByLabel(jetSrc_,jets);
-  jettt = jets.failedToGet () ? 0 : &*jets ;
+  //  jettt = jets.failedToGet () ? 0 : &*jets ;
+  jettt = &*jets;
 
   // get met collection
   iEvent.getByLabel(metSrc_,mets);
@@ -827,13 +828,15 @@ void Tupel::readEvent(const edm::Event& iEvent){
   // get photon collection
   edm::Handle<edm::View<pat::Photon> > hPhotons;
   iEvent.getByLabel(photonSrc_, hPhotons);
-  photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
+  //  photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
+  photons = &*hPhotons;
 
   //get Gen jets
   iEvent.getByLabel(gjetSrc_, genjetColl_);
 
   iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
-  vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
+  //vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
+  vtxx = &*pvHandle;
 
   iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h);
 //  if(vtxx){
@@ -842,13 +845,13 @@ void Tupel::readEvent(const edm::Event& iEvent){
 //    reco::VertexRef primVtx(vtx_h,0);
 //  }
 
-  edm::Handle<double>  rho_;
-  iEvent.getByLabel(mSrcRho_, rho_);
+  iEvent.getByLabel(mSrcRho_, rho);
   rhoIso=99;
-  if(!rho_.failedToGet())rhoIso = *rho_;
+  if(!rho.failedToGet()) rhoIso = *rho;
+
   iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
+
   if(!beamSpotHandle.failedToGet()) beamSpot = *beamSpotHandle;
-  iEvent.getByLabel(mSrcRho_,rho);
 }
 
 void Tupel::processMET(const edm::Event& iEvent){
