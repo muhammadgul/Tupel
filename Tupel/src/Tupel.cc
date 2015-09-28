@@ -95,7 +95,7 @@ private:
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
   std::vector<edm::InputTag> metSources;
-
+  bool elecIdsListed_=false;
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
 
   // ----------member data ---------------------------
@@ -121,6 +121,7 @@ private:
   std::vector<double> Dr01LepM;
   std::vector<double> Dr01LepId;
   std::vector<double> Dr01LepStatus;
+  std::vector<double> Dr01LepMomId;
   std::vector<double> Bare01LepPt;
   std::vector<double> Bare01LepEta;
   std::vector<double> Bare01LepPhi;
@@ -128,6 +129,7 @@ private:
   std::vector<double> Bare01LepM;
   std::vector<double> Bare01LepId;
   std::vector<double> Bare01LepStatus;
+  std::vector<double> Bare01LepMomId;
   std::vector<double> St03Pt;
   std::vector<double> St03Eta;
   std::vector<double> St03Phi;
@@ -135,6 +137,8 @@ private:
   std::vector<double> St03M;
   std::vector<double> St03Id;
   std::vector<double> St03Status;
+  std::vector<double> St03MotherId;
+  std::vector<double> St03NumberMom;
   std::vector<double> St01PhotonPt;
   std::vector<double> St01PhotonEta;
   std::vector<double> St01PhotonPhi;
@@ -168,38 +172,38 @@ private:
   std::vector<double> caloJetEmFrac_;
   std::vector<double> caloJetn90_;
   ///pfjets
-  std::vector<double> patJetPfAk05En_;
-  std::vector<double> patJetPfAk05Pt_;
-  std::vector<double> patJetPfAk05Eta_;
-  std::vector<double> patJetPfAk05Phi_;
-  //std::vector<double> patJetPfAk05JesUncert_;
-  std::vector<double> patJetPfAk05LooseId_;
-  std::vector<double> patJetPfAk05Et_;
-  std::vector<double> patJetPfAk05RawPt_;
-  std::vector<double> patJetPfAk05RawEn_;
-  std::vector<double> patJetPfAk05HadEHF_;
-  std::vector<double> patJetPfAk05EmEHF_;
-  //std::vector<double> patJetPfAk05jetBSZ_;
-  //std::vector<double> patJetPfAk05jetBZ_;
-  std::vector<double> patJetPfAk05jetBetaClassic_;
-  std::vector<double> patJetPfAk05jetBeta_;
-  std::vector<double> patJetPfAk05jetBetaStar_;
-  std::vector<double> patJetPfAk05jetBetaStarClassic_;
-  std::vector<double> patJetPfAk05jetpuMVA_;
-  std::vector<double> patJetPfAk05chf_;
-  std::vector<double> patJetPfAk05nhf_;
-  std::vector<double> patJetPfAk05cemf_;
-  std::vector<double> patJetPfAk05nemf_;
-  std::vector<double> patJetPfAk05cmult_;
-  std::vector<double> patJetPfAk05nconst_;
-  std::vector<bool> patJetPfAk05jetpukLoose_;
-  std::vector<bool> patJetPfAk05jetpukMedium_;
-  std::vector<bool> patJetPfAk05jetpukTight_;
-  std::vector<double> patJetPfAk05PtUp_;
-  std::vector<double> patJetPfAk05PtDn_;
-  std::vector<double> patJetPfAk05BDiscCSV_;
-  std::vector<double> patJetPfAk05BDiscCSVV1_;
-  std::vector<double> patJetPfAk05BDiscCSVSLV1_;
+  std::vector<double> patJetPfAk04En_;
+  std::vector<double> patJetPfAk04Pt_;
+  std::vector<double> patJetPfAk04Eta_;
+  std::vector<double> patJetPfAk04Phi_;
+  //std::vector<double> patJetPfAk04JesUncert_;
+  std::vector<double> patJetPfAk04LooseId_;
+  std::vector<double> patJetPfAk04Et_;
+  std::vector<double> patJetPfAk04RawPt_;
+  std::vector<double> patJetPfAk04RawEn_;
+  std::vector<double> patJetPfAk04HadEHF_;
+  std::vector<double> patJetPfAk04EmEHF_;
+  //std::vector<double> patJetPfAk04jetBSZ_;
+  //std::vector<double> patJetPfAk04jetBZ_;
+  std::vector<double> patJetPfAk04jetBetaClassic_;
+  std::vector<double> patJetPfAk04jetBeta_;
+  std::vector<double> patJetPfAk04jetBetaStar_;
+  std::vector<double> patJetPfAk04jetBetaStarClassic_;
+  std::vector<double> patJetPfAk04jetpuMVA_;
+  std::vector<double> patJetPfAk04chf_;
+  std::vector<double> patJetPfAk04nhf_;
+  std::vector<double> patJetPfAk04cemf_;
+  std::vector<double> patJetPfAk04nemf_;
+  std::vector<double> patJetPfAk04cmult_;
+  std::vector<double> patJetPfAk04nconst_;
+  std::vector<bool> patJetPfAk04jetpukLoose_;
+  std::vector<bool> patJetPfAk04jetpukMedium_;
+  std::vector<bool> patJetPfAk04jetpukTight_;
+  std::vector<double> patJetPfAk04PtUp_;
+  std::vector<double> patJetPfAk04PtDn_;
+  std::vector<double> patJetPfAk04BDiscCSVv2_;
+  std::vector<double> patJetPfAk04BDiscCSVV1_;
+  std::vector<double> patJetPfAk04BDiscCSVSLV1_;
   std::vector<double> unc_;
   ///Muons
   std::vector<double> patMuonPt_;
@@ -210,6 +214,9 @@ private:
   std::vector<double> patMuonCharge_;
   std::vector<double> patMuonDxy_;
   std::vector<double> patMuonCombId_;
+  std::vector<double> patMuonLooseId_;
+  std::vector<double> patMuonMediumId_;
+  std::vector<double> patMuonTightId_;
   std::vector<double> patMuonTrig_;
   std::vector<double> patMuonDetIsoRho_;
   std::vector<double> patMuonPfIsoDbeta_;
@@ -259,6 +266,7 @@ private:
   std::vector<double> patElecMediumIDOff_;
   std::vector<double> patElecMediumIDOff_Tom_;
 
+
        std::vector<double>  patElecchIso03_;
        std::vector<double>  patElecnhIso03_;
        std::vector<double>  patElecphIso03_;
@@ -266,6 +274,7 @@ private:
   std::vector<double> patElecPfIso_;
   std::vector<double> patElecPfIsodb_;
   std::vector<double> patElecPfIsoRho_;
+  std::vector<unsigned>  patElecId_;
   std::vector<double> charged_;
   std::vector<double> photon_;
   std::vector<double> neutral_;
@@ -279,9 +288,10 @@ private:
   std::vector<double> x2_pdfInfo_;
   std::vector<double> scalePDF_pdfInfo_;
   double ptHat_,mcWeight_; 
+  std::vector<double> mcWeights_;
   double rhoPrime,AEff;
   //HLT
-  double HLT_Mu17_Mu8,HLT_Mu17_TkMu8;
+  double HLT_Mu17_Mu8,HLT_Mu17_TkMu8,HLT_IsoMu24_eta2p1;
   double HLT_Elec17_Elec8;
 
 //  JetCorrectionUncertainty *jecUnc;
@@ -424,6 +434,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     Dr01LepM.clear();
     Dr01LepId.clear();
     Dr01LepStatus.clear();
+  Dr01LepMomId.clear();
     Bare01LepPt.clear();
     Bare01LepEta.clear();
     Bare01LepPhi.clear();
@@ -431,6 +442,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     Bare01LepM.clear();
     Bare01LepId.clear();
     Bare01LepStatus.clear();
+    Bare01LepMomId.clear();
     St03Pt.clear();
     St03Eta.clear();
     St03Phi.clear();
@@ -438,6 +450,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     St03M.clear();
     St03Id.clear();
     St03Status.clear();
+ St03MotherId.clear();
+St03NumberMom.clear();
     St01PhotonPt.clear();
     St01PhotonEta.clear();
     St01PhotonPhi.clear();
@@ -469,38 +483,38 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     caloJetEmEHF_.clear();
     caloJetEmFrac_.clear();
     caloJetn90_.clear();
-    patJetPfAk05En_.clear();
-    patJetPfAk05Pt_.clear();
-    patJetPfAk05Eta_.clear();
-    patJetPfAk05Phi_.clear();
-    //patJetPfAk05JesUncert_.clear();
-    patJetPfAk05LooseId_.clear();
-    patJetPfAk05Et_.clear();
-    patJetPfAk05RawPt_.clear();
-    patJetPfAk05RawEn_.clear();
-    patJetPfAk05HadEHF_.clear();
-    patJetPfAk05EmEHF_.clear();
-    //patJetPfAk05jetBSZ_.clear();
-    //patJetPfAk05jetBZ_.clear();
-    patJetPfAk05jetBetaClassic_.clear();
-    patJetPfAk05jetBeta_.clear();
-    patJetPfAk05jetBetaStar_.clear();
-    patJetPfAk05jetBetaStarClassic_.clear();
-    patJetPfAk05jetpuMVA_.clear();
-    patJetPfAk05chf_.clear();
-    patJetPfAk05nhf_.clear();
-    patJetPfAk05cemf_.clear();
-    patJetPfAk05nemf_.clear();
-    patJetPfAk05cmult_.clear();
-    patJetPfAk05nconst_.clear();
-    patJetPfAk05jetpukLoose_.clear();
-    patJetPfAk05jetpukMedium_.clear();
-    patJetPfAk05jetpukTight_.clear();
-    patJetPfAk05PtUp_.clear();
-    patJetPfAk05PtDn_.clear();
-    patJetPfAk05BDiscCSV_.clear();
-    patJetPfAk05BDiscCSVV1_.clear();
-    patJetPfAk05BDiscCSVSLV1_.clear();
+    patJetPfAk04En_.clear();
+    patJetPfAk04Pt_.clear();
+    patJetPfAk04Eta_.clear();
+    patJetPfAk04Phi_.clear();
+    //patJetPfAk04JesUncert_.clear();
+    patJetPfAk04LooseId_.clear();
+    patJetPfAk04Et_.clear();
+    patJetPfAk04RawPt_.clear();
+    patJetPfAk04RawEn_.clear();
+    patJetPfAk04HadEHF_.clear();
+    patJetPfAk04EmEHF_.clear();
+    //patJetPfAk04jetBSZ_.clear();
+    //patJetPfAk04jetBZ_.clear();
+    patJetPfAk04jetBetaClassic_.clear();
+    patJetPfAk04jetBeta_.clear();
+    patJetPfAk04jetBetaStar_.clear();
+    patJetPfAk04jetBetaStarClassic_.clear();
+    patJetPfAk04jetpuMVA_.clear();
+    patJetPfAk04chf_.clear();
+    patJetPfAk04nhf_.clear();
+    patJetPfAk04cemf_.clear();
+    patJetPfAk04nemf_.clear();
+    patJetPfAk04cmult_.clear();
+    patJetPfAk04nconst_.clear();
+    patJetPfAk04jetpukLoose_.clear();
+    patJetPfAk04jetpukMedium_.clear();
+    patJetPfAk04jetpukTight_.clear();
+    patJetPfAk04PtUp_.clear();
+    patJetPfAk04PtDn_.clear();
+    patJetPfAk04BDiscCSVv2_.clear();
+    patJetPfAk04BDiscCSVV1_.clear();
+    patJetPfAk04BDiscCSVSLV1_.clear();
     unc_.clear();
     ///Muons
     patMuonPt_.clear();
@@ -511,6 +525,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     patMuonCharge_.clear();
     patMuonDxy_.clear();
     patMuonCombId_.clear();
+    patMuonLooseId_.clear();
+    patMuonMediumId_.clear();
+    patMuonTightId_.clear();
     patMuonTrig_.clear();
     patMuonDetIsoRho_.clear();
     patMuonPfIsoDbeta_.clear();
@@ -559,9 +576,14 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     patElecCharge_.clear();
     patElecMediumIDOff_.clear();
     patElecMediumIDOff_Tom_.clear();
+  patElecchIso03_.clear();
+  patElecnhIso03_.clear();
+  patElecphIso03_.clear();
+  patElecpuChIso03_.clear();
     patElecPfIso_.clear();
     patElecPfIsodb_.clear();
     patElecPfIsoRho_.clear();
+  patElecId_.clear();
     charged_.clear();
     photon_.clear();  
     neutral_.clear();
@@ -574,6 +596,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     HLT_Mu17_Mu8=0;
     HLT_Mu17_TkMu8=0;
     HLT_Elec17_Elec8=0;
+    HLT_IsoMu24_eta2p1=0;
     ////Add 08/23/13/////
     id1_pdfInfo_.clear();
     id2_pdfInfo_.clear();
@@ -582,6 +605,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     scalePDF_pdfInfo_.clear();
     ptHat_=0;
     mcWeight_=0;
+    mcWeights_.clear();
     ///////////////////end clear vector////////////////////// 
     event = iEvent.id().event();
     run = iEvent.id().run();
@@ -655,81 +679,93 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     }
     }
     if (!realdata && genParticles){     
-      const std::vector<reco::GenParticle> & gen = *genParticles_h;
-      for (size_t i=0; i<genParticles->size(); ++i){
-	TLorentzVector genR1DressLep1(0,0,0,0);
-	//      TLorentzVector genPho(0,0,0,0); 
-	int st = gen[i].status();
-	int id = gen[i].pdgId();
-      //  cout<<"STATUS ID "<<st<<" "<<id<<endl;
-	if(gen[i].numberOfMothers()){
-	  if (st==3){
-	    TLorentzVector genLep3(0,0,0,0);
-	    genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-	    St03Pt.push_back(genLep3.Pt());
-	    St03Eta.push_back(genLep3.Eta());
-	    St03Phi.push_back(genLep3.Phi());
-	    St03E.push_back(genLep3.Energy());
-	    St03M.push_back(genLep3.M());
-	    St03Id.push_back(id);
-	    St03Status.push_back(st);
-	  }
-	  if (st==1){
-	    TLorentzVector genLep1(0,0,0,0);
-	    genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-	    TLorentzVector genR1Pho1(0,0,0,0);
-	   
-	    edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
-	    iEvent.getByLabel(genParticleSrc_, genpart2);
-	    const std::vector<reco::GenParticle> & gen2 = *genpart2;
-	    //LOOP over photons//
-	    if(abs(id)==11 || abs(id)==13){
-	      for(unsigned int j=0; j<genpart2->size(); ++j){
-	        if(gen2[j].numberOfMothers()){
-		  if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
-		  TLorentzVector thisPho1(0,0,0,0);
-		  thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
-		  double dR = genLep1.DeltaR(thisPho1);
-		  if(dR<0.1){
-		    genR1Pho1+=thisPho1;
+    const std::vector<reco::GenParticle> & gen = *genParticles_h;
+    for (size_t i=0; i<genParticles->size(); ++i){
+      TLorentzVector genR1DressLep1(0,0,0,0);
+//      TLorentzVector genPho(0,0,0,0); 
+      int st = gen[i].status();
+      int id = gen[i].pdgId();
 
-		  }
-		
-		  if(dR<0.2){
-		    St01PhotonPt.push_back(thisPho1.Pt());
-		    St01PhotonEta.push_back(thisPho1.Eta());
-		    St01PhotonPhi.push_back(thisPho1.Phi());
-		    St01PhotonE.push_back(thisPho1.Energy());
-		    St01PhotonM.push_back(thisPho1.M());
-		    St01PhotonId.push_back(gen2[j].pdgId());
-		    St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
-		    St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
-		    St01PhotonStatus.push_back(gen2[j].status()); 
-		  }
+      if(gen[i].numberOfMothers()){
+ 
+        if (abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 ||abs(st)==3 ){
+          TLorentzVector genLep3(0,0,0,0);
+
+          if(abs(gen[i].eta())<10)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+          if(abs(gen[i].eta())>10)genLep3.SetPxPyPzE(0.001,0.001,gen[i].pz(),gen[i].energy());
+	  St03Pt.push_back(genLep3.Pt());
+	  St03Eta.push_back(genLep3.Eta());
+	  St03Phi.push_back(genLep3.Phi());
+	  St03E.push_back(genLep3.Energy());
+	  St03M.push_back(genLep3.M());
+          St03MotherId.push_back(gen[i].mother()->pdgId());
+	  St03NumberMom.push_back(gen[i].numberOfMothers());
+	  St03Id.push_back(id);
+	  St03Status.push_back(st);
+        }
+
+        if(gen[i].numberOfMothers() ==1 && gen[i].mother()->pdgId() != id){
+
+         continue;
+        }
+        if (st==1 && (abs(id)==13||abs(id)==11 || abs(id)==15 ||abs(id)==12||abs(id)==14||abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
+
+          TLorentzVector genLep1(0,0,0,0);
+          genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+	  TLorentzVector genR1Pho1(0,0,0,0);
+
+       	  edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
+          iEvent.getByLabel(genParticleSrc_, genpart2);
+          const std::vector<reco::GenParticle> & gen2 = *genpart2;
+            //LOOP over photons//
+	  if (st==1 && (abs(id)==13||abs(id)==11)){
+            for(unsigned int j=0; j<genpart2->size(); ++j){
+              if(gen2[j].numberOfMothers()){
+	        if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
+	        TLorentzVector thisPho1(0,0,0,0);
+	        thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
+  	        double dR = genLep1.DeltaR(thisPho1);
+	        if(dR<0.1){
+	          genR1Pho1+=thisPho1;
 	        }
-	      }
+	        if(dR<0.2){
+	          St01PhotonPt.push_back(thisPho1.Pt());
+	          St01PhotonEta.push_back(thisPho1.Eta());
+	          St01PhotonPhi.push_back(thisPho1.Phi());
+	          St01PhotonE.push_back(thisPho1.Energy());
+	          St01PhotonM.push_back(thisPho1.M());
+	          St01PhotonId.push_back(gen2[j].pdgId());
+	          St01PhotonMomId.push_back(fabs(gen2[j].mother()->pdgId()));
+	          St01PhotonNumberMom.push_back(gen2[j].numberOfMothers());
+	          St01PhotonStatus.push_back(gen2[j].status());
+	        }
+              }
+            }
+          }
+          genR1DressLep1=genLep1+genR1Pho1;
+	  Dr01LepPt.push_back(genR1DressLep1.Pt());
+	  Dr01LepEta.push_back(genR1DressLep1.Eta());
+	  Dr01LepPhi.push_back(genR1DressLep1.Phi());
+	  Dr01LepE.push_back(genR1DressLep1.Energy());
+	  Dr01LepM.push_back(genR1DressLep1.M());
+	  Dr01LepId.push_back(id);
+	  Dr01LepMomId.push_back(id);
+	  Dr01LepStatus.push_back(st);
 
-	      genR1DressLep1=genLep1+genR1Pho1;
-	      Dr01LepPt.push_back(genR1DressLep1.Pt());
-	      Dr01LepEta.push_back(genR1DressLep1.Eta());
-	      Dr01LepPhi.push_back(genR1DressLep1.Phi());
-	      Dr01LepE.push_back(genR1DressLep1.Energy());
-	      Dr01LepM.push_back(genR1DressLep1.M());
-	      Dr01LepId.push_back(id);
-	      Dr01LepStatus.push_back(st);
-            }	  
-            cout<<"STATUS, ID, MOM ID, number of MOM "<<st<<" "<<id<<"  "<<gen[i].mother()->pdgId()<<"  "<<gen[i].numberOfMothers()<<endl;  
-	    Bare01LepPt.push_back(genLep1.Pt());
-	    Bare01LepEta.push_back(genLep1.Eta());
-	    Bare01LepPhi.push_back(genLep1.Phi());
-	    Bare01LepE.push_back(genLep1.Energy());
-	    Bare01LepM.push_back(genLep1.M());
-	    Bare01LepId.push_back(id);
-	    Bare01LepStatus.push_back(st);
-	  }
-	}
+	  Bare01LepPt.push_back(genLep1.Pt());
+	  Bare01LepEta.push_back(genLep1.Eta());
+	  Bare01LepPhi.push_back(genLep1.Phi());
+	  Bare01LepE.push_back(genLep1.Energy());
+	  Bare01LepM.push_back(genLep1.M());
+	  Bare01LepId.push_back(id);
+	  Bare01LepMomId.push_back(id);
+	  Bare01LepStatus.push_back(st);
+        }
       }
     }
+    }
+    //cout<<"aaaaaa"<<endl;
+
     if (!realdata){
       //matrix element info
       Handle<LHEEventProduct> lheH;
@@ -749,7 +785,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	GjPy.push_back(genjet[k].py());
 	GjPz.push_back(genjet[k].pz());
 	//double isChargedJet=false;
-//	double chargedFraction = 0.;
+	double chargedFraction = 0.;
 //	std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
 //	for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
 //	  if ( (**thepart).charge()!=0 ){
@@ -763,6 +799,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       }
     }
     
+    //cout<<"bbbbbbbbb"<<endl;
     ////Add 08/27/13//////
     if(!realdata){
       edm::Handle<GenEventInfoProduct>   genEventInfoProd;
@@ -770,6 +807,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	if (genEventInfoProd->hasBinningValues())
 	  ptHat_ = genEventInfoProd->binningValues()[0];
 	mcWeight_ = genEventInfoProd->weight();
+      mcWeights_ = genEventInfoProd->weights();
       }
       /// now get the PDF information
       edm::Handle<GenEventInfoProduct> pdfInfoHandle;
@@ -785,14 +823,14 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	}   
       }   
     }
-    
+        //cout<<"ccccccccccccccc"<<endl;
     int Mu17_Mu8=0;
     int Mu17_TkMu8=0;
     int Elec17_Elec8=0;
-    
+    int IsoMu24_eta2p1=0;
     HLT_Mu17_Mu8=0;
     HLT_Mu17_TkMu8=0;
-    
+   HLT_IsoMu24_eta2p1=0; 
     int ntrigs;
     vector<string> trigname;
     vector<bool> trigaccept;
@@ -805,7 +843,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       for (int i = 0; i < ntrigs; i++) {
 	trigname.push_back(trigNames->triggerName(i));
 	trigaccept.push_back(HLTResHandle->accept(i));
+      //  cout<<trigNames->triggerName(i)<<endl;
 	if (trigaccept[i]){
+	  if(std::string(trigname[i]).find("HLT_IsoMu24_eta2p1")!=std::string::npos) IsoMu24_eta2p1=1;
 	  if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) Mu17_Mu8=1;
 	  if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) Mu17_TkMu8=1;
 	  if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) Elec17_Elec8=1;
@@ -813,13 +853,15 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       }
     }
     HLT_Mu17_Mu8=Mu17_Mu8;
+    HLT_IsoMu24_eta2p1=IsoMu24_eta2p1;
+
     HLT_Mu17_TkMu8=Mu17_TkMu8;
     HLT_Elec17_Elec8=Elec17_Elec8;
     
     double MuFill=0;
     double Mu17_Mu8_Matched=0;
     double Mu17_TkMu8_Matched=0;
-
+        //cout<<"dddddddddddddddddd"<<endl;
     if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
@@ -864,6 +906,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	  if( !pvHandle->empty() && !pvHandle->front().isFake() ) {
 	    const reco::Vertex &vtx = pvHandle->front();
 	    dZ= mu[j].muonBestTrack()->dz(vtx.position());
+
 	  }
 	}
 	patMuonChi2Ndoff_.push_back(normChi2);
@@ -874,6 +917,19 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	patMuonTkLayers_.push_back(trkLayers);
 	
 	int idpass=0;
+        int tightid=0, medid=0, looseid=0;
+        for (const pat::Muon &mu : *muons)
+        {
+        if( pvHandle->empty() && pvHandle->front().isFake())continue;
+        const reco::Vertex &vtx = pvHandle->front();
+        bool isTight(muon::isTightMuon(mu,vtx));
+        bool isMedium(muon::isMediumMuon(mu));
+        bool isLoose(muon::isLooseMuon(mu));
+        if (isTight)tightid=1;if (isMedium)medid=1;if (isLoose)looseid=1;
+        }
+        patMuonLooseId_.push_back(looseid);
+        patMuonMediumId_.push_back(medid);
+        patMuonTightId_.push_back(tightid);
 	if(mu[j].isGlobalMuon() && mu[j].isPFMuon() && normChi2<10 && muonHits>0 && nMatches>1 && mu[j].dB()<0.2 && dZ<0.5 && pixelHits>0 && trkLayers>5)idpass=1;
 	patMuonCombId_.push_back(idpass);
 	int TrigSum=0;
@@ -914,7 +970,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       }
     }
     }
-    
+            //cout<<"eeeeeeeeeeeeeeeeeeeeeee"<<endl;
     //electrons B.B.
     
     int ElecFill=0;
@@ -967,7 +1023,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
      }
 
 
-     //cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
+     ////cout<<dEtaIn_<<"  "<<dPhiIn_<<"  "<<hOverE_<<"  "<<sigmaIetaIeta_<<"  "<<full5x5_sigmaIetaIeta_<<"  "<<ooEmooP_<<"  "<< d0_<<"  "<< dz_<<"  "<<expectedMissingInnerHits_<<"  "<<passConversionVeto_<<endl;
 
      patElecdEtaIn_.push_back(dEtaIn_);
      patElecdPhiIn_.push_back(dPhiIn_);
@@ -979,6 +1035,28 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
      patElecdz_.push_back(dz_);
      patElecexpectedMissingInnerHits_.push_back(expectedMissingInnerHits_);
      patElecpassConversionVeto_.push_back(passConversionVeto_);     
+
+      std::vector<std::pair<std::string,float> > idlist = el.electronIDs();
+      if(!elecIdsListed_) {
+	std::cout << "Supported electron ids:\n"; 
+	for (unsigned k  = 0 ; k < idlist.size(); ++k){
+	  std::cout << idlist[k].first << ": " << idlist[k].second  << "\n";
+	}
+	std::cout << std::flush;
+	elecIdsListed_ = true;
+      }
+     unsigned elecid = 0;
+      
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= 1;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= 2;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-medium"))) elecid |= 4;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-tight"))) elecid |= 8;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto"))) elecid |= 16;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose"))) elecid |= 32;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium"))) elecid |= 64;
+      if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight"))) elecid |= 128;
+      patElecId_.push_back(elecid);
+
 
       double Elec17_Elec8_Matched=0;
       
@@ -1036,6 +1114,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       ElecFill++; 
     }
     }
+            //cout<<"fffffffffffffffffffff"<<endl;
     //double PFjetFill=0;
     double chf = 0;
     double nhf = 0;
@@ -1049,7 +1128,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
       const pat::Jet & jet = jets->at(i);
       
-      patJetPfAk05jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
+      patJetPfAk04jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
       chf = jet.chargedHadronEnergyFraction();
       nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
       cemf = jet.chargedEmEnergyFraction();
@@ -1057,35 +1136,35 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       cmult = jet.chargedMultiplicity();
       nconst = jet.numberOfDaughters();
       
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
-    //  cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
-      patJetPfAk05BDiscCSV_.push_back(jet.bDiscriminator("combinedSecondaryVertexBJetTags"));
-      patJetPfAk05BDiscCSVV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
-      patJetPfAk05BDiscCSVSLV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
+    //  //cout<<"jet.bDiscriminator(combinedSecondaryVertexBJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexBJetTags")<<endl;
+    //  //cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
+    //  //cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
+      patJetPfAk04BDiscCSVv2_.push_back(jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
+      patJetPfAk04BDiscCSVV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
+      patJetPfAk04BDiscCSVSLV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
       
-      patJetPfAk05En_.push_back(jet.energy());
-      patJetPfAk05Pt_.push_back(jet.pt());
-      patJetPfAk05Eta_.push_back(jet.eta());
-      patJetPfAk05Phi_.push_back(jet.phi());
-      patJetPfAk05Et_.push_back(jet.et());
-      patJetPfAk05RawPt_.push_back(jet.correctedJet(0).pt());
-      patJetPfAk05RawEn_.push_back(jet.correctedJet(0).energy());
-      patJetPfAk05HadEHF_.push_back(jet.HFHadronEnergy());
-      patJetPfAk05EmEHF_.push_back(jet.HFEMEnergy());
-      patJetPfAk05chf_.push_back(chf);
-      patJetPfAk05nhf_.push_back(nhf);
-      patJetPfAk05cemf_.push_back(cemf);
-      patJetPfAk05nemf_.push_back(nemf);
-      patJetPfAk05cmult_.push_back(cmult);
-      patJetPfAk05nconst_.push_back(nconst);
+      patJetPfAk04En_.push_back(jet.energy());
+      patJetPfAk04Pt_.push_back(jet.pt());
+      patJetPfAk04Eta_.push_back(jet.eta());
+      patJetPfAk04Phi_.push_back(jet.phi());
+      patJetPfAk04Et_.push_back(jet.et());
+      patJetPfAk04RawPt_.push_back(jet.correctedJet(0).pt());
+      patJetPfAk04RawEn_.push_back(jet.correctedJet(0).energy());
+      patJetPfAk04HadEHF_.push_back(jet.HFHadronEnergy());
+      patJetPfAk04EmEHF_.push_back(jet.HFEMEnergy());
+      patJetPfAk04chf_.push_back(chf);
+      patJetPfAk04nhf_.push_back(nhf);
+      patJetPfAk04cemf_.push_back(cemf);
+      patJetPfAk04nemf_.push_back(nemf);
+      patJetPfAk04cmult_.push_back(cmult);
+      patJetPfAk04nconst_.push_back(nconst);
 
       double unc = 1.;
       unc_.push_back(unc);
       double up = (1+unc)*jet.pt();
       double down = (1-unc)*jet.pt();
-      patJetPfAk05PtUp_.push_back(up);
-      patJetPfAk05PtDn_.push_back(down);
+      patJetPfAk04PtUp_.push_back(up);
+      patJetPfAk04PtDn_.push_back(down);
       double tempJetID=0;
       if( abs(jet.eta())<2.4){
 	if(chf>0 && nhf<0.99 && cmult>0.0 && cemf<0.99 && nemf<0.99 && nconst>1) tempJetID=1;
@@ -1097,7 +1176,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 	if ((nhf<0.95)&&(nemf<0.95)&&(nconst>1))tempJetID=2; 
 	if ((nhf<0.9)&&(nemf<0.9)&&(nconst>1))tempJetID=3;
       }
-      patJetPfAk05LooseId_.push_back(tempJetID);//ala 
+      patJetPfAk04LooseId_.push_back(tempJetID);//ala 
       //PFjetFill++;
       
       if(!realdata){
@@ -1113,9 +1192,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
       }
     }
     }//end jets
-    
+                //cout<<"gggggggggggggggggggggg"<<endl;
     myTree->Fill();
-    
+                //cout<<"hhhhhhhhhhhhhhhhhhhhh"<<endl;
 }
 
 void 
@@ -1152,6 +1231,7 @@ Tupel::beginJob()
     myTree->Branch("Dr01LepM",&Dr01LepM);
     myTree->Branch("Dr01LepId",&Dr01LepId);
     myTree->Branch("Dr01LepStatus",&Dr01LepStatus);
+  myTree->Branch("Dr01LepMomId",&Dr01LepMomId);
     myTree->Branch("Bare01LepPt",&Bare01LepPt);
     myTree->Branch("Bare01LepEta",&Bare01LepEta);
     myTree->Branch("Bare01LepPhi",&Bare01LepPhi);
@@ -1159,7 +1239,7 @@ Tupel::beginJob()
     myTree->Branch("Bare01LepM",&Bare01LepM);
     myTree->Branch("Bare01LepId",&Bare01LepId);
     myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
-    
+      myTree->Branch("Bare01LepMomId",&Bare01LepMomId);      
     myTree->Branch("St03Pt",&St03Pt);
     myTree->Branch("St03Eta",&St03Eta);
     myTree->Branch("St03Phi",&St03Phi);
@@ -1167,6 +1247,9 @@ Tupel::beginJob()
     myTree->Branch("St03M",&St03M);
     myTree->Branch("St03Id",&St03Id);
     myTree->Branch("St03Status",&St03Status);
+   myTree->Branch("St03MotherId",&St03MotherId);
+    myTree->Branch("St03NumberMom",&St03NumberMom);    
+
     
     myTree->Branch("St01PhotonPt",&St01PhotonPt);
     myTree->Branch("St01PhotonEta",&St01PhotonEta);
@@ -1196,6 +1279,7 @@ Tupel::beginJob()
     myTree->Branch("HLT_Mu17_Mu8",&HLT_Mu17_Mu8);
     myTree->Branch("HLT_Mu17_TkMu8",&HLT_Mu17_TkMu8);
     myTree->Branch("HLT_Elec17_Elec8",&HLT_Elec17_Elec8);
+    myTree->Branch("HLT_IsoMu24_eta2p1",&HLT_IsoMu24_eta2p1);
     
     //Muons
     myTree->Branch("patMuonPt_",&patMuonPt_);
@@ -1206,6 +1290,9 @@ Tupel::beginJob()
     myTree->Branch("patMuonCharge_",&patMuonCharge_);
     myTree->Branch("patMuonDxy_",&patMuonDxy_);
     myTree->Branch("patMuonCombId_",&patMuonCombId_);
+    myTree->Branch("patMuonLooseId_",&patMuonLooseId_);
+    myTree->Branch("patMuonMediumId_",&patMuonMediumId_);
+    myTree->Branch("patMuonTightId_",&patMuonTightId_);
     myTree->Branch("patMuonTrig_",&patMuonTrig_);
     myTree->Branch("patMuonDetIsoRho_",&patMuonDetIsoRho_);
     myTree->Branch("patMuonPfIsoDbeta_",&patMuonPfIsoDbeta_);
@@ -1232,7 +1319,7 @@ Tupel::beginJob()
     myTree->Branch("patMuon_Mu17_Mu8_Matched_",&patMuon_Mu17_Mu8_Matched_);
     myTree->Branch("patMuon_Mu17_TkMu8_Matched_",&patMuon_Mu17_TkMu8_Matched_);
 
-
+  myTree->Branch("patElecId_",&patElecId_);
     myTree->Branch("patElecdEtaIn_",&patElecdEtaIn_);
     myTree->Branch("patElecdPhiIn_",&patElecdPhiIn_);
     myTree->Branch("patElechOverE_",&patElechOverE_);
@@ -1274,36 +1361,36 @@ Tupel::beginJob()
     myTree->Branch("patElec_mva_presel_",&patElec_mva_presel_);
     
     //PFJet
-    myTree->Branch("patJetPfAk05En_",&patJetPfAk05En_);
-    myTree->Branch("patJetPfAk05Pt_",&patJetPfAk05Pt_);
-    myTree->Branch("patJetPfAk05Eta_",&patJetPfAk05Eta_);
-    myTree->Branch("patJetPfAk05Phi_",&patJetPfAk05Phi_);
-    myTree->Branch("patJetPfAk05LooseId_",&patJetPfAk05LooseId_);
-    myTree->Branch("patJetPfAk05Et_",&patJetPfAk05Et_);
-    myTree->Branch("patJetPfAk05RawPt_",&patJetPfAk05RawPt_);
-    myTree->Branch("patJetPfAk05RawEn_",&patJetPfAk05RawEn_);
-    myTree->Branch("patJetPfAk05HadEHF_",&patJetPfAk05HadEHF_);
-    myTree->Branch("patJetPfAk05EmEHF_",&patJetPfAk05EmEHF_);
-    myTree->Branch("patJetPfAk05chf_",&patJetPfAk05chf_);
-    myTree->Branch("patJetPfAk05nhf_",&patJetPfAk05nhf_);
-    myTree->Branch("patJetPfAk05cemf_",&patJetPfAk05cemf_);
-    myTree->Branch("patJetPfAk05nemf_",&patJetPfAk05nemf_);
-    myTree->Branch("patJetPfAk05cmult_",&patJetPfAk05cmult_);
-    myTree->Branch("patJetPfAk05nconst_",&patJetPfAk05nconst_);
-    myTree->Branch("patJetPfAk05jetBeta_",&patJetPfAk05jetBeta_);
-    myTree->Branch("patJetPfAk05jetBetaClassic_",&patJetPfAk05jetBetaClassic_);
-    myTree->Branch("patJetPfAk05jetBetaStar_",&patJetPfAk05jetBetaStar_);
-    myTree->Branch("patJetPfAk05jetBetaStarClassic_",&patJetPfAk05jetBetaStarClassic_);
-    myTree->Branch("patJetPfAk05jetpuMVA_",&patJetPfAk05jetpuMVA_);
-    myTree->Branch("patJetPfAk05jetpukLoose_",&patJetPfAk05jetpukLoose_);
-    myTree->Branch("patJetPfAk05jetpukMedium_",&patJetPfAk05jetpukMedium_);
-    myTree->Branch("patJetPfAk05jetpukTight_",&patJetPfAk05jetpukTight_);
-    myTree->Branch("patJetPfAk05BDiscCSV_",&patJetPfAk05BDiscCSV_);
-    myTree->Branch("patJetPfAk05BDiscCSVV1_",&patJetPfAk05BDiscCSVV1_);
-    myTree->Branch("patJetPfAk05BDiscCSVSLV1_",&patJetPfAk05BDiscCSVSLV1_);
+    myTree->Branch("patJetPfAk04En_",&patJetPfAk04En_);
+    myTree->Branch("patJetPfAk04Pt_",&patJetPfAk04Pt_);
+    myTree->Branch("patJetPfAk04Eta_",&patJetPfAk04Eta_);
+    myTree->Branch("patJetPfAk04Phi_",&patJetPfAk04Phi_);
+    myTree->Branch("patJetPfAk04LooseId_",&patJetPfAk04LooseId_);
+    myTree->Branch("patJetPfAk04Et_",&patJetPfAk04Et_);
+    myTree->Branch("patJetPfAk04RawPt_",&patJetPfAk04RawPt_);
+    myTree->Branch("patJetPfAk04RawEn_",&patJetPfAk04RawEn_);
+    myTree->Branch("patJetPfAk04HadEHF_",&patJetPfAk04HadEHF_);
+    myTree->Branch("patJetPfAk04EmEHF_",&patJetPfAk04EmEHF_);
+    myTree->Branch("patJetPfAk04chf_",&patJetPfAk04chf_);
+    myTree->Branch("patJetPfAk04nhf_",&patJetPfAk04nhf_);
+    myTree->Branch("patJetPfAk04cemf_",&patJetPfAk04cemf_);
+    myTree->Branch("patJetPfAk04nemf_",&patJetPfAk04nemf_);
+    myTree->Branch("patJetPfAk04cmult_",&patJetPfAk04cmult_);
+    myTree->Branch("patJetPfAk04nconst_",&patJetPfAk04nconst_);
+    myTree->Branch("patJetPfAk04jetBeta_",&patJetPfAk04jetBeta_);
+    myTree->Branch("patJetPfAk04jetBetaClassic_",&patJetPfAk04jetBetaClassic_);
+    myTree->Branch("patJetPfAk04jetBetaStar_",&patJetPfAk04jetBetaStar_);
+    myTree->Branch("patJetPfAk04jetBetaStarClassic_",&patJetPfAk04jetBetaStarClassic_);
+    myTree->Branch("patJetPfAk04jetpuMVA_",&patJetPfAk04jetpuMVA_);
+    myTree->Branch("patJetPfAk04jetpukLoose_",&patJetPfAk04jetpukLoose_);
+    myTree->Branch("patJetPfAk04jetpukMedium_",&patJetPfAk04jetpukMedium_);
+    myTree->Branch("patJetPfAk04jetpukTight_",&patJetPfAk04jetpukTight_);
+    myTree->Branch("patJetPfAk04BDiscCSVv2_",&patJetPfAk04BDiscCSVv2_);
+    myTree->Branch("patJetPfAk04BDiscCSVV1_",&patJetPfAk04BDiscCSVV1_);
+    myTree->Branch("patJetPfAk04BDiscCSVSLV1_",&patJetPfAk04BDiscCSVSLV1_);
     myTree->Branch("unc_",&unc_);
-    myTree->Branch("patJetPfAk05PtUp_",&patJetPfAk05PtUp_);
-    myTree->Branch("patJetPfAk05PtDn_",&patJetPfAk05PtDn_); 
+    myTree->Branch("patJetPfAk04PtUp_",&patJetPfAk04PtUp_);
+    myTree->Branch("patJetPfAk04PtDn_",&patJetPfAk04PtDn_); 
 
     //CaloJets
     myTree->Branch("caloJetPt_",&caloJetPt_);
@@ -1323,6 +1410,7 @@ Tupel::beginJob()
     myTree->Branch("scalePDF_pdfInfo_",&scalePDF_pdfInfo_);
     myTree->Branch("ptHat_",&ptHat_);
     myTree->Branch("mcWeight_",&mcWeight_);
+    myTree->Branch("mcWeights_",&mcWeights_);
     myTree->Branch("nup",&nup);   
 }
 
