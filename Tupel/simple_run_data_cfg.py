@@ -211,7 +211,7 @@ process.out = cms.OutputModule("PoolOutputModule",
     outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*'])
 #    outputCommands = cms.untracked.vstring(['drop *'])
 )
-process.endpath= cms.EndPath(process.out)
+#process.endpath= cms.EndPath(process.out)
 
 
 #from PhysicsTools.PatAlgos.tools.trigTools import *

@@ -209,9 +209,9 @@ process.options.allowUnscheduled = cms.untracked.bool(True)
 process.out = cms.OutputModule("PoolOutputModule",
     fileName = cms.untracked.string('test.root'),
 #    outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*'])
-    outputCommands = cms.untracked.vstring(['keep *'])
+    outputCommands = cms.untracked.vstring(['drop *'])
 )
-process.endpath= cms.EndPath(process.out)
+#process.endpath= cms.EndPath(process.out)
 
 
 #from PhysicsTools.PatAlgos.tools.trigTools import *
