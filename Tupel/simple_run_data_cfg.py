@@ -162,7 +162,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   #tauSrc      = cms.untracked.InputTag("slimmedPatTaus"),
 #  jetSrc      = cms.untracked.InputTag("slimmedJets"),
 
-    jetSrc      = cms.untracked.InputTag("jetsrcc"),
+    jetSrc      = cms.untracked.InputTag(jetsrcc),
   metSrc      = cms.untracked.InputTag("patMETsPF"),
   genSrc      = cms.untracked.InputTag("prunedGenParticles"),
   gjetSrc       = cms.untracked.InputTag('slimmedGenJets'),
@@ -224,4 +224,5 @@ iFileName = "fileNameDump_cfg.py"
 file = open(iFileName,'w')
 file.write(str(process.dumpPython()))
 file.close()
+
 

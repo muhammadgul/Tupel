@@ -162,7 +162,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   #tauSrc      = cms.untracked.InputTag("slimmedPatTaus"),
 #  jetSrc      = cms.untracked.InputTag("slimmedJets"),
 
-    jetSrc      = cms.untracked.InputTag("jetsrcc"),
+    jetSrc      = cms.untracked.InputTag(jetsrcc),
   metSrc      = cms.untracked.InputTag("patMETsPF"),
   genSrc      = cms.untracked.InputTag("prunedGenParticles"),
   gjetSrc       = cms.untracked.InputTag('slimmedGenJets'),
@@ -208,8 +208,8 @@ process.options.allowUnscheduled = cms.untracked.bool(True)
 
 process.out = cms.OutputModule("PoolOutputModule",
     fileName = cms.untracked.string('test.root'),
-    outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*'])
-#    outputCommands = cms.untracked.vstring(['drop *'])
+#    outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*'])
+    outputCommands = cms.untracked.vstring(['keep *'])
 )
 process.endpath= cms.EndPath(process.out)
 
@@ -224,4 +224,5 @@ iFileName = "fileNameDump_cfg.py"
 file = open(iFileName,'w')
 file.write(str(process.dumpPython()))
 file.close()
+
 

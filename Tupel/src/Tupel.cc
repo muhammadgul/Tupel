@@ -1046,7 +1046,8 @@ St03NumberMom.clear();
 	elecIdsListed_ = true;
       }
      unsigned elecid = 0;
-      
+      if(!realdata){
+
       if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= 1;
       if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= 2;
       if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-medium"))) elecid |= 4;
@@ -1055,6 +1056,28 @@ St03NumberMom.clear();
       if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose"))) elecid |= 32;
       if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium"))) elecid |= 64;
       if(el.electronID(std::string("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight"))) elecid |= 128;
+
+     }
+
+if(realdata){
+
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-50ns-V1-standalone-veto"))) elecid |= 1;
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-50ns-V1-standalone-loose"))) elecid |= 2;
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-50ns-V1-standalone-medium"))) elecid |= 4;
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-50ns-V1-standalone-tight"))) elecid |= 8;
+
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-25ns-V1-standalone-veto"))) elecid |= 16;
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-25ns-V1-standalone-loose"))) elecid |= 32;
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-25ns-V1-standalone-medium"))) elecid |= 64;
+      if(el.electronID(std::string("cutBasedElectronID-Spring15-25ns-V1-standalone-tight"))) elecid |= 128;
+
+      if(el.electronID(std::string("cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-loose"))) elecid |= 256;
+      if(el.electronID(std::string("cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-medium"))) elecid |= 512;
+      if(el.electronID(std::string("cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-tight"))) elecid |= 1024; 
+      if(el.electronID(std::string("cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-veto"))) elecid |= 2048; 
+
+     }
+
       patElecId_.push_back(elecid);
 
 
