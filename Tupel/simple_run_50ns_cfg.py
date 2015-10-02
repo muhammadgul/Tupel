@@ -1,28 +1,28 @@
 import FWCore.ParameterSet.Config as cms
 process = cms.Process("S2")
-process.load('Configuration.StandardSequences.Services_cff')
-process.load('Configuration.StandardSequences.GeometryDB_cff')
-process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+#process.load('Configuration.StandardSequences.Services_cff')
+#process.load('Configuration.StandardSequences.GeometryDB_cff')
+#process.load('Configuration.StandardSequences.MagneticField_38T_cff')
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-from JetMETCorrections.Configuration.DefaultJEC_cff import *
-from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
+#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+#from JetMETCorrections.Configuration.DefaultJEC_cff import *
+ #from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
 runOnData= False #True #data/MC switch
 
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 #from Configuration.AlCa.GlobalTag import GlobalTag
-from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
+#from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 
-if runOnData:
-	process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_v2') #for 25 ns data
-else: 
-	process.GlobalTag = GlobalTag(process.GlobalTag, '74X_mcRun2_asymptotic_v2') #for 25ns mc
+#if runOnData:
+#	process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_v2') #for 25 ns data
+#else: 
+#	process.GlobalTag = GlobalTag(process.GlobalTag, '74X_mcRun2_asymptotic_v2') #for 25ns mc
 
 
 process.source = cms.Source("PoolSource",
 #    fileNames = cms.untracked.vstring("/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/00000/0066F143-F8FD-E411-9A0B-D4AE526A0D2E.root")
-  fileNames = cms.untracked.vstring("/store/mc/RunIISpring15DR74/TT_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v2/00000/0AB045B5-BB0C-E511-81FD-0025905A60B8.root")
+  fileNames = cms.untracked.vstring("/store/mc/RunIISpring15DR74/TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v3/10000/181C4893-BF08-E511-9EFA-B083FECFD4F0.root")
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
@@ -51,18 +51,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 #  )
 #  )
 #process.es_prefer_jec = cms.ESPrefer("PoolDBESSource",'jec')
-process.load("PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff")
-process.patJetCorrFactorsReapplyJEC = process.patJetCorrFactorsUpdated.clone(
-  src = cms.InputTag("slimmedJets"),
-  levels = ['L1FastJet','L2Relative', 'L3Absolute', 'L2L3Residual'],
-  payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
 
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetsUpdated
-process.patJetsReapplyJEC = process.patJetsUpdated.clone(
-  jetSource = cms.InputTag("slimmedJets"),
-  jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
-  )
-process.reapplyJEC = cms.Sequence( process.patJetCorrFactorsReapplyJEC + process.patJetsReapplyJEC)
 ########################################
 #from RecoJets.JetProducers.ak5PFJets_cfi import ak5PFJets
 #from RecoJets.JetProducers.ak4PFJets_cfi import ak4PFJets
@@ -148,10 +137,8 @@ process.TFileService = cms.Service("TFileService",
 #process.patJetPartonMatch.matched = cms.InputTag("prunedGenParticles")
 #process.patJetCorrFactors.primaryVertices=cms.InputTag("offlineSlimmedPrimaryVertices")
 
-if runOnData:
-    jetsrcc="slimmedjets"
-else :
-    jetsrcc="patJetsReapplyJEC"
+
+jetsrcc="slimmedJets"
 
 process.tupel = cms.EDAnalyzer("Tupel",
 #  trigger      = cms.InputTag( "patTrigger" ),

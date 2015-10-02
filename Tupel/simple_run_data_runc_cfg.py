@@ -14,10 +14,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 #from Configuration.AlCa.GlobalTag import GlobalTag
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 
-if runOnData:
-	process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_v2') #for 25 ns data
-else: 
-	process.GlobalTag = GlobalTag(process.GlobalTag, '74X_mcRun2_asymptotic_v2') #for 25ns mc
+process.GlobalTag = GlobalTag(process.GlobalTag, '74X_dataRun2_v2') #for 25 ns data #for runC remaking jet energy collections
 
 
 process.source = cms.Source("PoolSource",
@@ -54,7 +51,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 process.load("PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff")
 process.patJetCorrFactorsReapplyJEC = process.patJetCorrFactorsUpdated.clone(
   src = cms.InputTag("slimmedJets"),
-  levels = ['L1FastJet','L2Relative', 'L3Absolute', 'L2L3Residual'],
+  levels = ['L1FastJet','L2Relative', 'L3Absolute'],
   payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
 
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetsUpdated
@@ -149,7 +146,7 @@ process.TFileService = cms.Service("TFileService",
 #process.patJetCorrFactors.primaryVertices=cms.InputTag("offlineSlimmedPrimaryVertices")
 
 if runOnData:
-    jetsrcc="slimmedjets"
+    jetsrcc="slimmedJets"
 else :
     jetsrcc="patJetsReapplyJEC"
 

@@ -148,7 +148,7 @@ process.TFileService = cms.Service("TFileService",
 #process.patJetCorrFactors.primaryVertices=cms.InputTag("offlineSlimmedPrimaryVertices")
 
 if runOnData:
-    jetsrcc="slimmedjets"
+    jetsrcc="slimmedJets"
 else :
     jetsrcc="patJetsReapplyJEC"
 
