@@ -693,6 +693,7 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltDiMu, 22,HLT_DoubleMu18NoFiltersNoVtx_v1);
   DEF_BIT2(TrigHltDiMu, 23,HLT_TrkMu15_DoubleTrkMu5NoFiltersNoVtx_v2);
   DEF_BIT2(TrigHltDiMu, 24,HLT_TrkMu17_DoubleTrkMu8NoFiltersNoVtx_v2);
+  DEF_BIT2(TrigHltDiMu, 25,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v1);
 
   DEF_BIT2(TrigHltMu, 1 , HLT_Mu16_eta2p1_CaloMET30_v2);
   DEF_BIT2(TrigHltMu, 2 , HLT_IsoMu16_eta2p1_CaloMET30_v2);
@@ -739,6 +740,7 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltMu, 43, HLT_Mu17_v1);
   DEF_BIT2(TrigHltMu, 44, HLT_Mu24_v1);
   DEF_BIT2(TrigHltMu, 45, HLT_Mu34_v1);
+  DEF_BIT2(TrigHltMu, 46, HLT_IsoMu24_eta2p1_v1);
 
 
   DEF_BIT2(TrigHltEl,  1, HLT_Ele25WP60_Ele8_Mass55_v2);
@@ -1183,6 +1185,7 @@ void Tupel::processTrigger(const edm::Event& iEvent){
 	if(trigNames->triggerName(i).find("HLT_Mu17_Mu8") != std::string::npos) *TrigHlt_ |= kMu17_Mu8_;
 	if(trigNames->triggerName(i).find("HLT_Mu17_TkMu8") != std::string::npos) *TrigHlt_ |= kMu17_TkMu8_;
 	if(trigNames->triggerName(i).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
+	std::string thisTrigger = trigNames->triggerName(i);
 	fillTrig(std::string(trigNames->triggerName(i)));
       }
     }
