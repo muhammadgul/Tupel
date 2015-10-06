@@ -1,7 +1,7 @@
 /* -*- c-basic-offset: 2; -*-
 
-Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan,
-	 Philippe Gras...
+   Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan,
+   Philippe Gras...
 
 */
 
@@ -88,13 +88,13 @@ const static char* checksum = QUOTE(MYFILE_CHECKSUM);
  *
  *  For long description including spaces please use the DEF_BIT_L version
  */
-#define DEF_BIT(bitField, bitNum, label) \
-  k ## label ## _ = 1 <<bitNum; \
+#define DEF_BIT(bitField, bitNum, label)		\
+  k ## label ## _ = 1 <<bitNum;				\
   bitField ## Map ## _[#label] = 1LL <<bitNum;		\
   treeHelper_->defineBit(#bitField, bitNum, #label);
 
-#define DEF_BIT2(bitField, bitNum, label) \
-  bitField ## Map ## _[#label] = 1LL <<bitNum; \
+#define DEF_BIT2(bitField, bitNum, label)		\
+  bitField ## Map ## _[#label] = 1LL <<bitNum;		\
   treeHelper_->defineBit(#bitField, bitNum, #label);
 
 /**
@@ -102,13 +102,13 @@ const static char* checksum = QUOTE(MYFILE_CHECKSUM);
  * as variable name. The argument desc must be a c string including
  * the quotes or a c-string (char*) type variable.
  */
-#define DEF_BIT_L(bitField, bitNum, label, desc) \
-  k ## label ## _ = 1 <<bitNum; \
-  bitField ## Map ## _[#label] = 1 <<bitNum; \
+#define DEF_BIT_L(bitField, bitNum, label, desc)	\
+  k ## label ## _ = 1 <<bitNum;				\
+  bitField ## Map ## _[#label] = 1 <<bitNum;		\
   treeHelper_->defineBit(#bitField, bitNum, desc);
 
-#define DEF_BIT2_L(bitField, bitNum, label, desc) \
-  bitField ## Map ## _[#label] = 1 <<bitNum; \
+#define DEF_BIT2_L(bitField, bitNum, label, desc)	\
+  bitField ## Map ## _[#label] = 1 <<bitNum;		\
   treeHelper_->defineBit(#bitField, bitNum, desc);
 
 
@@ -129,7 +129,7 @@ public:
   ~Tupel();
 
 private:
-/// everything that needs to be done before the event loop
+  /// everything that needs to be done before the event loop
   virtual void beginJob() ;
   /// everything that needs to be done during the event loop
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
@@ -138,6 +138,8 @@ private:
   virtual void endJob();
 
   virtual void endRun(edm::Run const& iRun, edm::EventSetup const&);
+
+  void allocateTrigMap(int ntrigMax);
 
   void defineBitFields();
 
@@ -182,11 +184,13 @@ private:
 
   void processPhotons();
 
-  /** Check if the argument is one of the 
+  /** Check if the argument is one of the
    * HLT trigger considered to be stored and if it is set
    * the corresponding bit.
    */
   void fillTrig(const std::string& trigname);
+
+  void writeTriggerStat();
 
   // input tags
   //edm::InputTag trigger_;
@@ -207,6 +211,11 @@ private:
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
   std::vector<edm::InputTag> metSources;
+  bool triggerStat_;
+
+  /** Total number of events analyzed so far
+   */
+  Long64_t analyzedEventCnt_;
 
   bool photonIdsListed_;
   bool elecIdsListed_;
@@ -255,7 +264,7 @@ private:
     ULong64_t* pTrig;
   };
   std::vector<TrigHltMapRcd> trigHltMapList_; //list of trigger maps.
-  
+
   //Missing energy
   std::auto_ptr<std::vector<float> > METPt_;
   std::auto_ptr<std::vector<float> > METPx_;
@@ -522,10 +531,10 @@ private:
   unsigned kCutBasedElId_CSA14_50ns_V1_standalone_medium_;
   unsigned kCutBasedElId_CSA14_50ns_V1_standalone_tight_;
 
-//  JetCorrectionUncertainty *jecUnc;
+  //  JetCorrectionUncertainty *jecUnc;
 
 
-///Event objects
+  ///Event objects
   edm::Handle<GenParticleCollection> genParticles_h;
   const GenParticleCollection* genParticles;
   edm::Handle<edm::View<pat::Muon> > muons;
@@ -546,12 +555,28 @@ private:
   reco::BeamSpot beamSpot;
   edm::Handle<double> rho;
   edm::Handle<reco::GenJetCollection> genjetColl_;
-///
+  ///
+
+  std::vector<std::vector<int> > trigAccept_;
+  std::vector<std::string> trigNames_;
+
+  bool trigStatValid_;
+
+  //  int singleMuOnly_;
+
+  struct TrigSorter{
+    TrigSorter(Tupel* t): tupel_(t){}
+    bool operator()(int i, int j) const{
+      return tupel_->trigAccept_[1+i][0] > tupel_->trigAccept_[1+j][0];
+    }
+    Tupel* tupel_;
+  };
+
 };
 
 using namespace std;
 using namespace reco;
-int ccnevent=0;
+//int ccnevent=0;
 Tupel::Tupel(const edm::ParameterSet& iConfig):
   //trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
   //triggerEvent_( iConfig.getParameter< edm::InputTag >( "triggerEvent" ) ),
@@ -571,12 +596,14 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
   genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
   metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
+  triggerStat_(iConfig.getUntrackedParameter<bool>("triggerStat", false)),
+  analyzedEventCnt_(0),
   photonIdsListed_(false),
   elecIdsListed_(false),
-  hltListed_(false)
-
+  hltListed_(false),
+  trigStatValid_(true)
+  //singleMuOnly_(0)
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
-
 {
 }
 
@@ -592,7 +619,7 @@ void Tupel::defineBitFields(){
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltElMap_,   TrigHltEl_.get()));
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltDiElMap_, TrigHltDiEl_.get()));
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltElMuMap_, TrigHltElMu_.get()));
-  
+
   DEF_BIT(TrigHlt, 0, Elec17_Elec8);
   DEF_BIT(TrigHlt, 1, Mu17_Mu8);
   DEF_BIT(TrigHlt, 2, Mu17_TkMu8);
@@ -755,7 +782,7 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltEl, 39, HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v2);
   DEF_BIT2(TrigHltEl, 40, HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v2);
   DEF_BIT2(TrigHltEl, 41, HLT_Ele15_PFHT300_v2);
-    
+
   DEF_BIT2(TrigHltDiEl, 1, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2);
   DEF_BIT2(TrigHltDiEl, 2, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2);
   DEF_BIT2(TrigHltDiEl, 3, HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v2);
@@ -766,13 +793,13 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltDiEl, 8, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW_v2);
   DEF_BIT2(TrigHltDiEl, 9, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v2);
 
-      
+
   DEF_BIT2(TrigHltElMu, 1, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v2);
   DEF_BIT2(TrigHltElMu, 2, HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v2);
   DEF_BIT2(TrigHltElMu, 3, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
   DEF_BIT2(TrigHltElMu, 4, HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
   DEF_BIT2(TrigHltElMu, 5, HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL_v2);
-    
+
   DEF_BIT(MuId, 0, MuIdLoose);
   DEF_BIT_L(MuId, 3, MuIdCustom, "Mu Id: isGlobalMuon\n"
 	    "&& isPFMuon\n"
@@ -783,7 +810,7 @@ void Tupel::defineBitFields(){
   DEF_BIT(MuType, 0, GlobMu);
   DEF_BIT(MuType, 1, TkMu);
   DEF_BIT(MuType, 2, PfMu);
-    
+
   DEF_BIT(ElId, 0, CutBasedElId_CSA14_50ns_V1_standalone_veto);
   DEF_BIT(ElId, 1, CutBasedElId_CSA14_50ns_V1_standalone_loose);
   DEF_BIT(ElId, 2, CutBasedElId_CSA14_50ns_V1_standalone_medium);
@@ -810,8 +837,8 @@ void Tupel::readEvent(const edm::Event& iEvent){
   iEvent.getByLabel(elecSrc_,electrons);
   electron = electrons.failedToGet () ? 0 :  &*electrons;
 
- // edm::Handle<reco::GsfElectronCollection> els_h;
- // iEvent.getByLabel("gsfElectrons", els_h);
+  // edm::Handle<reco::GsfElectronCollection> els_h;
+  // iEvent.getByLabel("gsfElectrons", els_h);
   iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);
 
   // get tau collection
@@ -839,11 +866,11 @@ void Tupel::readEvent(const edm::Event& iEvent){
   vtxx = &*pvHandle;
 
   iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h);
-//  if(vtxx){
-//    int nvtx=vtx_h->size();
-//    if(nvtx==0) return;
-//    reco::VertexRef primVtx(vtx_h,0);
-//  }
+  //  if(vtxx){
+  //    int nvtx=vtx_h->size();
+  //    if(nvtx==0) return;
+  //    reco::VertexRef primVtx(vtx_h,0);
+  //  }
 
   iEvent.getByLabel(mSrcRho_, rho);
   rhoIso=99;
@@ -855,7 +882,7 @@ void Tupel::readEvent(const edm::Event& iEvent){
 }
 
 void Tupel::processMET(const edm::Event& iEvent){
-   for(unsigned int imet=0;imet<metSources.size();imet++){
+  for(unsigned int imet=0;imet<metSources.size();imet++){
     Handle<View<pat::MET> > metH;
     iEvent.getByLabel(metSources[imet], metH);
     if(!metH.isValid())continue;
@@ -1125,35 +1152,54 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
   }
 }
 
-void Tupel::processTrigger(const edm::Event& iEvent){
 
+void Tupel::processTrigger(const edm::Event& iEvent){
+  bool trigNameFilled = trigNames_.size();
   int ntrigs;
-  std::vector<std::string> trigname;
-  std::vector<bool> trigaccept;
   edm::Handle< edm::TriggerResults > HLTResHandle;
   edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
+  std::vector<int> trigIndexList;
+  if(triggerStat_) trigIndexList.reserve(30);
   iEvent.getByLabel(HLTTag, HLTResHandle);
+  std::ofstream f;
+  if(analyzedEventCnt_==1){
+    f.open("trigger_list.txt");
+    f << "List of triggers extracted from event " << iEvent.id().event()
+      << " of run " << iEvent.id().run() << "\n\n";
+  }
   if ( HLTResHandle.isValid() && !HLTResHandle.failedToGet() ) {
     edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *HLTResHandle )) );
     ntrigs = (int)trigNames->size();
+    if(triggerStat_) allocateTrigMap(ntrigs);
     for (int i = 0; i < ntrigs; i++) {
-      trigname.push_back(trigNames->triggerName(i));
-      trigaccept.push_back(HLTResHandle->accept(i));
-      if (trigaccept[i]){
-	if(trigname[i].find("HLT_Mu17_Mu8")!=std::string::npos) *TrigHlt_ |= kMu17_Mu8_;
-	if(trigname[i].find("HLT_Mu17_TkMu8")!=std::string::npos) *TrigHlt_ |= kMu17_TkMu8_;
-	if(trigname[i].find(
-			  "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL"
-			    )!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
-	fillTrig(std::string(trigname[i]));
+      if(analyzedEventCnt_==1) f << trigNames->triggerName(i) << "\n";
+      if(triggerStat_){
+	if(!trigNameFilled) trigNames_[i] = trigNames->triggerName(i);
+	else if(trigNames_[i] != trigNames->triggerName(i)) trigStatValid_ = false;
+      }
+      //insert trigger name in the acceptance map if not yet in:
+      if (HLTResHandle->accept(i)){
+	if(triggerStat_) trigIndexList.push_back(i);
+	if(trigNames->triggerName(i).find("HLT_Mu17_Mu8") != std::string::npos) *TrigHlt_ |= kMu17_Mu8_;
+	if(trigNames->triggerName(i).find("HLT_Mu17_TkMu8") != std::string::npos) *TrigHlt_ |= kMu17_TkMu8_;
+	if(trigNames->triggerName(i).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) *TrigHlt_ |= kElec17_Elec8_;
+	fillTrig(std::string(trigNames->triggerName(i)));
       }
     }
-    if(!hltListed_){
-      std::ofstream f("trigger_list.txt");
-      for (int i = 0; i < ntrigs; i++) {
-	f << trigname[i] << "\n";
+
+    if(triggerStat_){
+      if(trigIndexList.size()==0) trigAccept_[0][0] += 1;
+      for(std::vector<int>::iterator it1 = trigIndexList.begin();
+	  it1 != trigIndexList.end();
+	  ++it1){
+	trigAccept_[1 + *it1][0] += 1;
+	if(trigIndexList.size()==1) trigAccept_[1+*it1][1] += 1;
+	for(std::vector<int>::iterator it2 = trigIndexList.begin();
+	    it2 != trigIndexList.end();
+	    ++it2){
+	  trigAccept_[1 + *it1][2 + *it2] += 1;
+	}
       }
-      hltListed_ = true;
     }
   }
 }
@@ -1164,7 +1210,7 @@ void Tupel::fillTrig(const std::string& trigname){
     const std::map<std::string, ULong64_t>& trigHltMap = *(itTrigHltMap->pMap);
     ULong64_t* pTrig = itTrigHltMap->pTrig;
     for(std::map<std::string, ULong64_t>::const_iterator it = trigHltMap.begin();
-	it != trigHltMap.end(); ++it){      
+	it != trigHltMap.end(); ++it){
       if(trigname.find(it->first)!=std::string::npos) *pTrig |= it->second;
     }
   }
@@ -1184,7 +1230,7 @@ void Tupel::processMuons(){
       //	if ( trigRef2.isAvailable() && trigRef2.isNonnull() ) {
       //	  Mu17_TkMu8_Matched=1;
       //	}
-	    //TODO: filled MuHltMatch
+      //TODO: filled MuHltMatch
       //patMuonIdMedium_->push_back(mu[j].isMediumMuon()); Requires CMSSW >= 4_7_2
       if(vtxx){
 	unsigned bit = 0;
@@ -1606,7 +1652,7 @@ void Tupel::processPhotons(){
 
 void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   using namespace edm; //ADD
-  ++ccnevent;
+  ++analyzedEventCnt_;
 
   readEvent(iEvent);
 
@@ -1706,7 +1752,7 @@ Tupel::beginJob()
   ADD_BRANCH_D(TrigHltEl, "HLT Electron triggger bits. See BitField.TrigHltEl for bit description.");
   ADD_BRANCH_D(TrigHltDiEl, "HLT Dielecton triggger bits. See BitField.TrigHltDiEl for bit description.");
   ADD_BRANCH_D(TrigHltElMu, "HLT Muon + Electron triggger bits. See BitField.TrigHltElMu for bit description.");
-  
+
   //Missing Energy
   treeHelper_->addDescription("MET", "PF MET");
   ADD_BRANCH(METPt);
@@ -1958,12 +2004,70 @@ Tupel::beginJob()
 
 }
 
+void Tupel::allocateTrigMap(int nTrigMax){
+  std::vector<int> row(nTrigMax+2, 0);
+  std::vector<std::vector<int> > newMap(nTrigMax+1, row);
+  std::vector<std::string> newTrigNames(nTrigMax, "");
+  for(unsigned i = 0; i < trigAccept_.size(); ++i){
+    if(i < trigNames_.size()) newTrigNames[i] = trigNames_[i];
+    for(unsigned j = 0; j < trigAccept_[i].size(); ++j){
+      newMap[i][j] = trigAccept_[i][j];
+    }
+  }
+  trigNames_.swap(newTrigNames);
+  trigAccept_.swap(newMap);
+}
+
 void
-Tupel::endJob()
-{
+Tupel::endJob(){
   //  delete jecUnc;
   //  myTree->Print();
   treeHelper_->fillDescriptionTree();
+
+  if(triggerStat_) writeTriggerStat();
+}
+
+void
+Tupel::writeTriggerStat(){
+  std::ofstream f("trigger_stat.txt");
+  if(!trigStatValid_){
+    f << "Trigger statistics is not available. \n\n"
+      "Events with different trigger index maps were processed. Trigger statistics"
+      "is not supported for such case.\n\n";
+    f << "Column S contains the number of events the trigger indicated in second column of is the only one fired.\n"
+      << "The columns on the right of the column S contain for each combination of two triggers the number of events "
+      "for which both triggers have been fired. The number in the column header refers to the trigger indices "
+      "contained in the first column of the table.\n\n";
+  } else {
+
+    f << "Trigger statistics\n"
+      << "------------------\n\n"
+      << "Total number of processed events: " << analyzedEventCnt_ << "\n\n";
+
+    f  << "#\tTrigger line\tAccept count\tAccept rate\tS";
+    //sort the map per value by inverting key and value:
+    std::vector<int> trigSortedIndex(trigNames_.size());
+    for(unsigned i = 0; i < trigSortedIndex.size(); ++i){
+      trigSortedIndex[i] = i;
+      if(i<10) f << "\t" << (1+i);
+    }
+    f << "\n";
+    sort(trigSortedIndex.begin(), trigSortedIndex.end(), TrigSorter(this));
+    trigSortedIndex.resize(10);
+    f << "0\tNone\t" << trigAccept_[0][0] << "\n";
+    for(unsigned i = 0; i < trigSortedIndex.size(); ++i){
+      unsigned ii = trigSortedIndex[i];
+      f << (i+1) << "\t" << trigNames_[ii] << " (" << ii << ")"
+	<< "\t" << trigAccept_[1+ii][0]
+	<< "\t" << double(trigAccept_[1+ii][0]) / analyzedEventCnt_
+	<< "\t" << trigAccept_[1+ii][1];
+      for(unsigned j = 0; j < trigSortedIndex.size(); ++j){
+	unsigned jj = trigSortedIndex[j];
+	f << "\t" << trigAccept_[1+ii][2+jj];
+      }
+      f << "\n";
+    }
+  }
 }
 
 void
