@@ -2,7 +2,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'test60data_20151008'
+config.General.requestName = 'test60data_20151008_new'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -22,7 +22,7 @@ config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 10
 config.Data.totalUnits= -1
 config.Data.lumiMask= '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
-config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf'
+config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_new'
 config.Data.publication = False
 config.Data.publishDataName = 'SingleMuon_Run2015D-PromptReco-v3'
 #config.Data.primaryDataset='CRAB_PrivateMC'
