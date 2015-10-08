@@ -162,6 +162,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   muonSrc     = cms.untracked.InputTag("slimmedMuons"),
   #tauSrc      = cms.untracked.InputTag("slimmedPatTaus"),
 #  jetSrc      = cms.untracked.InputTag("slimmedJets"),
+    pfcandSrc	   = cms.untracked.InputTag("packedPFCandidates"),
 
     jetSrc      = cms.untracked.InputTag(jetsrcc),
   metSrc      = cms.untracked.InputTag("patMETsPF"),

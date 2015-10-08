@@ -2,7 +2,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'test60data'
+config.General.requestName = 'test60data_20151008'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -21,14 +21,10 @@ config.Data.inputDataset = '/SingleMuon/Run2015D-PromptReco-v3/MINIAOD'
 config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 10
 config.Data.totalUnits= -1
-config.Data.lumiMask= '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-256869_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
-#config.Data.lumiMask= '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/DCSOnly/json_DCSONLY_Run2015B.txt'
-#config.Data.lumiMask= 'good_list.txt'
-#config.Data.runRange='251562,251161,251643,251721,251883'
-#config.Data.outLFN = '/store/caf/user/efe/ntupel/t012j_5f_ckm_NLO_FXFX/crab_seed_4500_' # or '/store/group/<subdir>'
-config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns'
+config.Data.lumiMask= '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
+config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf'
 config.Data.publication = False
-config.Data.publishDataName = 'SingleMuon_Run2015D-PromptReco-v1'
+config.Data.publishDataName = 'SingleMuon_Run2015D-PromptReco-v3'
 #config.Data.primaryDataset='CRAB_PrivateMC'
 config.section_("Site")
 config.Site.storageSite = 'T2_CH_CERN'

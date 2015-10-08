@@ -26,6 +26,7 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 #include "FWCore/Common/interface/TriggerNames.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 #include "PhysicsTools/PatUtils/interface/TriggerHelper.h"
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
@@ -87,6 +88,7 @@ private:
   edm::InputTag elecSrc_;
   edm::InputTag muonSrc_;
   edm::InputTag tauSrc_;
+  edm::InputTag pfcandSrc_;
   edm::InputTag jetSrc_;
   edm::InputTag gjetSrc_;
   edm::InputTag metSrc_;
@@ -205,6 +207,12 @@ private:
   std::vector<double> patJetPfAk04BDiscCSVV1_;
   std::vector<double> patJetPfAk04BDiscCSVSLV1_;
   std::vector<double> unc_;
+std::vector<double> patJetPfAk04ConstId;
+std::vector<double> patJetPfAk04ConstPt;
+std::vector<double> patJetPfAk04ConstEta;
+std::vector<double> patJetPfAk04ConstPhi;
+std::vector<double> patJetPfAk04ConstE;
+
   ///Muons
   std::vector<double> patMuonPt_;
   std::vector<double> patMuonEta_;
@@ -265,7 +273,22 @@ private:
   std::vector<double> patElecCharge_;
   std::vector<double> patElecMediumIDOff_;
   std::vector<double> patElecMediumIDOff_Tom_;
-
+  std::vector<double> patPfCandPt;
+  std::vector<double> patPfCandEta;
+  std::vector<double> patPfCandPhi;
+  std::vector<double> patPfCandE;
+  std::vector<double> patPfCandM;
+  std::vector<double> patPfCandPx;
+  std::vector<double> patPfCandPhiAtVtx;
+  std::vector<double> patPfCandLostInnerHits;
+  std::vector<double> patPfCandTrackHighPurity;
+  std::vector<double> patPfCandPuppiWeight;
+  std::vector<double> patPfCandPuppiWeightNolep;
+std::vector<double> patPfCandCharge;
+std::vector<double>  patPfCandDxy;
+std::vector<double>  patPfCandDxyerr;
+std::vector<double> patPfCandDz;
+std::vector<double>  patPfCandDzerr;
 
        std::vector<double>  patElecchIso03_;
        std::vector<double>  patElecnhIso03_;
@@ -310,7 +333,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   photonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc")),
   elecSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
   muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),
-  //tauSrc_(iConfig.getUntrackedParameter<edm::InputTag>("tauSrc" )),
+  pfcandSrc_(iConfig.getUntrackedParameter<edm::InputTag>("pfcandSrc" )),
   jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
   gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
   metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
@@ -370,7 +393,11 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   // get tau collection 
   edm::Handle<edm::View<pat::Tau> > taus;
   iEvent.getByLabel(tauSrc_,taus);
-					  
+					
+
+  edm::Handle<edm::View<pat::PackedCandidate> > pfcand;
+  iEvent.getByLabel(pfcandSrc_,pfcand);
+  const edm::View<pat::PackedCandidate> * pfcands = pfcand.failedToGet () ? 0 : &*pfcand ;
   // get jet collection
   edm::Handle<edm::View<pat::Jet> > jets;
   iEvent.getByLabel(jetSrc_,jets);
@@ -406,6 +433,22 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   edm::Handle<double> rho;
   iEvent.getByLabel(mSrcRho_,rho);
 
+patPfCandPt.clear();
+patPfCandEta.clear();
+patPfCandPhi.clear();
+patPfCandE.clear();
+patPfCandM.clear();
+patPfCandPx.clear();
+patPfCandPhiAtVtx.clear();
+patPfCandLostInnerHits.clear();
+patPfCandTrackHighPurity.clear();
+patPfCandPuppiWeight.clear();
+patPfCandPuppiWeightNolep.clear();
+      patPfCandCharge.clear();
+       patPfCandDxy.clear();
+       patPfCandDxyerr.clear();
+      patPfCandDz.clear();
+       patPfCandDzerr.clear();
     event=0;
     realdata=0;
     run=0;
@@ -515,6 +558,11 @@ St03NumberMom.clear();
     patJetPfAk04BDiscCSVv2_.clear();
     patJetPfAk04BDiscCSVV1_.clear();
     patJetPfAk04BDiscCSVSLV1_.clear();
+      patJetPfAk04ConstId.clear();
+      patJetPfAk04ConstPt.clear();
+      patJetPfAk04ConstEta.clear();
+      patJetPfAk04ConstPhi.clear();
+      patJetPfAk04ConstE.clear();
     unc_.clear();
     ///Muons
     patMuonPt_.clear();
@@ -645,6 +693,35 @@ St03NumberMom.clear();
        }
 
 
+
+
+    if(pfcands){
+      for( unsigned int i=0; i<pfcands->size(); ++i){
+        const pat::PackedCandidate & pf = pfcands->at(i);
+       if(pf.charge()==0) continue;
+
+       //if(pf.charge()!=0)cout<<pf.charge()<<"  "<<pf.dzError()<<"  "<<pf.dz()<<endl;
+       patPfCandPt.push_back(pf.pt());
+       patPfCandCharge.push_back(pf.charge());
+       patPfCandDxy.push_back(pf.dxy());
+       patPfCandDxyerr.push_back(pf.dxyError());
+      patPfCandDz.push_back(pf.dz());
+       patPfCandDzerr.push_back(pf.dzError());
+
+       patPfCandEta.push_back(pf.eta());
+       patPfCandPhi.push_back(pf.phi());
+       patPfCandE.push_back(pf.energy());
+       patPfCandM.push_back(pf.mass());
+       patPfCandPx.push_back(pf.px());
+       patPfCandPhiAtVtx.push_back(pf.phiAtVtx());
+       patPfCandLostInnerHits.push_back(pf.lostInnerHits());
+       patPfCandTrackHighPurity.push_back(pf.trackHighPurity());
+       patPfCandPuppiWeight.push_back(pf.puppiWeight());
+       patPfCandPuppiWeightNolep.push_back(pf.puppiWeightNoLep()); 
+ 
+      }
+ 
+    }
 
 
     EvtInfo_NumVtx = 0;
@@ -1150,7 +1227,7 @@ if(realdata){
     if(jettt){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
       const pat::Jet & jet = jets->at(i);
-      
+    //  cout<<"I am here"<<endl;
       patJetPfAk04jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
       chf = jet.chargedHadronEnergyFraction();
       nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
@@ -1201,7 +1278,16 @@ if(realdata){
       }
       patJetPfAk04LooseId_.push_back(tempJetID);//ala 
       //PFjetFill++;
-      
+      for(unsigned int idx =0; idx<jet.numberOfDaughters();idx++){
+     // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
+      patJetPfAk04ConstId.push_back(jet.daughter(idx)->pdgId());
+      patJetPfAk04ConstPt.push_back(jet.daughter(idx)->pt());
+      patJetPfAk04ConstEta.push_back(jet.daughter(idx)->eta());
+      patJetPfAk04ConstPhi.push_back(jet.daughter(idx)->phi());
+      patJetPfAk04ConstE.push_back(jet.daughter(idx)->energy());
+
+
+    }
       if(!realdata){
 	bool matchGen=false;
 	if (jet.genJet()){
@@ -1229,6 +1315,25 @@ Tupel::beginJob()
     edm::Service<TFileService> fs;
     TFileDirectory TestDir = fs->mkdir("test");
     myTree = new TTree("MuonTree","MuonTree");
+
+    myTree->Branch("patPfCandPt",&patPfCandPt);
+    myTree->Branch("patPfCandEta",&patPfCandEta);
+    myTree->Branch("patPfCandPhi",&patPfCandPhi);
+    myTree->Branch("patPfCandE",&patPfCandE);
+    myTree->Branch("patPfCandM",&patPfCandM);
+    myTree->Branch("patPfCandPx",&patPfCandPx);
+    myTree->Branch("patPfCandPhiAtVtx",&patPfCandPhiAtVtx);
+    myTree->Branch("patPfCandLostInnerHits",&patPfCandLostInnerHits);
+    myTree->Branch("patPfCandTrackHighPurity",&patPfCandTrackHighPurity);
+    myTree->Branch("patPfCandPuppiWeight",&patPfCandPuppiWeight);
+    myTree->Branch("patPfCandPuppiWeightNolep",&patPfCandPuppiWeightNolep);
+  myTree->Branch("patPfCandCharge",&patPfCandCharge);
+    myTree->Branch("patPfCandDxy",&patPfCandDxy);
+    myTree->Branch("patPfCandDxyerr",&patPfCandDxyerr);
+    myTree->Branch("patPfCandDz",&patPfCandDz);
+    myTree->Branch("patPfCandDzerr",&patPfCandDzerr);
+
+
     myTree->Branch("METPt",&METPt);
     myTree->Branch("METPx",&METPx);
     myTree->Branch("METPy",&METPy);
@@ -1414,6 +1519,11 @@ Tupel::beginJob()
     myTree->Branch("unc_",&unc_);
     myTree->Branch("patJetPfAk04PtUp_",&patJetPfAk04PtUp_);
     myTree->Branch("patJetPfAk04PtDn_",&patJetPfAk04PtDn_); 
+    myTree->Branch("patJetPfAk04ConstId",&patJetPfAk04ConstId);
+    myTree->Branch("patJetPfAk04ConstPt",&patJetPfAk04ConstPt);
+    myTree->Branch("patJetPfAk04ConstEta",&patJetPfAk04ConstEta);
+    myTree->Branch("patJetPfAk04ConstPhi",&patJetPfAk04ConstPhi);
+    myTree->Branch("patJetPfAk04ConstE",&patJetPfAk04ConstE);
 
     //CaloJets
     myTree->Branch("caloJetPt_",&caloJetPt_);
