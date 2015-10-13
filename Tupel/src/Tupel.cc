@@ -289,7 +289,8 @@ std::vector<double>  patPfCandDxy;
 std::vector<double>  patPfCandDxyerr;
 std::vector<double> patPfCandDz;
 std::vector<double>  patPfCandDzerr;
-
+std::vector<double> patPfCandDzAssociatedPV;
+std::vector<double> patPfCandFromPv;
        std::vector<double>  patElecchIso03_;
        std::vector<double>  patElecnhIso03_;
        std::vector<double>  patElecphIso03_;
@@ -448,7 +449,9 @@ patPfCandPuppiWeightNolep.clear();
        patPfCandDxy.clear();
        patPfCandDxyerr.clear();
       patPfCandDz.clear();
+patPfCandDzAssociatedPV.clear();
        patPfCandDzerr.clear();
+patPfCandFromPv.clear();
     event=0;
     realdata=0;
     run=0;
@@ -698,14 +701,17 @@ St03NumberMom.clear();
     if(pfcands){
       for( unsigned int i=0; i<pfcands->size(); ++i){
         const pat::PackedCandidate & pf = pfcands->at(i);
-       if(pf.charge()==0) continue;
+       if(pf.charge()==0 || pf.pt()<0.3 ||(fabs(pf.dzError())!=0&&fabs(pf.dzAssociatedPV()/pf.dzError())>10) ||  (fabs(pf.dxyError())!=0&&fabs(pf.dxy()/pf.dxyError())>10) ||fabs(pf.dzError())==0||fabs(pf.dxyError())==0) continue;
 
-       //if(pf.charge()!=0)cout<<pf.charge()<<"  "<<pf.dzError()<<"  "<<pf.dz()<<endl;
-       patPfCandPt.push_back(pf.pt());
+       //if(pf.charge()!=0){cout<<pf.charge()<<"  "<<pf.dzError()<<"  "<<pf.dz()<<"  "<<" "<<pf.vx()<<"  "<<pf.vz()<<"  "<<endl;}
+       //cout<< pf.fromPV()<<endl;      
+patPfCandFromPv.push_back(pf.fromPV());
+patPfCandPt.push_back(pf.pt());
        patPfCandCharge.push_back(pf.charge());
        patPfCandDxy.push_back(pf.dxy());
        patPfCandDxyerr.push_back(pf.dxyError());
       patPfCandDz.push_back(pf.dz());
+      patPfCandDzAssociatedPV.push_back(pf.dzAssociatedPV());
        patPfCandDzerr.push_back(pf.dzError());
 
        patPfCandEta.push_back(pf.eta());
@@ -1331,8 +1337,9 @@ Tupel::beginJob()
     myTree->Branch("patPfCandDxy",&patPfCandDxy);
     myTree->Branch("patPfCandDxyerr",&patPfCandDxyerr);
     myTree->Branch("patPfCandDz",&patPfCandDz);
+    myTree->Branch("patPfCandDzAssociatedPV",&patPfCandDzAssociatedPV);
     myTree->Branch("patPfCandDzerr",&patPfCandDzerr);
-
+    myTree->Branch("patPfCandFromPv",&patPfCandFromPv);
 
     myTree->Branch("METPt",&METPt);
     myTree->Branch("METPx",&METPx);
