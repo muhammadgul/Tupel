@@ -71,6 +71,8 @@ const double pi = 4*atan(1.);
 #define QUOTE(a) QUOTE2(a)
 const static char* checksum = QUOTE(MYFILE_CHECKSUM);
 
+#define QUICK_FIX_RUND
+
 /**
  * Define a bit of a bit field.
  * 1. Document the bit in the ROOT tree
@@ -526,14 +528,6 @@ private:
   unsigned kMu17_Mu8_;
   unsigned kMu17_TkMu8_;
 
-  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_veto_;
-  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_loose_;
-  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_medium_;
-  unsigned kCutBasedElId_CSA14_50ns_V1_standalone_tight_;
-
-  //  JetCorrectionUncertainty *jecUnc;
-
-
   ///Event objects
   edm::Handle<GenParticleCollection> genParticles_h;
   const GenParticleCollection* genParticles;
@@ -560,6 +554,9 @@ private:
   std::vector<std::vector<int> > trigAccept_;
   std::vector<std::string> trigNames_;
 
+
+  std::vector<bool> elIdEnabled_;
+  
   bool trigStatValid_;
 
   //  int singleMuOnly_;
@@ -813,10 +810,28 @@ void Tupel::defineBitFields(){
   DEF_BIT(MuType, 1, TkMu);
   DEF_BIT(MuType, 2, PfMu);
 
-  DEF_BIT(ElId, 0, CutBasedElId_CSA14_50ns_V1_standalone_veto);
-  DEF_BIT(ElId, 1, CutBasedElId_CSA14_50ns_V1_standalone_loose);
-  DEF_BIT(ElId, 2, CutBasedElId_CSA14_50ns_V1_standalone_medium);
-  DEF_BIT(ElId, 3, CutBasedElId_CSA14_50ns_V1_standalone_tight);
+  int nElId = 0;
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-veto); 
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-loose);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-medium);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-tight);
+
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto);
+
+  DEF_BIT2(ElId, nElId++,  cutBasedElectronID-Spring15-25ns-V1-standalone-loose);
+  DEF_BIT2(ElId, nElId++,  cutBasedElectronID-Spring15-25ns-V1-standalone-medium);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-25ns-V1-standalone-tight);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-25ns-V1-standalone-veto);
+
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-loose); 
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-medium);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-tight);
+  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-veto);
+
+  elIdEnabled_ = std::vector<bool>(nElId, true);
 }
 
 void Tupel::readEvent(const edm::Event& iEvent){
@@ -1364,11 +1379,16 @@ void Tupel::processElectrons(){
       elecIdsListed_ = true;
     }
     unsigned elecid = 0;
-
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_veto_;
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_loose_;
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-medium"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_medium_;
-    if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-tight"))) elecid |= kCutBasedElId_CSA14_50ns_V1_standalone_tight_;
+    
+    for(unsigned i = 0; i < idlist.size(); ++i){
+      //const int idAndConvRejectMask = 0x3;
+      //if(int(idlist[i].second) & idAndConvRejectMask){
+      if(int(idlist[i].second)){
+	std::map<std::string, unsigned>::const_iterator it = ElIdMap_.find(idlist[i].first);
+	if(it != ElIdMap_.end()) elecid  |= it->second;	
+      }
+    }
+      
     ElId_->push_back(elecid);
 
     dEtaIn_ = el.deltaEtaSuperClusterTrackAtVtx();
@@ -1487,6 +1507,7 @@ void Tupel::processJets(){
     const pat::Jet & jet = jets->at(i);
 
     JetAk04PuMva_->push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
+
     chf = jet.chargedHadronEnergyFraction();
     nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
     cemf = jet.chargedEmEnergyFraction();
