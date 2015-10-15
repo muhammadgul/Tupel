@@ -1434,7 +1434,7 @@ void Tupel::processElectrons(){
     ElD0_->push_back(d0_);
     ElDz_->push_back(dz_);
     ElExpectedMissingInnerHitCnt_->push_back(expectedMissingInnerHits_);
-    ElExpectedMissingInnerHitCnt_->push_back(passConversionVeto_);
+    ElPassConvVeto_->push_back(passConversionVeto_);
 
     int hltMatch = 0;
 
