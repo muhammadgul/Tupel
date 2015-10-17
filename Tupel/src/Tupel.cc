@@ -746,7 +746,7 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltMu, 43, HLT_Mu17);
   DEF_BIT2(TrigHltMu, 44, HLT_Mu24);
   DEF_BIT2(TrigHltMu, 45, HLT_Mu34);
-  //  DEF_BIT2(TrigHltMu, 46, HLT_IsoMu24_eta2p1);
+  DEF_BIT2(TrigHltMu, 46, HLT_IsoMu22);
 
 
   DEF_BIT2(TrigHltEl,  1, HLT_Ele25WP60_Ele8_Mass55);
