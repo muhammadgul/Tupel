@@ -194,6 +194,14 @@ private:
 
   void writeTriggerStat();
 
+  /** Checks trigger name, ignoring the version number.
+   * @param triggerBasename trigger base name without the version number
+   * @param triggerName with possibly the _vNNN version suffix
+   * @return true iff triggerName is identical to triggerBasename once the
+   * version suffix discarded
+   */
+  bool compTrigger(const char* triggerBasename, const char* triggerName) const;
+  
   // input tags
   //edm::InputTag trigger_;
   //edm::InputTag triggerEvent_;
@@ -666,138 +674,139 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltPhot, 44, Photon90_R9Id90_HE10_IsoM);
   DEF_BIT2(TrigHltPhot, 45, Photon90);
 
-  DEF_BIT2(TrigHltDiMu, 1 ,HLT_DoubleMu33NoFiltersNoVtx_v1);
-  DEF_BIT2(TrigHltDiMu, 2 ,HLT_DoubleMu38NoFiltersNoVtx_v1);
-  DEF_BIT2(TrigHltDiMu, 3 ,HLT_DoubleMu23NoFiltersNoVtxDisplaced_v1);
-  DEF_BIT2(TrigHltDiMu, 4 ,HLT_DoubleMu28NoFiltersNoVtxDisplaced_v1);
-  DEF_BIT2(TrigHltDiMu, 5 ,HLT_DoubleIsoMu17_eta2p1_v2);
-  DEF_BIT2(TrigHltDiMu, 6 ,HLT_L2DoubleMu23_NoVertex_v1);
-  DEF_BIT2(TrigHltDiMu, 7 ,HLT_L2DoubleMu28_NoVertex_2Cha_Angle2p5_Mass10_v1);
-  DEF_BIT2(TrigHltDiMu, 8 ,HLT_L2DoubleMu38_NoVertex_2Cha_Angle2p5_Mass10_v1);
-  DEF_BIT2(TrigHltDiMu, 9 ,HLT_Mu17_Mu8_DZ_v1);
-  DEF_BIT2(TrigHltDiMu, 10,HLT_Mu17_Mu8_SameSign_DZ_v1);
-  DEF_BIT2(TrigHltDiMu, 11,HLT_Mu20_Mu10_v1);
-  DEF_BIT2(TrigHltDiMu, 12,HLT_Mu20_Mu10_DZ_v1);
-  DEF_BIT2(TrigHltDiMu, 13,HLT_Mu20_Mu10_SameSign_DZ_v1);
-  DEF_BIT2(TrigHltDiMu, 14,HLT_Mu27_TkMu8_v2);
-  DEF_BIT2(TrigHltDiMu, 15,HLT_Mu30_TkMu11_v2);
-  DEF_BIT2(TrigHltDiMu, 16,HLT_Mu40_TkMu11_v2);
-  DEF_BIT2(TrigHltDiMu, 17,HLT_Mu17_TkMu8_DZ_v2);
-  DEF_BIT2(TrigHltDiMu, 18,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v2);
-  DEF_BIT2(TrigHltDiMu, 19,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v2);
-  DEF_BIT2(TrigHltDiMu, 20,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v2);
-  DEF_BIT2(TrigHltDiMu, 21,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v2);
-  DEF_BIT2(TrigHltDiMu, 22,HLT_DoubleMu18NoFiltersNoVtx_v1);
-  DEF_BIT2(TrigHltDiMu, 23,HLT_TrkMu15_DoubleTrkMu5NoFiltersNoVtx_v2);
-  DEF_BIT2(TrigHltDiMu, 24,HLT_TrkMu17_DoubleTrkMu8NoFiltersNoVtx_v2);
-  DEF_BIT2(TrigHltDiMu, 25,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v1);
+  DEF_BIT2(TrigHltDiMu, 1 ,HLT_DoubleMu33NoFiltersNoVtx);
+  DEF_BIT2(TrigHltDiMu, 2 ,HLT_DoubleMu38NoFiltersNoVtx);
+  DEF_BIT2(TrigHltDiMu, 3 ,HLT_DoubleMu23NoFiltersNoVtxDisplaced);
+  DEF_BIT2(TrigHltDiMu, 4 ,HLT_DoubleMu28NoFiltersNoVtxDisplaced);
+  DEF_BIT2(TrigHltDiMu, 5 ,HLT_DoubleIsoMu17_eta2p1);
+  DEF_BIT2(TrigHltDiMu, 6 ,HLT_L2DoubleMu23_NoVertex);
+  DEF_BIT2(TrigHltDiMu, 7 ,HLT_L2DoubleMu28_NoVertex_2Cha_Angle2p5_Mass10);
+  DEF_BIT2(TrigHltDiMu, 8 ,HLT_L2DoubleMu38_NoVertex_2Cha_Angle2p5_Mass10);
+  DEF_BIT2(TrigHltDiMu, 9 ,HLT_Mu17_Mu8_DZ);
+  DEF_BIT2(TrigHltDiMu, 10,HLT_Mu17_Mu8_SameSign_DZ);
+  DEF_BIT2(TrigHltDiMu, 11,HLT_Mu20_Mu10);
+  DEF_BIT2(TrigHltDiMu, 12,HLT_Mu20_Mu10_DZ);
+  DEF_BIT2(TrigHltDiMu, 13,HLT_Mu20_Mu10_SameSign_DZ);
+  DEF_BIT2(TrigHltDiMu, 14,HLT_Mu27_TkMu8);
+  DEF_BIT2(TrigHltDiMu, 15,HLT_Mu30_TkMu11);
+  DEF_BIT2(TrigHltDiMu, 16,HLT_Mu40_TkMu11);
+  DEF_BIT2(TrigHltDiMu, 17,HLT_Mu17_TkMu8_DZ);
+  DEF_BIT2(TrigHltDiMu, 18,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
+  DEF_BIT2(TrigHltDiMu, 19,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
+  
+  // DEF_BIT2(TrigHltDiMu, 20,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL);
+  //DEF_BIT2(TrigHltDiMu, 21,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ);
+  DEF_BIT2(TrigHltDiMu, 22,HLT_DoubleMu18NoFiltersNoVtx);
+  DEF_BIT2(TrigHltDiMu, 23,HLT_TrkMu15_DoubleTrkMu5NoFiltersNoVtx);
+  DEF_BIT2(TrigHltDiMu, 24,HLT_TrkMu17_DoubleTrkMu8NoFiltersNoVtx);
+  // DEF_BIT2(TrigHltDiMu, 25,HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
 
-  DEF_BIT2(TrigHltMu, 1 , HLT_Mu16_eta2p1_CaloMET30_v2);
-  DEF_BIT2(TrigHltMu, 2 , HLT_IsoMu16_eta2p1_CaloMET30_v2);
-  DEF_BIT2(TrigHltMu, 3 , HLT_IsoMu16_eta2p1_CaloMET30_LooseIsoPFTau50_Trk30_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 4 , HLT_IsoMu17_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 5 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2);
-  DEF_BIT2(TrigHltMu, 6 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v2);
-  DEF_BIT2(TrigHltMu, 7 , HLT_IsoMu17_eta2p1_MediumIsoPFTau40_Trk1_eta2p1_Reg_v2);
-  DEF_BIT2(TrigHltMu, 8 , HLT_IsoMu24_eta2p1_LooseIsoPFTau20_v2);
-  DEF_BIT2(TrigHltMu, 9 , HLT_IsoMu20_eta2p1_CentralPFJet30_BTagCSV07_v2);
-  DEF_BIT2(TrigHltMu, 10, HLT_IsoMu20_eta2p1_TriCentralPFJet30_v2);
-  DEF_BIT2(TrigHltMu, 11, HLT_IsoMu20_eta2p1_TriCentralPFJet50_40_30_v2);
-  DEF_BIT2(TrigHltMu, 12, HLT_IsoMu20_v2);
-  DEF_BIT2(TrigHltMu, 13, HLT_IsoMu20_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 14, HLT_IsoMu24_eta2p1_CentralPFJet30_BTagCSV07_v2);
-  DEF_BIT2(TrigHltMu, 15, HLT_IsoMu24_eta2p1_TriCentralPFJet30_v2);
-  DEF_BIT2(TrigHltMu, 16, HLT_IsoMu24_eta2p1_TriCentralPFJet50_40_30_v2);
-  DEF_BIT2(TrigHltMu, 17, HLT_IsoMu24_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 18, HLT_IsoMu27_v2);
-  DEF_BIT2(TrigHltMu, 19, HLT_IsoTkMu20_v2);
-  DEF_BIT2(TrigHltMu, 20, HLT_IsoTkMu20_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 21, HLT_IsoTkMu24_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 22, HLT_IsoTkMu27_v2);
-  DEF_BIT2(TrigHltMu, 23, HLT_L2Mu10_v1);
-  DEF_BIT2(TrigHltMu, 24, HLT_L2Mu10_NoVertex_NoBPTX3BX_NoHalo_v1);
-  DEF_BIT2(TrigHltMu, 25, HLT_L2Mu10_NoVertex_NoBPTX_v1);
-  DEF_BIT2(TrigHltMu, 26, HLT_L2Mu35_NoVertex_3Sta_NoBPTX3BX_NoHalo_v1);
-  DEF_BIT2(TrigHltMu, 27, HLT_L2Mu40_NoVertex_3Sta_NoBPTX3BX_NoHalo_v1);
-  DEF_BIT2(TrigHltMu, 28, HLT_Mu20_v1);
-  DEF_BIT2(TrigHltMu, 29, HLT_TkMu20_v2);
-  DEF_BIT2(TrigHltMu, 30, HLT_Mu24_eta2p1_v1);
-  DEF_BIT2(TrigHltMu, 31, HLT_TkMu24_eta2p1_v2);
-  DEF_BIT2(TrigHltMu, 32, HLT_Mu27_v1);
-  DEF_BIT2(TrigHltMu, 33, HLT_TkMu27_v2);
-  DEF_BIT2(TrigHltMu, 34, HLT_Mu50_v1);
-  DEF_BIT2(TrigHltMu, 35, HLT_Mu55_v1);
-  DEF_BIT2(TrigHltMu, 36, HLT_Mu45_eta2p1_v1);
-  DEF_BIT2(TrigHltMu, 37, HLT_Mu50_eta2p1_v1);
-  DEF_BIT2(TrigHltMu, 38, HLT_Mu8_TrkIsoVVL_v2);
-  DEF_BIT2(TrigHltMu, 39, HLT_Mu17_TrkIsoVVL_v2);
-  DEF_BIT2(TrigHltMu, 40, HLT_Mu24_TrkIsoVVL_v2);
-  DEF_BIT2(TrigHltMu, 41, HLT_Mu34_TrkIsoVVL_v2);
-  DEF_BIT2(TrigHltMu, 42, HLT_Mu8_v1);
-  DEF_BIT2(TrigHltMu, 43, HLT_Mu17_v1);
-  DEF_BIT2(TrigHltMu, 44, HLT_Mu24_v1);
-  DEF_BIT2(TrigHltMu, 45, HLT_Mu34_v1);
-  DEF_BIT2(TrigHltMu, 46, HLT_IsoMu24_eta2p1_v1);
-
-
-  DEF_BIT2(TrigHltEl,  1, HLT_Ele25WP60_Ele8_Mass55_v2);
-  DEF_BIT2(TrigHltEl,  2, HLT_Ele25WP60_SC4_Mass55_v2);
-  DEF_BIT2(TrigHltEl,  3, HLT_Ele22_eta2p1_WPLoose_Gsf_v1);
-  DEF_BIT2(TrigHltEl,  4, HLT_Ele22_eta2p1_WPTight_Gsf_v1);
-  DEF_BIT2(TrigHltEl,  5, HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1);
-  DEF_BIT2(TrigHltEl,  6, HLT_Ele23_WPLoose_Gsf_v1);
-  DEF_BIT2(TrigHltEl,  7, HLT_Ele27_WPLoose_Gsf_WHbbBoost_v1);
-  DEF_BIT2(TrigHltEl,  8, HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1);
-  DEF_BIT2(TrigHltEl,  9, HLT_Ele27_eta2p1_WPLoose_Gsf_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v1);
-  DEF_BIT2(TrigHltEl, 10, HLT_Ele27_eta2p1_WPLoose_Gsf_CentralPFJet30_BTagCSV07_v1);
-  DEF_BIT2(TrigHltEl, 11, HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v1);
-  DEF_BIT2(TrigHltEl, 12, HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v1);
-  DEF_BIT2(TrigHltEl, 13, HLT_Ele27_eta2p1_WPLoose_Gsf_v1);
-  DEF_BIT2(TrigHltEl, 14, HLT_Ele27_eta2p1_WPTight_Gsf_v1);
-  DEF_BIT2(TrigHltEl, 15, HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1);
-  DEF_BIT2(TrigHltEl, 16, HLT_Ele32_eta2p1_WPLoose_Gsf_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v1);
-  DEF_BIT2(TrigHltEl, 17, HLT_Ele32_eta2p1_WPLoose_Gsf_CentralPFJet30_BTagCSV07_v1);
-  DEF_BIT2(TrigHltEl, 18, HLT_Ele32_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v1);
-  DEF_BIT2(TrigHltEl, 19, HLT_Ele32_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v1);
-  DEF_BIT2(TrigHltEl, 20, HLT_Ele32_eta2p1_WPLoose_Gsf_v1);
-  DEF_BIT2(TrigHltEl, 21, HLT_Ele32_eta2p1_WPTight_Gsf_v1);
-  DEF_BIT2(TrigHltEl, 22, HLT_Ele105_CaloIdVT_GsfTrkIdT_v2);
-  DEF_BIT2(TrigHltEl, 23, HLT_Ele115_CaloIdVT_GsfTrkIdT_v1);
-  DEF_BIT2(TrigHltEl, 24, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 25, HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 26, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 27, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 28, HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v1);
-  DEF_BIT2(TrigHltEl, 29, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltEl, 30, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltEl, 31, HLT_Ele27_eta2p1_WPLoose_Gsf_HT200_v1);
-  DEF_BIT2(TrigHltEl, 32, HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF_v2);
-  DEF_BIT2(TrigHltEl, 33, HLT_Ele15_IsoVVVL_BTagCSV0p72_PFHT400_v2);
-  DEF_BIT2(TrigHltEl, 34, HLT_Ele15_IsoVVVL_PFHT350_PFMET70_v1);
-  DEF_BIT2(TrigHltEl, 35, HLT_Ele15_IsoVVVL_PFHT600_v2);
-  DEF_BIT2(TrigHltEl, 36, HLT_Ele8_CaloIdM_TrackIdM_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 37, HLT_Ele12_CaloIdM_TrackIdM_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 38, HLT_Ele18_CaloIdM_TrackIdM_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 39, HLT_Ele23_CaloIdM_TrackIdM_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 40, HLT_Ele33_CaloIdM_TrackIdM_PFJet30_v2);
-  DEF_BIT2(TrigHltEl, 41, HLT_Ele15_PFHT300_v2);
-
-  DEF_BIT2(TrigHltDiEl, 1, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2);
-  DEF_BIT2(TrigHltDiEl, 2, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2);
-  DEF_BIT2(TrigHltDiEl, 3, HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v2);
-  DEF_BIT2(TrigHltDiEl, 4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltDiEl, 5, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltDiEl, 6, HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v2);
-  DEF_BIT2(TrigHltDiEl, 7, HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf_v1);
-  DEF_BIT2(TrigHltDiEl, 8, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW_v2);
-  DEF_BIT2(TrigHltDiEl, 9, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v2);
+  DEF_BIT2(TrigHltMu, 1 , HLT_Mu16_eta2p1_CaloMET30);
+  DEF_BIT2(TrigHltMu, 2 , HLT_IsoMu16_eta2p1_CaloMET30);
+  DEF_BIT2(TrigHltMu, 3 , HLT_IsoMu16_eta2p1_CaloMET30_LooseIsoPFTau50_Trk30_eta2p1);
+  DEF_BIT2(TrigHltMu, 4 , HLT_IsoMu17_eta2p1);
+  DEF_BIT2(TrigHltMu, 5 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20);
+  DEF_BIT2(TrigHltMu, 6 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1);
+  DEF_BIT2(TrigHltMu, 7 , HLT_IsoMu17_eta2p1_MediumIsoPFTau40_Trk1_eta2p1_Reg);
+  DEF_BIT2(TrigHltMu, 8 , HLT_IsoMu24_eta2p1_LooseIsoPFTau20);
+  DEF_BIT2(TrigHltMu, 9 , HLT_IsoMu20_eta2p1_CentralPFJet30_BTagCSV07);
+  DEF_BIT2(TrigHltMu, 10, HLT_IsoMu20_eta2p1_TriCentralPFJet30);
+  DEF_BIT2(TrigHltMu, 11, HLT_IsoMu20_eta2p1_TriCentralPFJet50_40_30);
+  DEF_BIT2(TrigHltMu, 12, HLT_IsoMu20);
+  DEF_BIT2(TrigHltMu, 13, HLT_IsoMu20_eta2p1);
+  DEF_BIT2(TrigHltMu, 14, HLT_IsoMu24_eta2p1_CentralPFJet30_BTagCSV07);
+  DEF_BIT2(TrigHltMu, 15, HLT_IsoMu24_eta2p1_TriCentralPFJet30);
+  DEF_BIT2(TrigHltMu, 16, HLT_IsoMu24_eta2p1_TriCentralPFJet50_40_30);
+  DEF_BIT2(TrigHltMu, 17, HLT_IsoMu24_eta2p1);
+  DEF_BIT2(TrigHltMu, 18, HLT_IsoMu27);
+  DEF_BIT2(TrigHltMu, 19, HLT_IsoTkMu20);
+  DEF_BIT2(TrigHltMu, 20, HLT_IsoTkMu20_eta2p1);
+  DEF_BIT2(TrigHltMu, 21, HLT_IsoTkMu24_eta2p1);
+  DEF_BIT2(TrigHltMu, 22, HLT_IsoTkMu27);
+  DEF_BIT2(TrigHltMu, 23, HLT_L2Mu10);
+  DEF_BIT2(TrigHltMu, 24, HLT_L2Mu10_NoVertex_NoBPTX3BX_NoHalo);
+  DEF_BIT2(TrigHltMu, 25, HLT_L2Mu10_NoVertex_NoBPTX);
+  DEF_BIT2(TrigHltMu, 26, HLT_L2Mu35_NoVertex_3Sta_NoBPTX3BX_NoHalo);
+  DEF_BIT2(TrigHltMu, 27, HLT_L2Mu40_NoVertex_3Sta_NoBPTX3BX_NoHalo);
+  DEF_BIT2(TrigHltMu, 28, HLT_Mu20);
+  DEF_BIT2(TrigHltMu, 29, HLT_TkMu20);
+  DEF_BIT2(TrigHltMu, 30, HLT_Mu24_eta2p1);
+  DEF_BIT2(TrigHltMu, 31, HLT_TkMu24_eta2p1);
+  DEF_BIT2(TrigHltMu, 32, HLT_Mu27);
+  DEF_BIT2(TrigHltMu, 33, HLT_TkMu27);
+  DEF_BIT2(TrigHltMu, 34, HLT_Mu50);
+  DEF_BIT2(TrigHltMu, 35, HLT_Mu55);
+  DEF_BIT2(TrigHltMu, 36, HLT_Mu45_eta2p1);
+  DEF_BIT2(TrigHltMu, 37, HLT_Mu50_eta2p1);
+  DEF_BIT2(TrigHltMu, 38, HLT_Mu8_TrkIsoVVL);
+  DEF_BIT2(TrigHltMu, 39, HLT_Mu17_TrkIsoVVL);
+  DEF_BIT2(TrigHltMu, 40, HLT_Mu24_TrkIsoVVL);
+  DEF_BIT2(TrigHltMu, 41, HLT_Mu34_TrkIsoVVL);
+  DEF_BIT2(TrigHltMu, 42, HLT_Mu8);
+  DEF_BIT2(TrigHltMu, 43, HLT_Mu17);
+  DEF_BIT2(TrigHltMu, 44, HLT_Mu24);
+  DEF_BIT2(TrigHltMu, 45, HLT_Mu34);
+  //  DEF_BIT2(TrigHltMu, 46, HLT_IsoMu24_eta2p1);
 
 
-  DEF_BIT2(TrigHltElMu, 1, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltElMu, 2, HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltElMu, 3, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltElMu, 4, HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2);
-  DEF_BIT2(TrigHltElMu, 5, HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL_v2);
+  DEF_BIT2(TrigHltEl,  1, HLT_Ele25WP60_Ele8_Mass55);
+  DEF_BIT2(TrigHltEl,  2, HLT_Ele25WP60_SC4_Mass55);
+  DEF_BIT2(TrigHltEl,  3, HLT_Ele22_eta2p1_WPLoose_Gsf);
+  DEF_BIT2(TrigHltEl,  4, HLT_Ele22_eta2p1_WPTight_Gsf);
+  DEF_BIT2(TrigHltEl,  5, HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20);
+  DEF_BIT2(TrigHltEl,  6, HLT_Ele23_WPLoose_Gsf);
+  DEF_BIT2(TrigHltEl,  7, HLT_Ele27_WPLoose_Gsf_WHbbBoost);
+  DEF_BIT2(TrigHltEl,  8, HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20);
+  DEF_BIT2(TrigHltEl,  9, HLT_Ele27_eta2p1_WPLoose_Gsf_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg);
+  DEF_BIT2(TrigHltEl, 10, HLT_Ele27_eta2p1_WPLoose_Gsf_CentralPFJet30_BTagCSV07);
+  DEF_BIT2(TrigHltEl, 11, HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30);
+  DEF_BIT2(TrigHltEl, 12, HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30);
+  DEF_BIT2(TrigHltEl, 13, HLT_Ele27_eta2p1_WPLoose_Gsf);
+  DEF_BIT2(TrigHltEl, 14, HLT_Ele27_eta2p1_WPTight_Gsf);
+  DEF_BIT2(TrigHltEl, 15, HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20);
+  DEF_BIT2(TrigHltEl, 16, HLT_Ele32_eta2p1_WPLoose_Gsf_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg);
+  DEF_BIT2(TrigHltEl, 17, HLT_Ele32_eta2p1_WPLoose_Gsf_CentralPFJet30_BTagCSV07);
+  DEF_BIT2(TrigHltEl, 18, HLT_Ele32_eta2p1_WPLoose_Gsf_TriCentralPFJet30);
+  DEF_BIT2(TrigHltEl, 19, HLT_Ele32_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30);
+  DEF_BIT2(TrigHltEl, 20, HLT_Ele32_eta2p1_WPLoose_Gsf);
+  DEF_BIT2(TrigHltEl, 21, HLT_Ele32_eta2p1_WPTight_Gsf);
+  DEF_BIT2(TrigHltEl, 22, HLT_Ele105_CaloIdVT_GsfTrkIdT);
+  DEF_BIT2(TrigHltEl, 23, HLT_Ele115_CaloIdVT_GsfTrkIdT);
+  DEF_BIT2(TrigHltEl, 24, HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  DEF_BIT2(TrigHltEl, 25, HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  DEF_BIT2(TrigHltEl, 26, HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  DEF_BIT2(TrigHltEl, 27, HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30);
+  DEF_BIT2(TrigHltEl, 28, HLT_Ele17_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltEl, 29, HLT_Ele23_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltEl, 30, HLT_Ele12_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltEl, 31, HLT_Ele27_eta2p1_WPLoose_Gsf_HT200);
+  DEF_BIT2(TrigHltEl, 32, HLT_Ele10_CaloIdM_TrackIdM_CentralPFJet30_BTagCSV0p54PF);
+  DEF_BIT2(TrigHltEl, 33, HLT_Ele15_IsoVVVL_BTagCSV0p72_PFHT400);
+  DEF_BIT2(TrigHltEl, 34, HLT_Ele15_IsoVVVL_PFHT350_PFMET70);
+  DEF_BIT2(TrigHltEl, 35, HLT_Ele15_IsoVVVL_PFHT600);
+  DEF_BIT2(TrigHltEl, 36, HLT_Ele8_CaloIdM_TrackIdM_PFJet30);
+  DEF_BIT2(TrigHltEl, 37, HLT_Ele12_CaloIdM_TrackIdM_PFJet30);
+  DEF_BIT2(TrigHltEl, 38, HLT_Ele18_CaloIdM_TrackIdM_PFJet30);
+  DEF_BIT2(TrigHltEl, 39, HLT_Ele23_CaloIdM_TrackIdM_PFJet30);
+  DEF_BIT2(TrigHltEl, 40, HLT_Ele33_CaloIdM_TrackIdM_PFJet30);
+  DEF_BIT2(TrigHltEl, 41, HLT_Ele15_PFHT300);
+
+  DEF_BIT2(TrigHltDiEl, 1, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  DEF_BIT2(TrigHltDiEl, 2, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  DEF_BIT2(TrigHltDiEl, 3, HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL);
+  DEF_BIT2(TrigHltDiEl, 4, HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltDiEl, 5, HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltDiEl, 6, HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300);
+  DEF_BIT2(TrigHltDiEl, 7, HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf);
+  DEF_BIT2(TrigHltDiEl, 8, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW);
+  DEF_BIT2(TrigHltDiEl, 9, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL);
+
+
+  DEF_BIT2(TrigHltElMu, 1, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltElMu, 2, HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltElMu, 3, HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltElMu, 4, HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL);
+  DEF_BIT2(TrigHltElMu, 5, HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL);
 
   DEF_BIT(MuId, 0, MuIdLoose);
   DEF_BIT_L(MuId, 3, MuIdCustom, "Mu Id: isGlobalMuon\n"
@@ -1229,7 +1238,9 @@ void Tupel::fillTrig(const std::string& trigname){
     ULong64_t* pTrig = itTrigHltMap->pTrig;
     for(std::map<std::string, ULong64_t>::const_iterator it = trigHltMap.begin();
 	it != trigHltMap.end(); ++it){
-      if(trigname.find(it->first)!=std::string::npos) *pTrig |= it->second;
+      if(compTrigger(it->first.c_str(), trigname.c_str()))  *pTrig |= it->second;
+      //      std::cout << it->first.c_str() << ", " <<  trigname.c_str() << " -> "
+      //		<< (compTrigger(it->first.c_str(), trigname.c_str()) ? "identical" : "different") << "\n";
     }
   }
 }
@@ -2123,5 +2134,22 @@ Tupel::endRun(edm::Run const& iRun, edm::EventSetup const&){
   }
   treeHelper_->addDescription("EvtWeights", desc.c_str());
 }
+
+bool Tupel::compTrigger(const char* a, const char* bv) const{
+  int i = 0;
+  for(;a[i]!=0 && bv[i]!=0; ++i){
+    if(a[i]!= bv[i]) return false;
+  }
+  if(a[i]) return false;
+  if(bv[i]==0) return true;
+  if(bv[i] != '_') return false;
+  if(bv[++i]!='v') return false;
+  for(;;){
+    if(bv[++i]==0) return true;
+    if(!isdigit(bv[i])) return false;
+  }
+  return true;
+};
+
 
 DEFINE_FWK_MODULE(Tupel);
