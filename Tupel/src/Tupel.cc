@@ -1129,7 +1129,7 @@ patPfCandPt.push_back(pf.pt());
 	elecIdsListed_ = true;
       }
      unsigned elecid = 0;
-      if(!realdata){
+      /*if(!realdata){
 
       if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-veto"))) elecid |= 1;
       if(el.electronID(std::string("cutBasedElectronID-CSA14-50ns-V1-standalone-loose"))) elecid |= 2;
@@ -1159,7 +1159,7 @@ if(realdata){
       if(el.electronID(std::string("cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-tight"))) elecid |= 1024; 
       if(el.electronID(std::string("cutBasedElectronID-PHYS14-PU20bx25-V2-standalone-veto"))) elecid |= 2048; 
 
-     }
+     }*/
 
       patElecId_.push_back(elecid);
 

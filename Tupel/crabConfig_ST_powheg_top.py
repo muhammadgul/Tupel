@@ -9,7 +9,7 @@ config.General.transferLogs = True
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'simple_run_cfg.py'
+config.JobType.psetName = 'simple_run_data_cfg.py'
 #config.JobType.scriptExe = 'job_crab.sh'
 #config.JobType.outputFiles=['events_presys.lhe']
 #config.JobType.inputFiles = ['FrameworkJobReport.xml']
@@ -22,7 +22,7 @@ config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 1000
 config.Data.totalUnits= -1
 #config.Data.outLFN = '/store/caf/user/efe/ntupel/t012j_5f_ckm_NLO_FXFX/crab_seed_4500_' # or '/store/group/<subdir>'
-config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced'
+config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_news'
 config.Data.publication = False
 config.Data.publishDataName = 'ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1'
 #config.Data.primaryDataset='CRAB_PrivateMC'

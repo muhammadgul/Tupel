@@ -3,7 +3,7 @@ process = cms.Process("S2")
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.GeometryDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 from JetMETCorrections.Configuration.DefaultJEC_cff import *
@@ -61,6 +61,7 @@ from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetsUpdated
 process.patJetsReapplyJEC = process.patJetsUpdated.clone(
   jetSource = cms.InputTag("slimmedJets"),
   jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
+
   )
 process.reapplyJEC = cms.Sequence( process.patJetCorrFactorsReapplyJEC + process.patJetsReapplyJEC)
 ########################################
@@ -149,7 +150,7 @@ process.TFileService = cms.Service("TFileService",
 #process.patJetCorrFactors.primaryVertices=cms.InputTag("offlineSlimmedPrimaryVertices")
 
 if runOnData:
-    jetsrcc="slimmedjets"
+    jetsrcc="slimmedJets"
 else :
     jetsrcc="patJetsReapplyJEC"
 
@@ -173,7 +174,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
   mSrcRho      = cms.untracked.InputTag('fixedGridRhoFastjetAll'),#arbitrary rho now
   CalojetLabel = cms.untracked.InputTag('slimmedJets'), #same collection now BB 
-  metSource = cms.VInputTag("slimmedMETs","slimmedMETs","slimmedMETs","slimmedMETs"), #no MET corr yet
+  metSource = cms.VInputTag("slimmedMETs","slimmedMETsNoHF","slimmedMETs","slimmedMETs"), #no MET corr yet
   lheSource=cms.untracked.InputTag('source')
 
 )
