@@ -738,7 +738,7 @@ patPfCandPt.push_back(pf.pt());
     }
     if(!realdata){
       Handle<std::vector< PileupSummaryInfo > >  PupInfo;
-      iEvent.getByLabel("addPileupInfo", PupInfo);
+      iEvent.getByLabel("slimmedAddPileupInfo", PupInfo);
       if(!PupInfo.failedToGet()){
       std::vector<PileupSummaryInfo>::const_iterator PVI;
       float npT=-1.;
