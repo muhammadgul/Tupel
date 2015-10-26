@@ -316,6 +316,22 @@ std::vector<double> patPfCandFromPv;
   double rhoPrime,AEff;
   //HLT
   double HLT_Mu17_Mu8,HLT_Mu17_TkMu8,HLT_IsoMu24_eta2p1;
+    double HLT_IsoMu17_eta2p1;
+    double HLT_IsoMu20;
+    double HLT_IsoMu20_eta2p1;
+    double HLT_IsoTkMu20;
+    double HLT_IsoTkMu20_eta2p1;
+    double HLT_Mu20;
+    double HLT_TkMu20;
+
+
+    double HLT_IsoMu18;
+    double HLT_IsoMu18_eta2p1;
+    double HLT_IsoTkMu18;
+    double HLT_IsoTkMu18_eta2p1;
+    double HLT_Mu18;
+    double HLT_TkMu18;
+
   double HLT_Elec17_Elec8;
 
 //  JetCorrectionUncertainty *jecUnc;
@@ -648,6 +664,22 @@ St03NumberMom.clear();
     HLT_Mu17_TkMu8=0;
     HLT_Elec17_Elec8=0;
     HLT_IsoMu24_eta2p1=0;
+      HLT_IsoMu17_eta2p1=0;
+      HLT_IsoMu20=0;
+      HLT_IsoMu20_eta2p1=0;
+      HLT_IsoTkMu20=0;
+      HLT_IsoTkMu20_eta2p1=0;
+      HLT_Mu20=0;
+      HLT_TkMu20=0;
+
+
+      HLT_IsoMu18=0;
+      HLT_IsoMu18_eta2p1=0;
+      HLT_IsoTkMu18=0;
+      HLT_IsoTkMu18_eta2p1=0;
+      HLT_Mu18=0;
+      HLT_TkMu18=0;
+
     ////Add 08/23/13/////
     id1_pdfInfo_.clear();
     id2_pdfInfo_.clear();
@@ -911,6 +943,22 @@ patPfCandPt.push_back(pf.pt());
     int Mu17_TkMu8=0;
     int Elec17_Elec8=0;
     int IsoMu24_eta2p1=0;
+    int IsoMu17_eta2p1=0;
+    int IsoMu20=0;
+    int IsoMu20_eta2p1=0;
+    int IsoTkMu20=0;
+    int IsoTkMu20_eta2p1=0;
+    int Mu20=0;
+    int TkMu20=0;
+
+
+    int IsoMu18=0;
+    int IsoMu18_eta2p1=0;
+    int IsoTkMu18=0;
+    int IsoTkMu18_eta2p1=0;
+    int Mu18=0;
+    int TkMu18=0;
+
     HLT_Mu17_Mu8=0;
     HLT_Mu17_TkMu8=0;
    HLT_IsoMu24_eta2p1=0; 
@@ -926,12 +974,30 @@ patPfCandPt.push_back(pf.pt());
       for (int i = 0; i < ntrigs; i++) {
 	trigname.push_back(trigNames->triggerName(i));
 	trigaccept.push_back(HLTResHandle->accept(i));
-      //  cout<<trigNames->triggerName(i)<<endl;
+        //cout<<trigNames->triggerName(i)<<endl;
 	if (trigaccept[i]){
 	  if(std::string(trigname[i]).find("HLT_IsoMu24_eta2p1")!=std::string::npos) IsoMu24_eta2p1=1;
 	  if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) Mu17_Mu8=1;
 	  if(std::string(trigname[i]).find("HLT_Mu17_TkMu8")!=std::string::npos) Mu17_TkMu8=1;
 	  if(std::string(trigname[i]).find("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL")!=std::string::npos) Elec17_Elec8=1;
+
+	  if(std::string(trigname[i]).find("HLT_IsoMu17_eta2p1_v")!=std::string::npos)IsoMu17_eta2p1=1;
+	  if(std::string(trigname[i]).find("HLT_IsoMu20_v")!=std::string::npos)IsoMu20=1;
+	  if(std::string(trigname[i]).find("HLT_IsoMu20_eta2p1_v")!=std::string::npos)IsoMu20_eta2p1=1;
+	  if(std::string(trigname[i]).find("HLT_IsoTkMu20_v")!=std::string::npos)IsoTkMu20=1;
+	  if(std::string(trigname[i]).find("HLT_IsoTkMu20_eta2p1_v")!=std::string::npos)IsoTkMu20_eta2p1=1;
+	  if(std::string(trigname[i]).find("HLT_Mu20_v")!=std::string::npos)Mu20=1;
+	  if(std::string(trigname[i]).find("HLT_TkMu20_v")!=std::string::npos)TkMu20=1;
+
+	  if(std::string(trigname[i]).find("HLT_IsoMu18_v")!=std::string::npos)IsoMu18=1;
+	  if(std::string(trigname[i]).find("HLT_IsoMu18_eta2p1_v")!=std::string::npos)IsoMu18_eta2p1=1;
+	  if(std::string(trigname[i]).find("HLT_IsoTkMu18_v")!=std::string::npos)IsoTkMu18=1;
+	  if(std::string(trigname[i]).find("HLT_IsoTkMu18_eta2p1_v")!=std::string::npos)IsoTkMu18_eta2p1=1;
+	  if(std::string(trigname[i]).find("HLT_Mu18_v")!=std::string::npos)Mu18=1;
+	  if(std::string(trigname[i]).find("HLT_TkMu18_v")!=std::string::npos)TkMu18=1;
+
+
+
 	}
       }
     }
@@ -941,6 +1007,22 @@ patPfCandPt.push_back(pf.pt());
     HLT_Mu17_TkMu8=Mu17_TkMu8;
     HLT_Elec17_Elec8=Elec17_Elec8;
     
+
+      HLT_IsoMu17_eta2p1=IsoMu17_eta2p1;
+      HLT_IsoMu20=IsoMu20;
+      HLT_IsoMu20_eta2p1=IsoMu20_eta2p1;
+      HLT_IsoTkMu20=IsoTkMu20;
+      HLT_IsoTkMu20_eta2p1=IsoTkMu20_eta2p1;
+      HLT_Mu20=Mu20;
+      HLT_TkMu20=TkMu20;
+
+
+      HLT_IsoMu18=IsoMu18;
+      HLT_IsoMu18_eta2p1=IsoMu18_eta2p1;
+      HLT_IsoTkMu18=IsoTkMu18;
+      HLT_IsoTkMu18_eta2p1=IsoTkMu18_eta2p1;
+      HLT_Mu18=Mu18;
+      HLT_TkMu18=TkMu18;
     double MuFill=0;
     double Mu17_Mu8_Matched=0;
     double Mu17_TkMu8_Matched=0;
@@ -1415,6 +1497,23 @@ Tupel::beginJob()
     myTree->Branch("HLT_Mu17_TkMu8",&HLT_Mu17_TkMu8);
     myTree->Branch("HLT_Elec17_Elec8",&HLT_Elec17_Elec8);
     myTree->Branch("HLT_IsoMu24_eta2p1",&HLT_IsoMu24_eta2p1);
+     myTree->Branch("HLT_IsoMu17_eta2p1",&HLT_IsoMu17_eta2p1); 
+     myTree->Branch("HLT_IsoMu20",&HLT_IsoMu20); 
+     myTree->Branch("HLT_IsoMu20_eta2p1",&HLT_IsoMu20_eta2p1); 
+     myTree->Branch("HLT_IsoTkMu20",&HLT_IsoTkMu20); 
+     myTree->Branch("HLT_IsoTkMu20_eta2p1",&HLT_IsoTkMu20_eta2p1);
+     myTree->Branch("HLT_Mu20",&HLT_Mu20); 
+     myTree->Branch("HLT_TkMu20",&HLT_TkMu20); 
+
+
+     myTree->Branch("HLT_IsoMu18",&HLT_IsoMu18); 
+     myTree->Branch("HLT_IsoMu18_eta2p1",&HLT_IsoMu18_eta2p1); 
+     myTree->Branch("HLT_IsoTkMu18",&HLT_IsoTkMu18);
+     myTree->Branch("HLT_IsoTkMu18_eta2p1",&HLT_IsoTkMu18_eta2p1); 
+     myTree->Branch("HLT_Mu18",&HLT_Mu18); 
+     myTree->Branch("HLT_TkMu18",&HLT_TkMu18); 
+
+
     
     //Muons
     myTree->Branch("patMuonPt_",&patMuonPt_);
