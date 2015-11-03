@@ -181,6 +181,7 @@ private:
   //std::vector<double> patJetPfAk04JesUncert_;
   std::vector<double> patJetPfAk04LooseId_;
   std::vector<double> patJetPfAk04Et_;
+  std::vector<double> patJetPfAk04PartonFlavour_;
   std::vector<double> patJetPfAk04RawPt_;
   std::vector<double> patJetPfAk04RawEn_;
   std::vector<double> patJetPfAk04HadEHF_;
@@ -552,6 +553,7 @@ St03NumberMom.clear();
     //patJetPfAk04JesUncert_.clear();
     patJetPfAk04LooseId_.clear();
     patJetPfAk04Et_.clear();
+patJetPfAk04PartonFlavour_.clear();
     patJetPfAk04RawPt_.clear();
     patJetPfAk04RawEn_.clear();
     patJetPfAk04HadEHF_.clear();
@@ -1336,6 +1338,7 @@ if(realdata){
       patJetPfAk04Eta_.push_back(jet.eta());
       patJetPfAk04Phi_.push_back(jet.phi());
       patJetPfAk04Et_.push_back(jet.et());
+      patJetPfAk04PartonFlavour_.push_back(jet.partonFlavour());
       patJetPfAk04RawPt_.push_back(jet.correctedJet(0).pt());
       patJetPfAk04RawEn_.push_back(jet.correctedJet(0).energy());
       patJetPfAk04HadEHF_.push_back(jet.HFHadronEnergy());
@@ -1346,6 +1349,9 @@ if(realdata){
       patJetPfAk04nemf_.push_back(nemf);
       patJetPfAk04cmult_.push_back(cmult);
       patJetPfAk04nconst_.push_back(nconst);
+
+
+      
 
       double unc = 1.;
       unc_.push_back(unc);
@@ -1601,6 +1607,7 @@ Tupel::beginJob()
     myTree->Branch("patJetPfAk04Phi_",&patJetPfAk04Phi_);
     myTree->Branch("patJetPfAk04LooseId_",&patJetPfAk04LooseId_);
     myTree->Branch("patJetPfAk04Et_",&patJetPfAk04Et_);
+    myTree->Branch("patJetPfAk04PartonFlavour_",&patJetPfAk04PartonFlavour_);
     myTree->Branch("patJetPfAk04RawPt_",&patJetPfAk04RawPt_);
     myTree->Branch("patJetPfAk04RawEn_",&patJetPfAk04RawEn_);
     myTree->Branch("patJetPfAk04HadEHF_",&patJetPfAk04HadEHF_);
