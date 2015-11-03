@@ -97,20 +97,18 @@ void fixsplithist(TH1* htop, TH1* hbot){
 }
 
 
-
 void plot_stack(TString var, TString xtitle, int setlog, int rebin, double lumi,TLatex * latexlab,int ise){
 TString iselec;
 iselec +=(ise);
-cout<<"1111111"<<endl;
-TFile *data = TFile::Open("data_isElec_"+iselec+".root");
-TFile *mc_s = TFile::Open("mc_signal_isElec_"+iselec+".root");
-TFile *mc_o = TFile::Open("mc_other_isElec_"+iselec+".root");
-TFile *st_tw_t = TFile::Open("ST_tWch_t_isElec_"+iselec+".root");
-TFile *st_tw_tbar = TFile::Open("ST_tWch_tbar_isElec_"+iselec+".root");
-TFile *st_t_t = TFile::Open("ST_tch_t_isElec_"+iselec+".root");
-TFile *st_t_tbar = TFile::Open("ST_tch_tbar_isElec_"+iselec+".root");
-TFile *wjet = TFile::Open("ST_WJet_isElec_"+iselec+".root");
-cout<<"111111122222"<<endl;
+TFile *data = TFile::Open("data_25ns_runD_isElec_"+iselec+".root");
+TFile *mc_s = TFile::Open("mc_signal_25ns_isElec_"+iselec+".root");
+TFile *mc_o = TFile::Open("mc_other_25ns_isElec_"+iselec+".root");
+TFile *st_tw_t = TFile::Open("st_tw_top_25ns_isElec_"+iselec+".root");
+TFile *st_tw_tbar = TFile::Open("st_tw_atop_25ns_isElec_"+iselec+".root");
+TFile *st_t_t = TFile::Open("st_t_top_25ns_isElec_"+iselec+".root");
+TFile *st_t_tbar = TFile::Open("st_t_atop_25ns_isElec_"+iselec+".root");
+TFile *wjet = TFile::Open("wjet_25ns_isElec_"+iselec+".root");
+
 TH1 * tmphdata  =(TH1D*)(data->Get(var));
 TH1 * tmphmc_s  =(TH1D*)(mc_s->Get(var));
 TH1 * tmphmc_o  =(TH1D*)(mc_o->Get(var));
@@ -119,21 +117,14 @@ TH1 * tmphst_t_tbar  =(TH1D*)(st_t_tbar->Get(var));
 TH1 * tmphst_tw_t  =(TH1D*)(st_tw_t->Get(var));
 TH1 * tmphst_tw_tbar  =(TH1D*)(st_tw_tbar->Get(var));
 TH1 * tmphwjet  =(TH1D*)(wjet->Get(var));
-cout<<"111111133333"<<endl;
+
 TH1D* hdata= (TH1D*)tmphdata->Clone("");
 TH1D* hmc_s= (TH1D*)tmphmc_s->Clone("");
-
 TH1D* hmc_o = (TH1D*)tmphmc_o->Clone("");
-cout<<"111111144444"<<endl;
 TH1D* hst_t_t= (TH1D*)tmphst_t_t->Clone("");
-cout<<"111111155555"<<endl;
-
 TH1D* hst_t_tbar = (TH1D*)tmphst_t_tbar->Clone("");
-cout<<"11111115555566666"<<endl;
 TH1D* hst_tw_t = (TH1D*)tmphst_tw_t->Clone("");
-cout<<"11111115555577777"<<endl;
 TH1D* hst_tw_tbar = (TH1D*)tmphst_tw_tbar->Clone("");
-
 TH1D* hwjet = (TH1D*)tmphwjet->Clone("");
 
 
@@ -173,7 +164,7 @@ TTree *tst_tw_t = (TTree *)st_tw_t->Get("tree");
 double wst_tw_t;
 tst_tw_t->SetBranchAddress("wtot",&wst_tw_t);
 tst_tw_t->GetEntry(0);
-cout<<"22222222222"<<endl;
+
 
 TTree *tst_tw_tbar = (TTree *)st_tw_tbar->Get("tree");
 double wst_tw_tbar;
@@ -196,7 +187,7 @@ hst_tw_tbar->Scale(35.6*lumi/wst_tw_tbar);
 hwjet->Scale(3* 20508.9*lumi /wwjet);
 
 
-cout<<"33333333333333"<<endl;
+
 
 TH1* stackmc= (TH1D*)hmc_s->Clone("stackmc");
 stackmc->Add(hmc_o);
@@ -219,7 +210,7 @@ hmc_o->Scale(asd);
 double h_data_max=-99;
 double h_mc_max=-99;
 double max=-99;
-cout<<"44444444444444444"<<endl;
+
 double h_data_min=9999999;
 double h_mc_min=9999999;
 double min=9999999;
@@ -247,7 +238,7 @@ hmc_s->SetFillColor(633);
 stacst->SetFillColor(616);
 hwjet->SetFillColor(413);
 stackmc->SetFillColor(634);
-cout<<"555555555555555"<<endl;
+
 TLegend *leg1 = new TLegend(0.7931567,0.453719,0.94980511,0.685385);
 leg1->SetBorderSize(0);
 leg1->SetFillColor(kWhite);
@@ -260,7 +251,7 @@ leg1->AddEntry(hwjet, "WJets","peF");
 hdata->SetMarkerStyle(20);
 
 
-cout<<"66666666666666"<<endl;
+
    THStack *hs = new THStack("hs","Stacked 1D histograms");
 hs->Add(hwjet);
 hs->Add(stacst);
@@ -270,7 +261,7 @@ hs->Add(hmc_s);
   hs->SetHistogram(hmc_s);
 TH1* mont = (TH1D*)hdata->Clone();
 mont->Divide(hdata,stackmc,1,1);
-cout<<"7777777777777777"<<endl;
+
 TCanvas *c1 = new TCanvas("c1","c1",800,800);
 TPaveText *pt = new TPaveText(.09,.925,.70,0.98);
 pt->SetFillColor(0);
@@ -352,9 +343,9 @@ pt->SetFillColor(0);
           fixsplithist(hdata,mont);
           TString a;
           a+=setlog;
-          c1->Print("stack_plots/" + var +"_logy_" + a + "_iselec_" + iselec+ ".pdf");
-          c1->Print("stack_plots/" + var +"_logy_" + a + "_iselec_" + iselec+ ".png");
-          c1->Print("stack_plots/" + var +"_logy_" + a + "_iselec_" + iselec+ ".root");
+          c1->Print("stack_plots_25ns/" + var +"_logy_" + a + "_iselec_" + iselec+ ".pdf");
+          c1->Print("stack_plots_25ns/" + var +"_logy_" + a + "_iselec_" + iselec+ ".png");
+          c1->Print("stack_plots_25ns/" + var +"_logy_" + a + "_iselec_" + iselec+ ".root");
 }
 
 
@@ -363,14 +354,15 @@ void plot_stack_add(TString var, TString var2, TString xtitle, int setlog, int r
 
 TString iselec;
 iselec +=(ise);
-TFile *data = TFile::Open("data_isElec_"+iselec+".root");
-TFile *mc_s = TFile::Open("mc_signal_isElec_"+iselec+".root");
-TFile *mc_o = TFile::Open("mc_other_isElec_"+iselec+".root");
-TFile *st_tw_t = TFile::Open("ST_tWch_t_isElec_"+iselec+".root");
-TFile *st_tw_tbar = TFile::Open("ST_tWch_tbar_isElec_"+iselec+".root");
-TFile *st_t_t = TFile::Open("ST_tch_t_isElec_"+iselec+".root");
-TFile *st_t_tbar = TFile::Open("ST_tch_tbar_isElec_"+iselec+".root");
-TFile *wjet = TFile::Open("ST_WJet_isElec_"+iselec+".root");
+
+TFile *data = TFile::Open("data_25ns_runD_isElec_"+iselec+".root");
+TFile *mc_s = TFile::Open("mc_signal_25ns_isElec_"+iselec+".root");
+TFile *mc_o = TFile::Open("mc_other_25ns_isElec_"+iselec+".root");
+TFile *st_tw_t = TFile::Open("st_tw_top_25ns_isElec_"+iselec+".root");
+TFile *st_tw_tbar = TFile::Open("st_tw_atop_25ns_isElec_"+iselec+".root");
+TFile *st_t_t = TFile::Open("st_t_top_25ns_isElec_"+iselec+".root");
+TFile *st_t_tbar = TFile::Open("st_t_atop_25ns_isElec_"+iselec+".root");
+TFile *wjet = TFile::Open("wjet_25ns_isElec_"+iselec+".root");
 
 TH1 * tmphdata  =(TH1D*)(data->Get(var));
 TH1 * tmphmc_s  =(TH1D*)(mc_s->Get(var));
@@ -648,9 +640,9 @@ Lumi +=(lumi);
 
           TString a;
           a+=setlog;
-          c1->Print("stack_plots/" + var + var2+"_logy_" + a + "_iselec_" + iselec+".pdf");
-          c1->Print("stack_plots/" + var + var2+"_logy_" + a + "_iselec_" + iselec+ ".png");
-          c1->Print("stack_plots/" + var + var2+"_logy_" + a + "_iselec_" + iselec+".root");
+          c1->Print("stack_plots_25ns/" + var + var2+"_logy_" + a + "_iselec_" + iselec+".pdf");
+          c1->Print("stack_plots_25ns/" + var + var2+"_logy_" + a + "_iselec_" + iselec+ ".png");
+          c1->Print("stack_plots_25ns/" + var + var2+"_logy_" + a + "_iselec_" + iselec+".root");
 }
 
 
@@ -1060,18 +1052,18 @@ Lumi +=(lumi);
 
           TString a;
           a+=setlog;
-          c1->Print("stack_plots/" + var + var2+"_logy_" + a + "_mu_elec_comb_.pdf");
-          c1->Print("stack_plots/" + var + var2+"_logy_" + a + "_mu_elec_comb_.png");
-          c1->Print("stack_plots/" + var + var2+"_logy_" + a + "_mu_elec_comb_.root");
+          c1->Print("stack_plots_25ns/" + var + var2+"_logy_" + a + "_mu_elec_comb_.pdf");
+          c1->Print("stack_plots_25ns/" + var + var2+"_logy_" + a + "_mu_elec_comb_.png");
+          c1->Print("stack_plots_25ns/" + var + var2+"_logy_" + a + "_mu_elec_comb_.root");
 }
 
 
-void macro_data_mc_comp(){
+void macro_data_mc_comp_25ns(){
 
    gStyle->SetOptStat(kFALSE);
    gStyle->SetOptTitle(kFALSE);
 //  double lumii=23.757;
-   double lumii=41;
+   double lumii=5.6;
     TLatex *latexLabel = new TLatex(); 
 
     latexLabel->SetTextSize(0.03305);
@@ -1144,10 +1136,10 @@ plot_stack("y_top","y(t)",0,4,lumii,latexLabel,ise);
 plot_stack("y_atop","y(#bar{t})",0,4,lumii,latexLabel,ise);
 plot_stack("deltaY_reco","|y_{t}| -|y_{#bar{t}}|",0,5,lumii,latexLabel,ise);
 
-plot_stack("m_thad","m_{t} [GeV]",0,2,lumii,latexLabel,ise);
-cout<<"aaaa"<<endl;
+plot_stack("m_thad","m_{t} [GeV]",0,1,lumii,latexLabel,ise);
+plot_stack("m_thad","m_{t} [GeV]",1,1,lumii,latexLabel,ise);
 plot_stack("pu_mva","pu MVA",0,2,lumii,latexLabel,ise);
-cout<<"bbb"<<endl;
+
 plot_stack_add("m_top","m_atop","m_{t} [GeV]",1,4,lumii,latexLabel,ise);
 plot_stack_add("pt_top","pt_atop","p_{T}(t) [GeV]",1,4,lumii,latexLabel,ise);
 plot_stack_add("m_top","m_atop","m_{t} [GeV]",0,2,lumii,latexLabel,ise);

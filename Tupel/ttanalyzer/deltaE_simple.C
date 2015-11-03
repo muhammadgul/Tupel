@@ -17,9 +17,11 @@ void deltaE_simple(){
    TH2::SetDefaultSumw2();  
    TString fileName[100];
    TFile *f[100];
-   fileName[0]="mc_signal";
-  fileName[1]="data";
- int nfiles=2;
+   fileName[0]="mc_signal_25ns_isElec_0";
+  fileName[1]="data_25ns_runD_isElec_0";
+  fileName[2]="ST_WJet_isElec_0";
+   fileName[3]="mc_amc_hpp_signal_isElec_0";
+ int nfiles=4;
 
 for(int z =0; z<nfiles;z++){  //input files
 f[z]= TFile::Open(fileName[z]+".root");
@@ -124,6 +126,7 @@ sprintf(nam,"v_gen_jettheta_%i_1_%i_%i_%i",i,k,l,m);
   vector<double> asym_charge_gen=calculate_asymm(pos_gen,neg_gen,MyWeight1,1);
   double asym_vall= asym_charge_gen[0]*100;
     double asym_errr= asym_charge_gen[1]*100;
+  cout<<"value in the macro "<<asym_vall<<" "<< asym_errr<<endl;
   leg1->AddEntry(asym[i], a,"");
   sprintf(nammm,"total asym %0.4f %% #pm %0.4f %%",asym_vall, asym_errr);
 
@@ -137,12 +140,12 @@ sprintf(nam,"v_gen_jettheta_%i_1_%i_%i_%i",i,k,l,m);
 
   c[i]=new TCanvas ("c","c",800,800);
   c[i]->cd();
-    asym[i]->SetMinimum(-0.11);
-    asym[i]->SetMaximum(0.11);
+    asym[i]->SetMinimum(-0.11*100);
+    asym[i]->SetMaximum(0.11*100);
     asym[i]->SetXTitle("#theta_{j} gen level");
     asym[i]->Draw();
     leg1->Draw("sames");
-  sprintf(nammm,"asym_plots/%s_asym_gen_%i_%i_%i_%i.pdf",fileName[z].Data(),i,k,l,m);
+  sprintf(nammm,"asym_plots_25ns/%s_asym_gen_%i_%i_%i_%i.pdf",fileName[z].Data(),i,k,l,m);
   c[i]->Print(nammm);
 
 
@@ -190,7 +193,7 @@ sprintf(nam,"v_jettheta_%i_1_%i_%i_%i",i,k,l,m);
     asym_recc[i]->SetXTitle("#theta_{j} rec level");
     asym_recc[i]->Draw();
     leg2->Draw("sames");
-  sprintf(nammm,"asym_plots/%s_asym_rec_%i_%i_%i_%i.pdf",fileName[z].Data(),i,k,l,m);
+  sprintf(nammm,"asym_plots_25ns/%s_asym_rec_%i_%i_%i_%i.pdf",fileName[z].Data(),i,k,l,m);
   c[i]->Print(nammm);
 
 

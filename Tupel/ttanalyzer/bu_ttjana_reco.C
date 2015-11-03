@@ -1,0 +1,620 @@
+#define ttjana_reco_cxx
+#include "ttjana_reco.h"
+#include <TH2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <stdio.h>
+#include <iostream>
+#include <math.h>
+#include <TLorentzVector.h>
+
+
+void ttjana_reco::Loop()
+{
+//using namespace std;
+//   In a ROOT session, you can do:
+//      Root > .L ttjana_reco.C
+//      Root > ttjana_reco t
+//      Root > t.GetEntry(12); // Fill t data members with entry number 12
+//      Root > t.Show();       // Show values of entry 12
+//      Root > t.Show(16);     // Read and show values of entry 16
+//      Root > t.Loop();       // Loop on all entries
+//
+
+//     This is the loop skeleton where:
+//    jentry is the global entry number in the chain
+//    ientry is the entry number in the current Tree
+//  Note that the argument to GetEntry must be:
+//    jentry for TChain::GetEntry
+//    ientry for TTree::GetEntry and TBranch::GetEntry
+//
+//       To read only selected branches, Insert statements like:
+// METHOD1:
+//    fChain->SetBranchStatus("*",0);  // disable all branches
+//    fChain->SetBranchStatus("branchname",1);  // activate branchname
+// METHOD2: replace line
+//    fChain->GetEntry(jentry);       //read all branches
+//by  b_branchname->GetEntry(ientry); //read only this branch
+   if (fChain == 0) return;
+
+   Long64_t nentries = fChain->GetEntries();
+   //cout<<fChain->GetEntries()<<endl;
+   Long64_t nbytes = 0, nb = 0;
+
+
+   TFile* file_out = new TFile("out_reco.root","RECREATE"); 
+   file_out->cd();	
+
+   TH1* h_gen_dijet_mass= new TH1D ("gen_dijet_mass","gen_dijet_mass",100,0,1000);
+
+   TH1* h_gen_m_top= new TH1D ("gen_m_top","gen_m_top",100,0,1000);
+   TH1* h_gen_m_atop= new TH1D ("gen_m_atop","gen_m_atop",100,0,1000);
+
+
+   TH1* h_muon_pt= new TH1D ("muon_pt","muon_pt",100,0,1000);
+   TH1* h_muon_eta= new TH1D ("muon_eta","muon_eta",100,-2.5,2.5);
+
+   TH1* h_ljet_pt= new TH1D ("ljet_pt","ljet_pt",100,0,1000);
+   TH1* h_ljet_eta= new TH1D ("jlet_eta","ljet_eta",100,-2.5,2.5);
+
+   TH1* h_sljet_pt= new TH1D ("sljet_pt","ljet_pt",100,0,1000);
+   TH1* h_sljet_eta= new TH1D ("sjlet_eta","ljet_eta",100,-2.5,2.5);
+   TH1* h_MTW= new TH1D ("MTW","MTW",100,0,1000);
+   TH1* h_MET_ET= new TH1D ("MET_ET","MET_ET",100,0,1000);
+   TH1* h_dijet_mass= new TH1D ("dijet_mass","dijet_mass",100,0,1000);
+
+   TH1* h_m_thad= new TH1D ("m_thad","m_thad",100,0,1000);
+   TH1* h_m_tlep= new TH1D ("m_tlep","m_tlep",100,0,1000);
+
+   TH1* h_m_top= new TH1D ("m_top","m_top",100,0,1000);
+   TH1* h_m_atop= new TH1D ("m_atop","m_atop",100,0,1000);
+   double real_count=0;
+   double complex_count=0;
+   double solved_complex_count=0;
+   double real=0;
+   double fake=0;
+   double miss=0;
+
+ //  nentries=10000;
+   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+
+      bool gen_sel=false;
+      bool rec_sel=false;
+      if(jentry%10000==0)cout<<jentry<<"/"<<nentries<<endl;
+      Long64_t ientry = LoadTree(jentry);
+      if (ientry < 0) break;
+      nb = fChain->GetEntry(jentry);   nbytes += nb;
+      // if (Cut(ientry) < 0) continue;
+      int mu_index=0;	
+      int mu_index20=0;	
+      vector<TLorentzVector>mu_vector;
+      vector<TLorentzVector>mu_vector20;
+      vector<int>mu_charge;
+      vector<unsigned int>b_jet_index;
+      vector<unsigned int>l_jet_index;
+      int jet_index=0;	
+      vector<TLorentzVector>jet_vector;
+
+
+      vector<TLorentzVector>gen_lepton_vector;
+      vector<TLorentzVector>gen_nu_vector;
+      vector<TLorentzVector>gen_light_jet_vector;
+      vector<TLorentzVector>gen_b_jet_vector;
+      vector<int> gen_b_jet_id;
+      TLorentzVector gen_top_vector;
+      TLorentzVector gen_atop_vector;
+      vector<int> gen_lepton_id;
+      unsigned int ind_check=-99;
+      //cout<<"1111111"<<endl;
+
+      for(unsigned int a=0; a<St03Id->size();a++){
+        
+        cout<<a<<"  "<<St03Id->at(a)<<endl;
+        
+      }
+      for(unsigned int st1_ind=0; st1_ind<Bare01LepPt->size();st1_ind++){
+        if(st1_ind==ind_check) continue;
+        //if(Bare01LepPt->at(st1_ind)<20)continue;
+        int lep_id= Bare01LepId->at(st1_ind);
+        TLorentzVector lep_tmp;
+        lep_tmp.SetPtEtaPhiE(Bare01LepPt->at(st1_ind),Bare01LepEta->at(st1_ind),Bare01LepPhi->at(st1_ind),Bare01LepE->at(st1_ind));
+       // cout<<st1_ind<<	"  "<<lep_id<<"  "<<endl;
+        for(unsigned int st1_ind_2=st1_ind; st1_ind_2<Bare01LepPt->size();st1_ind_2++){
+
+          TLorentzVector nu_tmp;
+          nu_tmp.SetPtEtaPhiE(Bare01LepPt->at(st1_ind_2),Bare01LepEta->at(st1_ind_2),Bare01LepPhi->at(st1_ind_2),Bare01LepE->at(st1_ind_2));
+          int nu_id= Bare01LepId->at(st1_ind_2);
+          if( fabs(lep_id)==13 &&lep_id*nu_id<0 && (fabs(nu_id)-fabs(lep_id))==1){
+            gen_lepton_id.push_back(lep_id);
+            gen_lepton_vector.push_back(lep_tmp);
+            gen_nu_vector.push_back(nu_tmp);
+            ind_check=st1_ind_2;
+            break;
+          }
+         if( fabs(lep_id)==14 &&lep_id*nu_id<0 && (fabs(lep_id)-fabs(nu_id))==1){
+            gen_lepton_id.push_back(nu_id);
+            gen_lepton_vector.push_back(nu_tmp);
+            gen_nu_vector.push_back(lep_tmp);
+            ind_check=st1_ind_2;
+            break;
+          }
+        }    
+      }
+      //cout<<"222222222222"<<endl;
+
+      for(unsigned int jet_ind=0; jet_ind<GjPt->size();jet_ind++){ 
+        if(GjPt->at(jet_ind)<30&& Gjeta->at(jet_ind)>2.5)continue;
+        bool match_lep=false;
+        bool match_b=false;
+        TLorentzVector jet_tmp;
+        jet_tmp.SetPtEtaPhiE(GjPt->at(jet_ind),Gjeta->at(jet_ind),Gjphi->at(jet_ind),GjE->at(jet_ind));
+        if(gen_lepton_vector.size()==1){
+            double deltaR1=DeltaR(jet_tmp.Eta(),gen_lepton_vector[0].Eta(),jet_tmp.Phi(),gen_lepton_vector[0].Phi());
+            double deltaR2=DeltaR(jet_tmp.Eta(),gen_nu_vector[0].Eta(),jet_tmp.Phi(),gen_nu_vector[0].Phi());
+            if(deltaR1<0.5 ||deltaR2<0.5){
+              match_lep=true;
+            }
+            if(match_lep)continue;
+        }
+
+      //cout<<"333333333333"<<endl;
+        int id_b=0;
+        for(unsigned int st3_ind=0; st3_ind<St03Pt->size();st3_ind++){
+          if(fabs(St03Id->at(st3_ind))==5){
+            TLorentzVector lep_tmp;
+            lep_tmp.SetPtEtaPhiE(St03Pt->at(st3_ind),St03Eta->at(st3_ind),St03Phi->at(st3_ind),St03E->at(st3_ind));
+            double deltaR=DeltaR(jet_tmp.Eta(),lep_tmp.Eta(),jet_tmp.Phi(),lep_tmp.Phi());
+            if(deltaR<0.1){
+              //cout<<St03Id->at(st3_ind)<<"  "<<deltaR<<endl;
+              match_b=true;
+              id_b=St03Id->at(st3_ind);
+            }
+          }          
+        }
+        if(match_b){
+          gen_b_jet_vector.push_back(jet_tmp);
+          gen_b_jet_id.push_back(id_b);
+        }
+      //cout<<"4444444444"<<endl;
+       if(!match_b){
+         // double deltaR_ljet_st3q=DeltaR(jet_tmp.Eta(),extra_parton_vector.Eta(),jet_tmp.Phi(),extra_parton_vector.Phi());
+          /*if(!(deltaR_ljet_st3q<0.1 &&(fabs(extra_parton_id)==21 ||fabs(extra_parton_id)<6) ))*/gen_light_jet_vector.push_back(jet_tmp);
+        }
+      }
+      //cout<<"5555555555"<<endl;
+      double gen_mmin=-9999;
+      int gen_ljet_ind1=-99;
+      int gen_ljet_ind2=-99;
+      if(gen_lepton_id.size()==1 && gen_b_jet_vector.size()==2 && gen_light_jet_vector.size()>=2 ){//gen level l+jet
+        for(unsigned int indljet=0;indljet<gen_light_jet_vector.size();indljet++){
+         for(unsigned int indljet2=indljet;indljet2<gen_light_jet_vector.size();indljet2++){
+            if(indljet2==indljet)continue;
+            double gen_mmin_temp=(gen_light_jet_vector[indljet]+gen_light_jet_vector[indljet2]).M();
+            if(fabs(gen_mmin_temp-80.4)<fabs(gen_mmin-80.4)){
+              gen_mmin=gen_mmin_temp;gen_ljet_ind1=indljet;gen_ljet_ind2=indljet2;
+            }
+          }
+        }
+        h_gen_dijet_mass->Fill(gen_mmin);
+        if(gen_lepton_id[0]>0){
+          if(gen_b_jet_id[0]<0){
+            gen_top_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[0];
+            gen_atop_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[1];
+          }
+          if(gen_b_jet_id[0]>0){
+            gen_top_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[1];
+            gen_atop_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[0];
+          }
+        }
+        if(gen_lepton_id[0]<0){
+          if(gen_b_jet_id[0]<0){
+            gen_atop_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[1];
+            gen_top_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[0];
+          }
+          if(gen_b_jet_id[0]>0){
+            gen_atop_vector=gen_lepton_vector[0]+gen_nu_vector[0]+gen_b_jet_vector[0];
+            gen_top_vector=gen_light_jet_vector[gen_ljet_ind1]+gen_light_jet_vector[gen_ljet_ind2]+gen_b_jet_vector[1];
+          }
+        }
+        h_gen_m_top->Fill(gen_atop_vector.M());
+        h_gen_m_atop->Fill(gen_atop_vector.M());
+        gen_sel=true;
+      }
+      //cout<<"666666666666"<<endl;
+
+
+
+
+
+
+
+
+
+      for(unsigned int mu_ind=0; mu_ind<patMuonPt_->size();mu_ind++){
+        if(patMuonPt_->at(mu_ind)>30 && fabs(patMuonEta_->at(mu_ind))<2.4){
+//          cout<<patMuonPt_->size()<<"  " <<mu_ind<<"  "<<patMuonPt_->at(mu_ind)<<endl;
+          TLorentzVector tmp;
+          tmp.SetPtEtaPhiE(patMuonPt_->at(mu_ind),patMuonEta_->at(mu_ind),patMuonPhi_->at(mu_ind),patMuonEn_->at(mu_ind));
+          mu_vector.push_back(tmp);
+          mu_charge.push_back(patMuonCharge_->at(mu_ind));
+          mu_index++;
+       }
+        if(patMuonPt_->at(mu_ind)>20 && fabs(patMuonEta_->at(mu_ind))<2.4){
+          mu_index20++;
+       }
+     }
+
+
+
+      for(unsigned int jet_ind=0; jet_ind<patJetPfAk05Pt_->size();jet_ind++){
+
+        if(patJetPfAk05Pt_->at(jet_ind)<30. || fabs(patJetPfAk05Eta_->at(jet_ind))>2.5 )continue;
+          //cout<<patJetPfAk05Pt_->size()<<"  " <<jet_ind<<"  "<<patJetPfAk05Pt_->at(jet_ind)<<endl;
+        TLorentzVector tmp;
+        tmp.SetPtEtaPhiE(patJetPfAk05Pt_->at(jet_ind),patJetPfAk05Eta_->at(jet_ind),patJetPfAk05Phi_->at(jet_ind),patJetPfAk05En_->at(jet_ind));
+        jet_vector.push_back(tmp);
+        double dr_j_l=99;
+        if(mu_index>0) dr_j_l=DeltaR(tmp.Eta(),mu_vector[0].Eta(),tmp.Phi(),mu_vector[0].Phi());
+        if(dr_j_l<0.4)continue;
+        if(patJetPfAk05BDiscCSV_->at(jet_ind)>0.697)b_jet_index.push_back(jet_index);//cut value 0.697
+        //else l_jet_index.push_back(jet_index);
+        jet_index++;
+      }
+
+
+      if (jet_vector.size()>=4 && b_jet_index.size()==2 && mu_index==1 &&mu_index20==1){//at least 4 jets, 2 of b jets, 1 muon
+        h_muon_pt->Fill(mu_vector[0].Pt());
+        h_muon_eta->Fill(mu_vector[0].Eta());
+
+        h_MET_ET->Fill(METPt->at(0));
+        
+  
+        double pz1=0;
+        double pz2=0;
+        double MW=80.4;
+        double ptl=mu_vector[0].Pt();
+        double pzl=mu_vector[0].Pz();
+        double El=mu_vector[0].E();
+        double ptnu= METPt->at(0);
+        TLorentzVector met;
+        met.SetPxPyPzE(METPx->at(0),METPy->at(0),METPz->at(0),METE->at(0));
+        double deltaphi=DeltaPhi(mu_vector[0].Phi(), met.Phi());
+        double cdphi= cos(deltaphi);
+        double mu= MW*MW/2 + ptl*ptnu*cdphi;
+
+        double A=mu*pzl/(ptl*ptl);
+        double B=mu*mu*pzl*pzl/(pow(ptl,4));
+        double C= (El*El*ptnu*ptnu- mu*mu)/(ptl*ptl);
+        double D=0;
+	double MTW=sqrt(2*ptl*ptnu*(1 -cdphi ));
+        ////cout<<MTW<<endl;
+        h_MTW->Fill(MTW);
+        TLorentzVector nu_complex;
+        if((B-C)<0){
+        //cout<<"new complex event "<<MTW<<endl;
+        bool found=false;  
+        double min_i=0;
+        double max_i=80;
+        
+          for(double px_var=min_i;px_var<max_i;px_var+=0.3){
+//              double py_var=px_var;
+            for(double py_var=0;py_var<=px_var;py_var+=0.3){
+              TLorentzVector met_new1;
+              met_new1.SetPxPyPzE(METPx->at(0)+px_var,METPy->at(0)+py_var,METPz->at(0),METE->at(0));
+              double deltaphi_new1=DeltaPhi(mu_vector[0].Phi(), met_new1.Phi());
+              double cdphi_new1= cos(deltaphi_new1);
+   	      double MTW_new1=sqrt(2*ptl*met_new1.Pt()*(1 -cdphi_new1 ));
+              if(MTW_new1>80.399&&MTW_new1<80.401){//cout<<"MTW old, px var +, py var +, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new1<<endl;
+                double ptnun=met_new1.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new1;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new1;
+                found=true;
+                break;
+              }
+              TLorentzVector met_new2;
+              met_new2.SetPxPyPzE(METPx->at(0)+px_var,METPy->at(0)-py_var,METPz->at(0),METE->at(0));
+              double deltaphi_new2=DeltaPhi(mu_vector[0].Phi(), met_new2.Phi());
+              double cdphi_new2= cos(deltaphi_new2);
+   	      double MTW_new2=sqrt(2*ptl*met_new2.Pt()*(1 -cdphi_new2 ));
+              if(MTW_new2>80.399&&MTW_new2<80.401){//cout<<"MTW old, px var +, py var -, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new2<<endl;
+                double ptnun=met_new2.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new2;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new2;
+                found=true;
+                break;
+              }
+
+              TLorentzVector met_new3;
+              met_new3.SetPxPyPzE(METPx->at(0)-px_var,METPy->at(0)+py_var,METPz->at(0),METE->at(0));
+              double deltaphi_new3=DeltaPhi(mu_vector[0].Phi(), met_new3.Phi());
+              double cdphi_new3= cos(deltaphi_new3);
+   	      double MTW_new3=sqrt(2*ptl*met_new3.Pt()*(1 -cdphi_new3 ));
+              if(MTW_new3>80.399&&MTW_new3<80.401){//cout<<"MTW old, px var -, py var +, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new3<<endl;
+                double ptnun=met_new3.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new3;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new3;
+                found=true;
+                break;
+              }
+
+              TLorentzVector met_new4;
+              met_new4.SetPxPyPzE(METPx->at(0)-px_var,METPy->at(0)-py_var,METPz->at(0),METE->at(0));
+              double deltaphi_new4=DeltaPhi(mu_vector[0].Phi(), met_new4.Phi());
+              double cdphi_new4= cos(deltaphi_new4);
+   	      double MTW_new4=sqrt(2*ptl*met_new4.Pt()*(1 -cdphi_new4 ));
+              if(MTW_new4>80.399&&MTW_new4<80.401){//cout<<"MTW old, px var -, py var -, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new4<<endl;
+                double ptnun=met_new4.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new4;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new4;
+                found=true;
+                break;
+              }
+              TLorentzVector met_new5;
+              met_new5.SetPxPyPzE(METPx->at(0)+py_var,METPy->at(0)+px_var,METPz->at(0),METE->at(0));
+              double deltaphi_new5=DeltaPhi(mu_vector[0].Phi(), met_new5.Phi());
+              double cdphi_new5= cos(deltaphi_new5);
+   	      double MTW_new5=sqrt(2*ptl*met_new5.Pt()*(1 -cdphi_new5 ));
+              if(MTW_new5>80.399&&MTW_new5<80.401){//cout<<"MTW old, px var +, py var +, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new5<<endl;
+                double ptnun=met_new5.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new5;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new5;
+                found=true;
+                break;
+              }
+              TLorentzVector met_new6;
+              met_new6.SetPxPyPzE(METPx->at(0)+py_var,METPy->at(0)-px_var,METPz->at(0),METE->at(0));
+              double deltaphi_new6=DeltaPhi(mu_vector[0].Phi(), met_new6.Phi());
+              double cdphi_new6= cos(deltaphi_new6);
+   	      double MTW_new6=sqrt(2*ptl*met_new6.Pt()*(1 -cdphi_new6 ));
+              if(MTW_new6>80.399&&MTW_new6<80.401){//cout<<"MTW old, px var +, py var -, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new6<<endl;
+                double ptnun=met_new6.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new6;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new6;
+                found=true;
+                break;
+              }
+
+              TLorentzVector met_new7;
+              met_new7.SetPxPyPzE(METPx->at(0)-py_var,METPy->at(0)+px_var,METPz->at(0),METE->at(0));
+              double deltaphi_new7=DeltaPhi(mu_vector[0].Phi(), met_new7.Phi());
+              double cdphi_new7= cos(deltaphi_new7);
+   	      double MTW_new7=sqrt(2*ptl*met_new7.Pt()*(1 -cdphi_new7 ));
+              if(MTW_new7>80.399&&MTW_new7<80.401){//cout<<"MTW old, px var -, py var +, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new7<<endl;
+                double ptnun=met_new7.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new7;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new7;
+                found=true;
+                break;
+              }
+
+              TLorentzVector met_new8;
+              met_new8.SetPxPyPzE(METPx->at(0)-py_var,METPy->at(0)-px_var,METPz->at(0),METE->at(0));
+              double deltaphi_new8=DeltaPhi(mu_vector[0].Phi(), met_new8.Phi());
+              double cdphi_new8= cos(deltaphi_new8);
+   	      double MTW_new8=sqrt(2*ptl*met_new8.Pt()*(1 -cdphi_new8 ));
+              if(MTW_new8>80.399&&MTW_new8<80.401){//cout<<"MTW old, px var -, py var -, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new8<<endl;
+                double ptnun=met_new8.Pt();
+                double mun= MW*MW/2 + ptl*ptnun*cdphi_new8;
+                double An=mun*pzl/(ptl*ptl);
+                double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
+                double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
+                double Dn=0;
+                //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+                A=An;
+                nu_complex=met_new8;
+                found=true;
+                break;
+              }
+
+            }
+          if(found)break; 
+          }
+
+        if(found)solved_complex_count++;
+        }
+
+
+
+
+
+
+
+
+        if((B-C)>=0)D= sqrt(B-C);
+        if(B-C<0)D=0;
+        if(B-C<0)complex_count++;
+        if((B-C)>=0)real_count++;
+        pz1= A+D;
+        pz2=A-D;
+
+        TLorentzVector nu_vector1;
+        TLorentzVector nu_vector2;
+        TLorentzVector tlep;
+        TLorentzVector thad;
+        if((B-C)>=0){
+          double new_E1=sqrt(METPx->at(0)*METPx->at(0) +METPy->at(0)*METPy->at(0) +pz1*pz1);
+          nu_vector1.SetPxPyPzE(METPx->at(0),METPy->at(0),pz1,new_E1);
+          double new_E2=sqrt(METPx->at(0)*METPx->at(0) +METPy->at(0)*METPy->at(0) +pz2*pz2);
+          nu_vector2.SetPxPyPzE(METPx->at(0),METPy->at(0),pz2,new_E2);
+        }
+
+        if((B-C)<0){
+          double new_E1=sqrt(nu_complex.Px()*nu_complex.Px() +nu_complex.Py()*nu_complex.Py() +pz1*pz1);
+          nu_vector1.SetPxPyPzE(METPx->at(0),METPy->at(0),pz1,new_E1);
+          double new_E2=sqrt(nu_complex.Px()*nu_complex.Px() +nu_complex.Py()*nu_complex.Py() +pz2*pz2);
+          nu_vector2.SetPxPyPzE(METPx->at(0),METPy->at(0),pz2,new_E2);
+        }
+      //  cout<<" nu1 b1, nu2 b1, nu1 b2, nu2 b2 "<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]).M()<<endl;
+
+        double m1=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]).M();
+        double m2=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]).M();
+        double m3=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]).M();
+        double m4=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]).M();
+        int ind2=-1;
+        if(fabs(m1-172.5) < fabs(m2-172.5)){
+          if(fabs(m3-172.5) < fabs(m4-172.5)){
+            if(fabs(m1-172.5) <fabs(m3-172.5)){//m1
+              tlep=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]);
+              ind2=b_jet_index[1];
+
+            }
+            if(fabs(m1-172.5) >fabs(m3-172.5)){//m3
+              tlep=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]);
+              ind2=b_jet_index[0];
+            }
+          }
+          if(fabs(m3-172.5) > fabs(m4-172.5)){
+           if(fabs(m1-172.5) <fabs(m4-172.5)){//m1
+              tlep=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]);
+              ind2=b_jet_index[1];
+            }
+            if(fabs(m1-172.5) >fabs(m4-172.5)){//m4
+              tlep=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]);
+              ind2=b_jet_index[0];
+            }
+          }
+        }
+
+
+        if(fabs(m1-172.5) > fabs(m2-172.5)){
+         if(fabs(m3-172.5) < fabs(m4-172.5)){
+            if(fabs(m2-172.5) <fabs(m3-172.5)){//m2
+              tlep=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]);
+              ind2=b_jet_index[1];
+            }
+            if(fabs(m2-172.5) >fabs(m3-172.5)){//m3
+              tlep=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]);
+              ind2=b_jet_index[0];
+            }
+          }
+          if(fabs(m3-172.5) > fabs(m4-172.5)){
+           if(fabs(m2-172.5) <fabs(m4-172.5)){//m2
+              tlep=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]);
+              ind2=b_jet_index[1];
+            }
+            if(fabs(m2-172.5) >fabs(m4-172.5)){//m4
+              tlep=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]);
+              ind2=b_jet_index[0];
+            }
+          }
+        }
+
+
+        if((fabs(m1-172.5) == fabs(m2-172.5) )&& (fabs(m3-172.5) == fabs(m4-172.5) )){
+           if(fabs(m1-172.5) <fabs(m3-172.5)){//m1
+              tlep=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]);
+              ind2=b_jet_index[1];
+           }
+          if(fabs(m1-172.5) >fabs(m3-172.5)){//m3
+              tlep=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]);
+              ind2=b_jet_index[0];
+           }
+        } 
+
+        double mmin=9999;
+        int ljet_ind1=-99, ljet_ind2=-99;
+        for(unsigned int j_ind=0; j_ind<jet_vector.size();j_ind++){
+          if(j_ind==b_jet_index[0]|| j_ind==b_jet_index[1])continue;
+          for(unsigned int j_indd=j_ind; j_indd<jet_vector.size();j_indd++){
+            if(j_ind==j_indd || j_indd==b_jet_index[0]|| j_indd==b_jet_index[1])continue;
+
+            double mmin_temp=(jet_vector[j_ind]+jet_vector[j_indd]).M();
+            if(fabs(mmin_temp-80.4)<fabs(mmin-80.4)){
+              mmin=mmin_temp;ljet_ind1=j_ind;ljet_ind2=j_indd;
+            }
+          }
+        }
+      //  cout<<ljet_ind1<<"  "<<ljet_ind2<<"  "<<(jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M()<<endl;
+        h_ljet_pt->Fill(jet_vector[ljet_ind1].Pt());
+        h_ljet_eta->Fill(jet_vector[ljet_ind1].Eta());    
+
+        h_sljet_pt->Fill(jet_vector[ljet_ind2].Pt());
+        h_sljet_eta->Fill(jet_vector[ljet_ind2].Eta());  
+
+        h_dijet_mass->Fill((jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M());  
+//        cout<<" nu1 b1, nu2 b1, nu1 b2, nu2 b2 "<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]).M()<<endl;
+
+//       cout<<"jj b1, jj b2  "<<(jet_vector[ljet_ind1]+jet_vector[ljet_ind2] +jet_vector[b_jet_index[0]] ).M()<<"  "<<(jet_vector[ljet_ind1]+jet_vector[ljet_ind2] +jet_vector[b_jet_index[1]] ).M()<<endl;
+        thad=jet_vector[ljet_ind1]+jet_vector[ljet_ind2] +jet_vector[ind2];
+
+     //   cout<<m1<<"  "<<m2<<"  "<<m3<<"  "<<m4<<"  "<<endl;
+       
+     //   cout<<tlep.M()<<" "<<thad.M()<<endl;
+        h_m_thad->Fill(thad.M()); 
+        h_m_tlep->Fill(tlep.M());       
+  
+        TLorentzVector top_vector;
+        TLorentzVector atop_vector;
+        if(mu_charge[0]>0){
+          h_m_top->Fill(tlep.M());
+          h_m_atop->Fill(thad.M());
+          top_vector=tlep;
+          atop_vector=thad;
+        }
+
+        if(mu_charge[0]<0){
+          h_m_atop->Fill(tlep.M());
+          h_m_top->Fill(thad.M());
+          atop_vector=tlep;
+          top_vector=thad;
+        }
+
+        rec_sel=true;  
+        
+      }//multiplicity requirement
+
+      if(rec_sel&&gen_sel)real++;
+      if(rec_sel&&!gen_sel)fake++;   
+      if(!rec_sel&&gen_sel)miss++;         
+      //cout<<mu_index<<"  "<<jet_index	<<endl;
+     
+   }
+
+   cout<<"real Nu solutions "<<real_count<<" complex solutions "<<complex_count<<" solved complex solutions "<<solved_complex_count<<" fraction of complex count "<<complex_count/(complex_count+real_count)<<" fraction of solved complex events "<<solved_complex_count/(complex_count)<<endl;    
+   cout<<"number of gen and reco tt events "<<real <<" number of gen only "<<miss<<" number of reco only "<<fake<<endl;
+   file_out->Write();
+   file_out->Close();
+}
+

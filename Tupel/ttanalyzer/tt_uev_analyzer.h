@@ -1,30 +1,28 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Jul  2 12:00:13 2015 by ROOT version 6.02/05
-// from TChain tupel/MuonTree/
+// Sat Oct 10 16:56:03 2015 by ROOT version 6.02/05
+// from TChain MuonTree/
 //////////////////////////////////////////////////////////
 
-#ifndef ttjana_reco_h
-#define ttjana_reco_h
-#include "TMath.h"
+#ifndef tt_uev_analyzer_h
+#define tt_uev_analyzer_h
+
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
 using namespace std;
 // Header file for the classes stored in the TTree if any.
 #include "vector"
+#include "vector"
+#include "vector"
+#include "vector"
 
-class ttjana_reco {
+class tt_uev_analyzer {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
-   const Int_t kMaxGjDoughterId = 1;
-   const Int_t kMaxGjDoughterPt = 1;
-   const Int_t kMaxGjDoughterEta = 1;
-   const Int_t kMaxGjDoughterPhi = 1;
-   const Int_t kMaxGjDoughterE = 1;
    const Int_t kMaxpatMuonPt = 1;
    const Int_t kMaxpatMuonEta = 1;
    const Int_t kMaxpatMuonPhi = 1;
@@ -33,6 +31,9 @@ public :
    const Int_t kMaxpatMuonCharge = 1;
    const Int_t kMaxpatMuonDxy = 1;
    const Int_t kMaxpatMuonCombId = 1;
+   const Int_t kMaxpatMuonLooseId = 1;
+   const Int_t kMaxpatMuonMediumId = 1;
+   const Int_t kMaxpatMuonTightId = 1;
    const Int_t kMaxpatMuonTrig = 1;
    const Int_t kMaxpatMuonDetIsoRho = 1;
    const Int_t kMaxpatMuonPfIsoDbeta = 1;
@@ -58,8 +59,8 @@ public :
    const Int_t kMaxpatMuon_PF_IsoDY = 1;
    const Int_t kMaxpatMuon_Mu17_Mu8_Matched = 1;
    const Int_t kMaxpatMuon_Mu17_TkMu8_Matched = 1;
-   const Int_t kMaxpatElecdEtaIn = 1;
    const Int_t kMaxpatElecId = 1;
+   const Int_t kMaxpatElecdEtaIn = 1;
    const Int_t kMaxpatElecdPhiIn = 1;
    const Int_t kMaxpatElechOverE = 1;
    const Int_t kMaxpatElecsigmaIetaIeta = 1;
@@ -119,15 +120,10 @@ public :
    const Int_t kMaxpatJetPfAk04jetpukLoose = 1;
    const Int_t kMaxpatJetPfAk04jetpukMedium = 1;
    const Int_t kMaxpatJetPfAk04jetpukTight = 1;
-   const Int_t kMaxpatJetPfAk04BDiscCSV = 1;
+   const Int_t kMaxpatJetPfAk04BDiscCSVv2 = 1;
    const Int_t kMaxpatJetPfAk04BDiscCSVV1 = 1;
    const Int_t kMaxpatJetPfAk04BDiscCSVSLV1 = 1;
    const Int_t kMaxunc = 1;
-   const Int_t kMaxpatJetPfAk04DoughterId = 1;
-   const Int_t kMaxpatJetPfAk04DoughterPt = 1;
-   const Int_t kMaxpatJetPfAk04DoughterEta = 1;
-   const Int_t kMaxpatJetPfAk04DoughterPhi = 1;
-   const Int_t kMaxpatJetPfAk04DoughterE = 1;
    const Int_t kMaxpatJetPfAk04PtUp = 1;
    const Int_t kMaxpatJetPfAk04PtDn = 1;
    const Int_t kMaxcaloJetPt = 1;
@@ -147,8 +143,27 @@ public :
    const Int_t kMaxptHat = 1;
    const Int_t kMaxmcWeight = 1;
    const Int_t kMaxmcWeights = 1;
+   const Int_t kMaxwtot_write = 1;
 
    // Declaration of leaf types
+   vector<double>  *patPfCandPt;
+   vector<double>  *patPfCandEta;
+   vector<double>  *patPfCandPhi;
+   vector<double>  *patPfCandE;
+   vector<double>  *patPfCandM;
+   vector<double>  *patPfCandPx;
+   vector<double>  *patPfCandPhiAtVtx;
+   vector<double>  *patPfCandLostInnerHits;
+   vector<double>  *patPfCandTrackHighPurity;
+   vector<double>  *patPfCandPuppiWeight;
+   vector<double>  *patPfCandPuppiWeightNolep;
+   vector<double>  *patPfCandCharge;
+   vector<double>  *patPfCandDxy;
+   vector<double>  *patPfCandDxyerr;
+   vector<double>  *patPfCandDz;
+   vector<double>  *patPfCandDzAssociatedPV;
+   vector<double>  *patPfCandDzerr;
+   vector<double>  *patPfCandFromPv;
    vector<double>  *METPt;
    vector<double>  *METPx;
    vector<double>  *METPy;
@@ -210,11 +225,6 @@ public :
    vector<double>  *GjPz;
    vector<double>  *GjChargedFraction;
    vector<bool>    *matchGjet;
-   vector<int>     *GjDoughterId_;
-   vector<double>  *GjDoughterPt_;
-   vector<double>  *GjDoughterEta_;
-   vector<double>  *GjDoughterPhi_;
-   vector<double>  *GjDoughterE_;
    vector<double>  *MGjPt;
    vector<double>  *MGjeta;
    vector<double>  *MGjphi;
@@ -222,6 +232,23 @@ public :
    Double_t        HLT_Mu17_Mu8;
    Double_t        HLT_Mu17_TkMu8;
    Double_t        HLT_Elec17_Elec8;
+   Double_t        HLT_IsoMu24_eta2p1;
+    Double_t  HLT_IsoMu17_eta2p1;
+    Double_t  HLT_IsoMu20;
+    Double_t  HLT_IsoMu20_eta2p1;
+    Double_t  HLT_IsoTkMu20;
+    Double_t  HLT_IsoTkMu20_eta2p1;
+    Double_t  HLT_Mu20;
+    Double_t  HLT_TkMu20;
+
+
+    Double_t  HLT_IsoMu18;
+    Double_t  HLT_IsoMu18_eta2p1;
+    Double_t  HLT_IsoTkMu18;
+    Double_t  HLT_IsoTkMu18_eta2p1;
+    Double_t  HLT_Mu18;
+    Double_t  HLT_TkMu18;
+
    vector<double>  *patMuonPt_;
    vector<double>  *patMuonEta_;
    vector<double>  *patMuonPhi_;
@@ -230,6 +257,9 @@ public :
    vector<double>  *patMuonCharge_;
    vector<double>  *patMuonDxy_;
    vector<double>  *patMuonCombId_;
+   vector<double>  *patMuonLooseId_;
+   vector<double>  *patMuonMediumId_;
+   vector<double>  *patMuonTightId_;
    vector<double>  *patMuonTrig_;
    vector<double>  *patMuonDetIsoRho_;
    vector<double>  *patMuonPfIsoDbeta_;
@@ -255,7 +285,7 @@ public :
    vector<double>  *patMuon_PF_IsoDY_;
    vector<double>  *patMuon_Mu17_Mu8_Matched_;
    vector<double>  *patMuon_Mu17_TkMu8_Matched_;
-   vector<unsigned>  *patElecId_;
+   vector<unsigned int> *patElecId_;
    vector<double>  *patElecdEtaIn_;
    vector<double>  *patElecdPhiIn_;
    vector<double>  *patElechOverE_;
@@ -300,6 +330,7 @@ public :
    vector<double>  *patJetPfAk04Phi_;
    vector<double>  *patJetPfAk04LooseId_;
    vector<double>  *patJetPfAk04Et_;
+//   vector<double>  *patJetPfAk04PartonFlavour_;
    vector<double>  *patJetPfAk04RawPt_;
    vector<double>  *patJetPfAk04RawEn_;
    vector<double>  *patJetPfAk04HadEHF_;
@@ -322,13 +353,13 @@ public :
    vector<double>  *patJetPfAk04BDiscCSVV1_;
    vector<double>  *patJetPfAk04BDiscCSVSLV1_;
    vector<double>  *unc_;
-   vector<int>     *patJetPfAk04DoughterId_;
-   vector<double>  *patJetPfAk04DoughterPt_;
-   vector<double>  *patJetPfAk04DoughterEta_;
-   vector<double>  *patJetPfAk04DoughterPhi_;
-   vector<double>  *patJetPfAk04DoughterE_;
    vector<double>  *patJetPfAk04PtUp_;
    vector<double>  *patJetPfAk04PtDn_;
+   vector<double>  *patJetPfAk04ConstId;
+   vector<double>  *patJetPfAk04ConstPt;
+   vector<double>  *patJetPfAk04ConstEta;
+   vector<double>  *patJetPfAk04ConstPhi;
+   vector<double>  *patJetPfAk04ConstE;
    vector<double>  *caloJetPt_;
    vector<double>  *caloJetRawPt_;
    vector<double>  *caloJetEn_;
@@ -338,20 +369,6 @@ public :
    vector<double>  *caloJetEmEHF_;
    vector<double>  *caloJetEmFrac_;
    vector<double>  *caloJetn90_;
-   vector<double>  *PhotonPt;
-   vector<double>  *PhotonEta;
-   vector<double>  *PhotonPhi;
-   vector<double>  *PhotonIsoEcal;
-   vector<double>  *PhotonIsoHcal;
-   vector<double>  *PhotonPfIsoChargdH;
-   vector<double>  *PhotonPfIsoNeutralH;
-   vector<double>  *PhotonPfIsoPhoton;
-   vector<double>  *PhotonPfIsoPuChargedH;
-   vector<double>  *PhotonPfIsoEcalCluster;
-   vector<double>  *PhotonPfIsoHcalCluster;
-   vector<double>  *PhotonE3x3;
-   vector<double>  *PhotonSigmaIetaIeta;
-   vector<unsigned int> *PhotonId;
    vector<double>  *id1_pdfInfo_;
    vector<double>  *id2_pdfInfo_;
    vector<double>  *x1_pdfInfo_;
@@ -360,9 +377,28 @@ public :
    Double_t        ptHat_;
    Double_t        mcWeight_;
    vector<double>  *mcWeights_;
+   Double_t  wtot_write;
    Double_t        nup;
 
    // List of branches
+   TBranch        *b_patPfCandPt;   //!
+   TBranch        *b_patPfCandEta;   //!
+   TBranch        *b_patPfCandPhi;   //!
+   TBranch        *b_patPfCandE;   //!
+   TBranch        *b_patPfCandM;   //!
+   TBranch        *b_patPfCandPx;   //!
+   TBranch        *b_patPfCandPhiAtVtx;   //!
+   TBranch        *b_patPfCandLostInnerHits;   //!
+   TBranch        *b_patPfCandTrackHighPurity;   //!
+   TBranch        *b_patPfCandPuppiWeight;   //!
+   TBranch        *b_patPfCandPuppiWeightNolep;   //!
+   TBranch        *b_patPfCandCharge;   //!
+   TBranch        *b_patPfCandDxy;   //!
+   TBranch        *b_patPfCandDxyerr;   //!
+   TBranch        *b_patPfCandDz;   //!
+   TBranch        *b_patPfCandDzAssociatedPV;   //!
+   TBranch        *b_patPfCandDzerr;   //!
+   TBranch        *b_patPfCandFromPv;
    TBranch        *b_METPt;   //!
    TBranch        *b_METPx;   //!
    TBranch        *b_METPy;   //!
@@ -424,11 +460,6 @@ public :
    TBranch        *b_GjPz;   //!
    TBranch        *b_GjChargedFraction;   //!
    TBranch        *b_matchGjet;   //!
-   TBranch        *b_GjDoughterId_;   //!
-   TBranch        *b_GjDoughterPt_;   //!
-   TBranch        *b_GjDoughterEta_;   //!
-   TBranch        *b_GjDoughterPhi_;   //!
-   TBranch        *b_GjDoughterE_;   //!
    TBranch        *b_MGjPt;   //!
    TBranch        *b_MGjeta;   //!
    TBranch        *b_MGjphi;   //!
@@ -436,6 +467,23 @@ public :
    TBranch        *b_HLT_Mu17_Mu8;   //!
    TBranch        *b_HLT_Mu17_TkMu8;   //!
    TBranch        *b_HLT_Elec17_Elec8;   //!
+   TBranch        *b_HLT_IsoMu24_eta2p1;   //!
+    TBranch        *b_HLT_IsoMu17_eta2p1;
+    TBranch        *b_HLT_IsoMu20;
+    TBranch        *b_HLT_IsoMu20_eta2p1;
+    TBranch        *b_HLT_IsoTkMu20;
+    TBranch        *b_HLT_IsoTkMu20_eta2p1;
+    TBranch        *b_HLT_Mu20;
+    TBranch        *b_HLT_TkMu20;
+
+
+    TBranch        *b_HLT_IsoMu18;
+    TBranch        *b_HLT_IsoMu18_eta2p1;
+    TBranch        *b_HLT_IsoTkMu18;
+    TBranch        *b_HLT_IsoTkMu18_eta2p1;
+    TBranch        *b_HLT_Mu18;
+    TBranch        *b_HLT_TkMu18;
+
    TBranch        *b_patMuonPt_;   //!
    TBranch        *b_patMuonEta_;   //!
    TBranch        *b_patMuonPhi_;   //!
@@ -444,6 +492,9 @@ public :
    TBranch        *b_patMuonCharge_;   //!
    TBranch        *b_patMuonDxy_;   //!
    TBranch        *b_patMuonCombId_;   //!
+   TBranch        *b_patMuonLooseId_;   //!
+   TBranch        *b_patMuonMediumId_;   //!
+   TBranch        *b_patMuonTightId_;   //!
    TBranch        *b_patMuonTrig_;   //!
    TBranch        *b_patMuonDetIsoRho_;   //!
    TBranch        *b_patMuonPfIsoDbeta_;   //!
@@ -469,8 +520,8 @@ public :
    TBranch        *b_patMuon_PF_IsoDY_;   //!
    TBranch        *b_patMuon_Mu17_Mu8_Matched_;   //!
    TBranch        *b_patMuon_Mu17_TkMu8_Matched_;   //!
-   TBranch        *b_patElecdEtaIn_;   //!
    TBranch        *b_patElecId_;   //!
+   TBranch        *b_patElecdEtaIn_;   //!
    TBranch        *b_patElecdPhiIn_;   //!
    TBranch        *b_patElechOverE_;   //!
    TBranch        *b_patElecsigmaIetaIeta_;   //!
@@ -514,6 +565,7 @@ public :
    TBranch        *b_patJetPfAk04Phi_;   //!
    TBranch        *b_patJetPfAk04LooseId_;   //!
    TBranch        *b_patJetPfAk04Et_;   //!
+//   TBranch        *b_patJetPfAk04PartonFlavour_;
    TBranch        *b_patJetPfAk04RawPt_;   //!
    TBranch        *b_patJetPfAk04RawEn_;   //!
    TBranch        *b_patJetPfAk04HadEHF_;   //!
@@ -536,13 +588,13 @@ public :
    TBranch        *b_patJetPfAk04BDiscCSVV1_;   //!
    TBranch        *b_patJetPfAk04BDiscCSVSLV1_;   //!
    TBranch        *b_unc_;   //!
-   TBranch        *b_patJetPfAk04DoughterId_;   //!
-   TBranch        *b_patJetPfAk04DoughterPt_;   //!
-   TBranch        *b_patJetPfAk04DoughterEta_;   //!
-   TBranch        *b_patJetPfAk04DoughterPhi_;   //!
-   TBranch        *b_patJetPfAk04DoughterE_;   //!
    TBranch        *b_patJetPfAk04PtUp_;   //!
    TBranch        *b_patJetPfAk04PtDn_;   //!
+   TBranch        *b_patJetPfAk04ConstId;   //!
+   TBranch        *b_patJetPfAk04ConstPt;   //!
+   TBranch        *b_patJetPfAk04ConstEta;   //!
+   TBranch        *b_patJetPfAk04ConstPhi;   //!
+   TBranch        *b_patJetPfAk04ConstE;   //!
    TBranch        *b_caloJetPt_;   //!
    TBranch        *b_caloJetRawPt_;   //!
    TBranch        *b_caloJetEn_;   //!
@@ -552,20 +604,6 @@ public :
    TBranch        *b_caloJetEmEHF_;   //!
    TBranch        *b_caloJetEmFrac_;   //!
    TBranch        *b_caloJetn90_;   //!
-   TBranch        *b_PhotonPt;   //!
-   TBranch        *b_PhotonEta;   //!
-   TBranch        *b_PhotonPhi;   //!
-   TBranch        *b_PhotonIsoEcal;   //!
-   TBranch        *b_PhotonIsoHcal;   //!
-   TBranch        *b_PhotonPfIsoChargdH;   //!
-   TBranch        *b_PhotonPfIsoNeutralH;   //!
-   TBranch        *b_PhotonPfIsoPhoton;   //!
-   TBranch        *b_PhotonPfIsoPuChargedH;   //!
-   TBranch        *b_PhotonPfIsoEcalCluster;   //!
-   TBranch        *b_PhotonPfIsoHcalCluster;   //!
-   TBranch        *b_PhotonE3x3;   //!
-   TBranch        *b_PhotonSigmaIetaIeta;   //!
-   TBranch        *b_PhotonId;   //!
    TBranch        *b_id1_pdfInfo_;   //!
    TBranch        *b_id2_pdfInfo_;   //!
    TBranch        *b_x1_pdfInfo_;   //!
@@ -574,10 +612,11 @@ public :
    TBranch        *b_ptHat_;   //!
    TBranch        *b_mcWeight_;   //!
    TBranch        *b_mcWeights_;   //!
+   TBranch        *b_wtot_write;
    TBranch        *b_nup;   //!
 
-   ttjana_reco(TTree *tree=0);
-   virtual ~ttjana_reco();
+   tt_uev_analyzer(TTree *tree=0);
+   virtual ~tt_uev_analyzer();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -593,13 +632,12 @@ public :
    bool doe=false;
    int idd=13;
    double pi = 3.1415926535897932384626433832795028841971693;
-
 };
 
 #endif
 
-#ifdef ttjana_reco_cxx
-ttjana_reco::ttjana_reco(TTree *tree) : fChain(0) 
+#ifdef tt_uev_analyzer_cxx
+tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -612,162 +650,148 @@ ttjana_reco::ttjana_reco(TTree *tree) : fChain(0)
       if (!f || !f->IsOpen()) {
          f = new TFile("Memory Directory");
       }
-      f->GetObject("tupel/MuonTree",tree);
+      f->GetObject("MuonTree",tree);
 
 #else // SINGLE_TREE
 
       // The following code should be used if you want this class to access a chain
       // of trees.
-      TChain * chain = new TChain("tupel/MuonTree","");
-   if(doe)idd=11;
+      TChain * chain = new TChain("MuonTree","");
+      if(doe)idd=11;
+
+
+chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_reminiaod.root");
+chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_prompt.root");
+name="25ns_data_D_uev_newlist_2110_fromskimmed";
+
 /*
-#include "inlist_powheg_hpp.h"
-dosignal=true;
-name="mc_powheg_hpp_signal";
+chain->Add("/sdb2/Bugra/skimmed/25ns_wjet.root");
+name="25ns_wjet_uev_miniaodv2_2110_fromskimmed";
 */
 /*
-#include "inlist_powheg_hpp.h"
+chain->Add("/sdb3/Bugra/skimmed/25ns_tt_.root");
+chain->Add("/sdb3/Bugra/skimmed/25ns_tt__1.root");
+//chain->Add("/home/bugra/skimmed/25ns_tt_.root");
+//chain->Add("/home/bugra/skimmed/25ns_tt__1.root");
+//chain->Add("/home/bugra/skimmed/25ns_tt__2.root");
+//chain->Add("/home/bugra/skimmed/25ns_tt__3.root");
+name="25ns_tt_uev_miniaodv2_2110_fromskimmed";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/25ns_st_t_top.root");
+name="25ns_st_t_top_uev_2110_fromskimmed";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/25ns_st_t_atop.root");
+name="25ns_st_t_atop_uev_2110_fromskimmed";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/25ns_st_tw_atop.root");
+name="25ns_st_tw_atop_uev_2110_fromskimmed";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/25ns_st_tw_top.root");
+name="25ns_st_tw_top_uev_2110_fromskimmed";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/powheg_hpp.root");
+name="powheg_hpp";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/powheg_sdn.root");
+name="powheg_sdn";
+*/
+/*
+chain->Add("/sdb2/Bugra/skimmed/powheg_up.root");
+name="powheg_up";
+*/
+
+
+
+
+
+
+/*
+#include "25ns_data_D_uev.h"
+name="data_25ns_uev";
+*/
+
+/*
+#include "25ns_tt_uev_miniaodv2.h"
+name="mc_signal_25ns_uev_miniaodv2_signal";
+*/
+
+/*
+#include "25ns_data_D_uev_newlist.h"
+name="data_25ns_uev_newlist";
+*/
+
+
+/*
+#include "25ns_st_t_atop_uev.h"
+name="mc_st_t_atop_25ns_uev";
+*/
+/*
+#include "25ns_st_t_top_uev.h"
+name="mc_st_t_top_25ns_uev";
+*/
+/*
+#include "25ns_st_tw_atop_uev.h"
+name="mc_st_tw_atop_25ns_uev";
+*/
+/*
+#include "25ns_st_tw_top_uev.h"
+name="mc_st_tw_top_25ns_uev";
+*/
+/*
+#include "25ns_wjet_uev_miniaodv2.h"
+
+name="mc_wjet_25ns_uev_miniaodv2";
+*/
+
+
+/*
+#include "25ns_wjet_uev.h"
+name="mc_wjet_25ns_uev";
+*/
+
+
+/*
+#include "25ns_tt_uev.h"
+//dosignal=true;
+name="mc_signal_25ns_uev_signal";
+*/
+
+/*
+#include "25ns_tt_uev.h"
 dottother=true;
-name="mc_powheg_hpp_other";
+name="mc_signal_25ns_uev_ttother";
 */
 
-#include "inlist_powheg_sup.h"
-dosignal=true;
-name="mc_powheg_hpp_scaleup_signal";
-
-/*
-#include "inlist_powheg_sup.h"
-dottother=true;
-name="mc_powheg_hpp_scaleup_other";
-*/
-/*
-#include "inlist_powheg_sdn.h"
-dosignal=true;
-name="mc_powheg_hpp_scaledn_signal";
-*/
-/*
-#include "inlist_powheg_sdn.h"
-dottother=true;
-name="mc_powheg_hpp_scaledn_other";
-*/
-/*
-#include "inlist.h" //Powheg signal sample
-dosignal=true;
-name="mc_signal";
-*/
-/*
-#include "inlist.h" //Powheg signal sample
-dottother=true;
-name="mc_other";
-*/
-/*
-#include "inlist_amc_hpp.h"
-dosignal=true;
-name="mc_amc_hpp_signal";
-*/
-/*
-#include "inlist_amc_hpp.h"
-dottother=true;
-name="mc_amc_hpp_other";
-*/
-
-/*
-#include "datalist_e.h"
-#include "datalist.h"
- name="data";
-*/
-/*
-#include "datalist_golden.h"
-name="data_golden";
-*/
-
-
-/*
-#include "inlist_ST_tWch_t.h"
-name="ST_tWch_t";
-*/
-/*
-#include "inlist_ST_tWch_tbar.h"
-name="ST_tWch_tbar";
-*/
-/*#include "inlist_ST_tch_t.h"
-name="ST_tch_t";
-*/
-/*#include "inlist_ST_tch_tbar.h"
-name="ST_tch_tbar.root";
-*/
-/*
-#include "inlist_WJet.h"
-name="ST_WJet";
-*/
-
-
-
-
-
-
-/*
-#include "25ns_data_C.h"
- name="data_25ns_runC";
-*/
-
-/*
-#include "25ns_data_D.h"
- name="data_25ns_runD";
-*/
-/*
-#include "25ns_st_t_atop.h"
- name="st_t_atop_25ns";
-*/
-/*
-#include "25ns_st_t_top.h"
- name="st_t_top_25ns";
-*/
-/*
-#include "25ns_st_tw_atop.h"
- name="st_tw_atop_25ns";
-*/
-/*
-#include "25ns_st_tw_top.h"
- name="st_tw_top_25ns";
-*/
-/*
-#include "25ns_tt.h"
- name="mc_signal_25ns";
-dosignal=true;
-*/
-/*
-#include "25ns_tt.h"
- name="mc_other_25ns";
-dottother=true;
-*/
-/*
-#include "25ns_wjet.h"
- name="wjet_25ns";
-*/
       tree = chain;
-#endif // SINGLE_TREE
 
 name += "_isElec_";
 name += doe;
-name += ".root";
+name += "_v10.root";
+#endif // SINGLE_TREE
+
    }
    Init(tree);
 }
 
-ttjana_reco::~ttjana_reco()
+tt_uev_analyzer::~tt_uev_analyzer()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t ttjana_reco::GetEntry(Long64_t entry)
+Int_t tt_uev_analyzer::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ttjana_reco::LoadTree(Long64_t entry)
+Long64_t tt_uev_analyzer::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -780,7 +804,7 @@ Long64_t ttjana_reco::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ttjana_reco::Init(TTree *tree)
+void tt_uev_analyzer::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -791,6 +815,24 @@ void ttjana_reco::Init(TTree *tree)
    // (once per file to be processed).
 
    // Set object pointer
+   patPfCandPt = 0;
+   patPfCandEta = 0;
+   patPfCandPhi = 0;
+   patPfCandE = 0;
+   patPfCandM = 0;
+   patPfCandPx = 0;
+   patPfCandPhiAtVtx = 0;
+   patPfCandLostInnerHits = 0;
+   patPfCandTrackHighPurity = 0;
+   patPfCandPuppiWeight = 0;
+   patPfCandPuppiWeightNolep = 0;
+   patPfCandCharge = 0;
+   patPfCandDxy = 0;
+   patPfCandDxyerr = 0;
+   patPfCandDz = 0;
+   patPfCandDzAssociatedPV = 0;
+   patPfCandDzerr = 0;
+   patPfCandFromPv = 0;
    METPt = 0;
    METPx = 0;
    METPy = 0;
@@ -843,11 +885,6 @@ void ttjana_reco::Init(TTree *tree)
    GjPz = 0;
    GjChargedFraction = 0;
    matchGjet = 0;
-   GjDoughterId_ = 0;
-   GjDoughterPt_ = 0;
-   GjDoughterEta_ = 0;
-   GjDoughterPhi_ = 0;
-   GjDoughterE_ = 0;
    MGjPt = 0;
    MGjeta = 0;
    MGjphi = 0;
@@ -860,6 +897,9 @@ void ttjana_reco::Init(TTree *tree)
    patMuonCharge_ = 0;
    patMuonDxy_ = 0;
    patMuonCombId_ = 0;
+   patMuonLooseId_ = 0;
+   patMuonMediumId_ = 0;
+   patMuonTightId_ = 0;
    patMuonTrig_ = 0;
    patMuonDetIsoRho_ = 0;
    patMuonPfIsoDbeta_ = 0;
@@ -885,8 +925,8 @@ void ttjana_reco::Init(TTree *tree)
    patMuon_PF_IsoDY_ = 0;
    patMuon_Mu17_Mu8_Matched_ = 0;
    patMuon_Mu17_TkMu8_Matched_ = 0;
-   patElecdEtaIn_ = 0;
    patElecId_ = 0;
+   patElecdEtaIn_ = 0;
    patElecdPhiIn_ = 0;
    patElechOverE_ = 0;
    patElecsigmaIetaIeta_ = 0;
@@ -928,6 +968,7 @@ void ttjana_reco::Init(TTree *tree)
    patJetPfAk04Phi_ = 0;
    patJetPfAk04LooseId_ = 0;
    patJetPfAk04Et_ = 0;
+   //patJetPfAk04PartonFlavour_=0;
    patJetPfAk04RawPt_ = 0;
    patJetPfAk04RawEn_ = 0;
    patJetPfAk04HadEHF_ = 0;
@@ -950,13 +991,13 @@ void ttjana_reco::Init(TTree *tree)
    patJetPfAk04BDiscCSVV1_ = 0;
    patJetPfAk04BDiscCSVSLV1_ = 0;
    unc_ = 0;
-   patJetPfAk04DoughterId_ = 0;
-   patJetPfAk04DoughterPt_ = 0;
-   patJetPfAk04DoughterEta_ = 0;
-   patJetPfAk04DoughterPhi_ = 0;
-   patJetPfAk04DoughterE_ = 0;
    patJetPfAk04PtUp_ = 0;
    patJetPfAk04PtDn_ = 0;
+   patJetPfAk04ConstId = 0;
+   patJetPfAk04ConstPt = 0;
+   patJetPfAk04ConstEta = 0;
+   patJetPfAk04ConstPhi = 0;
+   patJetPfAk04ConstE = 0;
    caloJetPt_ = 0;
    caloJetRawPt_ = 0;
    caloJetEn_ = 0;
@@ -966,20 +1007,6 @@ void ttjana_reco::Init(TTree *tree)
    caloJetEmEHF_ = 0;
    caloJetEmFrac_ = 0;
    caloJetn90_ = 0;
-   PhotonPt = 0;
-   PhotonEta = 0;
-   PhotonPhi = 0;
-   PhotonIsoEcal = 0;
-   PhotonIsoHcal = 0;
-   PhotonPfIsoChargdH = 0;
-   PhotonPfIsoNeutralH = 0;
-   PhotonPfIsoPhoton = 0;
-   PhotonPfIsoPuChargedH = 0;
-   PhotonPfIsoEcalCluster = 0;
-   PhotonPfIsoHcalCluster = 0;
-   PhotonE3x3 = 0;
-   PhotonSigmaIetaIeta = 0;
-   PhotonId = 0;
    id1_pdfInfo_ = 0;
    id2_pdfInfo_ = 0;
    x1_pdfInfo_ = 0;
@@ -992,6 +1019,24 @@ void ttjana_reco::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
+   fChain->SetBranchAddress("patPfCandPt", &patPfCandPt, &b_patPfCandPt);
+   fChain->SetBranchAddress("patPfCandEta", &patPfCandEta, &b_patPfCandEta);
+   fChain->SetBranchAddress("patPfCandPhi", &patPfCandPhi, &b_patPfCandPhi);
+   fChain->SetBranchAddress("patPfCandE", &patPfCandE, &b_patPfCandE);
+   fChain->SetBranchAddress("patPfCandM", &patPfCandM, &b_patPfCandM);
+   fChain->SetBranchAddress("patPfCandPx", &patPfCandPx, &b_patPfCandPx);
+   fChain->SetBranchAddress("patPfCandPhiAtVtx", &patPfCandPhiAtVtx, &b_patPfCandPhiAtVtx);
+   fChain->SetBranchAddress("patPfCandLostInnerHits", &patPfCandLostInnerHits, &b_patPfCandLostInnerHits);
+   fChain->SetBranchAddress("patPfCandTrackHighPurity", &patPfCandTrackHighPurity, &b_patPfCandTrackHighPurity);
+   fChain->SetBranchAddress("patPfCandPuppiWeight", &patPfCandPuppiWeight, &b_patPfCandPuppiWeight);
+   fChain->SetBranchAddress("patPfCandPuppiWeightNolep", &patPfCandPuppiWeightNolep, &b_patPfCandPuppiWeightNolep);
+   fChain->SetBranchAddress("patPfCandCharge", &patPfCandCharge, &b_patPfCandCharge);
+   fChain->SetBranchAddress("patPfCandDxy", &patPfCandDxy, &b_patPfCandDxy);
+   fChain->SetBranchAddress("patPfCandDxyerr", &patPfCandDxyerr, &b_patPfCandDxyerr);
+   fChain->SetBranchAddress("patPfCandDz", &patPfCandDz, &b_patPfCandDz);
+   fChain->SetBranchAddress("patPfCandDzAssociatedPV", &patPfCandDzAssociatedPV, &b_patPfCandDzAssociatedPV);
+   fChain->SetBranchAddress("patPfCandDzerr", &patPfCandDzerr, &b_patPfCandDzerr);
+    fChain->SetBranchAddress("patPfCandFromPv",&patPfCandFromPv, &b_patPfCandFromPv);
    fChain->SetBranchAddress("METPt", &METPt, &b_METPt);
    fChain->SetBranchAddress("METPx", &METPx, &b_METPx);
    fChain->SetBranchAddress("METPy", &METPy, &b_METPy);
@@ -1053,11 +1098,6 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("GjPz", &GjPz, &b_GjPz);
    fChain->SetBranchAddress("GjChargedFraction", &GjChargedFraction, &b_GjChargedFraction);
    fChain->SetBranchAddress("matchGjet", &matchGjet, &b_matchGjet);
-   fChain->SetBranchAddress("GjDoughterId_", &GjDoughterId_, &b_GjDoughterId_);
-   fChain->SetBranchAddress("GjDoughterPt_", &GjDoughterPt_, &b_GjDoughterPt_);
-   fChain->SetBranchAddress("GjDoughterEta_", &GjDoughterEta_, &b_GjDoughterEta_);
-   fChain->SetBranchAddress("GjDoughterPhi_", &GjDoughterPhi_, &b_GjDoughterPhi_);
-   fChain->SetBranchAddress("GjDoughterE_", &GjDoughterE_, &b_GjDoughterE_);
    fChain->SetBranchAddress("MGjPt", &MGjPt, &b_MGjPt);
    fChain->SetBranchAddress("MGjeta", &MGjeta, &b_MGjeta);
    fChain->SetBranchAddress("MGjphi", &MGjphi, &b_MGjphi);
@@ -1065,6 +1105,25 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("HLT_Mu17_Mu8", &HLT_Mu17_Mu8, &b_HLT_Mu17_Mu8);
    fChain->SetBranchAddress("HLT_Mu17_TkMu8", &HLT_Mu17_TkMu8, &b_HLT_Mu17_TkMu8);
    fChain->SetBranchAddress("HLT_Elec17_Elec8", &HLT_Elec17_Elec8, &b_HLT_Elec17_Elec8);
+   fChain->SetBranchAddress("HLT_IsoMu24_eta2p1", &HLT_IsoMu24_eta2p1, &b_HLT_IsoMu24_eta2p1);
+
+   fChain->SetBranchAddress("HLT_IsoMu17_eta2p1", &HLT_IsoMu17_eta2p1, &b_HLT_IsoMu17_eta2p1);
+   fChain->SetBranchAddress("HLT_IsoMu20", &HLT_IsoMu20, &b_HLT_IsoMu20);
+   fChain->SetBranchAddress("HLT_IsoMu20_eta2p1", &HLT_IsoMu20_eta2p1, &b_HLT_IsoMu20_eta2p1);
+   fChain->SetBranchAddress("HLT_IsoTkMu20", &HLT_IsoTkMu20, &b_HLT_IsoTkMu20);
+   fChain->SetBranchAddress("HLT_IsoTkMu20_eta2p1", &HLT_IsoTkMu20_eta2p1, &b_HLT_IsoTkMu20_eta2p1);
+   fChain->SetBranchAddress("HLT_Mu20", &HLT_Mu20, &b_HLT_Mu20);
+   fChain->SetBranchAddress("HLT_TkMu20", &HLT_TkMu20, &b_HLT_TkMu20);
+
+
+   fChain->SetBranchAddress("HLT_IsoMu18", &HLT_IsoMu18, &b_HLT_IsoMu18);
+   fChain->SetBranchAddress("HLT_IsoMu18_eta2p1", &HLT_IsoMu18_eta2p1, &b_HLT_IsoMu18_eta2p1);
+   fChain->SetBranchAddress("HLT_IsoTkMu18", &HLT_IsoTkMu18, &b_HLT_IsoTkMu18);
+   fChain->SetBranchAddress("HLT_IsoTkMu18_eta2p1", &HLT_IsoTkMu18_eta2p1, &b_HLT_IsoTkMu18_eta2p1);
+   fChain->SetBranchAddress("HLT_Mu18", &HLT_Mu18, &b_HLT_Mu18);
+   fChain->SetBranchAddress("HLT_TkMu18", &HLT_TkMu18, &b_HLT_TkMu18);
+
+
    fChain->SetBranchAddress("patMuonPt_", &patMuonPt_, &b_patMuonPt_);
    fChain->SetBranchAddress("patMuonEta_", &patMuonEta_, &b_patMuonEta_);
    fChain->SetBranchAddress("patMuonPhi_", &patMuonPhi_, &b_patMuonPhi_);
@@ -1073,6 +1132,9 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("patMuonCharge_", &patMuonCharge_, &b_patMuonCharge_);
    fChain->SetBranchAddress("patMuonDxy_", &patMuonDxy_, &b_patMuonDxy_);
    fChain->SetBranchAddress("patMuonCombId_", &patMuonCombId_, &b_patMuonCombId_);
+   fChain->SetBranchAddress("patMuonLooseId_", &patMuonLooseId_, &b_patMuonLooseId_);
+   fChain->SetBranchAddress("patMuonMediumId_", &patMuonMediumId_, &b_patMuonMediumId_);
+   fChain->SetBranchAddress("patMuonTightId_", &patMuonTightId_, &b_patMuonTightId_);
    fChain->SetBranchAddress("patMuonTrig_", &patMuonTrig_, &b_patMuonTrig_);
    fChain->SetBranchAddress("patMuonDetIsoRho_", &patMuonDetIsoRho_, &b_patMuonDetIsoRho_);
    fChain->SetBranchAddress("patMuonPfIsoDbeta_", &patMuonPfIsoDbeta_, &b_patMuonPfIsoDbeta_);
@@ -1098,8 +1160,8 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("patMuon_PF_IsoDY_", &patMuon_PF_IsoDY_, &b_patMuon_PF_IsoDY_);
    fChain->SetBranchAddress("patMuon_Mu17_Mu8_Matched_", &patMuon_Mu17_Mu8_Matched_, &b_patMuon_Mu17_Mu8_Matched_);
    fChain->SetBranchAddress("patMuon_Mu17_TkMu8_Matched_", &patMuon_Mu17_TkMu8_Matched_, &b_patMuon_Mu17_TkMu8_Matched_);
-   fChain->SetBranchAddress("patElecdEtaIn_", &patElecdEtaIn_, &b_patElecdEtaIn_);
    fChain->SetBranchAddress("patElecId_", &patElecId_, &b_patElecId_);
+   fChain->SetBranchAddress("patElecdEtaIn_", &patElecdEtaIn_, &b_patElecdEtaIn_);
    fChain->SetBranchAddress("patElecdPhiIn_", &patElecdPhiIn_, &b_patElecdPhiIn_);
    fChain->SetBranchAddress("patElechOverE_", &patElechOverE_, &b_patElechOverE_);
    fChain->SetBranchAddress("patElecsigmaIetaIeta_", &patElecsigmaIetaIeta_, &b_patElecsigmaIetaIeta_);
@@ -1143,6 +1205,7 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("patJetPfAk04Phi_", &patJetPfAk04Phi_, &b_patJetPfAk04Phi_);
    fChain->SetBranchAddress("patJetPfAk04LooseId_", &patJetPfAk04LooseId_, &b_patJetPfAk04LooseId_);
    fChain->SetBranchAddress("patJetPfAk04Et_", &patJetPfAk04Et_, &b_patJetPfAk04Et_);
+ //  fChain->SetBranchAddress("patJetPfAk04PartonFlavour_", &patJetPfAk04PartonFlavour_, &b_patJetPfAk04PartonFlavour_);
    fChain->SetBranchAddress("patJetPfAk04RawPt_", &patJetPfAk04RawPt_, &b_patJetPfAk04RawPt_);
    fChain->SetBranchAddress("patJetPfAk04RawEn_", &patJetPfAk04RawEn_, &b_patJetPfAk04RawEn_);
    fChain->SetBranchAddress("patJetPfAk04HadEHF_", &patJetPfAk04HadEHF_, &b_patJetPfAk04HadEHF_);
@@ -1165,13 +1228,13 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("patJetPfAk04BDiscCSVV1_", &patJetPfAk04BDiscCSVV1_, &b_patJetPfAk04BDiscCSVV1_);
    fChain->SetBranchAddress("patJetPfAk04BDiscCSVSLV1_", &patJetPfAk04BDiscCSVSLV1_, &b_patJetPfAk04BDiscCSVSLV1_);
    fChain->SetBranchAddress("unc_", &unc_, &b_unc_);
-   fChain->SetBranchAddress("patJetPfAk04DoughterId_", &patJetPfAk04DoughterId_, &b_patJetPfAk04DoughterId_);
-   fChain->SetBranchAddress("patJetPfAk04DoughterPt_", &patJetPfAk04DoughterPt_, &b_patJetPfAk04DoughterPt_);
-   fChain->SetBranchAddress("patJetPfAk04DoughterEta_", &patJetPfAk04DoughterEta_, &b_patJetPfAk04DoughterEta_);
-   fChain->SetBranchAddress("patJetPfAk04DoughterPhi_", &patJetPfAk04DoughterPhi_, &b_patJetPfAk04DoughterPhi_);
-   fChain->SetBranchAddress("patJetPfAk04DoughterE_", &patJetPfAk04DoughterE_, &b_patJetPfAk04DoughterE_);
    fChain->SetBranchAddress("patJetPfAk04PtUp_", &patJetPfAk04PtUp_, &b_patJetPfAk04PtUp_);
    fChain->SetBranchAddress("patJetPfAk04PtDn_", &patJetPfAk04PtDn_, &b_patJetPfAk04PtDn_);
+   fChain->SetBranchAddress("patJetPfAk04ConstId", &patJetPfAk04ConstId, &b_patJetPfAk04ConstId);
+   fChain->SetBranchAddress("patJetPfAk04ConstPt", &patJetPfAk04ConstPt, &b_patJetPfAk04ConstPt);
+   fChain->SetBranchAddress("patJetPfAk04ConstEta", &patJetPfAk04ConstEta, &b_patJetPfAk04ConstEta);
+   fChain->SetBranchAddress("patJetPfAk04ConstPhi", &patJetPfAk04ConstPhi, &b_patJetPfAk04ConstPhi);
+   fChain->SetBranchAddress("patJetPfAk04ConstE", &patJetPfAk04ConstE, &b_patJetPfAk04ConstE);
    fChain->SetBranchAddress("caloJetPt_", &caloJetPt_, &b_caloJetPt_);
    fChain->SetBranchAddress("caloJetRawPt_", &caloJetRawPt_, &b_caloJetRawPt_);
    fChain->SetBranchAddress("caloJetEn_", &caloJetEn_, &b_caloJetEn_);
@@ -1181,20 +1244,6 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("caloJetEmEHF_", &caloJetEmEHF_, &b_caloJetEmEHF_);
    fChain->SetBranchAddress("caloJetEmFrac_", &caloJetEmFrac_, &b_caloJetEmFrac_);
    fChain->SetBranchAddress("caloJetn90_", &caloJetn90_, &b_caloJetn90_);
-   fChain->SetBranchAddress("PhotonPt", &PhotonPt, &b_PhotonPt);
-   fChain->SetBranchAddress("PhotonEta", &PhotonEta, &b_PhotonEta);
-   fChain->SetBranchAddress("PhotonPhi", &PhotonPhi, &b_PhotonPhi);
-   fChain->SetBranchAddress("PhotonIsoEcal", &PhotonIsoEcal, &b_PhotonIsoEcal);
-   fChain->SetBranchAddress("PhotonIsoHcal", &PhotonIsoHcal, &b_PhotonIsoHcal);
-   fChain->SetBranchAddress("PhotonPfIsoChargdH", &PhotonPfIsoChargdH, &b_PhotonPfIsoChargdH);
-   fChain->SetBranchAddress("PhotonPfIsoNeutralH", &PhotonPfIsoNeutralH, &b_PhotonPfIsoNeutralH);
-   fChain->SetBranchAddress("PhotonPfIsoPhoton", &PhotonPfIsoPhoton, &b_PhotonPfIsoPhoton);
-   fChain->SetBranchAddress("PhotonPfIsoPuChargedH", &PhotonPfIsoPuChargedH, &b_PhotonPfIsoPuChargedH);
-   fChain->SetBranchAddress("PhotonPfIsoEcalCluster", &PhotonPfIsoEcalCluster, &b_PhotonPfIsoEcalCluster);
-   fChain->SetBranchAddress("PhotonPfIsoHcalCluster", &PhotonPfIsoHcalCluster, &b_PhotonPfIsoHcalCluster);
-   fChain->SetBranchAddress("PhotonE3x3", &PhotonE3x3, &b_PhotonE3x3);
-   fChain->SetBranchAddress("PhotonSigmaIetaIeta", &PhotonSigmaIetaIeta, &b_PhotonSigmaIetaIeta);
-   fChain->SetBranchAddress("PhotonId", &PhotonId, &b_PhotonId);
    fChain->SetBranchAddress("id1_pdfInfo_", &id1_pdfInfo_, &b_id1_pdfInfo_);
    fChain->SetBranchAddress("id2_pdfInfo_", &id2_pdfInfo_, &b_id2_pdfInfo_);
    fChain->SetBranchAddress("x1_pdfInfo_", &x1_pdfInfo_, &b_x1_pdfInfo_);
@@ -1203,11 +1252,12 @@ void ttjana_reco::Init(TTree *tree)
    fChain->SetBranchAddress("ptHat_", &ptHat_, &b_ptHat_);
    fChain->SetBranchAddress("mcWeight_", &mcWeight_, &b_mcWeight_);
    fChain->SetBranchAddress("mcWeights_", &mcWeights_, &b_mcWeights_);
+   fChain->SetBranchAddress("wtot_write", &wtot_write, &b_wtot_write);
    fChain->SetBranchAddress("nup", &nup, &b_nup);
    Notify();
 }
 
-Bool_t ttjana_reco::Notify()
+Bool_t tt_uev_analyzer::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1218,33 +1268,33 @@ Bool_t ttjana_reco::Notify()
    return kTRUE;
 }
 
-void ttjana_reco::Show(Long64_t entry)
+void tt_uev_analyzer::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ttjana_reco::Cut(Long64_t entry)
+Int_t tt_uev_analyzer::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-double ttjana_reco::DeltaR(double eta1, double eta2, double phi1, double phi2)
+
+double tt_uev_analyzer::DeltaR(double eta1, double eta2, double phi1, double phi2)
         {
         double deta = eta2 - eta1;
         double dphi = phi2 - phi1;
-        if (fabs(dphi) > pi) dphi = 6.28 - fabs(dphi);
+        if (fabs(dphi) > pi) dphi = 2*pi - fabs(dphi);
         double DELTAR = sqrt(pow(dphi,2)+pow(deta,2))*1.0;
         return DELTAR;
         }
-double ttjana_reco::DeltaPhi(double phi1, double phi2)
+double tt_uev_analyzer::DeltaPhi(double phi1, double phi2)
        	{
 	double dphi = phi2 - phi1;
-       	if (fabs(dphi) > pi) dphi = 6.28 - fabs(dphi);
+       	if (fabs(dphi) > pi) dphi = 2*pi - fabs(dphi);
         return dphi;
         }
-
-#endif // #ifdef ttjana_reco_cxx
+#endif // #ifdef tt_uev_analyzer_cxx
