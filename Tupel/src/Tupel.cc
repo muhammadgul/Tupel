@@ -335,7 +335,7 @@ std::vector<double> patPfCandFromPv;
 
   double HLT_Elec17_Elec8;
 
-//  JetCorrectionUncertainty *jecUnc;
+  JetCorrectionUncertainty *jecUnc;
 };
 
 using namespace std;
@@ -1351,9 +1351,11 @@ if(realdata){
       patJetPfAk04nconst_.push_back(nconst);
 
 
-      
+      jecUnc->setJetEta(jet.eta());
+      jecUnc->setJetPt(jet.pt());
+      double unc = jecUnc->getUncertainty(true);
 
-      double unc = 1.;
+//      double unc = 1.;
       unc_.push_back(unc);
       double up = (1+unc)*jet.pt();
       double down = (1-unc)*jet.pt();
@@ -1404,7 +1406,7 @@ void
 Tupel::beginJob()
 {
   
-//  jecUnc = new JetCorrectionUncertainty("Fall12_V7_DATA_Uncertainty_AK5PFchs.txt");
+  jecUnc = new JetCorrectionUncertainty("Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
     // register to the TFileService
     edm::Service<TFileService> fs;
     TFileDirectory TestDir = fs->mkdir("test");
@@ -1663,7 +1665,7 @@ Tupel::beginJob()
 void 
 Tupel::endJob() 
 {
-//  delete jecUnc;
+  delete jecUnc;
   myTree->Print();
 }
 

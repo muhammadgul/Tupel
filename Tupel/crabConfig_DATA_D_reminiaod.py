@@ -9,7 +9,7 @@ config.General.transferLogs = True
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'simple_run_data_cfg.py'
+config.JobType.psetName = 'simple_run_data_jecv6_cfg.py'
 #config.JobType.scriptExe = 'job_crab.sh'
 #config.JobType.outputFiles=['events_presys.lhe']
 #config.JobType.inputFiles = ['FrameworkJobReport.xml']
@@ -24,7 +24,7 @@ config.Data.totalUnits= -1
 #config.Data.lumiMask= '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-258159_13TeV_PromptReco_Collisions15_25ns_JSON_v3.txt'
 config.Data.lumiMask= '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
 
-config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_2010'
+config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_0911'
 config.Data.publication = False
 config.Data.publishDataName = 'SingleMuon_Run2015D-05Oct2015-v1'
 #config.Data.primaryDataset='CRAB_PrivateMC'
