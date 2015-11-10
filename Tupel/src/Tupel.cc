@@ -55,6 +55,7 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
 //#include "CMGTools/External/interface/PileupJetIdentifier.h"
 #include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -72,9 +73,11 @@ public:
 private:
 /// everything that needs to be done before the event loop
   virtual void beginJob() ;
-  /// everything that needs to be done during the event loop
+  /// everything that needs to be done during the event loop 
+  virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   /// everything that needs to be done after the event loop
+
   virtual void endJob() ;
 
   // input tags
@@ -924,7 +927,7 @@ patPfCandPt.push_back(pf.pt());
 	if (genEventInfoProd->hasBinningValues())
 	  ptHat_ = genEventInfoProd->binningValues()[0];
 	mcWeight_ = genEventInfoProd->weight();
-      mcWeights_ = genEventInfoProd->weights();
+
       }
       /// now get the PDF information
       edm::Handle<GenEventInfoProduct> pdfInfoHandle;
@@ -938,8 +941,19 @@ patPfCandPt.push_back(pf.pt());
 	  //dfInfo_.push_back(pdfInfoHandle->pdf()->xPDF.second);
 	  scalePDF_pdfInfo_.push_back(pdfInfoHandle->pdf()->scalePDF);
 	}   
-      }   
+      } 
+
+      edm::Handle<LHEEventProduct>   lheEventInfoProd;
+      if (iEvent.getByLabel("externalLHEProducer",lheEventInfoProd)) {
+        //mcWeights_ = genEventInfoProd->weights();
+//        cout<<lheEventInfoProd->weights().size()<<endl;
+
+        for(unsigned int size=0;size<lheEventInfoProd->weights().size();size++){
+          mcWeights_.push_back(lheEventInfoProd->weights()[size].wgt);
+        }
+      }  
     }
+
         //cout<<"ccccccccccccccc"<<endl;
     int Mu17_Mu8=0;
     int Mu17_TkMu8=0;
@@ -1402,6 +1416,25 @@ if(realdata){
                 //cout<<"hhhhhhhhhhhhhhhhhhhhh"<<endl;
 }
 
+void
+Tupel::beginRun(edm::Run const& iRun, edm::EventSetup const&){
+
+edm::Handle<LHERunInfoProduct> run;
+ 
+typedef std::vector<LHERunInfoProduct::Header>::const_iterator headers_const_iterator;
+ 
+iRun.getByLabel( "externalLHEProducer", run );
+// iRun.getByLabel( "source", run );
+LHERunInfoProduct myLHERunInfoProduct = *(run.product());
+ 
+for (headers_const_iterator iter=myLHERunInfoProduct.headers_begin(); iter!=myLHERunInfoProduct.headers_end(); iter++){
+  std::cout << iter->tag() << std::endl;
+  std::vector<std::string> lines = iter->lines();
+  for (unsigned int iLine = 0; iLine<lines.size(); iLine++) {
+   std::cout << lines.at(iLine);
+  }
+}
+}
 void 
 Tupel::beginJob()
 {
