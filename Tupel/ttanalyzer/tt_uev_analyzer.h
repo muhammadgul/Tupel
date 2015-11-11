@@ -330,7 +330,7 @@ public :
    vector<double>  *patJetPfAk04Phi_;
    vector<double>  *patJetPfAk04LooseId_;
    vector<double>  *patJetPfAk04Et_;
-//   vector<double>  *patJetPfAk04PartonFlavour_;
+   vector<double>  *patJetPfAk04PartonFlavour_;
    vector<double>  *patJetPfAk04RawPt_;
    vector<double>  *patJetPfAk04RawEn_;
    vector<double>  *patJetPfAk04HadEHF_;
@@ -565,7 +565,7 @@ public :
    TBranch        *b_patJetPfAk04Phi_;   //!
    TBranch        *b_patJetPfAk04LooseId_;   //!
    TBranch        *b_patJetPfAk04Et_;   //!
-//   TBranch        *b_patJetPfAk04PartonFlavour_;
+   TBranch        *b_patJetPfAk04PartonFlavour_;
    TBranch        *b_patJetPfAk04RawPt_;   //!
    TBranch        *b_patJetPfAk04RawEn_;   //!
    TBranch        *b_patJetPfAk04HadEHF_;   //!
@@ -659,52 +659,51 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
       TChain * chain = new TChain("MuonTree","");
       if(doe)idd=11;
 
-
-chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_reminiaod.root");
-chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_prompt.root");
-name="25ns_data_D_uev_newlist_2110_fromskimmed";
-
 /*
-chain->Add("/sdb2/Bugra/skimmed/25ns_wjet.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_reminiaod.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_prompt.root");
+name="25ns_data_D_uev_newlist_2110_fromskimmed";
+*/
+/*
+chain->Add("/sdb5/Bugra/skimmed/25ns_wjet.root");
 name="25ns_wjet_uev_miniaodv2_2110_fromskimmed";
 */
 /*
-chain->Add("/sdb3/Bugra/skimmed/25ns_tt_.root");
-chain->Add("/sdb3/Bugra/skimmed/25ns_tt__1.root");
-//chain->Add("/home/bugra/skimmed/25ns_tt_.root");
-//chain->Add("/home/bugra/skimmed/25ns_tt__1.root");
-//chain->Add("/home/bugra/skimmed/25ns_tt__2.root");
-//chain->Add("/home/bugra/skimmed/25ns_tt__3.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt_.root");
+//chain->Add("/sdb5/Bugra/skimmed/25ns_tt__1.root");
+//chain->Add("/sdb5/Bugra/skimmed/25ns_tt__2.root");
+//chain->Add("/sdb5/Bugra/skimmed/25ns_tt__3.root");
+dosignal=true;
 name="25ns_tt_uev_miniaodv2_2110_fromskimmed";
 */
 /*
-chain->Add("/sdb2/Bugra/skimmed/25ns_st_t_top.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_st_t_top.root");
 name="25ns_st_t_top_uev_2110_fromskimmed";
 */
 /*
-chain->Add("/sdb2/Bugra/skimmed/25ns_st_t_atop.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_st_t_atop.root");
 name="25ns_st_t_atop_uev_2110_fromskimmed";
 */
 /*
-chain->Add("/sdb2/Bugra/skimmed/25ns_st_tw_atop.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_st_tw_atop.root");
 name="25ns_st_tw_atop_uev_2110_fromskimmed";
 */
 /*
-chain->Add("/sdb2/Bugra/skimmed/25ns_st_tw_top.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_st_tw_top.root");
 name="25ns_st_tw_top_uev_2110_fromskimmed";
 */
 /*
-chain->Add("/sdb2/Bugra/skimmed/powheg_hpp.root");
+chain->Add("/sdb3/Bugra/skimmed/powheg_hpp.root");
 name="powheg_hpp";
 */
 /*
-chain->Add("/sdb2/Bugra/skimmed/powheg_sdn.root");
+chain->Add("/sdb3/Bugra/skimmed/powheg_sdn.root");
 name="powheg_sdn";
 */
-/*
-chain->Add("/sdb2/Bugra/skimmed/powheg_up.root");
+
+chain->Add("/sdb3/Bugra/skimmed/powheg_up.root");
 name="powheg_up";
-*/
+
 
 
 
@@ -772,7 +771,7 @@ name="mc_signal_25ns_uev_ttother";
 
 name += "_isElec_";
 name += doe;
-name += "_v10.root";
+name += "_v13.root";
 #endif // SINGLE_TREE
 
    }
@@ -968,7 +967,7 @@ void tt_uev_analyzer::Init(TTree *tree)
    patJetPfAk04Phi_ = 0;
    patJetPfAk04LooseId_ = 0;
    patJetPfAk04Et_ = 0;
-   //patJetPfAk04PartonFlavour_=0;
+   patJetPfAk04PartonFlavour_=0;
    patJetPfAk04RawPt_ = 0;
    patJetPfAk04RawEn_ = 0;
    patJetPfAk04HadEHF_ = 0;
@@ -1205,7 +1204,7 @@ void tt_uev_analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("patJetPfAk04Phi_", &patJetPfAk04Phi_, &b_patJetPfAk04Phi_);
    fChain->SetBranchAddress("patJetPfAk04LooseId_", &patJetPfAk04LooseId_, &b_patJetPfAk04LooseId_);
    fChain->SetBranchAddress("patJetPfAk04Et_", &patJetPfAk04Et_, &b_patJetPfAk04Et_);
- //  fChain->SetBranchAddress("patJetPfAk04PartonFlavour_", &patJetPfAk04PartonFlavour_, &b_patJetPfAk04PartonFlavour_);
+   fChain->SetBranchAddress("patJetPfAk04PartonFlavour_", &patJetPfAk04PartonFlavour_, &b_patJetPfAk04PartonFlavour_);
    fChain->SetBranchAddress("patJetPfAk04RawPt_", &patJetPfAk04RawPt_, &b_patJetPfAk04RawPt_);
    fChain->SetBranchAddress("patJetPfAk04RawEn_", &patJetPfAk04RawEn_, &b_patJetPfAk04RawEn_);
    fChain->SetBranchAddress("patJetPfAk04HadEHF_", &patJetPfAk04HadEHF_, &b_patJetPfAk04HadEHF_);
