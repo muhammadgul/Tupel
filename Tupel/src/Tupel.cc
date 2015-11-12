@@ -1343,10 +1343,11 @@ void Tupel::processMuons(){
       // OPTION 1: DeltaBeta corrections for iosolation
       float RelativeIsolationDBetaCorr = (chargedHadronIso + std::max(photonIso+neutralHadronIso - 0.5*chargedHadronIsoPU,0.))/std::max(a, mu[j].pt());
       MuPfIso_->push_back(RelativeIsolationDBetaCorr);
-      unsigned muType = 0;
+      int muType = 0;
       if(mu[j].isGlobalMuon()) muType |= kGlobMu_;
       if(mu[j].isTrackerMuon()) muType |= kTkMu_;
       if(mu[j].isPFMuon()) muType |= kPfMu_;
+      MuType_->push_back(muType);
       MuIsoTkIsoAbs_->push_back(mu[j].isolationR03().sumPt);
       MuIsoTkIsoRel_->push_back(mu[j].isolationR03().sumPt/mu[j].pt());
       MuIsoCalAbs_->push_back(mu[j].isolationR03().emEt + mu[j].isolationR03().hadEt);
