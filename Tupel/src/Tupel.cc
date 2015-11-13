@@ -1396,7 +1396,11 @@ void Tupel::processElectrons(){
       //if(int(idlist[i].second) & idAndConvRejectMask){
       if(int(idlist[i].second)){
 	std::map<std::string, unsigned>::const_iterator it = ElIdMap_.find(idlist[i].first);
-	if(it != ElIdMap_.end()) elecid  |= it->second;	
+	if(it != ElIdMap_.end()){
+	  elecid  |= it->second;
+	  //	  std::cout << idlist[i].first << ": " << idlist[i].second
+	  //		    << " / "  << it->first << ": " << it->second << "\n";
+	}
       }
     }
       
@@ -2082,13 +2086,14 @@ Tupel::writeTriggerStat(){
     f  << "#\tTrigger line\tAccept count\tAccept rate\tS";
     //sort the map per value by inverting key and value:
     std::vector<int> trigSortedIndex(trigNames_.size());
+    size_t maxTrigForCol = 10;
     for(unsigned i = 0; i < trigSortedIndex.size(); ++i){
       trigSortedIndex[i] = i;
-      if(i<10) f << "\t" << (1+i);
+      if(i<maxTrigForCol) f << "\t" << (1+i);
     }
     f << "\n";
     sort(trigSortedIndex.begin(), trigSortedIndex.end(), TrigSorter(this));
-    trigSortedIndex.resize(10);
+    //    trigSortedIndex.resize(10);
     f << "0\tNone\t" << trigAccept_[0][0] << "\n";
     for(unsigned i = 0; i < trigSortedIndex.size(); ++i){
       unsigned ii = trigSortedIndex[i];
@@ -2096,7 +2101,7 @@ Tupel::writeTriggerStat(){
 	<< "\t" << trigAccept_[1+ii][0]
 	<< "\t" << double(trigAccept_[1+ii][0]) / analyzedEventCnt_
 	<< "\t" << trigAccept_[1+ii][1];
-      for(unsigned j = 0; j < trigSortedIndex.size(); ++j){
+      for(unsigned j = 0; j < std::min(maxTrigForCol, trigSortedIndex.size()); ++j){
 	unsigned jj = trigSortedIndex[j];
 	f << "\t" << trigAccept_[1+ii][2+jj];
       }
