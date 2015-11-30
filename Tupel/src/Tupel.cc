@@ -222,6 +222,7 @@ private:
   edm::InputTag genParticleSrc_;
   std::vector<edm::InputTag> metSources;
   bool triggerStat_;
+  edm::InputTag puSrc_;
 
   /** Total number of events analyzed so far
    */
@@ -567,7 +568,7 @@ private:
   std::vector<std::string> trigNames_;
 
 
-  std::vector<bool> elIdEnabled_;
+  //  std::vector<bool> elIdEnabled_;
   
   bool trigStatValid_;
 
@@ -606,6 +607,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
   metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
   triggerStat_(iConfig.getUntrackedParameter<bool>("triggerStat", false)),
+  puSrc_(iConfig.getUntrackedParameter<edm::InputTag> ("puSrc")),
   analyzedEventCnt_(0),
   photonIdsListed_(false),
   elecIdsListed_(false),
@@ -822,28 +824,27 @@ void Tupel::defineBitFields(){
   DEF_BIT(MuType, 1, TkMu);
   DEF_BIT(MuType, 2, PfMu);
 
-  int nElId = 0;
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-veto); 
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-loose);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-medium);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-50ns-V1-standalone-tight);
+  DEF_BIT2(ElId, 0, cutBasedElectronID-CSA14-50ns-V1-standalone-veto); 
+  DEF_BIT2(ElId, 1, cutBasedElectronID-CSA14-50ns-V1-standalone-loose);
+  DEF_BIT2(ElId, 2, cutBasedElectronID-CSA14-50ns-V1-standalone-medium);
+  DEF_BIT2(ElId, 3, cutBasedElectronID-CSA14-50ns-V1-standalone-tight);
 
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto);
+  DEF_BIT2(ElId, 4, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose);
+  DEF_BIT2(ElId, 5, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium);
+  DEF_BIT2(ElId, 6, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight);
+  DEF_BIT2(ElId, 7, cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto);
 
-  DEF_BIT2(ElId, nElId++,  cutBasedElectronID-Spring15-25ns-V1-standalone-loose);
-  DEF_BIT2(ElId, nElId++,  cutBasedElectronID-Spring15-25ns-V1-standalone-medium);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-25ns-V1-standalone-tight);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-25ns-V1-standalone-veto);
+  DEF_BIT2(ElId, 8,  cutBasedElectronID-Spring15-25ns-V1-standalone-loose);
+  DEF_BIT2(ElId, 9,  cutBasedElectronID-Spring15-25ns-V1-standalone-medium);
+  DEF_BIT2(ElId, 10, cutBasedElectronID-Spring15-25ns-V1-standalone-tight);
+  DEF_BIT2(ElId, 11, cutBasedElectronID-Spring15-25ns-V1-standalone-veto);
 
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-loose); 
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-medium);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-tight);
-  DEF_BIT2(ElId, nElId++, cutBasedElectronID-Spring15-50ns-V1-standalone-veto);
+  DEF_BIT2(ElId, 12, cutBasedElectronID-Spring15-50ns-V1-standalone-loose); 
+  DEF_BIT2(ElId, 13, cutBasedElectronID-Spring15-50ns-V1-standalone-medium);
+  DEF_BIT2(ElId, 14, cutBasedElectronID-Spring15-50ns-V1-standalone-tight);
+  DEF_BIT2(ElId, 15, cutBasedElectronID-Spring15-50ns-V1-standalone-veto);
 
-  elIdEnabled_ = std::vector<bool>(nElId, true);
+  //  elIdEnabled_ = std::vector<bool>(16, true);
 }
 
 void Tupel::readEvent(const edm::Event& iEvent){
@@ -952,7 +953,7 @@ void Tupel::processVtx(){
 
 void Tupel::processPu(const edm::Event& iEvent){
   Handle<std::vector< PileupSummaryInfo > >  PupInfo;
-  iEvent.getByLabel("addPileupInfo", PupInfo);
+  iEvent.getByLabel(puSrc_, PupInfo);
   if(!PupInfo.failedToGet()){
     std::vector<PileupSummaryInfo>::const_iterator PVI;
     float npT=-1.;
