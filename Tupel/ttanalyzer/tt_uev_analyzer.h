@@ -629,8 +629,10 @@ public :
    TString name;
    bool dottother=false;
    bool dosignal=false;
+   bool dopdf=false;
    bool doe=false;
    int idd=13;
+   int jes=0;
    double pi = 3.1415926535897932384626433832795028841971693;
 };
 
@@ -664,18 +666,24 @@ chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_reminiaod.root");
 chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_prompt.root");
 name="25ns_data_D_uev_newlist_2110_fromskimmed";
 */
+
+
+
+
 /*
 chain->Add("/sdb5/Bugra/skimmed/25ns_wjet.root");
 name="25ns_wjet_uev_miniaodv2_2110_fromskimmed";
 */
 /*
 chain->Add("/sdb5/Bugra/skimmed/25ns_tt_.root");
-//chain->Add("/sdb5/Bugra/skimmed/25ns_tt__1.root");
-//chain->Add("/sdb5/Bugra/skimmed/25ns_tt__2.root");
-//chain->Add("/sdb5/Bugra/skimmed/25ns_tt__3.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt__1.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt__2.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt__3.root");
 dosignal=true;
 name="25ns_tt_uev_miniaodv2_2110_fromskimmed";
+
 */
+
 /*
 chain->Add("/sdb4/Bugra/skimmed/25ns_st_t_top.root");
 name="25ns_st_t_top_uev_2110_fromskimmed";
@@ -692,17 +700,51 @@ name="25ns_st_tw_atop_uev_2110_fromskimmed";
 chain->Add("/sdb4/Bugra/skimmed/25ns_st_tw_top.root");
 name="25ns_st_tw_top_uev_2110_fromskimmed";
 */
+
 /*
 chain->Add("/sdb3/Bugra/skimmed/powheg_hpp.root");
 name="powheg_hpp";
 */
 /*
-chain->Add("/sdb3/Bugra/skimmed/powheg_sdn.root");
+chain->Add("/sdb4/Bugra/skimmed/powheg_sdn.root");
 name="powheg_sdn";
 */
-
-chain->Add("/sdb3/Bugra/skimmed/powheg_up.root");
+/*
+chain->Add("/sdb4/Bugra/skimmed/powheg_up.root");
 name="powheg_up";
+*/
+
+
+/*
+chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_reminiaod.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_prompt.root");
+name="25ns_data_D_uev_newlist_2110_fromskimmed_jes_1";
+jes=1;
+*/
+
+
+/*
+chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_reminiaod.root");
+chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_prompt.root");
+name="25ns_data_D_uev_newlist_2110_fromskimmed_jes_-1";
+jes=-1;
+*/
+
+
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt_.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt__1.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt__2.root");
+chain->Add("/sdb5/Bugra/skimmed/25ns_tt__3.root");
+dosignal=true;
+dopdf=true;
+name="25ns_tt_uev_miniaodv2_2110_fromskimmed_pdfvar";
+
+
+
+
+
+
+
 
 
 
@@ -771,7 +813,7 @@ name="mc_signal_25ns_uev_ttother";
 
 name += "_isElec_";
 name += doe;
-name += "_v13.root";
+name += "_v15.root";
 #endif // SINGLE_TREE
 
    }

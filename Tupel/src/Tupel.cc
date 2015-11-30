@@ -904,6 +904,7 @@ patPfCandPt.push_back(pf.pt());
 	GjPx.push_back(genjet[k].px());
 	GjPy.push_back(genjet[k].py());
 	GjPz.push_back(genjet[k].pz());
+    //    cout<<k<<"  "<<genjet[k].partonFlavour()<<endl;
 	//double isChargedJet=false;
 	double chargedFraction = 0.;
 //	std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
@@ -1418,7 +1419,7 @@ if(realdata){
 
 void
 Tupel::beginRun(edm::Run const& iRun, edm::EventSetup const&){
-
+/*
 edm::Handle<LHERunInfoProduct> run;
  
 typedef std::vector<LHERunInfoProduct::Header>::const_iterator headers_const_iterator;
@@ -1433,7 +1434,7 @@ for (headers_const_iterator iter=myLHERunInfoProduct.headers_begin(); iter!=myLH
   for (unsigned int iLine = 0; iLine<lines.size(); iLine++) {
    std::cout << lines.at(iLine);
   }
-}
+}*/
 }
 void 
 Tupel::beginJob()

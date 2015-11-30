@@ -86,9 +86,9 @@ BTagCalibrationReader reader2(&sf,               // calibration instance
                              "central");           // systematics type
 
 
- standalone_LumiReWeighting puWeight(201550), puUp(201550,1), puDown(201550,-1);
+ standalone_LumiReWeighting puWeight(201525,0), puUp(201525,1), puDown(201525,-1);
    Long64_t nentries = fChain->GetEntries();
-//   if(nentries > 1000000)nentries = 1000000;
+//   if(nentries > 1)nentries = 1000;
  TH1::SetDefaultSumw2();
  TH2::SetDefaultSumw2();
  TProfile::SetDefaultSumw2();
@@ -108,6 +108,8 @@ BTagCalibrationReader reader2(&sf,               // calibration instance
    TFile* file_out = new TFile(name,"RECREATE"); 
    file_out->cd();	
        int pdfind_max=1;
+     if(dosignal)pdfind_max=2;
+     if(dopdf)pdfind_max=103;
       // if(dosignal) pdfind_max=103;
    TH1* h_ljet_pt[pdfind_max];
    TH1* h_ljet_eta[pdfind_max];
@@ -145,19 +147,19 @@ BTagCalibrationReader reader2(&sf,               // calibration instance
    TH2* h_dphi_ptsumpf[pdfind_max];
    TH2* h_dphi_ptaveragepf[pdfind_max];
    TH2* h_dphi_npf[pdfind_max];
-   TH2* h_nvtx_npf[pdfind_max];
+   TH1* h_nvtx_npf[pdfind_max];
    TH2* h_dphi_ptsumpf_0j[pdfind_max];
    TH2* h_dphi_ptaveragepf_0j[pdfind_max];
    TH2* h_dphi_npf_0j[pdfind_max];
-   TH2* h_nvtx_npf_0j[pdfind_max];
+   TH1* h_nvtx_npf_0j[pdfind_max];
    TH2* h_dphi_ptsumpf_1j[pdfind_max];
    TH2* h_dphi_ptaveragepf_1j[pdfind_max];
    TH2* h_dphi_npf_1j[pdfind_max];
-   TH2* h_nvtx_npf_1j[pdfind_max];
+   TH1* h_nvtx_npf_1j[pdfind_max];
    TH2* h_dphi_ptsumpf_2pj[pdfind_max];
    TH2* h_dphi_ptaveragepf_2pj[pdfind_max];
    TH2* h_dphi_npf_2pj[pdfind_max];
-   TH2* h_nvtx_npf_2pj[pdfind_max];
+   TH1* h_nvtx_npf_2pj[pdfind_max];
    TProfile* h_profile_dphi_ptsumpf[pdfind_max];
    TProfile* h_profile_dphi_ptaveragepf[pdfind_max];
    TProfile* h_profile_dphi_npf[pdfind_max];
@@ -568,7 +570,7 @@ sprintf(nam,"dphi_ptaveragepf_%i",i);
 sprintf(nam,"dphi_npf_%i",i);
  h_dphi_npf[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"nvtx_npf_%i",i);
- h_nvtx_npf[i]= new TH2D (nam,nam,50,0,50,20,0,100);
+ h_nvtx_npf[i]= new TH1D (nam,nam,50,0,49);
 sprintf(nam,"dphi_ptsumpf_0j_%i",i);
  h_dphi_ptsumpf_0j[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"dphi_ptaveragepf_0j_%i",i);
@@ -576,7 +578,7 @@ sprintf(nam,"dphi_ptaveragepf_0j_%i",i);
 sprintf(nam,"dphi_npf_0j_%i",i);
  h_dphi_npf_0j[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"nvtx_npf_0j_%i",i);
- h_nvtx_npf_0j[i]= new TH2D (nam,nam,50,0,50,20,0,100);
+ h_nvtx_npf_0j[i]= new TH1D (nam,nam,50,0,49);
 sprintf(nam,"dphi_ptsumpf_1j_%i",i);
  h_dphi_ptsumpf_1j[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"dphi_ptaveragepf_1j_%i",i);
@@ -584,7 +586,7 @@ sprintf(nam,"dphi_ptaveragepf_1j_%i",i);
 sprintf(nam,"dphi_npf_1j_%i",i);
  h_dphi_npf_1j[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"nvtx_npf_1j_%i",i);
- h_nvtx_npf_1j[i]= new TH2D (nam,nam,50,0,50,20,0,100);
+ h_nvtx_npf_1j[i]= new TH1D (nam,nam,50,0,49);
 sprintf(nam,"dphi_ptsumpf_2pj_%i",i);
  h_dphi_ptsumpf_2pj[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"dphi_ptaveragepf_2pj_%i",i);
@@ -592,7 +594,7 @@ sprintf(nam,"dphi_ptaveragepf_2pj_%i",i);
 sprintf(nam,"dphi_npf_2pj_%i",i);
  h_dphi_npf_2pj[i]= new TH2D (nam,nam,20,0,180,20,0,10);
 sprintf(nam,"nvtx_npf_2pj_%i",i);
- h_nvtx_npf_2pj[i]= new TH2D (nam,nam,50,0,50,20,0,100);
+ h_nvtx_npf_2pj[i]= new TH1D (nam,nam,50,0,49);
 sprintf(nam,"profile_dphi_ptsumpf_%i",i);
  h_profile_dphi_ptsumpf[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_dphi_ptaveragepf_%i",i);
@@ -600,9 +602,9 @@ sprintf(nam,"profile_dphi_ptaveragepf_%i",i);
 sprintf(nam,"profile_dphi_npf_%i",i);
  h_profile_dphi_npf[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_nvtx_npf_%i",i);
- h_profile_nvtx_npf[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_npf[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_nvtx_sumpt_%i",i);
- h_profile_nvtx_sumpt[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_sumpt[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_dphi_ptsumpf_0j_%i",i);
  h_profile_dphi_ptsumpf_0j[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_dphi_ptaveragepf_0j_%i",i);
@@ -610,9 +612,9 @@ sprintf(nam,"profile_dphi_ptaveragepf_0j_%i",i);
 sprintf(nam,"profile_dphi_npf_0j_%i",i);
  h_profile_dphi_npf_0j[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_nvtx_npf_0j_%i",i);
- h_profile_nvtx_npf_0j[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_npf_0j[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_nvtx_sumpt_0j_%i",i);
- h_profile_nvtx_sumpt_0j[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_sumpt_0j[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_dphi_ptsumpf_1j_%i",i);
  h_profile_dphi_ptsumpf_1j[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_dphi_ptaveragepf_1j_%i",i);
@@ -620,9 +622,9 @@ sprintf(nam,"profile_dphi_ptaveragepf_1j_%i",i);
 sprintf(nam,"profile_dphi_npf_1j_%i",i);
  h_profile_dphi_npf_1j[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_nvtx_npf_1j_%i",i);
- h_profile_nvtx_npf_1j[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_npf_1j[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_nvtx_sumpt_1j_%i",i);
- h_profile_nvtx_sumpt_1j[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_sumpt_1j[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_dphi_ptsumpf_2pj_%i",i);
  h_profile_dphi_ptsumpf_2pj[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_dphi_ptaveragepf_2pj_%i",i);
@@ -630,9 +632,9 @@ sprintf(nam,"profile_dphi_ptaveragepf_2pj_%i",i);
 sprintf(nam,"profile_dphi_npf_2pj_%i",i);
  h_profile_dphi_npf_2pj[i]= new TProfile (nam,nam,20,0,180,0,1000);
 sprintf(nam,"profile_nvtx_npf_2pj_%i",i);
- h_profile_nvtx_npf_2pj[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_npf_2pj[i]= new TProfile (nam,nam,50,0,49,0,1000);
 sprintf(nam,"profile_nvtx_sumpt_2pj_%i",i);
- h_profile_nvtx_sumpt_2pj[i]= new TProfile (nam,nam,50,0,50,0,1000);
+ h_profile_nvtx_sumpt_2pj[i]= new TProfile (nam,nam,50,0,49,0,1000);
 
 sprintf(nam,"profile_ptttbar_npf_%i",i);
  h_profile_ptttbar_npf[i]= new TProfile (nam,nam,10,pt_tt_range,0,1000);
@@ -1191,7 +1193,7 @@ sprintf(nam,"profile_yt_avept_toward_%i",i);
 
 
 sprintf(nam,"nvtx_%i",i);
- h_nvtx[i]= new TH1D (nam,nam,50,0,50);
+ h_nvtx[i]= new TH1D (nam,nam,50,0,49);
 sprintf(nam,"pf_dxy_%i",i);
  h_pf_dxy[i]= new TH1D (nam,nam,1000,0,2);
 sprintf(nam,"pf_dz_%i",i);
@@ -1389,7 +1391,8 @@ sprintf(nam,"y_t_%i",i);
 //cout<<"tttttttttttttttt"<<endl;
       if(!realdata && PU_npT>0){    
 //        wtot_write-=w;
-        w*=puWeight.weight(int(PU_npT));  
+        w*=puWeight.weight(int(PU_npT)); 
+
         sum_tot_weight+= puWeight.weight(int(PU_npT));
         sum_no++;
 //        wtot_write+=w;
@@ -1426,16 +1429,19 @@ sprintf(nam,"y_t_%i",i);
         if(jet_ind>=1)ind_jet_const+=patJetPfAk04nconst_->at(jet_ind-1);
         if( fabs(patJetPfAk04Eta_->at(jet_ind))>2.4 ||patJetPfAk04LooseId_->at(jet_ind)==0)continue;
 
+        double new_en=(1+ jes*unc_->at(jet_ind))*patJetPfAk04En_->at(jet_ind);
+        double new_pt=(1+ jes*unc_->at(jet_ind))*patJetPfAk04Pt_->at(jet_ind);
+
         TLorentzVector tmp;
-        tmp.SetPtEtaPhiE(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Phi_->at(jet_ind),patJetPfAk04En_->at(jet_ind));
+        tmp.SetPtEtaPhiE(new_pt,patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Phi_->at(jet_ind),new_en);
 
         double dr_j_l=99;
         if(mu_index>0) dr_j_l=DeltaR(tmp.Eta(),mu_vector[0].Eta(),tmp.Phi(),mu_vector[0].Phi());
 
         if(dr_j_l<0.4)continue;
-        if(patJetPfAk04Pt_->at(jet_ind)>15.)njet_15++;
-       if(patJetPfAk04Pt_->at(jet_ind)>15. &&patJetPfAk04Pt_->at(jet_ind)<30.)jet_vector_1530.push_back(tmp);
-        if(patJetPfAk04Pt_->at(jet_ind)<30.)continue;
+        if(new_pt>15.)njet_15++;
+       if(new_pt>15. &&new_pt<30.)jet_vector_1530.push_back(tmp);
+        if(new_pt<30.)continue;
         jet_vector.push_back(tmp);
         //jet_part_flav.push_back(patJetPfAk04PartonFlavour_->at(jet_ind));
         if(mu_index==1 &&mu_index20==1)h_csv[0]->Fill(patJetPfAk04BDiscCSVv2_->at(jet_ind),w);
@@ -1475,19 +1481,19 @@ sprintf(nam,"y_t_%i",i);
       double jet_eff=-99;
       if(dosignal){
    //    cout<<BTagEntry::FLAV_B (0)<<"  "<<BTagEntry::FLAV_C (1)<<"  "<<	BTagEntry::FLAV_UDSG (2)<<endl;
-       if (patJetPfAk04Pt_->at(jet_ind) < 670. ) {
+       if (new_pt < 670. ) {
          if(fabs(patJetPfAk04PartonFlavour_->at(jet_ind))==5){
-         jet_scalefactor = reader.eval(BTagEntry::FLAV_B, patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Pt_->at(jet_ind)); 
-         jet_eff = reader2.eval(BTagEntry::FLAV_B, patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Pt_->at(jet_ind)); 
+         jet_scalefactor = reader.eval(BTagEntry::FLAV_B, patJetPfAk04Eta_->at(jet_ind),new_pt); 
+         jet_eff = reader2.eval(BTagEntry::FLAV_B, patJetPfAk04Eta_->at(jet_ind),new_pt); 
          }
       else if(fabs(patJetPfAk04PartonFlavour_->at(jet_ind))==4){
-         jet_scalefactor = reader.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Pt_->at(jet_ind)); 
-         jet_eff = reader2.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Pt_->at(jet_ind)); 
+         jet_scalefactor = reader.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),new_pt); 
+         jet_eff = reader2.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),new_pt); 
          }   
          else{
-//         jet_scalefactor = reader.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Pt_->at(jet_ind)); 
+//         jet_scalefactor = reader.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),new_pt); 
           jet_scalefactor =1;
-         jet_eff = reader2.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),patJetPfAk04Pt_->at(jet_ind)); 
+         jet_eff = reader2.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),new_pt); 
          }
        }
        else {  // for error evaluation outside bounds:
@@ -1543,27 +1549,27 @@ sprintf(nam,"y_t_%i",i);
 
        if(fabs(patJetPfAk04PartonFlavour_->at(jet_ind))==5){
           mu_tot_b_jet++;
-          h_pt_eta_b[0]->Fill(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),w);
+          h_pt_eta_b[0]->Fill(new_pt,patJetPfAk04Eta_->at(jet_ind),w);
           if(patJetPfAk04BDiscCSVv2_->at(jet_ind)>0.89){
             mu_tot_b_tagged_jet++;
-            h_pt_eta_b_tagged[0]->Fill(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),w);
+            h_pt_eta_b_tagged[0]->Fill(new_pt,patJetPfAk04Eta_->at(jet_ind),w);
           }
        }
 
        else if(fabs(patJetPfAk04PartonFlavour_->at(jet_ind))==4){
           mu_tot_c_jet++;
-          h_pt_eta_c[0]->Fill(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),w);
+          h_pt_eta_c[0]->Fill(new_pt,patJetPfAk04Eta_->at(jet_ind),w);
           if(patJetPfAk04BDiscCSVv2_->at(jet_ind)>0.89){
             mu_tot_c_tagged_jet++;
-            h_pt_eta_c_tagged[0]->Fill(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),w);    
+            h_pt_eta_c_tagged[0]->Fill(new_pt,patJetPfAk04Eta_->at(jet_ind),w);    
           }        
        }
        else {
           mu_tot_udsg_jet++;
-          h_pt_eta_udsg[0]->Fill(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),w);
+          h_pt_eta_udsg[0]->Fill(new_pt,patJetPfAk04Eta_->at(jet_ind),w);
           if(patJetPfAk04BDiscCSVv2_->at(jet_ind)>0.89){
             mu_tot_udsg_tagged_jet++;
-            h_pt_eta_udsg_tagged[0]->Fill(patJetPfAk04Pt_->at(jet_ind),patJetPfAk04Eta_->at(jet_ind),w);    
+            h_pt_eta_udsg_tagged[0]->Fill(new_pt,patJetPfAk04Eta_->at(jet_ind),w);    
           }
        }
 
@@ -2041,7 +2047,7 @@ sprintf(nam,"y_t_%i",i);
            int ind_jet_constt=0;
            for(unsigned int jet_ind=0; jet_ind<patJetPfAk04Pt_->size();jet_ind++){
              if(jet_ind>=1)ind_jet_constt+=patJetPfAk04nconst_->at(jet_ind-1);
-             if(patJetPfAk04Pt_->at(jet_ind)<15. || fabs(patJetPfAk04Eta_->at(jet_ind))>2.5)continue;
+             if(new_pt<15. || fabs(patJetPfAk04Eta_->at(jet_ind))>2.5)continue;
              for(unsigned int jet_const_ind=0;jet_const_ind< patJetPfAk04nconst_->at(jet_ind);jet_const_ind++){
                double deltar_alljet_pf=DeltaR(patJetPfAk04ConstEta->at(ind_jet_constt+jet_const_ind),patPfCandEta->at(pfind),patJetPfAk04ConstPhi->at(ind_jet_constt+jet_const_ind),patPfCandPhi->at(pfind));
                if(deltar_alljet_pf<dr_min_alljet_pf)dr_min_alljet_pf=deltar_alljet_pf;
@@ -2092,7 +2098,29 @@ sprintf(nam,"y_t_%i",i);
        for(int pdfind=0; pdfind<pdfind_max;pdfind++){
         // if(pdfind!=0)cout<<mcWeights_->at(8+pdfind)<<endl;
          double weight=w;
-         if(pdfind!=0)weight=w*mcWeights_->at(8+pdfind);
+         if(dopdf&& pdfind!=0)weight=w*mcWeights_->at(8+pdfind);
+
+
+         if(!dopdf&&pdfind!=0 &&puWeight.weight(int(PU_npT))!=0 )weight=puUp.weight(int(PU_npT))*w/puWeight.weight(int(PU_npT)); 
+
+           h_npf_inclusive[pdfind]->Fill(n_pf,weight);
+           h_npf_toward[pdfind]->Fill(n_pf_toward,weight);
+           h_npf_transverse[pdfind]->Fill(n_pf_transverse,weight);
+           h_npf_away[pdfind]->Fill(n_pf_away,weight);
+
+           h_ptsumpf_inclusive[pdfind]->Fill(ptsum_pf,weight);
+           h_ptsumpf_toward[pdfind]->Fill(ptsum_pf_toward,weight);
+           h_ptsumpf_transverse[pdfind]->Fill(ptsum_pf_transverse,weight);
+           h_ptsumpf_away[pdfind]->Fill(ptsum_pf_away,weight);
+
+           if(n_pf!=0)h_ptavepf_inclusive[pdfind]->Fill(ptsum_pf/n_pf,weight);
+           if(n_pf_toward!=0)h_ptavepf_toward[pdfind]->Fill(ptsum_pf_toward/n_pf_toward,weight);
+           if(n_pf_transverse!=0)h_ptavepf_transverse[pdfind]->Fill(ptsum_pf_transverse/n_pf_transverse,weight);
+           if(n_pf_away!=0)h_ptavepf_away[pdfind]->Fill(ptsum_pf_away/n_pf_away,weight);
+
+
+
+
          if(n_pf!=0){
            for(int dphiloop=0;dphiloop<20;dphiloop++){
              if(n_pf_dphi[dphiloop]==0)continue;
@@ -2131,43 +2159,29 @@ sprintf(nam,"y_t_%i",i);
              }
            }
 
-           h_nvtx_npf[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
+           h_nvtx_npf[pdfind]->Fill(EvtInfo_NumVtx,weight);
            h_profile_nvtx_npf[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
            h_profile_nvtx_sumpt[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
           
            
            if(njet_15==4){
-           h_nvtx_npf_0j[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
+           h_nvtx_npf_0j[pdfind]->Fill(EvtInfo_NumVtx,weight);
            h_profile_nvtx_npf_0j[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
            h_profile_nvtx_sumpt_0j[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
            }
            if(njet_15==5){
-           h_nvtx_npf_1j[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
+           h_nvtx_npf_1j[pdfind]->Fill(EvtInfo_NumVtx,weight);
            h_profile_nvtx_npf_1j[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
            h_profile_nvtx_sumpt_1j[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
             }
 
            if(njet_15>=6){
-           h_nvtx_npf_2pj[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
+           h_nvtx_npf_2pj[pdfind]->Fill(EvtInfo_NumVtx,weight);
            h_profile_nvtx_npf_2pj[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
            h_profile_nvtx_sumpt_2pj[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
 
            }
 
-           h_npf_inclusive[pdfind]->Fill(n_pf,weight);
-           h_npf_toward[pdfind]->Fill(n_pf_toward,weight);
-           h_npf_transverse[pdfind]->Fill(n_pf_transverse,weight);
-           h_npf_away[pdfind]->Fill(n_pf_away,weight);
-
-           h_ptsumpf_inclusive[pdfind]->Fill(ptsum_pf,weight);
-           h_ptsumpf_toward[pdfind]->Fill(ptsum_pf_toward,weight);
-           h_ptsumpf_transverse[pdfind]->Fill(ptsum_pf_transverse,weight);
-           h_ptsumpf_away[pdfind]->Fill(ptsum_pf_away,weight);
-
-           h_ptavepf_inclusive[pdfind]->Fill(ptsum_pf/n_pf,weight);
-           h_ptavepf_toward[pdfind]->Fill(ptsum_pf_toward/n_pf_toward,weight);
-           h_ptavepf_transverse[pdfind]->Fill(ptsum_pf_transverse/n_pf_transverse,weight);
-           h_ptavepf_away[pdfind]->Fill(ptsum_pf_away/n_pf_away,weight);
 
            h_profile_ptttbar_npf[pdfind]->Fill(ttbar.Pt(),n_pf,weight);
            h_profile_ptttbar_sumpt[pdfind]->Fill(ttbar.Pt(),ptsum_pf,weight);
