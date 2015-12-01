@@ -80,7 +80,7 @@ cout<<"burda"<<endl;
  TProfile::SetDefaultSumw2();
    Long64_t nbytes = 0, nb = 0;
 
-   TFile* file_out = new TFile("/sdb3/Bugra/skimmed/" + name,"RECREATE"); 
+   TFile* file_out = new TFile("/sdb4/Bugra/skimmed/" + name,"RECREATE"); 
    file_out->cd();	
    TTree *weight_tree;
   weight_tree = new TTree("MuonTree","MuonTree");
@@ -345,7 +345,7 @@ cout<<"burda"<<endl;
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      if(jentry%10000==0)cout<<"/sdb3/Bugra/skimmed/" <<name<<" << "<<jentry<<"/"<<nentries<<endl;
+      if(jentry%10000==0)cout<<"/sdb4/Bugra/skimmed/" <<name<<" << "<<jentry<<"/"<<nentries<<endl;
       bool found_mu=false;
       bool found4jet=false;
       // if (Cut(ientry) < 0) continue;

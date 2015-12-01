@@ -656,18 +656,18 @@ tt_skimmer::tt_skimmer(TTree *tree) : fChain(0)
       // of trees.
       TChain * chain = new TChain("tupel/MuonTree","");
       if(doe)idd=11;
-
+/*
 chain->Add("/afs/cern.ch/work/b/bbilin/Tupel_13_tev_miniaod/CMSSW_7_4_14/src/Tupel/Tupel/withJEC_DYJetsToLL_ntuple.root");
 name="small_forbageff_25ns_tt_.root";
-
+*/
 /*
 #include "25ns_data_D_prompt_uev_newlist_2110_forskimmer.h"
 name="25ns_data_D_prompt.root";
 */
-/*
+
 #include "25ns_data_D_reminiaod_uev_newlist_2110_forskimmer.h"
 name="25ns_data_D_reminiaod.root";
-*/
+
 /*
 #include "25ns_wjet_uev_miniaodv2_2110_forskimmer.h"
 name="25ns_wjet.root";
