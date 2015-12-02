@@ -295,6 +295,8 @@ private:
   std::auto_ptr<std::vector<int> >      GLepDr01Id_;
   std::auto_ptr<std::vector<int> >      GLepDr01St_;
   std::auto_ptr<std::vector<int> >      GLepDr01MomId_;
+  std::auto_ptr<std::vector<bool> >     GLepDr01Prompt_;
+  std::auto_ptr<std::vector<bool> >     GLepDr01TauProd_;
 
   //Generator level leptons, not-dressed
   std::auto_ptr<std::vector<float> > 	GLepBarePt_;
@@ -304,7 +306,9 @@ private:
   std::auto_ptr<std::vector<int> >      GLepBareId_;
   std::auto_ptr<std::vector<int> > 	GLepBareSt_;
   std::auto_ptr<std::vector<int> > 	GLepBareMomId_;
-
+  std::auto_ptr<std::vector<bool> >     GLepBarePrompt_;
+  std::auto_ptr<std::vector<bool> >     GLepBareTauProd_;
+  
   //Generator level leptons, status 3
   std::auto_ptr<std::vector<float> > GLepSt3Pt_;
   std::auto_ptr<std::vector<float> > GLepSt3Eta_;
@@ -989,7 +993,7 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
     if (TMath::Abs(id) == 22) {
       TLorentzVector genPho(0, 0, 0, 0);
       genPho.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-
+      
       GPhotPt_->push_back(gen[i].pt());
       GPhotEta_->push_back(gen[i].eta());
       GPhotPhi_->push_back(gen[i].phi());
@@ -1036,11 +1040,9 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
       GPhotIsoSumPtDR05_->push_back(isoSumPtDR05);
     } // if |id| == 22
 
-
-    if(gen[i].numberOfMothers()){
-      //        if (st!=3 && fabs(id)!=13&& fabs(id)!=11 && fabs(id)!=22 && fabs(id)!=23) continue;
-      // if(abs(st)==13 ||abs(st)==12||abs(st)==11||abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 )cout<<"AAA "<<gen[i].numberOfMothers() <<"  "<< gen[i].mother()->pdgId()<<"  "<< gen[i].pdgId()<<"  "<<st<<"  "<<gen[i].px()<<"  "<<gen[i].py()<<"  "<<gen[i].pz()<<"  "<<gen[i].energy()<<endl;
-      if (abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 ||abs(st)==3 ){
+    
+    if (11 <= abs(id) && abs(id) <= 18 //lepton or neutrino
+	&& (abs(st)==23 || abs(st)==22 || abs(st)==21 || abs(st)==61 || abs(st)==3 || abs(st)==2)){
 	TLorentzVector genLep3(0,0,0,0);
 	if(abs(st)!=21)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
 	if(abs(st)==21)genLep3.SetPxPyPzE(0.001,0.001,gen[i].pz(),gen[i].energy());
@@ -1048,23 +1050,18 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	GLepSt3Eta_->push_back(eta(genLep3));
 	GLepSt3Phi_->push_back(genLep3.Phi());
 	GLepSt3E_->push_back(genLep3.Energy());
-	GLepSt3Mother0Id_->push_back(gen[i].mother()->pdgId());
+	GLepSt3Mother0Id_->push_back(gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : -1);
 	GLepSt3Id_->push_back(id);
 	GLepSt3St_->push_back(st);
       }
+    
       GLepSt3MotherCnt_->push_back(gen[i].numberOfMothers());
-      /* if(abs(id)==15){
-      //cout<<gen[i].numberOfMothers() <<"  "<< gen[i].mother()->pdgId()<<"  "<< gen[i].pdgId()<<"  "<<st<<endl;
-      n_tau++;
-      }*/
 
-      int momId = gen[i].mother()->pdgId();
-      if(gen[i].numberOfMothers() ==1 &&  momId != id){
-	//if(abs(id)==15)cout<<"DEAD"<<endl;
-	continue;
-      }
-      if (st==1 && (abs(id)==13||abs(id)==11 || abs(id)==15 ||abs(id)==12||abs(id)==14||abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
-
+      int momId = gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : -1 ;
+      
+      if (st==1 && (abs(id)==11 || abs(id)==13 || abs(id)==15
+		    || abs(id)==12|| abs(id)==14|| abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
+	
 	TLorentzVector genLep1(0,0,0,0);
 	genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
 	TLorentzVector genR1Pho1(0,0,0,0);
@@ -1096,8 +1093,11 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	      }
 	    }
 	  }
-	}
+	}//photon loop
 
+	bool isPrompt = gen[i].isPromptFinalState();
+	bool tauProd  = gen[i].isDirectPromptTauDecayProductFinalState();
+	
 	genR1DressLep1 = genLep1+genR1Pho1;
 	GLepDr01Pt_->push_back(genR1DressLep1.Pt());
 	GLepDr01Eta_->push_back(genR1DressLep1.Eta());
@@ -1106,6 +1106,8 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	GLepDr01Id_->push_back(id);
 	GLepDr01MomId_->push_back(momId);
 	GLepDr01St_->push_back(st);
+	GLepDr01Prompt_->push_back(isPrompt);
+	GLepDr01TauProd_->push_back(tauProd);
 
 	GLepBarePt_->push_back(genLep1.Pt());
 	GLepBareEta_->push_back(genLep1.Eta());
@@ -1114,9 +1116,10 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	GLepBareId_->push_back(id);
 	GLepBareMomId_->push_back(momId);
 	GLepBareSt_->push_back(st);
-      }
-    }
-  }
+	GLepBarePrompt_->push_back(isPrompt);
+	GLepBareTauProd_->push_back(tauProd);
+      } //status lepton or neutrino
+  } //gen particle loop
 }
 
 void Tupel::processGenJets(const edm::Event& iEvent){
@@ -1432,7 +1435,11 @@ void Tupel::processElectrons(){
       //if(int(idlist[i].second) & idAndConvRejectMask){
       if(int(idlist[i].second)){
 	std::map<std::string, unsigned>::const_iterator it = ElIdMap_.find(idlist[i].first);
-	if(it != ElIdMap_.end()) elecid  |= it->second;	
+	if(it != ElIdMap_.end()){
+	  elecid  |= it->second;
+	  //	  std::cout << idlist[i].first << ": " << idlist[i].second
+	  //		    << " / "  << it->first << ": " << it->second << "\n";
+	}
       }
     }
       
@@ -1845,6 +1852,8 @@ Tupel::beginJob()
   ADD_BRANCH(GLepDr01Id);
   ADD_BRANCH(GLepDr01St);
   ADD_BRANCH(GLepDr01MomId);
+  ADD_BRANCH(GLepDr01Prompt);
+  ADD_BRANCH(GLepDr01TauProd);  
   treeHelper_->addDescription("GLepBare", "Generator-level leptons, status 1 without dressing.");
   ADD_BRANCH(GLepBarePt);
   ADD_BRANCH(GLepBareEta);
@@ -1853,6 +1862,8 @@ Tupel::beginJob()
   ADD_BRANCH(GLepBareId);
   ADD_BRANCH(GLepBareSt);
   ADD_BRANCH(GLepBareMomId);
+  ADD_BRANCH(GLepBarePrompt);
+  ADD_BRANCH(GLepBareTauProd);  
   treeHelper_->addDescription("GLepDr01", "Status 3 generator-level leptons.");
   ADD_BRANCH(GLepSt3Pt);
   ADD_BRANCH(GLepSt3Eta);
@@ -2120,13 +2131,14 @@ Tupel::writeTriggerStat(){
     f  << "#\tTrigger line\tAccept count\tAccept rate\tS";
     //sort the map per value by inverting key and value:
     std::vector<int> trigSortedIndex(trigNames_.size());
+    size_t maxTrigForCol = 10;
     for(unsigned i = 0; i < trigSortedIndex.size(); ++i){
       trigSortedIndex[i] = i;
-      if(i<10) f << "\t" << (1+i);
+      if(i<maxTrigForCol) f << "\t" << (1+i);
     }
     f << "\n";
     sort(trigSortedIndex.begin(), trigSortedIndex.end(), TrigSorter(this));
-    trigSortedIndex.resize(10);
+    //    trigSortedIndex.resize(10);
     f << "0\tNone\t" << trigAccept_[0][0] << "\n";
     for(unsigned i = 0; i < trigSortedIndex.size(); ++i){
       unsigned ii = trigSortedIndex[i];
@@ -2134,7 +2146,7 @@ Tupel::writeTriggerStat(){
 	<< "\t" << trigAccept_[1+ii][0]
 	<< "\t" << double(trigAccept_[1+ii][0]) / analyzedEventCnt_
 	<< "\t" << trigAccept_[1+ii][1];
-      for(unsigned j = 0; j < trigSortedIndex.size(); ++j){
+      for(unsigned j = 0; j < std::min(maxTrigForCol, trigSortedIndex.size()); ++j){
 	unsigned jj = trigSortedIndex[j];
 	f << "\t" << trigAccept_[1+ii][2+jj];
       }
