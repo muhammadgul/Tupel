@@ -1169,7 +1169,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
            int id = gen[i].pdgId();
            if( !( id == 21 || abs(id) < 6 )  ) continue; // only consider quarks or gluons
 
-           if( gen[i].pt() < 0.0000001 ) continue;
+           if( gen[i].pt() < 0.0000001 ) continue; // prevent from using 0 pT  particles (DeltaR fails)
 
            TLorentzVector genobj(0,0,0,0);
            genobj.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
