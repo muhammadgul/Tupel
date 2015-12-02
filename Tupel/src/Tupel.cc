@@ -355,6 +355,8 @@ private:
   std::auto_ptr<std::vector<float> > GJetAk04ConstEta_;
   std::auto_ptr<std::vector<float> > GJetAk04ConstPhi_;
   std::auto_ptr<std::vector<float> > GJetAk04ConstE_;
+  std::auto_ptr<std::vector<float> > GJetAk04MatchedPartonID_;
+  std::auto_ptr<std::vector<float> > GJetAk04MatchedPartonDR_;
 
   //Exta generator information
   std::auto_ptr<std::vector<int> >   GPdfId1_;
@@ -960,8 +962,8 @@ void Tupel::processPu(const edm::Event& iEvent){
       int BX = PVI->getBunchCrossing();
 
       if(BX == 0) {
-	npT = PVI->getTrueNumInteractions();
-	npIT = PVI->getPU_NumInteractions();
+        npT = PVI->getTrueNumInteractions();
+        npIT = PVI->getPU_NumInteractions();
       }
     }
     //////TO CHECK
@@ -1151,6 +1153,39 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 	GJetAk04ConstE->push_back(genjet[k].daughter(idx)->energy();)
 	}
 	}*/
+      
+      TLorentzVector genjetlv;
+      genjetlv.SetPtEtaPhiE( genjet[k].pt(), genjet[k].eta(), genjet[k].phi(), genjet[k].energy());
+      float mindr = 100.;
+      int mindr_stat = -1;
+      int mindr_id =0;
+          
+      const std::vector<reco::GenParticle> & gen = *genParticles_h;
+      for (size_t i=0; i<genParticles->size(); ++i){
+
+           int id = gen[i].pdgId();
+           if( !( id == 21 || abs(id) < 6 )  ) continue; // only consider quarks or gluons
+
+           if( gen[i].pt() < 0.0000001 ) continue;
+
+           TLorentzVector genobj(0,0,0,0);
+           genobj.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+           float dr = genjetlv.DeltaR( genobj );
+
+           if( dr < mindr ) {
+               mindr = dr;
+               mindr_stat = gen[i].status();
+               mindr_id = gen[i].pdgId();
+
+           }
+      }
+
+      GJetAk04MatchedPartonID_->push_back(mindr_id);
+      GJetAk04MatchedPartonDR_->push_back(mindr);
+
+      std::cout << "Minimum dr ID = " << mindr_id << " stat = " << mindr_stat << " dr = " << mindr << std::endl;
+
+
     }
   }
 }
@@ -1866,6 +1901,8 @@ Tupel::beginJob()
   ADD_BRANCH(GJetAk04ConstEta);
   ADD_BRANCH(GJetAk04ConstPhi);
   ADD_BRANCH(GJetAk04ConstE);
+  ADD_BRANCH(GJetAk04MatchedPartonID);
+  ADD_BRANCH(GJetAk04MatchedPartonDR);
 
   //Exta generator information
   ADD_BRANCH_D(GPdfId1, "PDF Id for beam 1");
