@@ -1186,9 +1186,6 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       GJetAk04MatchedPartonID_->push_back(mindr_id);
       GJetAk04MatchedPartonDR_->push_back(mindr);
 
-      std::cout << "Minimum dr ID = " << mindr_id << " stat = " << mindr_stat << " dr = " << mindr << std::endl;
-
-
     }
   }
 }
