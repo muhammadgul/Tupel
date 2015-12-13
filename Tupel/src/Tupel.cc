@@ -127,6 +127,8 @@ private:
   std::vector<double> Dr01LepId;
   std::vector<double> Dr01LepStatus;
   std::vector<double> Dr01LepMomId;
+  std::vector<bool> Dr01LepIsPrompt;
+  std::vector<bool> Dr01LepIsTauProd;
   std::vector<double> Bare01LepPt;
   std::vector<double> Bare01LepEta;
   std::vector<double> Bare01LepPhi;
@@ -501,6 +503,9 @@ patPfCandFromPv.clear();
     Dr01LepId.clear();
     Dr01LepStatus.clear();
   Dr01LepMomId.clear();
+
+          Dr01LepIsPrompt.clear();
+          Dr01LepIsTauProd.clear();
     Bare01LepPt.clear();
     Bare01LepEta.clear();
     Bare01LepPhi.clear();
@@ -872,6 +877,10 @@ patPfCandPt.push_back(pf.pt());
 	  Dr01LepMomId.push_back(id);
 	  Dr01LepStatus.push_back(st);
 
+bool isPrompt = gen[i].isPromptFinalState();
+	bool tauProd  = gen[i].isDirectPromptTauDecayProductFinalState();
+          Dr01LepIsPrompt.push_back(isPrompt);
+          Dr01LepIsTauProd.push_back(tauProd);
 	  Bare01LepPt.push_back(genLep1.Pt());
 	  Bare01LepEta.push_back(genLep1.Eta());
 	  Bare01LepPhi.push_back(genLep1.Phi());
@@ -1491,6 +1500,9 @@ Tupel::beginJob()
     myTree->Branch("Dr01LepId",&Dr01LepId);
     myTree->Branch("Dr01LepStatus",&Dr01LepStatus);
   myTree->Branch("Dr01LepMomId",&Dr01LepMomId);
+ myTree->Branch("Dr01LepIsPrompt",&Dr01LepIsPrompt);
+  myTree->Branch("Dr01LepIsTauProd",&Dr01LepIsTauProd);
+
     myTree->Branch("Bare01LepPt",&Bare01LepPt);
     myTree->Branch("Bare01LepEta",&Bare01LepEta);
     myTree->Branch("Bare01LepPhi",&Bare01LepPhi);
