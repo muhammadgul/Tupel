@@ -36,6 +36,7 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
@@ -99,6 +100,7 @@ private:
   edm::InputTag CaloJet_;
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
+  edm::InputTag packedgenParticleSrc_;
   std::vector<edm::InputTag> metSources;
   bool elecIdsListed_=false;
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
@@ -137,6 +139,18 @@ private:
   std::vector<double> Bare01LepId;
   std::vector<double> Bare01LepStatus;
   std::vector<double> Bare01LepMomId;
+
+  std::vector<double> Packed01Pt;
+  std::vector<double> Packed01Eta;
+  std::vector<double> Packed01Phi;
+  std::vector<double> Packed01E;
+  std::vector<double> Packed01M;
+  std::vector<double> Packed01Id;
+  std::vector<double> Packed01Status;
+  std::vector<double> Packed01MomId;
+  std::vector<bool> Packed01IsPrompt;
+  std::vector<bool> Packed01IsTauProd;
+
   std::vector<double> St03Pt;
   std::vector<double> St03Eta;
   std::vector<double> St03Phi;
@@ -163,6 +177,11 @@ private:
   std::vector<double> GjPy;
   std::vector<double> GjPz;
   std::vector<double> GjChargedFraction;
+std::vector<double> GjConstId;
+std::vector<double> GjConstPt;
+std::vector<double> GjConstEta;
+std::vector<double> GjConstPhi;
+std::vector<double> GjConstE;
   std::vector<bool> matchGjet;
   std::vector<double> MGjPt;
   std::vector<double> MGjeta;
@@ -364,6 +383,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
 genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
+packedgenParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("pgenSrc")),
  metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"))
 
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
@@ -393,6 +413,14 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   edm::Handle<GenParticleCollection> genParticles_h;
   iEvent.getByLabel(genParticleSrc_, genParticles_h);
   const GenParticleCollection* genParticles  = genParticles_h.failedToGet () ? 0 : &*genParticles_h;
+
+
+
+  edm::Handle<edm::View<pat::PackedGenParticle> > packedgenParticles_h;
+  iEvent.getByLabel(packedgenParticleSrc_, packedgenParticles_h);
+  const edm::View<pat::PackedGenParticle>* packedgenParticles  = packedgenParticles_h.failedToGet () ? 0 : &*packedgenParticles_h;
+
+
   
   // get muon collection
   edm::Handle<edm::View<pat::Muon> > muons;
@@ -514,6 +542,17 @@ patPfCandFromPv.clear();
     Bare01LepId.clear();
     Bare01LepStatus.clear();
     Bare01LepMomId.clear();
+    Packed01Pt.clear();
+    Packed01Eta.clear();
+    Packed01Phi.clear();
+    Packed01E.clear();
+    Packed01M.clear();
+    Packed01Id.clear();
+    Packed01Status.clear();
+  Packed01MomId.clear();
+          Packed01IsPrompt.clear();
+          Packed01IsTauProd.clear();
+
     St03Pt.clear();
     St03Eta.clear();
     St03Phi.clear();
@@ -540,6 +579,11 @@ St03NumberMom.clear();
     GjPy.clear();
     GjPz.clear();
     GjChargedFraction.clear();
+      GjConstId.clear();
+      GjConstPt.clear();
+      GjConstEta.clear();
+      GjConstPhi.clear();
+      GjConstE.clear();
     matchGjet.clear();
     MGjPt.clear();
     MGjeta.clear();
@@ -813,7 +857,7 @@ patPfCandPt.push_back(pf.pt());
 
       if(gen[i].numberOfMothers()){
  
-        if (abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 ||abs(st)==3 ){
+        if (abs(st)==23 ||abs(st)==22||abs(st)==21||abs(st)==61 ||abs(st)==3||abs(st)==2 ){
           TLorentzVector genLep3(0,0,0,0);
 
           if(abs(gen[i].eta())<10)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
@@ -829,10 +873,10 @@ patPfCandPt.push_back(pf.pt());
 	  St03Status.push_back(st);
         }
 
-        if(gen[i].numberOfMothers() ==1 && gen[i].mother()->pdgId() != id){
+        /*if(gen[i].numberOfMothers() ==1 && gen[i].mother()->pdgId() != id){
 
          continue;
-        }
+        }*/
         if (st==1 && (abs(id)==13||abs(id)==11 || abs(id)==15 ||abs(id)==12||abs(id)==14||abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
 
           TLorentzVector genLep1(0,0,0,0);
@@ -893,6 +937,37 @@ bool isPrompt = gen[i].isPromptFinalState();
       }
     }
     }
+
+
+    if (!realdata && packedgenParticles){  
+
+
+      const edm::View<pat::PackedGenParticle> & gen = *packedgenParticles_h;
+      for (size_t i=0; i<packedgenParticles->size(); ++i){
+
+      int st = gen[i].status();
+      int id = gen[i].pdgId();
+   //  cout<<st<<"  "<<id<<"  "<<gen[i].pt()<<"  "<<gen[i].eta()<<"  "<<gen[i].phi()<<"  "<<gen[i].energy()<<endl;
+          TLorentzVector genLep1(0,0,0,0);
+          if(fabs(gen[i].eta())>0.00000001)genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+          else genLep1.SetPtEtaPhiE(0.00000001,0.00000001,gen[i].phi(),gen[i].energy());
+          if( gen[i].pt()<0.3 || fabs(gen[i].eta())>3.||gen[i].charge()==0) continue;
+          bool isPrompt = gen[i].isPromptFinalState();
+          bool tauProd  = gen[i].isDirectPromptTauDecayProductFinalState();
+          Packed01IsPrompt.push_back(isPrompt);
+          Packed01IsTauProd.push_back(tauProd);
+	  Packed01Pt.push_back(genLep1.Pt());
+	  Packed01Eta.push_back(genLep1.Eta());
+	  Packed01Phi.push_back(genLep1.Phi());
+	  Packed01E.push_back(genLep1.Energy());
+	  Packed01M.push_back(genLep1.M());
+	  Packed01Id.push_back(id);
+	  Packed01MomId.push_back(id);
+	  Packed01Status.push_back(st);
+      }
+    }
+
+
     //cout<<"aaaaaa"<<endl;
 
     if (!realdata){
@@ -925,6 +1000,22 @@ bool isPrompt = gen[i].isPromptFinalState();
 //	}
 	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
 	GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
+        if(fabs(genjet[k].eta())<3.0){
+          for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
+
+          //cout<<genjet[k].eta()<<endl;
+          //cout<<genjet[k].numberOfDaughters()<< "  "<<idx<<"  "<<genjet[k].daughter(idx)->pdgId()<<"  "<<endl;
+          //cout<<genjet[k].daughter(idx)->pt()<<"  "<<genjet[k].daughter(idx)->eta()<<"  "<<genjet[k].daughter(idx)->phi()<<"  "<<genjet[k].daughter(idx)->energy()<<endl<<endl;
+      GjConstId.push_back(genjet[k].daughter(idx)->pdgId());
+      GjConstPt.push_back(genjet[k].daughter(idx)->pt());
+      GjConstEta.push_back(genjet[k].daughter(idx)->eta());
+      GjConstPhi.push_back(genjet[k].daughter(idx)->phi());
+      GjConstE.push_back(genjet[k].daughter(idx)->energy());
+
+}
+
+
+        }
       }
       }
     }
@@ -1511,6 +1602,18 @@ Tupel::beginJob()
     myTree->Branch("Bare01LepId",&Bare01LepId);
     myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
       myTree->Branch("Bare01LepMomId",&Bare01LepMomId);      
+
+    myTree->Branch("Packed01Pt",&Packed01Pt);
+    myTree->Branch("Packed01Eta",&Packed01Eta);
+    myTree->Branch("Packed01Phi",&Packed01Phi);
+    myTree->Branch("Packed01E",&Packed01E);
+    myTree->Branch("Packed01M",&Packed01M);
+    myTree->Branch("Packed01Id",&Packed01Id);
+    myTree->Branch("Packed01Status",&Packed01Status);
+  myTree->Branch("Packed01MomId",&Packed01MomId);
+ myTree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
+  myTree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
+
     myTree->Branch("St03Pt",&St03Pt);
     myTree->Branch("St03Eta",&St03Eta);
     myTree->Branch("St03Phi",&St03Phi);
@@ -1540,6 +1643,12 @@ Tupel::beginJob()
     myTree->Branch("GjPy",&GjPy);
     myTree->Branch("GjPz",&GjPz);
     myTree->Branch("GjChargedFraction",&GjChargedFraction);
+    myTree->Branch("GjConstId",&GjConstId);
+    myTree->Branch("GjConstPt",&GjConstPt);
+    myTree->Branch("GjConstEta",&GjConstEta);
+    myTree->Branch("GjConstPhi",&GjConstPhi);
+    myTree->Branch("GjConstE",&GjConstE);
+
     myTree->Branch("matchGjet",&matchGjet);
     myTree->Branch("MGjPt",&MGjPt);
     myTree->Branch("MGjeta",&MGjeta);
