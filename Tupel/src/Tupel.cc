@@ -178,6 +178,7 @@ private:
   std::vector<double> GjPz;
   std::vector<double> GjChargedFraction;
 std::vector<double> GjConstId;
+std::vector<double> GjNConst;
 std::vector<double> GjConstPt;
 std::vector<double> GjConstEta;
 std::vector<double> GjConstPhi;
@@ -580,6 +581,7 @@ St03NumberMom.clear();
     GjPz.clear();
     GjChargedFraction.clear();
       GjConstId.clear();
+GjNConst.clear();
       GjConstPt.clear();
       GjConstEta.clear();
       GjConstPhi.clear();
@@ -1000,23 +1002,25 @@ bool isPrompt = gen[i].isPromptFinalState();
 //	}
 	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
 	GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
+        double nconst=0;
         if(fabs(genjet[k].eta())<3.0){
+          nconst=genjet[k].numberOfDaughters();
           for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
 
           //cout<<genjet[k].eta()<<endl;
           //cout<<genjet[k].numberOfDaughters()<< "  "<<idx<<"  "<<genjet[k].daughter(idx)->pdgId()<<"  "<<endl;
           //cout<<genjet[k].daughter(idx)->pt()<<"  "<<genjet[k].daughter(idx)->eta()<<"  "<<genjet[k].daughter(idx)->phi()<<"  "<<genjet[k].daughter(idx)->energy()<<endl<<endl;
-      GjConstId.push_back(genjet[k].daughter(idx)->pdgId());
-      GjConstPt.push_back(genjet[k].daughter(idx)->pt());
-      GjConstEta.push_back(genjet[k].daughter(idx)->eta());
-      GjConstPhi.push_back(genjet[k].daughter(idx)->phi());
-      GjConstE.push_back(genjet[k].daughter(idx)->energy());
+            GjConstId.push_back(genjet[k].daughter(idx)->pdgId());
+            GjConstPt.push_back(genjet[k].daughter(idx)->pt());
+            GjConstEta.push_back(genjet[k].daughter(idx)->eta());
+            GjConstPhi.push_back(genjet[k].daughter(idx)->phi());
+            GjConstE.push_back(genjet[k].daughter(idx)->energy());
 
-}
-
-
+          }
         }
+        GjNConst.push_back(nconst);
       }
+
       }
     }
     
@@ -1644,6 +1648,7 @@ Tupel::beginJob()
     myTree->Branch("GjPz",&GjPz);
     myTree->Branch("GjChargedFraction",&GjChargedFraction);
     myTree->Branch("GjConstId",&GjConstId);
+    myTree->Branch("GjNConst",&GjNConst);
     myTree->Branch("GjConstPt",&GjConstPt);
     myTree->Branch("GjConstEta",&GjConstEta);
     myTree->Branch("GjConstPhi",&GjConstPhi);
