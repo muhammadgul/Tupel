@@ -57,9 +57,9 @@ hist[1]->Draw("same");
 
         TString a;
           a+=setlogtmp;
-c111->Print("puvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
-c111->Print("puvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.png");
-c111->Print("puvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.root");
+c111->Print("puvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
+c111->Print("puvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.png");
+c111->Print("puvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.root");
 c111->Close();
 
 return histup;
@@ -145,9 +145,9 @@ hist[1]->Draw("same");
 //histdownn->Draw("same");
         TString a;
           a+=setlogtmp;
-c111->Print("puvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
-c111->Print("puvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.png");
-c111->Print("puvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.root");
+c111->Print("puvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
+c111->Print("puvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.png");
+c111->Print("puvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.root");
 c111->Close();
 return histup;
 mc_ss->Close();
@@ -233,9 +233,9 @@ hist[1]->Draw("same");
 hist[2]->Draw("same");
         TString a;
           a+=setlogtmp;
-c111->Print("jesvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
-c111->Print("jesvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.png");
-c111->Print("jesvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.root");
+c111->Print("jesvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
+c111->Print("jesvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.png");
+c111->Print("jesvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.root");
 c111->Close();
 
 return histup;
@@ -337,9 +337,9 @@ hist[2]->Draw("same");
 //histdownn->Draw("same");
         TString a;
           a+=setlogtmp;
-c111->Print("jesvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
-c111->Print("jesvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.png");
-c111->Print("jesvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.root");
+c111->Print("jesvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
+c111->Print("jesvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.png");
+c111->Print("jesvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.root");
 c111->Close();
 return histup;
 data_c->Close();
@@ -432,9 +432,9 @@ histupp->Add(histup);
 histdownn->Add(histup,-1);
         TString a;
           a+=setlogtmp;
-c111->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
-c111->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.png");
-c111->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.root");
+c111->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
+c111->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.png");
+c111->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.root");
 c111->Close();
 TCanvas *c222= new TCanvas("c222","c222",800,800);
 c222->cd();
@@ -446,9 +446,9 @@ hist[0]->Draw();
 
 histupp->Draw("samehhist");
 histdownn->Draw("samehhist");
-c222->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0._envelope.pdf");
-c222->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0._envelope.png");
-c222->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0._envelope.root");
+c222->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0._envelope.pdf");
+c222->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0._envelope.png");
+c222->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0._envelope.root");
 
 c222->Close();
 return histup;
@@ -557,9 +557,9 @@ histdownn->Fill(hist[0]->GetXaxis()->GetBinCenter(bin),hist[0]->GetBinContent(bi
 
         TString a;
           a+=setlogtmp;
-c111->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
-c111->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.png");
-c111->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0.root");
+c111->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.pdf");
+c111->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.png");
+c111->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0.root");
 c111->Close();
 TCanvas *c222= new TCanvas("c222","c222",800,800);
 c222->cd();
@@ -570,9 +570,9 @@ hist[0]->GetYaxis()->SetTitle(ytitletmp);
 hist[0]->Draw();
 histupp->Draw("samehhist");
 histdownn->Draw("samehhist");
-c222->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0._envelope.pdf");
-c222->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0._envelope.png");
-c222->Print("pdfvar_25ns_uev_v15/" + vartmp +"_logy_" + a + "_iselec_0._envelope.root");
+c222->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0._envelope.pdf");
+c222->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0._envelope.png");
+c222->Print("pdfvar_25ns_uev_v16/" + vartmp +"_logy_" + a + "_iselec_0._envelope.root");
 c222->Close();
 
 
@@ -681,12 +681,17 @@ void fixsplithist(TH1* htop, TH1* hbot){
 
   hbot->GetYaxis()->SetNdivisions(5);
 }
-void plot_stack_overlay(TString var, TString var2, TString var3,TString var4, TString xtitle, TString ytitle, int setlog,int setlogx, int rebin, double lumi,TLatex * latexlab,int ise, TString mult,double binmin, double binmax,double binminy, double binmaxy,TString vno){
+void plot_stack_overlay(TString var, TString var2, TString var3,TString var4 ,int isup, TString xtitle, TString ytitle, int setlog,int setlogx, int rebin, double lumi,TLatex * latexlab,int ise, TString mult,double binmin, double binmax,double binminy, double binmaxy,double rmin, double rmax,TString vno){
 TString iselec;
 iselec +=(ise);
 
 TFile *data = TFile::Open("25ns_data_D_uev_newlist_2110_fromskimmed_isElec_"+iselec+vno+".root");
-TFile *mc_s = TFile::Open("25ns_tt_uev_miniaodv2_2110_fromskimmed_isElec_"+iselec+vno+".root");
+TFile *mc_s;
+
+if(isup==1)mc_s = TFile::Open("powheg_up_isElec_"+iselec+vno+".root");
+if(isup==2)mc_s = TFile::Open("powheg_sdn_isElec_"+iselec+vno+".root");
+if(isup==0)mc_s = TFile::Open("25ns_tt_uev_miniaodv2_2110_fromskimmed_isElec_"+iselec+vno+".root");
+
 TH1D * tmphdata  =(TH1D*)(data->Get(var +"_0"));
 TH1D * tmphmc_s  =(TH1D*)(mc_s->Get(var +"_0"));
 TH1D* hdata= (TH1D*)tmphdata->Clone("");
@@ -735,6 +740,8 @@ TH1D* hmc_s4= (TH1D*)tmphmc_s4->Clone("");
 
 
  hdata->SetMarkerStyle(20);
+hmc_s->SetLineColor(kBlack);
+hdata->SetLineColor(kBlack);
 
  hdata2->SetMarkerStyle(21);
  //hmc_s2->SetMarkerStyle;
@@ -757,17 +764,30 @@ TH1D* hmc_s4= (TH1D*)tmphmc_s4->Clone("");
  //hmc_s3->Rebin(rebin);
 
 //TLegend *leg1 = new TLegend(0.3931567,0.653719,0.64980511,0.885385);
-TLegend *leg1 = new TLegend(0.4553,0.963-0.4180,0.9400,0.933-0.160);
+//TLegend *leg1 = new TLegend(0.4553,0.963-0.3880,0.9100,0.933-0.160);
+
+TLegend *leg1 = new TLegend(0.526253,0.963-0.40680,0.9100,0.933-0.060);
+
 leg1->SetBorderSize(0);
 leg1->SetFillColor(kWhite);
-leg1->SetTextSize(0.031);
+leg1->SetTextSize(0.0351);
 //leg1->AddEntry(hdata, "t#bar{t}","");
 leg1->AddEntry(hdata, "overall","pe");
 leg1->AddEntry(hdata2, "away","pe");
 leg1->AddEntry(hdata3, "transverse","pe");
 leg1->AddEntry(hdata4, "toward","pe");
-leg1->AddEntry(hmc_s, "t#bar{t} Powheg + Pythia 8 (CUETP8M1)","l");
-
+if(isup==0){
+  leg1->AddEntry(hmc_s, "t#bar{t} Powheg + Pythia 8","l");
+leg1->AddEntry(hmc_s, "(CUETP8M1)","");
+}
+if(isup==1){
+  leg1->AddEntry(hmc_s, "t#bar{t} Powheg + Pythia 8","l");
+   leg1->AddEntry(hmc_s, "(CUETP8M1) (2Q)^{2}","");
+}
+if(isup==2){
+  leg1->AddEntry(hmc_s, "t#bar{t} Powheg + Pythia 8","l");
+  leg1->AddEntry(hmc_s, "(CUETP8M1) (Q/2)^{2}","");
+}
 hdata->SetMarkerStyle(20);
 
 TH1D* monta = (TH1D*)hdata->Clone();
@@ -849,7 +869,7 @@ mont2->SetBinError(i,0.0000001);
 mont3->SetBinError(i,0.0000001);
 mont4->SetBinError(i,0.0000001);
 }*/
-   pt->AddText("CMS Preliminary #sqrt{s} = 13 TeV, #int L dt = 1.26 fb^{-1} ");
+   pt->AddText("CMS Preliminary #sqrt{s} = 13 TeV, #int L dt = 2.2 fb^{-1} ");
 
    TLatex *latexLabell = new TLatex(); 
 
@@ -860,12 +880,12 @@ mont4->SetBinError(i,0.0000001);
 
     latexLabell->SetTextFont(61);
 //    latexLabell->DrawLatex(0.853,0.963-0.080,"CMS");
-    latexLabell->DrawLatex(0.6253,0.963-0.10,"CMS");
+    latexLabell->DrawLatex(0.16253,0.963-0.10,"CMS");
     latexLabell->SetTextFont(52);
 //    latexLabell->DrawLatex(0.773,0.963-0.120,"Preliminary");
-    latexLabell->DrawLatex(0.713,0.963-0.10,"Preliminary");
+    latexLabell->DrawLatex(0.263,0.963-0.10,"Preliminary");
     latexLabell->SetTextFont(42);
-    latexLabell->DrawLatex(0.723,0.963-0.035,"1.26 fb^{-1} (13 TeV)");
+    latexLabell->DrawLatex(0.723,0.963-0.035,"2.2 fb^{-1} (13 TeV)");
    // latexLabell->SetTextSize(0.06305);
    // if(!ise)latexLabell->DrawLatex(0.8123,0.9363-0.160,"t#bar{t}");
     if(ise)latexLabell->DrawLatex(0.673,0.963-0.160,"e + jets, =2 b-tags");
@@ -928,15 +948,17 @@ mont4->SetBinError(i,0.0000001);
           for(int iss =0;iss<4;iss++)gr[iss]->Draw("p");         
            //l->Draw("same");
           mont->SetXTitle(xtitle);
-          mont->SetMinimum(0.5);
-          mont->SetMaximum(1.5);
+          mont->SetMinimum(rmin);
+          mont->SetMaximum(rmax);
           mont->SetYTitle("MC/Data");
           fixsplithist(hdata,mont);
           TString a;
           a+=setlog;
-          c1->Print("stack_plots_25ns_uev"+vno + "/overlay_" + var +"_logy_" + a + "_iselec_" + iselec+ ".pdf");
-          c1->Print("stack_plots_25ns_uev"+vno + "/overlay_" + var +"_logy_" + a + "_iselec_" + iselec+ ".png");
-          c1->Print("stack_plots_25ns_uev"+vno + "/overlay_" + var +"_logy_" + a + "_iselec_" + iselec+ ".root");
+          TString b;
+          if(isup!=0)b+=isup;
+          c1->Print("stack_plots_25ns_uev"+vno + "/overlay_" + var +"_logy_" + a + "_iselec_" + iselec+ "_" + b + ".pdf");
+          c1->Print("stack_plots_25ns_uev"+vno + "/overlay_" + var +"_logy_" + a + "_iselec_" + iselec+ "_" + b + ".png");
+          c1->Print("stack_plots_25ns_uev"+vno + "/overlay_" + var +"_logy_" + a + "_iselec_" + iselec+ "_" + b + ".root");
 c1->Close();
 data->Close();
 mc_s->Close();
@@ -976,16 +998,16 @@ TProfile* hmc_hpp= (TProfile*)tmphmc_hpp->Clone("");
  hmc_hpp->Rebin(rebin);
 
 
-TH1D* pdfvar = (TH1D*) estimate_pdfunc_profile(var,xtitle,ytitle,setlog,setlogx,ise,"_v15",rebin);
+//TH1D* pdfvar = (TH1D*) estimate_pdfunc_profile(var,xtitle,ytitle,setlog,setlogx,ise,"_v15",rebin);
 //pdfvar->Rebin(rebin);
-TH1D* jesvar = (TH1D*) estimate_jesunc_profile(var,xtitle,ytitle,setlog,setlogx,ise,"_v15",rebin);
+//TH1D* jesvar = (TH1D*) estimate_jesunc_profile(var,xtitle,ytitle,setlog,setlogx,ise,"_v16",rebin);
 
-TH1D* puvar = (TH1D*) estimate_puunc_profile(var,xtitle,ytitle,setlog,setlogx,ise,"_v15",rebin);
+//TH1D* puvar = (TH1D*) estimate_puunc_profile(var,xtitle,ytitle,setlog,setlogx,ise,"_v16",rebin);
 
 TH1D* pdfvarmont;
 TH1D* jesvarmont;
 TH1D* puvarmont;
-// = (TH1D*) estimate_pdfunc_profile(var,ise,"_v15");
+// = (TH1D*) estimate_pdfunc_profile(var,ise,"_v16");
 //pdfvarmont->Rebin(rebin);
 
 
@@ -995,7 +1017,7 @@ leg1->SetBorderSize(0);
 leg1->SetFillColor(kWhite);
 leg1->SetFillStyle(0);
 leg1->SetTextSize(0.04);
-leg1->AddEntry(hdata, "uncorrected data","pe");
+leg1->AddEntry(hdata, "detector-level data","pe");
 leg1->AddEntry(hmc_s, "t#bar{t} Powheg + Pythia 8 (CUETP8M1)","l");
 leg1->AddEntry(hmc_sup, "t#bar{t} Powheg + Pythia 8 (CUETP8M1) (2Q)^{2}","l");
 leg1->AddEntry(hmc_sdn, "t#bar{t} Powheg + Pythia 8 (CUETP8M1) (Q/2)^{2}","l");
@@ -1024,7 +1046,7 @@ TProfile* montt = (TProfile*)hdata->Clone();
 TProfile* monttt = (TProfile*)hmc_s->Clone();
 TH1D* monta = (TH1D*)montt->ProjectionX();
 TH1D* mont = (TH1D*)monttt->ProjectionX();
-mont->Divide(mont,monta,1,1);
+
 
 TProfile* montttsup = (TProfile*)hmc_sup->Clone();
 TProfile* montttsdn = (TProfile*)hmc_sdn->Clone();
@@ -1038,10 +1060,20 @@ TH1D* montsdn = (TH1D*)montttsdn->ProjectionX();
 TH1D* montahpp = (TH1D*)montt->ProjectionX();
 TH1D* monthpp = (TH1D*)monttthpp->ProjectionX();
 
-
+mont->Divide(mont,monta,1,1);
 montsup->Divide(montsup,montasup,1,1);
 montsdn->Divide(montsdn,montasdn,1,1);
 monthpp->Divide(monthpp,montahpp,1,1);
+
+
+//see pull rather than div
+
+/*for(int bin=1;bin<=mont->GetNbinsX();bin++){
+  mont->SetBinContent(bin,(mont->GetBinContent(bin)-monta->GetBinContent(bin))/monta->GetBinError(bin));
+  montsup->SetBinContent(bin,(montsup->GetBinContent(bin)-montasup->GetBinContent(bin))/montasup->GetBinError(bin));
+  montsdn->SetBinContent(bin,(montsdn->GetBinContent(bin)-montasdn->GetBinContent(bin))/montasdn->GetBinError(bin));
+  monthpp->SetBinContent(bin,(monthpp->GetBinContent(bin)-montahpp->GetBinContent(bin))/montahpp->GetBinError(bin));
+}*/
 
 TH1D* hband=(TH1D*)montasup->Clone("hband");
 TH1D* hbandd=(TH1D*)montasup->Clone("hband");
@@ -1078,12 +1110,12 @@ jesvarrmont->SetBinContent(i,mont->GetBinContent(i));
 totvarrmont->SetBinContent(i,mont->GetBinContent(i));
 
 
-pdfvarr->SetBinError(i,pdfvar->GetBinError(i));
-puvarr->SetBinError(i,puvar->GetBinError(i));
-jesvarr->SetBinError(i,jesvar->GetBinError(i));
+//pdfvarr->SetBinError(i,pdfvar->GetBinError(i));
+//puvarr->SetBinError(i,puvar->GetBinError(i));
+//jesvarr->SetBinError(i,jesvar->GetBinError(i));
 
-double asdeeee=sqrt(jesvar->GetBinError(i)*jesvar->GetBinError(i) + pdfvarr->GetBinError(i)*pdfvarr->GetBinError(i) + puvarr->GetBinError(i) *puvarr->GetBinError(i));
-totvarr->SetBinError(i,asdeeee);
+//double asdeeee=sqrt(jesvar->GetBinError(i)*jesvar->GetBinError(i) + pdfvarr->GetBinError(i)*pdfvarr->GetBinError(i) + puvarr->GetBinError(i) *puvarr->GetBinError(i));
+//totvarr->SetBinError(i,asdeeee);
 /*
 pdfvarrmont->SetBinError(i,fabs(mont->GetBinContent(i)*(pdfvar->GetBinError(i))/(hmc_s->GetBinContent(i)+pdfvar->GetBinError(i))));
 puvarrmont->SetBinError(i,fabs(mont->GetBinContent(i)*(puvar->GetBinError(i))/(hmc_s->GetBinContent(i)+puvar->GetBinError(i))));
@@ -1092,9 +1124,9 @@ jesvarrmont->SetBinError(i,fabs(mont->GetBinContent(i)*(jesvar->GetBinError(i))/
 totvarrmont->SetBinError(i,fabs(mont->GetBinContent(i)*(totvarr->GetBinError(i))/(hmc_s->GetBinContent(i)+totvarr->GetBinError(i))));
 */
 
-pdfvarrmont->SetBinError(i,fabs(pdfvar->GetBinError(i)/hdata->GetBinContent(i)));
-puvarrmont->SetBinError(i,fabs(puvar->GetBinError(i)/hdata->GetBinContent(i)));
-jesvarrmont->SetBinError(i,fabs(jesvar->GetBinError(i)/hdata->GetBinContent(i)));
+//pdfvarrmont->SetBinError(i,fabs(pdfvar->GetBinError(i)/hdata->GetBinContent(i)));
+//puvarrmont->SetBinError(i,fabs(puvar->GetBinError(i)/hdata->GetBinContent(i)));
+//jesvarrmont->SetBinError(i,fabs(jesvar->GetBinError(i)/hdata->GetBinContent(i)));
 
 totvarrmont->SetBinError(i,fabs(totvarr->GetBinError(i)/hdata->GetBinContent(i)));
 
@@ -1156,7 +1188,7 @@ pt->SetFillColor(0);
 //TString Lumi="";
 //Lumi +=(lumi);
 
-   pt->AddText("CMS Preliminary #sqrt{s} = 13 TeV, #int L dt = 1.26 fb^{-1} ");
+   pt->AddText("CMS Preliminary #sqrt{s} = 13 TeV, #int L dt = 2.2 fb^{-1} ");
 
    TLatex *latexLabell = new TLatex(); 
 
@@ -1167,12 +1199,12 @@ pt->SetFillColor(0);
 
     latexLabell->SetTextFont(61);
  //    latexLabell->DrawLatex(0.853,0.963-0.080,"CMS");
-    latexLabell->DrawLatex(0.6253,0.963-0.10,"CMS");
+    latexLabell->DrawLatex(0.16253,0.963-0.10,"CMS");
     latexLabell->SetTextFont(52);
 //    latexLabell->DrawLatex(0.773,0.963-0.120,"Preliminary");
-    latexLabell->DrawLatex(0.713,0.963-0.10,"Preliminary");
+    latexLabell->DrawLatex(0.263,0.963-0.10,"Preliminary");
     latexLabell->SetTextFont(42);
-    latexLabell->DrawLatex(0.723,0.963-0.035,"1.26 fb^{-1} (13 TeV)");
+    latexLabell->DrawLatex(0.723,0.963-0.035,"2.2 fb^{-1} (13 TeV)");
    // latexLabell->SetTextSize(0.06305);
    // if(!ise)latexLabell->DrawLatex(0.8123,0.9363-0.160,"t#bar{t}");
     if(ise)latexLabell->DrawLatex(0.673,0.963-0.160,"e + jets, =2 b-tags");
@@ -1256,7 +1288,12 @@ pt->SetFillColor(0);
           mont->SetXTitle(xtitle);
           mont->SetMinimum(0.69);
           mont->SetMaximum(1.31);
+//          mont->SetMinimum(-25.);
+//          mont->SetMaximum(25.);
+
           mont->SetYTitle("MC/Data");
+
+//          mont->SetYTitle("(MC-Data)/#sigma_{Data}");
           fixsplithist(hdata,mont);
           TString a;
           a+=setlog;
@@ -1332,8 +1369,8 @@ TH1D* hwjet = (TH1D*)tmphwjet->Clone("");
 //cout<<"333"<<endl;
 
 TH1D*pdfvar= (TH1D*) estimate_pdfunc_TH1(var,xtitle,ytitle,setlog,setlogx, ise, "_v15",rebin);
-TH1D* jesvar = (TH1D*) estimate_jesunc_TH1(var,xtitle,ytitle,setlog,setlogx,ise,"_v15",rebin);
-TH1D* puvar = (TH1D*) estimate_puunc_TH1(var,xtitle,ytitle,setlog,setlogx,ise,"_v15",rebin);
+TH1D* jesvar = (TH1D*) estimate_jesunc_TH1(var,xtitle,ytitle,setlog,setlogx,ise,"_v16",rebin);
+TH1D* puvar = (TH1D*) estimate_puunc_TH1(var,xtitle,ytitle,setlog,setlogx,ise,"_v16",rebin);
 //pdfvar->Rebin(rebin);
 //jesvar->Rebin(rebin);
 //puvar->Rebin(rebin);
@@ -1421,7 +1458,7 @@ hwjet->Scale(3* 20508.9*lumi /wwjet);
 
 
 
-
+cout<<hdata->Integral()<<"  "<<hmc_s->Integral()+hst_t_t->Integral() + hst_t_tbar->Integral() + hst_tw_t->Integral() + hst_tw_tbar->Integral() + hwjet->Integral()<<endl;
 
 
 for(int i=1; i<=hdata->GetNbinsX();i++){
@@ -1520,6 +1557,9 @@ hmc_s->SetFillColor(633);
 stacst->SetFillColor(616);
 hwjet->SetFillColor(413);
 stackmc->SetFillColor(634);
+
+cout<<hmc_s->Integral()<<"  "<<stacst->Integral()+hwjet->Integral()<<endl;
+
 
 hmc_sup->SetLineColor(kAzure+4);
 hmc_sdn->SetLineColor(kOrange-3);
@@ -1643,7 +1683,7 @@ pt->SetFillColor(0);
 //TString Lumi="";
 //Lumi +=(lumi);
 
-   pt->AddText("CMS Preliminary #sqrt{s} = 13 TeV, #int L dt = 1.26 fb^{-1} ");
+   pt->AddText("CMS Preliminary #sqrt{s} = 13 TeV, #int L dt = 2.2 fb^{-1} ");
 
    TLatex *latexLabell = new TLatex(); 
 
@@ -1661,7 +1701,7 @@ pt->SetFillColor(0);
  //   if(!ise)latexLabell->DrawLatex(0.673,0.963-0.160,"t#bar{t}");
  //   if(ise)latexLabell->DrawLatex(0.673,0.963-0.160,"e + jets, =2 b-tags");
     latexLabell->SetTextFont(42);
- latexLabell->DrawLatex(0.723,0.963-0.035,"1.26 fb^{-1} (13 TeV)");
+ latexLabell->DrawLatex(0.723,0.963-0.035,"2.2 fb^{-1} (13 TeV)");
 
 
     latexLabell->Draw("same");
@@ -1787,7 +1827,7 @@ void macro_uev_plots(){
    gStyle->SetOptStat(kFALSE);
    gStyle->SetOptTitle(kFALSE);
 //  double lumii=23.757;
-   double lumii=1263;
+   double lumii=2163.268;
 //   double lumii=552.6;
     TLatex *latexLabel = new TLatex(); 
 
@@ -1808,426 +1848,451 @@ if(ise==1)continue;
 
 
 
-int plot_set=2;
+int plot_set=1;
 if(plot_set==1){
+plot_stack("njet_ttbar","N_{jet} p_{T}(j)>30 GeV",1,0,1,lumii,latexLabel,ise,4,9,-1,-1,"_v16");
 
+plot_stack("lbjet_eta","#eta(bj_{1})",1,0,10,lumii,latexLabel,ise,-1,-1,2,20000,"_v16");
+plot_stack("slbjet_eta","#eta(bj_{2})",1,0,10,lumii,latexLabel,ise,-1,-1,2,20000,"_v16");
+plot_stack("csv","CSVv2",1,0,10,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
+plot_stack("csvmax","CSVv2",1,0,10,lumii,latexLabel,ise,-1,-1,1000,10000000,"_v16");
+plot_stack("csvmax2","CSVv2",1,0,10,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
+plot_stack("dphi_ttbar_pf","#Delta#phi(t#bar{t},ch)",1,0,1,lumii,latexLabel,ise,-1,-1,10,50000,"_v16");
+plot_stack("ljet_pt","p_{T}(j_{1}) [GeV]",1,0,1,lumii,latexLabel,ise,30.,300,0.1,1000,"_v16");
+plot_stack("ljet_eta","#eta(j_{1})",1,0,4,lumii,latexLabel,ise,-1,-1,10,20000,"_v16");
+plot_stack("sljet_pt","p_{T}(j_{2}) [GeV]",1,0,1,lumii,latexLabel,ise,30,200,-1,-1,"_v16");
+plot_stack("sljet_eta","#eta(j_{2})",1,0,4,lumii,latexLabel,ise,-1,-1,10,20000,"_v16");
 
-plot_stack("lbjet_eta","#eta(bj_{1})",1,0,10,lumii,latexLabel,ise,-1,-1,2,20000,"_v15");
-plot_stack("slbjet_eta","#eta(bj_{2})",1,0,10,lumii,latexLabel,ise,-1,-1,2,20000,"_v15");
-plot_stack("csv","CSVv2",1,0,10,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
-plot_stack("csvmax","CSVv2",1,0,10,lumii,latexLabel,ise,-1,-1,1000,10000000,"_v15");
-plot_stack("csvmax2","CSVv2",1,0,10,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
-plot_stack("dphi_ttbar_pf","#Delta#phi(t#bar{t},ch)",1,0,1,lumii,latexLabel,ise,-1,-1,10,50000,"_v15");
-plot_stack("ljet_pt","p_{T}(j_{1}) [GeV]",1,0,1,lumii,latexLabel,ise,30.,300,0.1,1000,"_v15");
-plot_stack("ljet_eta","#eta(j_{1})",1,0,4,lumii,latexLabel,ise,-1,-1,10,20000,"_v15");
-plot_stack("sljet_pt","p_{T}(j_{2}) [GeV]",1,0,1,lumii,latexLabel,ise,30,200,-1,-1,"_v15");
-plot_stack("sljet_eta","#eta(j_{2})",1,0,4,lumii,latexLabel,ise,-1,-1,10,20000,"_v15");
+plot_stack("pf_dxy","dxy [cm]",1,0,40,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("pf_dxy","dxy [cm]",1,0,40,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("pf_dz","dz [cm]",1,0,40,lumii,latexLabel,ise,-1,-1,0.1,1000000,"_v16");
 
-plot_stack("pf_dz","dz [cm]",1,0,40,lumii,latexLabel,ise,-1,-1,0.1,1000000,"_v15");
+plot_stack("pf_sigmadxy","Sdxy",1,0,20,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("pf_sigmadxy","Sdxy",1,0,20,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("pf_sigmadz","sdz",1,0,20,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("pf_sigmadz","sdz",1,0,20,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
-
-plot_stack("pf_pt","p_{T}^{ch}  [GeV]",1,0,40,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("pf_pt","p_{T}^{ch}  [GeV]",1,0,40,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
 
 
 
 //hist name, x title, setlogy, rebin, lumii, dummy, is electron, binmin, binmax (if  set as -1 getbinabove 0 is used)
-plot_stack("mu_pt_meas","p_{T} (#mu) [GeV]",1,0,100,lumii,latexLabel,ise,-1,-1,0.1,1000,"_v15");
+plot_stack("mu_pt_meas","p_{T} (#mu) [GeV]",1,0,100,lumii,latexLabel,ise,-1,-1,0.1,1000,"_v16");
 
-plot_stack("met_meas","MET [GeV]",1,0,4,lumii,latexLabel,ise,-1,-1,0.1,700,"_v15");
+plot_stack("met_meas","MET [GeV]",1,0,4,lumii,latexLabel,ise,-1,-1,0.1,700,"_v16");
 
-plot_stack("mu_eta_meas","#eta (#mu)",1,0,10,lumii,latexLabel,ise,-1,-1,1,50000,"_v15");
+plot_stack("mu_eta_meas","#eta (#mu)",1,0,10,lumii,latexLabel,ise,-1,-1,1,50000,"_v16");
 
-plot_stack("mu_phi_meas","#phi (#mu)",1,0,4,lumii,latexLabel,ise,-1,-1,50,10000,"_v15");
+plot_stack("mu_phi_meas","#phi (#mu)",1,0,4,lumii,latexLabel,ise,-1,-1,50,10000,"_v16");
 
-plot_stack("mu_iso_meas","Iso (#mu)",1,0,20,lumii,latexLabel,ise,0,0.2,-1,-1,"_v15");
+plot_stack("mu_iso_meas","Iso (#mu)",1,0,20,lumii,latexLabel,ise,0,0.2,-1,-1,"_v16");
 
-plot_stack("n_bjet","N bjet",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("n_bjet","N bjet",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("lbjet_pt","p_{T}(bj_{1}) [GeV]",1,0,2,lumii,latexLabel,ise,30,300,0.1,200000,"_v15");
+plot_stack("lbjet_pt","p_{T}(bj_{1}) [GeV]",1,0,2,lumii,latexLabel,ise,30,300,0.1,200000,"_v16");
 
-plot_stack("slbjet_pt","p_{T}(bj_{2}) [GeV]",1,0,1,lumii,latexLabel,ise,30,200,0.1,200000,"_v15");
+plot_stack("slbjet_pt","p_{T}(bj_{2}) [GeV]",1,0,1,lumii,latexLabel,ise,30,200,0.1,200000,"_v16");
 
-plot_stack("dijet_mass","M_{jj} [GeV]",1,0,2,lumii,latexLabel,ise,0,500,0.051,800,"_v15");
+plot_stack("dijet_mass","M_{jj} [GeV]",1,0,2,lumii,latexLabel,ise,0,500,0.051,800,"_v16");
 
-plot_stack("dijet_mass_narrow","M_{jj} [GeV]",0,0,40,lumii,latexLabel,ise,-1,-1,0,439.8,"_v15");
+plot_stack("dijet_mass_narrow","M_{jj} [GeV]",0,0,40,lumii,latexLabel,ise,-1,-1,0,739.8,"_v16");
 
-plot_stack("pt_ttbar","p_{T}(t#bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,280,"_v15");
+plot_stack("pt_ttbar","p_{T}(t#bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,470,"_v16");
 
-plot_stack("pt_ttbar_kinrec","p_{T}(t#bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,280,"_v15");
+plot_stack("pt_ttbar_kinrec","p_{T}(t#bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,280,"_v16");
 
-plot_stack("nu_pz","p_{z}(#nu) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,100,"_v15");
+plot_stack("nu_pz","p_{z}(#nu) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,100,"_v16");
 
-plot_stack("nu_pt","p_{T}(#nu) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,200,"_v15");
+plot_stack("nu_pt","p_{T}(#nu) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,200,"_v16");
 
-plot_stack("rec_ttjY","y (t#bar{t}j)",0,0,1,lumii,latexLabel,ise,-1,-1,0,7000,"_v15");
-
-
-
-plot_stack("y_ttbar","y (t#bar{t})",0,0,2,lumii,latexLabel,ise,-1,-1,0,9000,"_v15");
+plot_stack("rec_ttjY","y (t#bar{t}j)",0,0,1,lumii,latexLabel,ise,-1,-1,0,15000,"_v16");
 
 
 
-plot_stack("m_ttbar","M (t#bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,70,"_v15");
-
-plot_stack("m_thad","M (t_{had}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,250,"_v15");
-
-plot_stack("m_tlep","M (t_{lep}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,750,"_v15");
-
-plot_stack("pt_thad","p_{T} (t_{had}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,100,"_v15");
-
-plot_stack("pt_tlep","p_{T} (t_{lep}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,100,"_v15");
-
-plot_stack("m_t","M (t and #bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,750,"_v15");
-
-plot_stack("pt_t","p_{T} (t and #bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,400,"_v15");
-
-plot_stack("m_ttbar_fixbin","M (t#bar{t}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,70,"_v15");
-
-plot_stack("m_thad_fixbin","M (t_{had}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,250,"_v15");
-
-plot_stack("m_tlep_fixbin","M (t_{lep}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,750,"_v15");
-
-plot_stack("pt_thad_fixbin","p_{T} (t_{had}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,100,"_v15");
-
-plot_stack("pt_tlep_fixbin","p_{T} (t_{lep}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,100,"_v15");
-
-plot_stack("m_t_fixbin","M (t and #bar{t}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,750,"_v15");
-
-plot_stack("pt_t_fixbin","p_{T} (t and #bar{t}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,400,"_v15");
+plot_stack("y_ttbar","y (t#bar{t})",0,0,2,lumii,latexLabel,ise,-1,-1,0,18000,"_v16");
 
 
-plot_stack("y_thad","y (t_{had})",0,0,2,lumii,latexLabel,ise,-1,-1,0,9000,"_v15");
 
-plot_stack("y_tlep","y (t_{lep})",0,0,2,lumii,latexLabel,ise,-1,-1,0,9000,"_v15");
+plot_stack("m_ttbar","M (t#bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,70,"_v16");
+
+plot_stack("m_thad","M (t_{had}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,250,"_v16");
+
+plot_stack("m_tlep","M (t_{lep}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,750,"_v16");
+
+plot_stack("pt_thad","p_{T} (t_{had}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,200,"_v16");
+
+plot_stack("pt_tlep","p_{T} (t_{lep}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,200,"_v16");
+
+plot_stack("m_t","M (t and #bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,1000,"_v16");
+
+plot_stack("pt_t","p_{T} (t and #bar{t}) [GeV]",0,0,1,lumii,latexLabel,ise,-1,-1,0,400,"_v16");
+
+plot_stack("m_ttbar_fixbin","M (t#bar{t}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,70,"_v16");
+
+plot_stack("m_thad_fixbin","M (t_{had}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,250,"_v16");
+
+plot_stack("m_tlep_fixbin","M (t_{lep}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,750,"_v16");
+
+plot_stack("pt_thad_fixbin","p_{T} (t_{had}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,100,"_v16");
+
+plot_stack("pt_tlep_fixbin","p_{T} (t_{lep}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,100,"_v16");
+
+plot_stack("m_t_fixbin","M (t and #bar{t}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,750,"_v16");
+
+plot_stack("pt_t_fixbin","p_{T} (t and #bar{t}) [GeV]",0,0,4,lumii,latexLabel,ise,-1,-1,0,400,"_v16");
 
 
-plot_stack("y_t","y (t and #bar{t})",0,0,2,lumii,latexLabel,ise,-1,-1,0,20000,"_v15");
+plot_stack("y_thad","y (t_{had})",0,0,2,lumii,latexLabel,ise,-1,-1,0,12000,"_v16");
+
+plot_stack("y_tlep","y (t_{lep})",0,0,2,lumii,latexLabel,ise,-1,-1,0,12000,"_v16");
 
 
-plot_stack("njet_ttbar","N_{jet} p_{T}(j)>30 GeV",1,0,1,lumii,latexLabel,ise,4,9,-1,-1,"_v15");
+plot_stack("y_t","y (t and #bar{t})",0,0,2,lumii,latexLabel,ise,-1,-1,0,24000,"_v16");
 
-plot_stack("njet_15_ttbar","N_{jet}(extra) p_{T}(j)>15 GeV",1,0,1,lumii,latexLabel,ise,-1,-1,1,10000,"_v15");
 
-plot_stack("deltar_pf_jetpf","#Delta R_{min} (ch,jconst)",1,0,2,lumii,latexLabel,ise,0.,0.1,0.1,10000000,"_v15");
 
-plot_stack("deltar_pf_jet","#Delta R_{min} (ch,j)",1,0,1,lumii,latexLabel,ise,0.,0.1,50,10000000,"_v15");
 
-plot_stack("deltar_pf_jet_after","#Delta R_{min} (ch,j) after DR cut",1,0,1,lumii,latexLabel,ise,0.,0.1,50,10000000,"_v15");
+plot_stack("njet_15_ttbar","N_{jet}(extra) p_{T}(j)>15 GeV",1,0,1,lumii,latexLabel,ise,-1,-1,1,10000,"_v16");
 
-plot_stack("deltar_pf_mu","#Delta R (ch,mu)",1,0,2,lumii,latexLabel,ise,0.,0.1,0.1,10000000,"_v15");
+plot_stack("deltar_pf_jetpf","#Delta R_{min} (ch,jconst)",1,0,2,lumii,latexLabel,ise,0.,0.1,0.1,10000000,"_v16");
 
-plot_stack("nvtx_npf","N_{vtx}",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("deltar_pf_jet","#Delta R_{min} (ch,j)",1,0,1,lumii,latexLabel,ise,0.,0.1,50,10000000,"_v16");
 
-plot_stack("npf_inclusive","N^{ch}",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("deltar_pf_jet_after","#Delta R_{min} (ch,j) after DR cut",1,0,1,lumii,latexLabel,ise,0.,0.1,50,10000000,"_v16");
 
-plot_stack("npf_toward","N^{ch}, toward region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("deltar_pf_mu","#Delta R (ch,mu)",1,0,2,lumii,latexLabel,ise,0.,0.1,0.1,10000000,"_v16");
 
-plot_stack("npf_transverse","N^{ch}, transverse region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("nvtx_npf","N_{vtx}",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("npf_away","N^{ch}, away region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("npf_inclusive","N^{ch}",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("ptsumpf_inclusive","#Sigma p_{T}(ch) [GeV]",1,0,2,lumii,latexLabel,ise,-1,-1,0.01,10000,"_v15");
+plot_stack("npf_toward","N^{ch}, toward region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("ptsumpf_toward","#Sigma p_{T}(ch) [GeV] toward region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("npf_transverse","N^{ch}, transverse region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("ptsumpf_transverse","#Sigma p_{T}(ch) [GeV] transverse region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("npf_away","N^{ch}, away region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("ptsumpf_away","#Sigma p_{T}(ch) [GeV] away region",1,0,2,lumii,latexLabel,ise,-1,-1,0.01,10000,"_v15");
+plot_stack("ptsumpf_inclusive","#Sigma p_{T}(ch) [GeV]",1,0,2,lumii,latexLabel,ise,-1,-1,0.01,10000,"_v16");
 
-plot_stack("ptavepf_inclusive","#bar{p}_{T}^{ch} [GeV]",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("ptsumpf_toward","#Sigma p_{T}(ch) [GeV] toward region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("ptavepf_toward","#bar{p}_{T}^{ch} [GeV] toward region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("ptsumpf_transverse","#Sigma p_{T}(ch) [GeV] transverse region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("ptavepf_transverse","#bar{p}_{T}^{ch} [GeV] transverse region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("ptsumpf_away","#Sigma p_{T}(ch) [GeV] away region",1,0,2,lumii,latexLabel,ise,-1,-1,0.01,10000,"_v16");
 
-plot_stack("ptavepf_away","#bar{p}_{T}^{ch} [GeV] away region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v15");
+plot_stack("ptavepf_inclusive","#bar{p}_{T}^{ch} [GeV]",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
 
-plot_stack("njet_bb","n_{extra jet} in bb span",1,0,1,lumii,latexLabel,ise,-1,-1,1,20000,"_v15");
+plot_stack("ptavepf_toward","#bar{p}_{T}^{ch} [GeV] toward region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
+
+plot_stack("ptavepf_transverse","#bar{p}_{T}^{ch} [GeV] transverse region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
+
+plot_stack("ptavepf_away","#bar{p}_{T}^{ch} [GeV] away region",1,0,1,lumii,latexLabel,ise,-1,-1,-1,-1,"_v16");
+
+plot_stack("njet_bb","n_{extra jet} in bb span",1,0,1,lumii,latexLabel,ise,-1,-1,1,20000,"_v16");
 
 
 }
 if(plot_set==2){
-plot_stack_overlay("ptavepf_inclusive","ptavepf_away","ptavepf_transverse","ptavepf_toward","#LT p_{T}^{ch} #GT [GeV]","1/N_{ev} dN_{ev}/d(#LT p_{T}^{ch} #GT) [/GeV]",1,0,5,lumii,latexLabel,ise," ",-1,-1,0.000012,5,"_v15");
-plot_stack_overlay("ptsumpf_inclusive","ptsumpf_away","ptsumpf_transverse","ptsumpf_toward","#Sigma p_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d#Sigma p_{T}^{ch} [/GeV]",1,0,10,lumii,latexLabel,ise," ",-1,-1,0.000012,5,"_v15");
-plot_stack_overlay("npf_inclusive","npf_away","npf_transverse","npf_toward","N^{ch}","1/N_{ev} dN_{ev}/dN^{ch}",1,0,7,lumii,latexLabel,ise," ",-1,-1,0.000012,5,"_v15");
+plot_stack_overlay("ptavepf_inclusive","ptavepf_away","ptavepf_transverse","ptavepf_toward",0,"#bar{p}_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d(#bar{p}_{T}^{ch}) [/GeV]",1,0,5,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+plot_stack_overlay("ptsumpf_inclusive","ptsumpf_away","ptsumpf_transverse","ptsumpf_toward",0,"#Sigma p_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d#Sigma p_{T}^{ch} [/GeV]",1,0,10,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+plot_stack_overlay("npf_inclusive","npf_away","npf_transverse","npf_toward",0,"N^{ch}","1/N_{ev} dN_{ev}/dN^{ch}",1,0,7,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.1,2,"_v16");
+
+
+plot_stack_overlay("ptavepf_inclusive","ptavepf_away","ptavepf_transverse","ptavepf_toward",1,"#bar{p}_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d(#bar{p}_{T}^{ch}) [/GeV]",1,0,5,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+plot_stack_overlay("ptsumpf_inclusive","ptsumpf_away","ptsumpf_transverse","ptsumpf_toward",1,"#Sigma p_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d#Sigma p_{T}^{ch} [/GeV]",1,0,10,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+plot_stack_overlay("npf_inclusive","npf_away","npf_transverse","npf_toward",1,"N^{ch}","1/N_{ev} dN_{ev}/dN^{ch}",1,0,7,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+
+plot_stack_overlay("ptavepf_inclusive","ptavepf_away","ptavepf_transverse","ptavepf_toward",2,"#bar{p}_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d(#bar{p}_{T}^{ch}) [/GeV]",1,0,5,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+plot_stack_overlay("ptsumpf_inclusive","ptsumpf_away","ptsumpf_transverse","ptsumpf_toward",2,"#Sigma p_{T}^{ch} [GeV]","1/N_{ev} dN_{ev}/d#Sigma p_{T}^{ch} [/GeV]",1,0,10,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.4,1.6,"_v16");
+plot_stack_overlay("npf_inclusive","npf_away","npf_transverse","npf_toward",2,"N^{ch}","1/N_{ev} dN_{ev}/dN^{ch}",1,0,7,lumii,latexLabel,ise," ",-1,-1,0.000012,5,0.1,6,"_v16");
+
+
+plot_stack_profile("profile_nvtx_npf","N_{vtx}","N^{ch}",1,0,1,lumii,latexLabel,ise," ",-1,-1,0,50,"_v16");
+plot_stack_profile("profile_nvtx_sumpt","N_{vtx}"," #Sigma p_{T}^{ch} [GeV]",1,0,1,lumii,latexLabel,ise," ",-1,-1,0,170,"_v16");
+plot_stack_profile("profile_nvtx_npf_0j","N_{vtx}","N^{ch}",1,0,1,lumii,latexLabel,ise," =0 jet",-1,-1,0,50,"_v16");
+plot_stack_profile("profile_nvtx_sumpt_0j","N_{vtx}"," #Sigma p_{T}^{ch} [GeV]",1,0,1,lumii,latexLabel,ise," =0 jet",-1,-1,0,170,"_v16");
+plot_stack_profile("profile_nvtx_npf_1j","N_{vtx}","N^{ch} [GeV]",1,0,1,lumii,latexLabel,ise," =1 jet",-1,-1,0,50,"_v16");
+plot_stack_profile("profile_nvtx_sumpt_1j","N_{vtx}"," #Sigma p_{T}^{ch} [GeV]",1,0,1,lumii,latexLabel,ise," =1 jet",-1,-1,0,170,"_v16");
+plot_stack_profile("profile_nvtx_npf_2pj","N_{vtx}","N^{ch}",1,0,1,lumii,latexLabel,ise," >=2 jets",-1,-1,0,50,"_v16");
+plot_stack_profile("profile_nvtx_sumpt_2pj","N_{vtx}"," #Sigma p_{T}^{ch} [GeV]",1,0,1,lumii,latexLabel,ise," >=2 jets",-1,-1,0,170,"_v16");
+
+plot_stack_profile("profile_nvtx_njet15","N_{vtx}","N^{jet15}",1,0,1,lumii,latexLabel,ise," ",-1,-1,0,5,"_v18");
+plot_stack_profile("profile_nvtx_njet30","N_{vtx}","N^{jet30}",1,0,1,lumii,latexLabel,ise," ",-1,-1,0,5,"_v18");
+
+plot_stack_profile("profile_dphi_ptsumpf_0j","#Delta #phi","#LT #Sigma p_{T}^{ch} #GT [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =0 jet",0,179,1,25,"_v16");
+plot_stack_profile("profile_dphi_ptaveragepf_0j","#Delta #phi","#LT #bar{p}_{T}^{ch}#GT [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =0 jet",0,179,1.01,5.51,"_v16");
+plot_stack_profile("profile_dphi_npf_0j","#Delta #phi","#LT N^{ch}#GT[/9 deg]",1,0,1,lumii,latexLabel,ise," =0 jet",0,179,1.01,5.51,"_v16");
+
+
+plot_stack_profile("profile_dphi_ptsumpf_1j","#Delta #phi","#LT #Sigma p_{T}^{ch} #GT[GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =1 jet",0,179,1,25,"_v16");
+plot_stack_profile("profile_dphi_ptaveragepf_1j","#Delta #phi","#LT #bar{p}_{T}^{ch}#GT  [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =1 jet",0,179,1.01,5.51,"_v16");
+plot_stack_profile("profile_dphi_npf_1j","#Delta #phi","#LT N^{ch}#GT[/9 deg]",1,0,1,lumii,latexLabel,ise," =1 jet",0,179,1.01,5.51,"_v16");
+
+
+plot_stack_profile("profile_dphi_ptsumpf_2pj","#Delta #phi","#LT #Sigma p_{T}^{ch} #GT[GeV/9 deg]",1,0,1,lumii,latexLabel,ise," >=2 jets",0,179,1,25,"_v16");
+plot_stack_profile("profile_dphi_ptaveragepf_2pj","#Delta #phi","#LT #bar{p}_{T}^{ch}#GT [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," >=2 jets",0,179,1.01,5.51,"_v16");
+plot_stack_profile("profile_dphi_npf_2pj","#Delta #phi","#LT N^{ch}#GT[/9 deg]",1,0,1,lumii,latexLabel,ise," >=2 jets",0,179,1.01,5.51,"_v16");
 
 
 
-plot_stack_profile("profile_dphi_ptsumpf_0j","#Delta #phi","d (#Sigma p_{T}^{ch}) /d (#Delta #phi) [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =0 jet",0,179,1,25,"_v15");
-plot_stack_profile("profile_dphi_ptaveragepf_0j","#Delta #phi","d (#LT p_{T}^{ch} #GT) /d (#Delta #phi) [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =0 jet",0,179,1.01,5.51,"_v15");
-plot_stack_profile("profile_dphi_npf_0j","#Delta #phi","d (N^{ch})/d (#Delta #phi)[/9 deg]",1,0,1,lumii,latexLabel,ise," =0 jet",0,179,1.01,5.51,"_v15");
-
-
-plot_stack_profile("profile_dphi_ptsumpf_1j","#Delta #phi","d (#Sigma p_{T}^{ch}) /d (#Delta #phi)[GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =1 jet",0,179,1,25,"_v15");
-plot_stack_profile("profile_dphi_ptaveragepf_1j","#Delta #phi","d (#LT p_{T}^{ch} #GT) /d (#Delta #phi)  [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," =1 jet",0,179,1.01,5.51,"_v15");
-plot_stack_profile("profile_dphi_npf_1j","#Delta #phi","d (N^{ch})/d (#Delta #phi)[/9 deg]",1,0,1,lumii,latexLabel,ise," =1 jet",0,179,1.01,5.51,"_v15");
-
-
-plot_stack_profile("profile_dphi_ptsumpf_2pj","#Delta #phi","d (#Sigma p_{T}^{ch}) /d (#Delta #phi)[GeV/9 deg]",1,0,1,lumii,latexLabel,ise," >=2 jets",0,179,1,25,"_v15");
-plot_stack_profile("profile_dphi_ptaveragepf_2pj","#Delta #phi","d (#LT p_{T}^{ch} #GT) /d (#Delta #phi) [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," >=2 jets",0,179,1.01,5.51,"_v15");
-plot_stack_profile("profile_dphi_npf_2pj","#Delta #phi","d (N^{ch})/d (#Delta #phi)[/9 deg]",1,0,1,lumii,latexLabel,ise," >=2 jets",0,179,1.01,5.51,"_v15");
+plot_stack_profile("profile_dphi_ptsumpf","#Delta #phi","#LT #Sigma p_{T}^{ch} #GT[GeV/9 deg]",1,0,1,lumii,latexLabel,ise," ",0,179,1,25,"_v16");
+plot_stack_profile("profile_dphi_ptaveragepf","#Delta #phi","#LT #bar{p}_{T}^{ch}#GT [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," ",0,179,1.01,5.51,"_v16");
+plot_stack_profile("profile_dphi_npf","#Delta #phi","#LT N^{ch}#GT[/9 deg]",1,0,1,lumii,latexLabel,ise," ",0,179,1.01,5.51,"_v16");
 
 
 
-plot_stack_profile("profile_dphi_ptsumpf","#Delta #phi","d (#Sigma p_{T}^{ch}) /d (#Delta #phi)[GeV/9 deg]",1,0,1,lumii,latexLabel,ise," ",0,179,1,25,"_v15");
-plot_stack_profile("profile_dphi_ptaveragepf","#Delta #phi","d (#LT p_{T}^{ch} #GT) /d (#Delta #phi) [GeV/9 deg]",1,0,1,lumii,latexLabel,ise," ",0,179,1.01,5.51,"_v15");
-plot_stack_profile("profile_dphi_npf","#Delta #phi","d (N^{ch})/d (#Delta #phi)[/9 deg]",1,0,1,lumii,latexLabel,ise," ",0,179,1.01,5.51,"_v15");
+plot_stack_profile("profile_ptttbar_njet15","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet15} #GT ",1,1,1,lumii,latexLabel,ise," ",-1,-1,0.1,5.1,"_v18");
+plot_stack_profile("profile_ptttbar_njet15_away","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet15} #GT ",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0.1,5.1,"_v18");
+plot_stack_profile("profile_ptttbar_njet15_transverse","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet15} #GT[GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0.01,5.1,"_v18");
+plot_stack_profile("profile_ptttbar_njet15_toward","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet15} #GT ",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0.01,5.1,"_v18");
+
+
+plot_stack_profile("profile_ptttbar_njet30","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet30} #GT ",1,1,1,lumii,latexLabel,ise," ",-1,-1,0.01,5.1,"_v18");
+plot_stack_profile("profile_ptttbar_njet30_away","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet30} #GT ",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0.01,5.1,"_v18");
+plot_stack_profile("profile_ptttbar_njet30_transverse","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet30} #GT[GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0.01,5.1,"_v18");
+plot_stack_profile("profile_ptttbar_njet30_toward","p_{T}^{t#bar{t}} [GeV]","#LT N_{jet30} #GT ",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0.01,5.1,"_v18");
 
 
 
-plot_stack_profile("profile_ptttbar_npf","p_{T}^{t#bar{t}} [GeV]","N_{ch} ",1,1,1,lumii,latexLabel,ise," ",-1,-1,2.1,68.1,"_v15");
-plot_stack_profile("profile_ptttbar_sumpt","p_{T}^{t#bar{t}} [GeV]","#Sigma p_{T}^{ch} [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,8.01,260.1,"_v15");
-plot_stack_profile("profile_ptttbar_avept","p_{T}^{t#bar{t}} [GeV]","#LT p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1.1,10.1,"_v15");
+plot_stack_profile("profile_ptttbar_npf","p_{T}^{t#bar{t}} [GeV]","#LT N_{ch} #GT ",1,1,1,lumii,latexLabel,ise," ",-1,-1,2.1,68.1,"_v16");
+plot_stack_profile("profile_ptttbar_sumpt","p_{T}^{t#bar{t}} [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,8.01,260.1,"_v16");
+plot_stack_profile("profile_ptttbar_avept","p_{T}^{t#bar{t}} [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1.1,10.1,"_v16");
 
-plot_stack_profile("profile_ptttbar_npf_away","p_{T}^{t#bar{t}} [GeV]","N_{ch} ",1,1,1,lumii,latexLabel,ise,"away",-1,-1,2.1,68.1,"_v15");
-plot_stack_profile("profile_ptttbar_sumpt_away","p_{T}^{t#bar{t}} [GeV]","#Sigma p_{T}^{ch} [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,8.01,260.1,"_v15");
-plot_stack_profile("profile_ptttbar_avept_away","p_{T}^{t#bar{t}} [GeV]","#LT p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1.1,10.1,"_v15");
+plot_stack_profile("profile_ptttbar_npf_away","p_{T}^{t#bar{t}} [GeV]","#LT N_{ch} #GT ",1,1,1,lumii,latexLabel,ise,"away",-1,-1,2.1,68.1,"_v16");
+plot_stack_profile("profile_ptttbar_sumpt_away","p_{T}^{t#bar{t}} [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,8.01,260.1,"_v16");
+plot_stack_profile("profile_ptttbar_avept_away","p_{T}^{t#bar{t}} [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1.1,10.1,"_v16");
 
-plot_stack_profile("profile_ptttbar_npf_transverse","p_{T}^{t#bar{t}} [GeV]","N_{ch} ",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,4.1,16.1,"_v15");
-plot_stack_profile("profile_ptttbar_sumpt_transverse","p_{T}^{t#bar{t}} [GeV]","#Sigma p_{T}^{ch} [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,7.01,45.1,"_v15");
-plot_stack_profile("profile_ptttbar_avept_transverse","p_{T}^{t#bar{t}} [GeV]","#LT p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1.4,4.5,"_v15");
+plot_stack_profile("profile_ptttbar_npf_transverse","p_{T}^{t#bar{t}} [GeV]","#LT N_{ch} #GT ",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,4.1,16.1,"_v16");
+plot_stack_profile("profile_ptttbar_sumpt_transverse","p_{T}^{t#bar{t}} [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,7.01,45.1,"_v16");
+plot_stack_profile("profile_ptttbar_avept_transverse","p_{T}^{t#bar{t}} [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1.4,4.5,"_v16");
 
-plot_stack_profile("profile_ptttbar_npf_toward","p_{T}^{t#bar{t}} [GeV]","N_{ch} ",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,4.1,16.1,"_v15");
-plot_stack_profile("profile_ptttbar_sumpt_toward","p_{T}^{t#bar{t}} [GeV]","#Sigma p_{T}^{ch} [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,7.01,45.1,"_v15");
-plot_stack_profile("profile_ptttbar_avept_toward","p_{T}^{t#bar{t}} [GeV]","#LT p_{T}^{ch} #GT  [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1.4,4.5,"_v15");
+plot_stack_profile("profile_ptttbar_npf_toward","p_{T}^{t#bar{t}} [GeV]","#LT N_{ch} #GT ",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,4.1,16.1,"_v16");
+plot_stack_profile("profile_ptttbar_sumpt_toward","p_{T}^{t#bar{t}} [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,7.01,45.1,"_v16");
+plot_stack_profile("profile_ptttbar_avept_toward","p_{T}^{t#bar{t}} [GeV]","#LT #bar{p}_{T}^{ch} #GT  [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1.4,4.5,"_v16");
 }
 if(plot_set==3){
 
-plot_stack_profile("profile_ytt_npf","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v15");
+plot_stack_profile("profile_ytt_npf","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v16");
 
-plot_stack_profile("profile_mttbar_npf","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mttbar_sumpt","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mttbar_avept","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mttbar_npf","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mttbar_sumpt","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mttbar_avept","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mttbar_npf_away","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mttbar_sumpt_away","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mttbar_avept_away","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mttbar_npf_away","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mttbar_sumpt_away","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mttbar_avept_away","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mttbar_npf_transverse","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mttbar_sumpt_transverse","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mttbar_avept_transverse","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mttbar_npf_transverse","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mttbar_sumpt_transverse","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mttbar_avept_transverse","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mttbar_npf_toward","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mttbar_sumpt_toward","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mttbar_avept_toward","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mttbar_npf_toward","M (t#bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mttbar_sumpt_toward","M (t#bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mttbar_avept_toward","M (t#bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_ptthad_npf","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptthad_sumpt","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptthad_avept","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptthad_npf","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptthad_sumpt","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptthad_avept","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_ptthad_npf_away","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptthad_sumpt_away","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptthad_avept_away","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptthad_npf_away","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptthad_sumpt_away","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptthad_avept_away","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_ptthad_npf_transverse","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptthad_sumpt_transverse","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptthad_avept_transverse","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptthad_npf_transverse","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptthad_sumpt_transverse","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptthad_avept_transverse","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_ptthad_npf_toward","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptthad_sumpt_toward","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptthad_avept_toward","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptthad_npf_toward","p_{T} (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptthad_sumpt_toward","p_{T} (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptthad_avept_toward","p_{T} (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
 
 
-plot_stack_profile("profile_pttlep_npf","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_pttlep_sumpt","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_pttlep_avept","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_pttlep_npf","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_pttlep_sumpt","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_pttlep_avept","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_pttlep_npf_away","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_pttlep_sumpt_away","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_pttlep_avept_away","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_pttlep_npf_away","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_pttlep_sumpt_away","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_pttlep_avept_away","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_pttlep_npf_transverse","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_pttlep_sumpt_transverse","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_pttlep_avept_transverse","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_pttlep_npf_transverse","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_pttlep_sumpt_transverse","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_pttlep_avept_transverse","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_pttlep_npf_toward","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_pttlep_sumpt_toward","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_pttlep_avept_toward","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_pttlep_npf_toward","p_{T} (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_pttlep_sumpt_toward","p_{T} (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_pttlep_avept_toward","p_{T} (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_ytt_npf","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytt_sumpt","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytt_avept","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytt_npf","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytt_sumpt","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytt_avept","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytt_npf_away","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytt_sumpt_away","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytt_avept_away","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytt_npf_away","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytt_sumpt_away","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytt_avept_away","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytt_npf_transverse","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytt_sumpt_transverse","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytt_avept_transverse","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytt_npf_transverse","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytt_sumpt_transverse","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytt_avept_transverse","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytt_npf_toward","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytt_sumpt_toward","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytt_avept_toward","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytt_npf_toward","y (t#bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytt_sumpt_toward","y (t#bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytt_avept_toward","y (t#bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yttj_npf","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yttj_sumpt","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yttj_avept","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yttj_npf","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yttj_sumpt","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yttj_avept","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yttj_npf_away","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yttj_sumpt_away","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yttj_avept_away","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yttj_npf_away","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yttj_sumpt_away","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yttj_avept_away","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yttj_npf_transverse","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yttj_sumpt_transverse","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yttj_avept_transverse","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yttj_npf_transverse","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yttj_sumpt_transverse","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yttj_avept_transverse","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yttj_npf_toward","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yttj_sumpt_toward","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yttj_avept_toward","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yttj_npf_toward","y (t#bar{t}j)","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yttj_sumpt_toward","y (t#bar{t}j)","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yttj_avept_toward","y (t#bar{t}j)","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_ythad_npf","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ythad_sumpt","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ythad_avept","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ythad_npf","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ythad_sumpt","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ythad_avept","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ythad_npf_away","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ythad_sumpt_away","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ythad_avept_away","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ythad_npf_away","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ythad_sumpt_away","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ythad_avept_away","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ythad_npf_transverse","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ythad_sumpt_transverse","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ythad_avept_transverse","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ythad_npf_transverse","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ythad_sumpt_transverse","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ythad_avept_transverse","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ythad_npf_toward","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ythad_sumpt_toward","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ythad_avept_toward","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ythad_npf_toward","y (t_{had})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ythad_sumpt_toward","y (t_{had})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ythad_avept_toward","y (t_{had})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytlep_npf","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytlep_sumpt","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytlep_avept","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytlep_npf","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytlep_sumpt","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytlep_avept","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytlep_npf_away","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytlep_sumpt_away","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytlep_avept_away","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytlep_npf_away","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytlep_sumpt_away","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytlep_avept_away","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytlep_npf_transverse","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytlep_sumpt_transverse","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytlep_avept_transverse","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytlep_npf_transverse","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytlep_sumpt_transverse","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytlep_avept_transverse","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_ytlep_npf_toward","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_ytlep_sumpt_toward","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_ytlep_avept_toward","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_ytlep_npf_toward","y (t_{lep})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_ytlep_sumpt_toward","y (t_{lep})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_ytlep_avept_toward","y (t_{lep})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v16");
 
 
 
-plot_stack_profile("profile_yt_npf","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yt_sumpt","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yt_avept","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yt_npf","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yt_sumpt","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yt_avept","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yt_npf_away","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yt_sumpt_away","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yt_avept_away","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yt_npf_away","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yt_sumpt_away","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yt_avept_away","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"away",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yt_npf_transverse","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yt_sumpt_transverse","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yt_avept_transverse","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yt_npf_transverse","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yt_sumpt_transverse","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yt_avept_transverse","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"transverse",0,2.2,1,8.5,"_v16");
 
-plot_stack_profile("profile_yt_npf_toward","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v15");
-plot_stack_profile("profile_yt_sumpt_toward","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v15");
-plot_stack_profile("profile_yt_avept_toward","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v15");
+plot_stack_profile("profile_yt_npf_toward","y (t and #bar{t})","#LT N_{ch} #GT",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,55,"_v16");
+plot_stack_profile("profile_yt_sumpt_toward","y (t and #bar{t})","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,0,200,"_v16");
+plot_stack_profile("profile_yt_avept_toward","y (t and #bar{t})","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise,"toward",0,2.2,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_mthad_npf","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mthad_sumpt","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mthad_avept","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mthad_npf","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mthad_sumpt","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mthad_avept","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mthad_npf_away","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mthad_sumpt_away","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mthad_avept_away","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mthad_npf_away","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mthad_sumpt_away","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mthad_avept_away","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mthad_npf_transverse","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mthad_sumpt_transverse","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mthad_avept_transverse","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mthad_npf_transverse","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mthad_sumpt_transverse","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mthad_avept_transverse","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mthad_npf_toward","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mthad_sumpt_toward","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mthad_avept_toward","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mthad_npf_toward","M (t_{had}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mthad_sumpt_toward","M (t_{had}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mthad_avept_toward","M (t_{had}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mtlep_npf","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mtlep_sumpt","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mtlep_avept","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mtlep_npf","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mtlep_sumpt","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mtlep_avept","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_mtlep_npf_away","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mtlep_sumpt_away","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mtlep_avept_away","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mtlep_npf_away","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mtlep_sumpt_away","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mtlep_avept_away","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mtlep_npf_transverse","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mtlep_sumpt_transverse","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mtlep_avept_transverse","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mtlep_npf_transverse","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mtlep_sumpt_transverse","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mtlep_avept_transverse","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mtlep_npf_toward","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mtlep_sumpt_toward","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mtlep_avept_toward","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mtlep_npf_toward","M (t_{lep}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mtlep_sumpt_toward","M (t_{lep}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mtlep_avept_toward","M (t_{lep}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
 
 
-plot_stack_profile("profile_ptt_npf","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptt_sumpt","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptt_avept","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptt_npf","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptt_sumpt","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptt_avept","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_ptt_npf_away","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptt_sumpt_away","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptt_avept_away","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptt_npf_away","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptt_sumpt_away","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptt_avept_away","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_ptt_npf_transverse","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptt_sumpt_transverse","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptt_avept_transverse","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptt_npf_transverse","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptt_sumpt_transverse","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptt_avept_transverse","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
 
-plot_stack_profile("profile_ptt_npf_toward","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_ptt_sumpt_toward","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_ptt_avept_toward","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_ptt_npf_toward","p_{T} (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_ptt_sumpt_toward","p_{T} (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_ptt_avept_toward","p_{T} (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
 
 
 
 
 
-plot_stack_profile("profile_mt_npf","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mt_sumpt","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mt_avept","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mt_npf","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mt_sumpt","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mt_avept","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise," ",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mt_npf_away","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mt_sumpt_away","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mt_avept_away","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mt_npf_away","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mt_sumpt_away","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mt_avept_away","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"away",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mt_npf_transverse","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mt_sumpt_transverse","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mt_avept_transverse","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mt_npf_transverse","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mt_sumpt_transverse","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mt_avept_transverse","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"transverse",-1,-1,1,8.5,"_v16");
 
-plot_stack_profile("profile_mt_npf_toward","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v15");
-plot_stack_profile("profile_mt_sumpt_toward","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v15");
-plot_stack_profile("profile_mt_avept_toward","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v15");
+plot_stack_profile("profile_mt_npf_toward","M (t and #bar{t}) [GeV]","#LT N_{ch} #GT",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,55,"_v16");
+plot_stack_profile("profile_mt_sumpt_toward","M (t and #bar{t}) [GeV]","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,0,200,"_v16");
+plot_stack_profile("profile_mt_avept_toward","M (t and #bar{t}) [GeV]","#LT #bar{p}_{T}^{ch} #GT [GeV]",1,1,1,lumii,latexLabel,ise,"toward",-1,-1,1,8.5,"_v16");
 
 
 
 
 
 
-plot_stack_profile("profile_nvtx_npf","N_{vtx}","<N^{ch}>",1,0,1,lumii,latexLabel,ise," ",-1,-1,0,50,"_v15");
-plot_stack_profile("profile_nvtx_sumpt","N_{vtx}","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," ",-1,-1,0,170,"_v15");
-plot_stack_profile("profile_nvtx_npf_0j","N_{vtx}","<N^{ch}>",1,0,1,lumii,latexLabel,ise," =0 jet",-1,-1,0,50,"_v15");
-plot_stack_profile("profile_nvtx_sumpt_0j","N_{vtx}","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," =0 jet",-1,-1,0,170,"_v15");
-plot_stack_profile("profile_nvtx_npf_1j","N_{vtx}","<N^{ch}> [GeV]",1,0,1,lumii,latexLabel,ise," =1 jet",-1,-1,0,50,"_v15");
-plot_stack_profile("profile_nvtx_sumpt_1j","N_{vtx}","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," =1 jet",-1,-1,0,170,"_v15");
-plot_stack_profile("profile_nvtx_npf_2pj","N_{vtx}","<N^{ch}>",1,0,1,lumii,latexLabel,ise," >=2 jets",-1,-1,0,50,"_v15");
-plot_stack_profile("profile_nvtx_sumpt_2pj","N_{vtx}","#LT #Sigma p_{T}^{ch} #GT [GeV]",1,0,1,lumii,latexLabel,ise," >=2 jets",-1,-1,0,170,"_v15");
 
-plot_stack_profile("profile_deta_bb_njet_bb","#Delta#eta(b,b)","<n_{extra jet}>",1,0,1,lumii,latexLabel,ise," in bb rapidity span",0,4.5,0,5,"_v15");
+plot_stack_profile("profile_deta_bb_njet_bb","#Delta#eta(b,b)","<n_{extra jet}>",1,0,1,lumii,latexLabel,ise," in bb rapidity span",0,4.5,0,5,"_v16");
 
-plot_stack_profile("profile_deta_bb_njet_extra","#Delta#eta(b,b)","<n_{extra jet}>",1,0,1,lumii,latexLabel,ise," inclusive",0,4.5,0,5,"_v15");
+plot_stack_profile("profile_deta_bb_njet_extra","#Delta#eta(b,b)","<n_{extra jet}>",1,0,1,lumii,latexLabel,ise," inclusive",0,4.5,0,5,"_v16");
 }
 
 

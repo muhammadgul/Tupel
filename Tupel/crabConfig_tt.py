@@ -2,7 +2,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'test2_20151009_new'
+config.General.requestName = 'test2_20151216_new4'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -22,7 +22,7 @@ config.Data.splitting = 'LumiBased'
 config.Data.unitsPerJob = 1000
 config.Data.totalUnits= -1
 #config.Data.outLFN = '/store/caf/user/efe/ntupel/t012j_5f_ckm_NLO_FXFX/crab_seed_4500_' # or '/store/group/<subdir>'
-config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_0911_2'
+config.Data.outLFNDirBase = '/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401'
 config.Data.publication = False
 config.Data.outputDatasetTag = 'TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1'
 #config.Data.primaryDataset='CRAB_PrivateMC'

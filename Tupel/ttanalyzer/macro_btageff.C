@@ -1,7 +1,7 @@
 void macro_btageff(){
    gStyle->SetOptStat(kFALSE);
    gStyle->SetOptTitle(kFALSE);
-TFile *mc_s = TFile::Open("25ns_tt_uev_miniaodv2_2110_fromskimmed_isElec_0_v11.root");
+TFile *mc_s = TFile::Open("25ns_tt_uev_miniaodv2_2110_fromskimmed_isElec_0_v16.root");
 TH2D* bmatch_tmp =(TH2D*) mc_s->Get("pt_eta_b_tagged_0");
 TH2D* b_tmp = (TH2D*)mc_s->Get("pt_eta_b_0");
 
