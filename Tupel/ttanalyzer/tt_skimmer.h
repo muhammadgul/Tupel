@@ -244,6 +244,7 @@ public :
    vector<double>  *MGjE;
    vector<double> *GjConstId;
    vector<double> *GjConstPt;
+   vector<double> *GjConstCharge;
    vector<double> *GjConstEta;
    vector<double> *GjConstPhi;
    vector<double> *GjConstE;
@@ -377,6 +378,7 @@ public :
    vector<double>  *patJetPfAk04PtDn_;
    vector<double>  *patJetPfAk04ConstId;
    vector<double>  *patJetPfAk04ConstPt;
+   vector<double> *patJetPfAk04ConstCharge;
    vector<double>  *patJetPfAk04ConstEta;
    vector<double>  *patJetPfAk04ConstPhi;
    vector<double>  *patJetPfAk04ConstE;
@@ -494,6 +496,7 @@ public :
    TBranch        *b_GjChargedFraction;   //!
    TBranch        *b_GjConstId;
    TBranch        *b_GjConstPt;
+   TBranch        *b_GjConstCharge;
    TBranch        *b_GjConstEta;
    TBranch        *b_GjConstPhi;
    TBranch        *b_GjConstE;
@@ -631,7 +634,9 @@ public :
    TBranch        *b_patJetPfAk04PtUp_;   //!
    TBranch        *b_patJetPfAk04PtDn_;   //!
    TBranch        *b_patJetPfAk04ConstId;   //!
-   TBranch        *b_patJetPfAk04ConstPt;   //!
+   TBranch        *b_patJetPfAk04ConstPt;
+
+   TBranch        *b_patJetPfAk04ConstCharge;
    TBranch        *b_patJetPfAk04ConstEta;   //!
    TBranch        *b_patJetPfAk04ConstPhi;   //!
    TBranch        *b_patJetPfAk04ConstE;   //!
@@ -713,22 +718,24 @@ name="25ns_data_D_reminiaod.root";
 #include "25ns_wjet_uev_miniaodv2_2110_forskimmer.h"
 name="25ns_wjet.root";
 */
-/*
+
 #include "25ns_tt_uev_miniaodv2_2110_forskimmer.h"
 name="25ns_tt_.root";
-*/
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_100.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_101.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_102.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_103.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_104.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_105.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_106.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_107.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_108.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1401/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160114_100836/0000/withJEC_DYJetsToLL_ntuple_109.root");
-name="25ns_tt_small_.root";
 
+/*
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_100.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_101.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_102.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_103.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_104.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_105.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_106.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_107.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_108.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_109.root");
+chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_1901/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160119_163527/0000/withJEC_DYJetsToLL_ntuple_10.root");
+name="25ns_tt_small_.root";
+*/
 /*
 #include "25ns_st_t_top_uev_2110_forskimmer.h"
 name="25ns_st_t_top.root";
@@ -916,6 +923,7 @@ void tt_skimmer::Init(TTree *tree)
    matchGjet = 0;
       GjConstId = 0;
       GjConstPt = 0;
+GjConstCharge = 0;
       GjConstEta = 0;
       GjConstPhi = 0;
       GjConstE = 0;
@@ -1031,6 +1039,7 @@ patJetPfAk04PartonFlavour_=0;
    patJetPfAk04PtDn_ = 0;
    patJetPfAk04ConstId = 0;
    patJetPfAk04ConstPt = 0;
+patJetPfAk04ConstCharge = 0;
    patJetPfAk04ConstEta = 0;
    patJetPfAk04ConstPhi = 0;
    patJetPfAk04ConstE = 0;
@@ -1149,6 +1158,7 @@ patJetPfAk04PartonFlavour_=0;
    fChain->SetBranchAddress("GjChargedFraction", &GjChargedFraction, &b_GjChargedFraction);
    fChain->SetBranchAddress("GjConstId",&GjConstId,&b_GjConstId);
    fChain->SetBranchAddress("GjConstPt",&GjConstPt,&b_GjConstPt);
+   fChain->SetBranchAddress("GjConstCharge",&GjConstCharge,&b_GjConstCharge);
    fChain->SetBranchAddress("GjConstEta",&GjConstEta,&b_GjConstEta);
    fChain->SetBranchAddress("GjConstPhi",&GjConstPhi,&b_GjConstPhi);
    fChain->SetBranchAddress("GjConstE",&GjConstE,&b_GjConstE);
@@ -1288,6 +1298,7 @@ patJetPfAk04PartonFlavour_=0;
    fChain->SetBranchAddress("patJetPfAk04PtDn_", &patJetPfAk04PtDn_, &b_patJetPfAk04PtDn_);
    fChain->SetBranchAddress("patJetPfAk04ConstId", &patJetPfAk04ConstId, &b_patJetPfAk04ConstId);
    fChain->SetBranchAddress("patJetPfAk04ConstPt", &patJetPfAk04ConstPt, &b_patJetPfAk04ConstPt);
+   fChain->SetBranchAddress("patJetPfAk04ConstCharge", &patJetPfAk04ConstCharge, &b_patJetPfAk04ConstCharge);
    fChain->SetBranchAddress("patJetPfAk04ConstEta", &patJetPfAk04ConstEta, &b_patJetPfAk04ConstEta);
    fChain->SetBranchAddress("patJetPfAk04ConstPhi", &patJetPfAk04ConstPhi, &b_patJetPfAk04ConstPhi);
    fChain->SetBranchAddress("patJetPfAk04ConstE", &patJetPfAk04ConstE, &b_patJetPfAk04ConstE);

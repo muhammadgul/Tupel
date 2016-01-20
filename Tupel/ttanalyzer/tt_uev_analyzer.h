@@ -241,6 +241,7 @@ class tt_uev_analyzer {
   vector<double>  *GjChargedFraction;
    vector<double> *GjConstId;
    vector<double> *GjConstPt;
+  vector<double>  *GjConstCharge;
    vector<double> *GjConstEta;
    vector<double> *GjConstPhi;
    vector<double> *GjConstE;
@@ -378,6 +379,7 @@ class tt_uev_analyzer {
   vector<double>  *patJetPfAk04PtDn_;
   vector<double>  *patJetPfAk04ConstId;
   vector<double>  *patJetPfAk04ConstPt;
+  vector<double>  *patJetPfAk04ConstCharge;
   vector<double>  *patJetPfAk04ConstEta;
   vector<double>  *patJetPfAk04ConstPhi;
   vector<double>  *patJetPfAk04ConstE;
@@ -495,6 +497,7 @@ class tt_uev_analyzer {
   TBranch        *b_GjChargedFraction;   //!
    TBranch        *b_GjConstId;
    TBranch        *b_GjConstPt;
+   TBranch        *b_GjConstCharge;
    TBranch        *b_GjConstEta;
    TBranch        *b_GjConstPhi;
    TBranch        *b_GjConstE;
@@ -632,6 +635,7 @@ class tt_uev_analyzer {
   TBranch        *b_patJetPfAk04PtDn_;   //!
   TBranch        *b_patJetPfAk04ConstId;   //!
   TBranch        *b_patJetPfAk04ConstPt;   //!
+   TBranch        *b_patJetPfAk04ConstCharge;
   TBranch        *b_patJetPfAk04ConstEta;   //!
   TBranch        *b_patJetPfAk04ConstPhi;   //!
   TBranch        *b_patJetPfAk04ConstE;   //!
@@ -919,6 +923,7 @@ void tt_uev_analyzer::Init(TTree *tree)
 GjNConst = 0;
       GjConstId = 0;
       GjConstPt = 0;
+GjConstCharge = 0;
       GjConstEta = 0;
       GjConstPhi = 0;
       GjConstE = 0;
@@ -1033,6 +1038,7 @@ GjNConst = 0;
   patJetPfAk04PtDn_ = 0;
   patJetPfAk04ConstId = 0;
   patJetPfAk04ConstPt = 0;
+patJetPfAk04ConstCharge = 0;
   patJetPfAk04ConstEta = 0;
   patJetPfAk04ConstPhi = 0;
   patJetPfAk04ConstE = 0;
@@ -1151,6 +1157,7 @@ GjNConst = 0;
    fChain->SetBranchAddress("GjNConst",&GjNConst,&b_GjNConst);
    fChain->SetBranchAddress("GjConstId",&GjConstId,&b_GjConstId);
    fChain->SetBranchAddress("GjConstPt",&GjConstPt,&b_GjConstPt);
+   fChain->SetBranchAddress("GjConstCharge",&GjConstCharge,&b_GjConstCharge);
    fChain->SetBranchAddress("GjConstEta",&GjConstEta,&b_GjConstEta);
    fChain->SetBranchAddress("GjConstPhi",&GjConstPhi,&b_GjConstPhi);
    fChain->SetBranchAddress("GjConstE",&GjConstE,&b_GjConstE);
@@ -1289,6 +1296,7 @@ GjNConst = 0;
   fChain->SetBranchAddress("patJetPfAk04PtDn_", &patJetPfAk04PtDn_, &b_patJetPfAk04PtDn_);
   fChain->SetBranchAddress("patJetPfAk04ConstId", &patJetPfAk04ConstId, &b_patJetPfAk04ConstId);
   fChain->SetBranchAddress("patJetPfAk04ConstPt", &patJetPfAk04ConstPt, &b_patJetPfAk04ConstPt);
+  fChain->SetBranchAddress("patJetPfAk04ConstCharge", &patJetPfAk04ConstCharge,&b_patJetPfAk04ConstCharge);
   fChain->SetBranchAddress("patJetPfAk04ConstEta", &patJetPfAk04ConstEta, &b_patJetPfAk04ConstEta);
   fChain->SetBranchAddress("patJetPfAk04ConstPhi", &patJetPfAk04ConstPhi, &b_patJetPfAk04ConstPhi);
   fChain->SetBranchAddress("patJetPfAk04ConstE", &patJetPfAk04ConstE, &b_patJetPfAk04ConstE);

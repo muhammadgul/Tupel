@@ -126,383 +126,383 @@ void tt_uev_analyzer::Loop()
 
   TH1* h_gen_mttbar= new TH1D("gen_mttbar","gen_mttbar",100,0,1000);
 
-  TH1* h_ljet_pt[pdfind_max];
-  TH1* h_ljet_eta[pdfind_max];
-  TH1* h_sljet_pt[pdfind_max];
-  TH1* h_sljet_eta[pdfind_max];
-  TH1* h_lbjet_pt[pdfind_max];
-  TH1* h_lbjet_eta[pdfind_max];
-  TH1* h_slbjet_pt[pdfind_max];
-  TH1* h_slbjet_eta[pdfind_max];
-  TH1* h_dijet_mass[pdfind_max];
-  TH1* h_dijet_mass_narrow[pdfind_max];
-  TH1* h_pt_ttbar[pdfind_max];
-  TH1* h_phi_ttbar[pdfind_max];
-  TH1* h_dphi_ttbar_pf[pdfind_max];
-  TH1* h_njet_ttbar[pdfind_max];
-  TH1* h_njet_15_ttbar[pdfind_max];
-  TH1* h_njet_bb[pdfind_max];
-  TH1* h_pt_ttbar_kinrec[pdfind_max];
-  TH1* h_nu_pz[pdfind_max];
-  TH1* h_nu_pt[pdfind_max];
-  TH1* h_n_bjet[pdfind_max];
-  TH1* h_deltar_pf_jetpf[pdfind_max];
-  TH1* h_deltar_pf_jet[pdfind_max];
-  TH1* h_deltar_pf_jet_after[pdfind_max];
-  TH1* h_deltar_pf_mu[pdfind_max];
-  TH1* h_mu_pt[pdfind_max];
-  TH1* h_mu_eta[pdfind_max];
-  TH1* h_mu_phi[pdfind_max];
-  TH1* h_mu_iso[pdfind_max];
-  TH1* h_mu_pt_meas[pdfind_max];
-  TH1* h_mu_eta_meas[pdfind_max];
-  TH1* h_mu_phi_meas[pdfind_max];
-  TH1* h_mu_iso_meas[pdfind_max];
-  TH1* h_met_meas[pdfind_max];
-  TH2* h_dphi_ptsumpf[pdfind_max];
-  TH2* h_dphi_ptaveragepf[pdfind_max];
-  TH2* h_dphi_npf[pdfind_max];
-  TH1* h_nvtx_npf[pdfind_max];
-  TH2* h_dphi_ptsumpf_0j[pdfind_max];
-  TH2* h_dphi_ptaveragepf_0j[pdfind_max];
-  TH2* h_dphi_npf_0j[pdfind_max];
-  TH1* h_nvtx_npf_0j[pdfind_max];
-  TH2* h_dphi_ptsumpf_1j[pdfind_max];
-  TH2* h_dphi_ptaveragepf_1j[pdfind_max];
-  TH2* h_dphi_npf_1j[pdfind_max];
-  TH1* h_nvtx_npf_1j[pdfind_max];
-  TH2* h_dphi_ptsumpf_2pj[pdfind_max];
-  TH2* h_dphi_ptaveragepf_2pj[pdfind_max];
-  TH2* h_dphi_npf_2pj[pdfind_max];
-  TH1* h_nvtx_npf_2pj[pdfind_max];
-  TProfile* h_profile_dphi_ptsumpf[pdfind_max];
-  TProfile* h_profile_dphi_ptaveragepf[pdfind_max];
-  TProfile* h_profile_dphi_npf[pdfind_max];
-  TProfile* h_profile_nvtx_npf[pdfind_max];
-  TProfile* h_profile_nvtx_njet15[pdfind_max];
-  TProfile* h_profile_nvtx_njet30[pdfind_max];
-  TProfile* h_profile_nvtx_sumpt[pdfind_max];
-  TProfile* h_profile_dphi_ptsumpf_0j[pdfind_max];
-  TProfile* h_profile_dphi_ptaveragepf_0j[pdfind_max];
-  TProfile* h_profile_dphi_npf_0j[pdfind_max];
-  TProfile* h_profile_nvtx_npf_0j[pdfind_max];
-  TProfile* h_profile_nvtx_sumpt_0j[pdfind_max];
-  TProfile* h_profile_dphi_ptsumpf_1j[pdfind_max];
-  TProfile* h_profile_dphi_ptaveragepf_1j[pdfind_max];
-  TProfile* h_profile_dphi_npf_1j[pdfind_max];
-  TProfile* h_profile_nvtx_npf_1j[pdfind_max];
-  TProfile* h_profile_nvtx_sumpt_1j[pdfind_max];
-  TProfile* h_profile_dphi_ptsumpf_2pj[pdfind_max];
-  TProfile* h_profile_dphi_ptaveragepf_2pj[pdfind_max];
-  TProfile* h_profile_dphi_npf_2pj[pdfind_max];
-  TProfile* h_profile_nvtx_npf_2pj[pdfind_max];
-  TProfile* h_profile_nvtx_sumpt_2pj[pdfind_max];
-  TProfile* h_profile_ptttbar_npf[pdfind_max];
-  TProfile* h_profile_ptttbar_sumpt[pdfind_max];
-  TProfile* h_profile_ptttbar_avept[pdfind_max];
-  TProfile* h_profile_ptttbar_npf_away[pdfind_max];
-  TProfile* h_profile_ptttbar_sumpt_away[pdfind_max];
-  TProfile* h_profile_ptttbar_avept_away[pdfind_max];
-  TProfile* h_profile_ptttbar_npf_transverse[pdfind_max];
-  TProfile* h_profile_ptttbar_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ptttbar_avept_transverse[pdfind_max];
-  TProfile* h_profile_ptttbar_npf_toward[pdfind_max];
-  TProfile* h_profile_ptttbar_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ptttbar_avept_toward[pdfind_max];
-  TProfile* h_profile_deta_bb_njet_bb[pdfind_max];
-  TProfile* h_profile_deta_bb_njet_extra[pdfind_max];
+  TH1* h_ljet_pt[pdfind_max*2];
+  TH1* h_ljet_eta[pdfind_max*2];
+  TH1* h_sljet_pt[pdfind_max*2];
+  TH1* h_sljet_eta[pdfind_max*2];
+  TH1* h_lbjet_pt[pdfind_max*2];
+  TH1* h_lbjet_eta[pdfind_max*2];
+  TH1* h_slbjet_pt[pdfind_max*2];
+  TH1* h_slbjet_eta[pdfind_max*2];
+  TH1* h_dijet_mass[pdfind_max*2];
+  TH1* h_dijet_mass_narrow[pdfind_max*2];
+  TH1* h_pt_ttbar[pdfind_max*2];
+  TH1* h_phi_ttbar[pdfind_max*2];
+  TH1* h_dphi_ttbar_pf[pdfind_max*2];
+  TH1* h_njet_ttbar[pdfind_max*2];
+  TH1* h_njet_15_ttbar[pdfind_max*2];
+  TH1* h_njet_bb[pdfind_max*2];
+  TH1* h_pt_ttbar_kinrec[pdfind_max*2];
+  TH1* h_nu_pz[pdfind_max*2];
+  TH1* h_nu_pt[pdfind_max*2];
+  TH1* h_n_bjet[pdfind_max*2];
+  TH1* h_deltar_pf_jetpf[pdfind_max*2];
+  TH1* h_deltar_pf_jet[pdfind_max*2];
+  TH1* h_deltar_pf_jet_after[pdfind_max*2];
+  TH1* h_deltar_pf_mu[pdfind_max*2];
+  TH1* h_mu_pt[pdfind_max*2];
+  TH1* h_mu_eta[pdfind_max*2];
+  TH1* h_mu_phi[pdfind_max*2];
+  TH1* h_mu_iso[pdfind_max*2];
+  TH1* h_mu_pt_meas[pdfind_max*2];
+  TH1* h_mu_eta_meas[pdfind_max*2];
+  TH1* h_mu_phi_meas[pdfind_max*2];
+  TH1* h_mu_iso_meas[pdfind_max*2];
+  TH1* h_met_meas[pdfind_max*2];
+  TH2* h_dphi_ptsumpf[pdfind_max*2];
+  TH2* h_dphi_ptaveragepf[pdfind_max*2];
+  TH2* h_dphi_npf[pdfind_max*2];
+  TH1* h_nvtx_npf[pdfind_max*2];
+  TH2* h_dphi_ptsumpf_0j[pdfind_max*2];
+  TH2* h_dphi_ptaveragepf_0j[pdfind_max*2];
+  TH2* h_dphi_npf_0j[pdfind_max*2];
+  TH1* h_nvtx_npf_0j[pdfind_max*2];
+  TH2* h_dphi_ptsumpf_1j[pdfind_max*2];
+  TH2* h_dphi_ptaveragepf_1j[pdfind_max*2];
+  TH2* h_dphi_npf_1j[pdfind_max*2];
+  TH1* h_nvtx_npf_1j[pdfind_max*2];
+  TH2* h_dphi_ptsumpf_2pj[pdfind_max*2];
+  TH2* h_dphi_ptaveragepf_2pj[pdfind_max*2];
+  TH2* h_dphi_npf_2pj[pdfind_max*2];
+  TH1* h_nvtx_npf_2pj[pdfind_max*2];
+  TProfile* h_profile_dphi_ptsumpf[pdfind_max*2];
+  TProfile* h_profile_dphi_ptaveragepf[pdfind_max*2];
+  TProfile* h_profile_dphi_npf[pdfind_max*2];
+  TProfile* h_profile_nvtx_npf[pdfind_max*2];
+  TProfile* h_profile_nvtx_njet15[pdfind_max*2];
+  TProfile* h_profile_nvtx_njet30[pdfind_max*2];
+  TProfile* h_profile_nvtx_sumpt[pdfind_max*2];
+  TProfile* h_profile_dphi_ptsumpf_0j[pdfind_max*2];
+  TProfile* h_profile_dphi_ptaveragepf_0j[pdfind_max*2];
+  TProfile* h_profile_dphi_npf_0j[pdfind_max*2];
+  TProfile* h_profile_nvtx_npf_0j[pdfind_max*2];
+  TProfile* h_profile_nvtx_sumpt_0j[pdfind_max*2];
+  TProfile* h_profile_dphi_ptsumpf_1j[pdfind_max*2];
+  TProfile* h_profile_dphi_ptaveragepf_1j[pdfind_max*2];
+  TProfile* h_profile_dphi_npf_1j[pdfind_max*2];
+  TProfile* h_profile_nvtx_npf_1j[pdfind_max*2];
+  TProfile* h_profile_nvtx_sumpt_1j[pdfind_max*2];
+  TProfile* h_profile_dphi_ptsumpf_2pj[pdfind_max*2];
+  TProfile* h_profile_dphi_ptaveragepf_2pj[pdfind_max*2];
+  TProfile* h_profile_dphi_npf_2pj[pdfind_max*2];
+  TProfile* h_profile_nvtx_npf_2pj[pdfind_max*2];
+  TProfile* h_profile_nvtx_sumpt_2pj[pdfind_max*2];
+  TProfile* h_profile_ptttbar_npf[pdfind_max*2];
+  TProfile* h_profile_ptttbar_sumpt[pdfind_max*2];
+  TProfile* h_profile_ptttbar_avept[pdfind_max*2];
+  TProfile* h_profile_ptttbar_npf_away[pdfind_max*2];
+  TProfile* h_profile_ptttbar_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ptttbar_avept_away[pdfind_max*2];
+  TProfile* h_profile_ptttbar_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ptttbar_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ptttbar_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ptttbar_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ptttbar_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ptttbar_avept_toward[pdfind_max*2];
+  TProfile* h_profile_deta_bb_njet_bb[pdfind_max*2];
+  TProfile* h_profile_deta_bb_njet_extra[pdfind_max*2];
 
-  TProfile* h_profile_ptttbar_njet30[pdfind_max];
-  TProfile* h_profile_ptttbar_njet15[pdfind_max];
+  TProfile* h_profile_ptttbar_njet30[pdfind_max*2];
+  TProfile* h_profile_ptttbar_njet15[pdfind_max*2];
 
-  TProfile* h_profile_ptttbar_njet30_away[pdfind_max];
-  TProfile* h_profile_ptttbar_njet15_away[pdfind_max];
+  TProfile* h_profile_ptttbar_njet30_away[pdfind_max*2];
+  TProfile* h_profile_ptttbar_njet15_away[pdfind_max*2];
 
-  TProfile* h_profile_ptttbar_njet30_transverse[pdfind_max];
-  TProfile* h_profile_ptttbar_njet15_transverse[pdfind_max];
+  TProfile* h_profile_ptttbar_njet30_transverse[pdfind_max*2];
+  TProfile* h_profile_ptttbar_njet15_transverse[pdfind_max*2];
 
-  TProfile* h_profile_ptttbar_njet30_toward[pdfind_max];
-  TProfile* h_profile_ptttbar_njet15_toward[pdfind_max];
+  TProfile* h_profile_ptttbar_njet30_toward[pdfind_max*2];
+  TProfile* h_profile_ptttbar_njet15_toward[pdfind_max*2];
 
-  TProfile* h_profile_mttbar_npf[pdfind_max];
-  TProfile* h_profile_mttbar_sumpt[pdfind_max];
-  TProfile* h_profile_mttbar_avept[pdfind_max];
-  TProfile* h_profile_mttbar_npf_away[pdfind_max];
-  TProfile* h_profile_mttbar_sumpt_away[pdfind_max];
-  TProfile* h_profile_mttbar_avept_away[pdfind_max];
-  TProfile* h_profile_mttbar_npf_transverse[pdfind_max];
-  TProfile* h_profile_mttbar_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_mttbar_avept_transverse[pdfind_max];
-  TProfile* h_profile_mttbar_npf_toward[pdfind_max];
-  TProfile* h_profile_mttbar_sumpt_toward[pdfind_max];
-  TProfile* h_profile_mttbar_avept_toward[pdfind_max];
-  TProfile* h_profile_ytt_npf[pdfind_max];
-  TProfile* h_profile_ytt_sumpt[pdfind_max];
-  TProfile* h_profile_ytt_avept[pdfind_max];
-  TProfile* h_profile_ytt_npf_away[pdfind_max];
-  TProfile* h_profile_ytt_sumpt_away[pdfind_max];
-  TProfile* h_profile_ytt_avept_away[pdfind_max];
-  TProfile* h_profile_ytt_npf_transverse[pdfind_max];
-  TProfile* h_profile_ytt_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ytt_avept_transverse[pdfind_max];
-  TProfile* h_profile_ytt_npf_toward[pdfind_max];
-  TProfile* h_profile_ytt_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ytt_avept_toward[pdfind_max];
-  TProfile* h_profile_yttj_npf[pdfind_max];
-  TProfile* h_profile_yttj_sumpt[pdfind_max];
-  TProfile* h_profile_yttj_avept[pdfind_max];
-  TProfile* h_profile_yttj_npf_away[pdfind_max];
-  TProfile* h_profile_yttj_sumpt_away[pdfind_max];
-  TProfile* h_profile_yttj_avept_away[pdfind_max];
-  TProfile* h_profile_yttj_npf_transverse[pdfind_max];
-  TProfile* h_profile_yttj_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_yttj_avept_transverse[pdfind_max];
-  TProfile* h_profile_yttj_npf_toward[pdfind_max];
-  TProfile* h_profile_yttj_sumpt_toward[pdfind_max];
-  TProfile* h_profile_yttj_avept_toward[pdfind_max];
-  TProfile* h_profile_mtop_npf[pdfind_max];
-  TProfile* h_profile_mtop_sumpt[pdfind_max];
-  TProfile* h_profile_mtop_avept[pdfind_max];
-  TProfile* h_profile_mtop_npf_away[pdfind_max];
-  TProfile* h_profile_mtop_sumpt_away[pdfind_max];
-  TProfile* h_profile_mtop_avept_away[pdfind_max];
-  TProfile* h_profile_mtop_npf_transverse[pdfind_max];
-  TProfile* h_profile_mtop_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_mtop_avept_transverse[pdfind_max];
-  TProfile* h_profile_mtop_npf_toward[pdfind_max];
-  TProfile* h_profile_mtop_sumpt_toward[pdfind_max];
-  TProfile* h_profile_mtop_avept_toward[pdfind_max];
-  TProfile* h_profile_matop_npf[pdfind_max];
-  TProfile* h_profile_matop_sumpt[pdfind_max];
-  TProfile* h_profile_matop_avept[pdfind_max];
-  TProfile* h_profile_matop_npf_away[pdfind_max];
-  TProfile* h_profile_matop_sumpt_away[pdfind_max];
-  TProfile* h_profile_matop_avept_away[pdfind_max];
-  TProfile* h_profile_matop_npf_transverse[pdfind_max];
-  TProfile* h_profile_matop_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_matop_avept_transverse[pdfind_max];
-  TProfile* h_profile_matop_npf_toward[pdfind_max];
-  TProfile* h_profile_matop_sumpt_toward[pdfind_max];
-  TProfile* h_profile_matop_avept_toward[pdfind_max];
-  TProfile* h_profile_pttop_npf[pdfind_max];
-  TProfile* h_profile_pttop_sumpt[pdfind_max];
-  TProfile* h_profile_pttop_avept[pdfind_max];
-  TProfile* h_profile_pttop_npf_away[pdfind_max];
-  TProfile* h_profile_pttop_sumpt_away[pdfind_max];
-  TProfile* h_profile_pttop_avept_away[pdfind_max];
-  TProfile* h_profile_pttop_npf_transverse[pdfind_max];
-  TProfile* h_profile_pttop_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_pttop_avept_transverse[pdfind_max];
-  TProfile* h_profile_pttop_npf_toward[pdfind_max];
-  TProfile* h_profile_pttop_sumpt_toward[pdfind_max];
-  TProfile* h_profile_pttop_avept_toward[pdfind_max];
-  TProfile* h_profile_ptatop_npf[pdfind_max];
-  TProfile* h_profile_ptatop_sumpt[pdfind_max];
-  TProfile* h_profile_ptatop_avept[pdfind_max];
-  TProfile* h_profile_ptatop_npf_away[pdfind_max];
-  TProfile* h_profile_ptatop_sumpt_away[pdfind_max];
-  TProfile* h_profile_ptatop_avept_away[pdfind_max];
-  TProfile* h_profile_ptatop_npf_transverse[pdfind_max];
-  TProfile* h_profile_ptatop_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ptatop_avept_transverse[pdfind_max];
-  TProfile* h_profile_ptatop_npf_toward[pdfind_max];
-  TProfile* h_profile_ptatop_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ptatop_avept_toward[pdfind_max];
-  TProfile* h_profile_ytop_npf[pdfind_max];
-  TProfile* h_profile_ytop_sumpt[pdfind_max];
-  TProfile* h_profile_ytop_avept[pdfind_max];
-  TProfile* h_profile_ytop_npf_away[pdfind_max];
-  TProfile* h_profile_ytop_sumpt_away[pdfind_max];
-  TProfile* h_profile_ytop_avept_away[pdfind_max];
-  TProfile* h_profile_ytop_npf_transverse[pdfind_max];
-  TProfile* h_profile_ytop_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ytop_avept_transverse[pdfind_max];
-  TProfile* h_profile_ytop_npf_toward[pdfind_max];
-  TProfile* h_profile_ytop_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ytop_avept_toward[pdfind_max];
-  TProfile* h_profile_yatop_npf[pdfind_max];
-  TProfile* h_profile_yatop_sumpt[pdfind_max];
-  TProfile* h_profile_yatop_avept[pdfind_max];
-  TProfile* h_profile_yatop_npf_away[pdfind_max];
-  TProfile* h_profile_yatop_sumpt_away[pdfind_max];
-  TProfile* h_profile_yatop_avept_away[pdfind_max];
-  TProfile* h_profile_yatop_npf_transverse[pdfind_max];
-  TProfile* h_profile_yatop_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_yatop_avept_transverse[pdfind_max];
-  TProfile* h_profile_yatop_npf_toward[pdfind_max];
-  TProfile* h_profile_yatop_sumpt_toward[pdfind_max];
-  TProfile* h_profile_yatop_avept_toward[pdfind_max];
-  TProfile* h_profile_mthad_npf[pdfind_max];
-  TProfile* h_profile_mthad_sumpt[pdfind_max];
-  TProfile* h_profile_mthad_avept[pdfind_max];
-  TProfile* h_profile_mthad_npf_away[pdfind_max];
-  TProfile* h_profile_mthad_sumpt_away[pdfind_max];
-  TProfile* h_profile_mthad_avept_away[pdfind_max];
-  TProfile* h_profile_mthad_npf_transverse[pdfind_max];
-  TProfile* h_profile_mthad_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_mthad_avept_transverse[pdfind_max];
-  TProfile* h_profile_mthad_npf_toward[pdfind_max];
-  TProfile* h_profile_mthad_sumpt_toward[pdfind_max];
-  TProfile* h_profile_mthad_avept_toward[pdfind_max];
-  TProfile* h_profile_mtlep_npf[pdfind_max];
-  TProfile* h_profile_mtlep_sumpt[pdfind_max];
-  TProfile* h_profile_mtlep_avept[pdfind_max];
-  TProfile* h_profile_mtlep_npf_away[pdfind_max];
-  TProfile* h_profile_mtlep_sumpt_away[pdfind_max];
-  TProfile* h_profile_mtlep_avept_away[pdfind_max];
-  TProfile* h_profile_mtlep_npf_transverse[pdfind_max];
-  TProfile* h_profile_mtlep_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_mtlep_avept_transverse[pdfind_max];
-  TProfile* h_profile_mtlep_npf_toward[pdfind_max];
-  TProfile* h_profile_mtlep_sumpt_toward[pdfind_max];
-  TProfile* h_profile_mtlep_avept_toward[pdfind_max];
-  TProfile* h_profile_ptthad_npf[pdfind_max];
-  TProfile* h_profile_ptthad_sumpt[pdfind_max];
-  TProfile* h_profile_ptthad_avept[pdfind_max];
-  TProfile* h_profile_ptthad_npf_away[pdfind_max];
-  TProfile* h_profile_ptthad_sumpt_away[pdfind_max];
-  TProfile* h_profile_ptthad_avept_away[pdfind_max];
-  TProfile* h_profile_ptthad_npf_transverse[pdfind_max];
-  TProfile* h_profile_ptthad_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ptthad_avept_transverse[pdfind_max];
-  TProfile* h_profile_ptthad_npf_toward[pdfind_max];
-  TProfile* h_profile_ptthad_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ptthad_avept_toward[pdfind_max];
-  TProfile* h_profile_pttlep_npf[pdfind_max];
-  TProfile* h_profile_pttlep_sumpt[pdfind_max];
-  TProfile* h_profile_pttlep_avept[pdfind_max];
-  TProfile* h_profile_pttlep_npf_away[pdfind_max];
-  TProfile* h_profile_pttlep_sumpt_away[pdfind_max];
-  TProfile* h_profile_pttlep_avept_away[pdfind_max];
-  TProfile* h_profile_pttlep_npf_transverse[pdfind_max];
-  TProfile* h_profile_pttlep_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_pttlep_avept_transverse[pdfind_max];
-  TProfile* h_profile_pttlep_npf_toward[pdfind_max];
-  TProfile* h_profile_pttlep_sumpt_toward[pdfind_max];
-  TProfile* h_profile_pttlep_avept_toward[pdfind_max];
-  TProfile* h_profile_ythad_npf[pdfind_max];
-  TProfile* h_profile_ythad_sumpt[pdfind_max];
-  TProfile* h_profile_ythad_avept[pdfind_max];
-  TProfile* h_profile_ythad_npf_away[pdfind_max];
-  TProfile* h_profile_ythad_sumpt_away[pdfind_max];
-  TProfile* h_profile_ythad_avept_away[pdfind_max];
-  TProfile* h_profile_ythad_npf_transverse[pdfind_max];
-  TProfile* h_profile_ythad_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ythad_avept_transverse[pdfind_max];
-  TProfile* h_profile_ythad_npf_toward[pdfind_max];
-  TProfile* h_profile_ythad_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ythad_avept_toward[pdfind_max];
-  TProfile* h_profile_ytlep_npf[pdfind_max];
-  TProfile* h_profile_ytlep_sumpt[pdfind_max];
-  TProfile* h_profile_ytlep_avept[pdfind_max];
-  TProfile* h_profile_ytlep_npf_away[pdfind_max];
-  TProfile* h_profile_ytlep_sumpt_away[pdfind_max];
-  TProfile* h_profile_ytlep_avept_away[pdfind_max];
-  TProfile* h_profile_ytlep_npf_transverse[pdfind_max];
-  TProfile* h_profile_ytlep_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ytlep_avept_transverse[pdfind_max];
-  TProfile* h_profile_ytlep_npf_toward[pdfind_max];
-  TProfile* h_profile_ytlep_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ytlep_avept_toward[pdfind_max];
-  TProfile* h_profile_mt_npf[pdfind_max];
-  TProfile* h_profile_mt_sumpt[pdfind_max];
-  TProfile* h_profile_mt_avept[pdfind_max];
-  TProfile* h_profile_mt_npf_away[pdfind_max];
-  TProfile* h_profile_mt_sumpt_away[pdfind_max];
-  TProfile* h_profile_mt_avept_away[pdfind_max];
-  TProfile* h_profile_mt_npf_transverse[pdfind_max];
-  TProfile* h_profile_mt_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_mt_avept_transverse[pdfind_max];
-  TProfile* h_profile_mt_npf_toward[pdfind_max];
-  TProfile* h_profile_mt_sumpt_toward[pdfind_max];
-  TProfile* h_profile_mt_avept_toward[pdfind_max];
-  TProfile* h_profile_ptt_npf[pdfind_max];
-  TProfile* h_profile_ptt_sumpt[pdfind_max];
-  TProfile* h_profile_ptt_avept[pdfind_max];
-  TProfile* h_profile_ptt_npf_away[pdfind_max];
-  TProfile* h_profile_ptt_sumpt_away[pdfind_max];
-  TProfile* h_profile_ptt_avept_away[pdfind_max];
-  TProfile* h_profile_ptt_npf_transverse[pdfind_max];
-  TProfile* h_profile_ptt_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_ptt_avept_transverse[pdfind_max];
-  TProfile* h_profile_ptt_npf_toward[pdfind_max];
-  TProfile* h_profile_ptt_sumpt_toward[pdfind_max];
-  TProfile* h_profile_ptt_avept_toward[pdfind_max];
-  TProfile* h_profile_yt_npf[pdfind_max];
-  TProfile* h_profile_yt_sumpt[pdfind_max];
-  TProfile* h_profile_yt_avept[pdfind_max];
-  TProfile* h_profile_yt_npf_away[pdfind_max];
-  TProfile* h_profile_yt_sumpt_away[pdfind_max];
-  TProfile* h_profile_yt_avept_away[pdfind_max];
-  TProfile* h_profile_yt_npf_transverse[pdfind_max];
-  TProfile* h_profile_yt_sumpt_transverse[pdfind_max];
-  TProfile* h_profile_yt_avept_transverse[pdfind_max];
-  TProfile* h_profile_yt_npf_toward[pdfind_max];
-  TProfile* h_profile_yt_sumpt_toward[pdfind_max];
-  TProfile* h_profile_yt_avept_toward[pdfind_max];
-  TH1* h_nvtx[pdfind_max];
-  TH1* h_pf_dxy[pdfind_max];
-  TH1* h_pf_dz[pdfind_max];
-  TH1* h_pf_sigmadxy[pdfind_max];
-  TH1* h_pf_sigmadz[pdfind_max];
-  TH1* h_pf_pt[pdfind_max];
-  TH1* h_csv[pdfind_max];
-  TH1* h_csvmax[pdfind_max];
-  TH1* h_csvmax2[pdfind_max];
-  TH1* h_npf_inclusive[pdfind_max];
-  TH1* h_npf_toward[pdfind_max];
-  TH1* h_npf_transverse[pdfind_max];
-  TH1* h_npf_away[pdfind_max];
-  TH1* h_ptsumpf_inclusive[pdfind_max];
-  TH1* h_ptsumpf_toward[pdfind_max];
-  TH1* h_ptsumpf_transverse[pdfind_max];
-  TH1* h_ptsumpf_away[pdfind_max];
-  TH1* h_ptavepf_inclusive[pdfind_max];
-  TH1* h_ptavepf_toward[pdfind_max];
-  TH1* h_ptavepf_transverse[pdfind_max];
-  TH1* h_ptavepf_away[pdfind_max];
-  TH1*h_puweight[pdfind_max];
-  TH1*h_puweight_weighted[pdfind_max];
-  TH1*h_puweight_meas[pdfind_max];
-  TH1*h_puweight_weighted_meas[pdfind_max];
-  TH1* h_MTW[pdfind_max];
-  TH1* h_m_thad[pdfind_max];
-  TH1* h_m_thad_fixbin[pdfind_max];
-  TH1* h_m_tlep[pdfind_max];
-  TH1* h_m_tlep_fixbin[pdfind_max];
-  TH1* h_m_top[pdfind_max];
-  TH1* h_m_atop[pdfind_max];
-  TH1* h_pt_top[pdfind_max];
-  TH1* h_pt_atop[pdfind_max];
-  TH1* h_m_top_fixbin[pdfind_max];
-  TH1* h_m_atop_fixbin[pdfind_max];
-  TH1* h_pt_top_fixbin[pdfind_max];
-  TH1* h_pt_atop_fixbin[pdfind_max];
-  TH1* h_y_top[pdfind_max];
-  TH1* h_y_atop[pdfind_max];
-  TH1*   h_rec_ttjY[pdfind_max];
-  TH1* h_m_ttbar[pdfind_max];
-  TH1* h_m_ttbar_fixbin[pdfind_max];
-  TH1* h_y_ttbar[pdfind_max];
-  TH1* h_pt_thad[pdfind_max];
-  TH1* h_pt_thad_fixbin[pdfind_max];
-  TH1* h_pt_tlep[pdfind_max];
-  TH1* h_pt_tlep_fixbin[pdfind_max];
-  TH1* h_y_thad[pdfind_max];
-  TH1* h_y_tlep[pdfind_max];
-  TH1* h_m_t[pdfind_max];
-  TH1* h_m_t_fixbin[pdfind_max];
-  TH1* h_pt_t[pdfind_max];
-  TH1* h_pt_t_fixbin[pdfind_max];
-  TH1* h_y_t[pdfind_max];
-  TH2* h_pt_eta_b[pdfind_max];
-  TH2* h_pt_eta_b_tagged[pdfind_max];
-  TH2* h_pt_eta_c[pdfind_max];
-  TH2* h_pt_eta_c_tagged[pdfind_max];
-  TH2* h_pt_eta_udsg[pdfind_max];
-  TH2* h_pt_eta_udsg_tagged[pdfind_max];
+  TProfile* h_profile_mttbar_npf[pdfind_max*2];
+  TProfile* h_profile_mttbar_sumpt[pdfind_max*2];
+  TProfile* h_profile_mttbar_avept[pdfind_max*2];
+  TProfile* h_profile_mttbar_npf_away[pdfind_max*2];
+  TProfile* h_profile_mttbar_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_mttbar_avept_away[pdfind_max*2];
+  TProfile* h_profile_mttbar_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_mttbar_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_mttbar_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_mttbar_npf_toward[pdfind_max*2];
+  TProfile* h_profile_mttbar_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_mttbar_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ytt_npf[pdfind_max*2];
+  TProfile* h_profile_ytt_sumpt[pdfind_max*2];
+  TProfile* h_profile_ytt_avept[pdfind_max*2];
+  TProfile* h_profile_ytt_npf_away[pdfind_max*2];
+  TProfile* h_profile_ytt_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ytt_avept_away[pdfind_max*2];
+  TProfile* h_profile_ytt_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ytt_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ytt_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ytt_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ytt_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ytt_avept_toward[pdfind_max*2];
+  TProfile* h_profile_yttj_npf[pdfind_max*2];
+  TProfile* h_profile_yttj_sumpt[pdfind_max*2];
+  TProfile* h_profile_yttj_avept[pdfind_max*2];
+  TProfile* h_profile_yttj_npf_away[pdfind_max*2];
+  TProfile* h_profile_yttj_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_yttj_avept_away[pdfind_max*2];
+  TProfile* h_profile_yttj_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_yttj_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_yttj_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_yttj_npf_toward[pdfind_max*2];
+  TProfile* h_profile_yttj_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_yttj_avept_toward[pdfind_max*2];
+  TProfile* h_profile_mtop_npf[pdfind_max*2];
+  TProfile* h_profile_mtop_sumpt[pdfind_max*2];
+  TProfile* h_profile_mtop_avept[pdfind_max*2];
+  TProfile* h_profile_mtop_npf_away[pdfind_max*2];
+  TProfile* h_profile_mtop_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_mtop_avept_away[pdfind_max*2];
+  TProfile* h_profile_mtop_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_mtop_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_mtop_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_mtop_npf_toward[pdfind_max*2];
+  TProfile* h_profile_mtop_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_mtop_avept_toward[pdfind_max*2];
+  TProfile* h_profile_matop_npf[pdfind_max*2];
+  TProfile* h_profile_matop_sumpt[pdfind_max*2];
+  TProfile* h_profile_matop_avept[pdfind_max*2];
+  TProfile* h_profile_matop_npf_away[pdfind_max*2];
+  TProfile* h_profile_matop_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_matop_avept_away[pdfind_max*2];
+  TProfile* h_profile_matop_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_matop_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_matop_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_matop_npf_toward[pdfind_max*2];
+  TProfile* h_profile_matop_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_matop_avept_toward[pdfind_max*2];
+  TProfile* h_profile_pttop_npf[pdfind_max*2];
+  TProfile* h_profile_pttop_sumpt[pdfind_max*2];
+  TProfile* h_profile_pttop_avept[pdfind_max*2];
+  TProfile* h_profile_pttop_npf_away[pdfind_max*2];
+  TProfile* h_profile_pttop_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_pttop_avept_away[pdfind_max*2];
+  TProfile* h_profile_pttop_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_pttop_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_pttop_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_pttop_npf_toward[pdfind_max*2];
+  TProfile* h_profile_pttop_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_pttop_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ptatop_npf[pdfind_max*2];
+  TProfile* h_profile_ptatop_sumpt[pdfind_max*2];
+  TProfile* h_profile_ptatop_avept[pdfind_max*2];
+  TProfile* h_profile_ptatop_npf_away[pdfind_max*2];
+  TProfile* h_profile_ptatop_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ptatop_avept_away[pdfind_max*2];
+  TProfile* h_profile_ptatop_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ptatop_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ptatop_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ptatop_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ptatop_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ptatop_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ytop_npf[pdfind_max*2];
+  TProfile* h_profile_ytop_sumpt[pdfind_max*2];
+  TProfile* h_profile_ytop_avept[pdfind_max*2];
+  TProfile* h_profile_ytop_npf_away[pdfind_max*2];
+  TProfile* h_profile_ytop_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ytop_avept_away[pdfind_max*2];
+  TProfile* h_profile_ytop_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ytop_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ytop_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ytop_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ytop_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ytop_avept_toward[pdfind_max*2];
+  TProfile* h_profile_yatop_npf[pdfind_max*2];
+  TProfile* h_profile_yatop_sumpt[pdfind_max*2];
+  TProfile* h_profile_yatop_avept[pdfind_max*2];
+  TProfile* h_profile_yatop_npf_away[pdfind_max*2];
+  TProfile* h_profile_yatop_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_yatop_avept_away[pdfind_max*2];
+  TProfile* h_profile_yatop_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_yatop_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_yatop_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_yatop_npf_toward[pdfind_max*2];
+  TProfile* h_profile_yatop_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_yatop_avept_toward[pdfind_max*2];
+  TProfile* h_profile_mthad_npf[pdfind_max*2];
+  TProfile* h_profile_mthad_sumpt[pdfind_max*2];
+  TProfile* h_profile_mthad_avept[pdfind_max*2];
+  TProfile* h_profile_mthad_npf_away[pdfind_max*2];
+  TProfile* h_profile_mthad_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_mthad_avept_away[pdfind_max*2];
+  TProfile* h_profile_mthad_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_mthad_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_mthad_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_mthad_npf_toward[pdfind_max*2];
+  TProfile* h_profile_mthad_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_mthad_avept_toward[pdfind_max*2];
+  TProfile* h_profile_mtlep_npf[pdfind_max*2];
+  TProfile* h_profile_mtlep_sumpt[pdfind_max*2];
+  TProfile* h_profile_mtlep_avept[pdfind_max*2];
+  TProfile* h_profile_mtlep_npf_away[pdfind_max*2];
+  TProfile* h_profile_mtlep_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_mtlep_avept_away[pdfind_max*2];
+  TProfile* h_profile_mtlep_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_mtlep_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_mtlep_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_mtlep_npf_toward[pdfind_max*2];
+  TProfile* h_profile_mtlep_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_mtlep_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ptthad_npf[pdfind_max*2];
+  TProfile* h_profile_ptthad_sumpt[pdfind_max*2];
+  TProfile* h_profile_ptthad_avept[pdfind_max*2];
+  TProfile* h_profile_ptthad_npf_away[pdfind_max*2];
+  TProfile* h_profile_ptthad_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ptthad_avept_away[pdfind_max*2];
+  TProfile* h_profile_ptthad_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ptthad_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ptthad_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ptthad_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ptthad_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ptthad_avept_toward[pdfind_max*2];
+  TProfile* h_profile_pttlep_npf[pdfind_max*2];
+  TProfile* h_profile_pttlep_sumpt[pdfind_max*2];
+  TProfile* h_profile_pttlep_avept[pdfind_max*2];
+  TProfile* h_profile_pttlep_npf_away[pdfind_max*2];
+  TProfile* h_profile_pttlep_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_pttlep_avept_away[pdfind_max*2];
+  TProfile* h_profile_pttlep_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_pttlep_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_pttlep_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_pttlep_npf_toward[pdfind_max*2];
+  TProfile* h_profile_pttlep_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_pttlep_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ythad_npf[pdfind_max*2];
+  TProfile* h_profile_ythad_sumpt[pdfind_max*2];
+  TProfile* h_profile_ythad_avept[pdfind_max*2];
+  TProfile* h_profile_ythad_npf_away[pdfind_max*2];
+  TProfile* h_profile_ythad_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ythad_avept_away[pdfind_max*2];
+  TProfile* h_profile_ythad_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ythad_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ythad_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ythad_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ythad_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ythad_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ytlep_npf[pdfind_max*2];
+  TProfile* h_profile_ytlep_sumpt[pdfind_max*2];
+  TProfile* h_profile_ytlep_avept[pdfind_max*2];
+  TProfile* h_profile_ytlep_npf_away[pdfind_max*2];
+  TProfile* h_profile_ytlep_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ytlep_avept_away[pdfind_max*2];
+  TProfile* h_profile_ytlep_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ytlep_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ytlep_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ytlep_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ytlep_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ytlep_avept_toward[pdfind_max*2];
+  TProfile* h_profile_mt_npf[pdfind_max*2];
+  TProfile* h_profile_mt_sumpt[pdfind_max*2];
+  TProfile* h_profile_mt_avept[pdfind_max*2];
+  TProfile* h_profile_mt_npf_away[pdfind_max*2];
+  TProfile* h_profile_mt_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_mt_avept_away[pdfind_max*2];
+  TProfile* h_profile_mt_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_mt_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_mt_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_mt_npf_toward[pdfind_max*2];
+  TProfile* h_profile_mt_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_mt_avept_toward[pdfind_max*2];
+  TProfile* h_profile_ptt_npf[pdfind_max*2];
+  TProfile* h_profile_ptt_sumpt[pdfind_max*2];
+  TProfile* h_profile_ptt_avept[pdfind_max*2];
+  TProfile* h_profile_ptt_npf_away[pdfind_max*2];
+  TProfile* h_profile_ptt_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_ptt_avept_away[pdfind_max*2];
+  TProfile* h_profile_ptt_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_ptt_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_ptt_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_ptt_npf_toward[pdfind_max*2];
+  TProfile* h_profile_ptt_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_ptt_avept_toward[pdfind_max*2];
+  TProfile* h_profile_yt_npf[pdfind_max*2];
+  TProfile* h_profile_yt_sumpt[pdfind_max*2];
+  TProfile* h_profile_yt_avept[pdfind_max*2];
+  TProfile* h_profile_yt_npf_away[pdfind_max*2];
+  TProfile* h_profile_yt_sumpt_away[pdfind_max*2];
+  TProfile* h_profile_yt_avept_away[pdfind_max*2];
+  TProfile* h_profile_yt_npf_transverse[pdfind_max*2];
+  TProfile* h_profile_yt_sumpt_transverse[pdfind_max*2];
+  TProfile* h_profile_yt_avept_transverse[pdfind_max*2];
+  TProfile* h_profile_yt_npf_toward[pdfind_max*2];
+  TProfile* h_profile_yt_sumpt_toward[pdfind_max*2];
+  TProfile* h_profile_yt_avept_toward[pdfind_max*2];
+  TH1* h_nvtx[pdfind_max*2];
+  TH1* h_pf_dxy[pdfind_max*2];
+  TH1* h_pf_dz[pdfind_max*2];
+  TH1* h_pf_sigmadxy[pdfind_max*2];
+  TH1* h_pf_sigmadz[pdfind_max*2];
+  TH1* h_pf_pt[pdfind_max*2];
+  TH1* h_csv[pdfind_max*2];
+  TH1* h_csvmax[pdfind_max*2];
+  TH1* h_csvmax2[pdfind_max*2];
+  TH1* h_npf_inclusive[pdfind_max*2];
+  TH1* h_npf_toward[pdfind_max*2];
+  TH1* h_npf_transverse[pdfind_max*2];
+  TH1* h_npf_away[pdfind_max*2];
+  TH1* h_ptsumpf_inclusive[pdfind_max*2];
+  TH1* h_ptsumpf_toward[pdfind_max*2];
+  TH1* h_ptsumpf_transverse[pdfind_max*2];
+  TH1* h_ptsumpf_away[pdfind_max*2];
+  TH1* h_ptavepf_inclusive[pdfind_max*2];
+  TH1* h_ptavepf_toward[pdfind_max*2];
+  TH1* h_ptavepf_transverse[pdfind_max*2];
+  TH1* h_ptavepf_away[pdfind_max*2];
+  TH1*h_puweight[pdfind_max*2];
+  TH1*h_puweight_weighted[pdfind_max*2];
+  TH1*h_puweight_meas[pdfind_max*2];
+  TH1*h_puweight_weighted_meas[pdfind_max*2];
+  TH1* h_MTW[pdfind_max*2];
+  TH1* h_m_thad[pdfind_max*2];
+  TH1* h_m_thad_fixbin[pdfind_max*2];
+  TH1* h_m_tlep[pdfind_max*2];
+  TH1* h_m_tlep_fixbin[pdfind_max*2];
+  TH1* h_m_top[pdfind_max*2];
+  TH1* h_m_atop[pdfind_max*2];
+  TH1* h_pt_top[pdfind_max*2];
+  TH1* h_pt_atop[pdfind_max*2];
+  TH1* h_m_top_fixbin[pdfind_max*2];
+  TH1* h_m_atop_fixbin[pdfind_max*2];
+  TH1* h_pt_top_fixbin[pdfind_max*2];
+  TH1* h_pt_atop_fixbin[pdfind_max*2];
+  TH1* h_y_top[pdfind_max*2];
+  TH1* h_y_atop[pdfind_max*2];
+  TH1*   h_rec_ttjY[pdfind_max*2];
+  TH1* h_m_ttbar[pdfind_max*2];
+  TH1* h_m_ttbar_fixbin[pdfind_max*2];
+  TH1* h_y_ttbar[pdfind_max*2];
+  TH1* h_pt_thad[pdfind_max*2];
+  TH1* h_pt_thad_fixbin[pdfind_max*2];
+  TH1* h_pt_tlep[pdfind_max*2];
+  TH1* h_pt_tlep_fixbin[pdfind_max*2];
+  TH1* h_y_thad[pdfind_max*2];
+  TH1* h_y_tlep[pdfind_max*2];
+  TH1* h_m_t[pdfind_max*2];
+  TH1* h_m_t_fixbin[pdfind_max*2];
+  TH1* h_pt_t[pdfind_max*2];
+  TH1* h_pt_t_fixbin[pdfind_max*2];
+  TH1* h_y_t[pdfind_max*2];
+  TH2* h_pt_eta_b[pdfind_max*2];
+  TH2* h_pt_eta_b_tagged[pdfind_max*2];
+  TH2* h_pt_eta_c[pdfind_max*2];
+  TH2* h_pt_eta_c_tagged[pdfind_max*2];
+  TH2* h_pt_eta_udsg[pdfind_max*2];
+  TH2* h_pt_eta_udsg_tagged[pdfind_max*2];
   char nam[10000];
-  for(int i =0; i<pdfind_max;i++){
+  for(int i =0; i<pdfind_max*2;i++){
     sprintf(nam,"pt_eta_b_%i",i);
     h_pt_eta_b[i]= new TH2D(nam,nam,7,pt_b_range,10,-2.4,2.4);
     sprintf(nam,"pt_eta_b_tagged_%i",i);
@@ -1437,12 +1437,66 @@ void tt_uev_analyzer::Loop()
     vector<int> st01_mu_charge;
     vector<TLorentzVector> st01_nu_vector;
     vector<TLorentzVector> Gjet_vector;
+    vector<TLorentzVector> Gjet_vector_1530;
+
     vector<vector<TLorentzVector>> Gjetconst_vector;
     vector<vector<TLorentzVector>> GBjetconst_vector;
     vector<TLorentzVector> GBjet_vector;
     TLorentzVector gtlep_vector;
     TLorentzVector gthad_vector;
-    int lind=-99,nind=-99,j1ind=-99,j2ind=-99;
+
+   TLorentzVector gtop_vector;
+    TLorentzVector gatop_vector;
+
+      TLorentzVector gttbar_vector;
+      TLorentzVector gttj_vector;
+      double getab1;
+      double getab2;
+      double getamin=0;
+      double gdeltaetabb;
+      int gnjet_bb=0;
+      int gnjet_transverse=0;
+      int gnjet_away=0;
+      int gnjet_toward=0;
+
+      int gnjet_transverse15=0;
+      int gnjet_away15=0;
+      int gnjet_toward15=0;
+
+      unsigned int lind=9999,nind=9999,j1ind=9999,j2ind=9999;
+      unsigned int gextra_jet_index=99/*,gextra_jet_index_1530=99*/;
+      vector<unsigned int> ga_min;
+      int gn_pf=0;
+      int gn_pf_dphi[20];
+      double gptsum_pf_dphi[20];
+
+      /*         int n_pf_ttpt[10];
+		 double ptsum_pf_ttpt[10];
+
+		 int n_pf_ttpt_away[10];
+		 double ptsum_pf_ttpt_away[10];
+
+		 int n_pf_ttpt_transverse[10];
+		 double ptsum_pf_ttpt_transverse[10];
+
+		 int n_pf_ttpt_toward[10];
+		 double ptsum_pf_ttpt_toward[10];*/
+
+      double gptsum_pf=0;
+      double gptsum_pf_away=0;
+      double gptsum_pf_transverse=0;
+      double gptsum_pf_toward=0;
+      int gn_pf_away=0;
+      int gn_pf_transverse=0;
+      int gn_pf_toward=0;
+      for(int i =0;i<20;i++){
+	gn_pf_dphi[i]=0;
+	gptsum_pf_dphi[i]=0;
+      } 
+
+    double w=1;
+    if(mcWeights_->size()>0)w=mcWeights_->at(0);
+
 //    vector<TLorentzVector> Gpart_vector;
 
     //cout<<"1111111111"<<endl;
@@ -1466,6 +1520,9 @@ void tt_uev_analyzer::Loop()
     }
 //    cout<<st01_mu_vector.size()<<" "<<st01_nu_vector.size()<<endl;
     unsigned int const_size=0;
+    int gnjet_30=0;
+    int gnjet_15=0;
+  
   //  cout<<"NEW EVENT"<<endl; 	
     for(unsigned int gj_ind=0;gj_ind<GjPt->size();gj_ind++){
       bool isbjet=false;       
@@ -1473,47 +1530,53 @@ void tt_uev_analyzer::Loop()
 
       TLorentzVector tmp;
       tmp.SetPtEtaPhiE(GjPt->at(gj_ind),Gjeta->at(gj_ind),Gjphi->at(gj_ind),GjE->at(gj_ind));
-      if(GjPt->at(gj_ind)<30 || fabs(Gjeta->at(gj_ind))>2.4)continue;  
+      if(GjPt->at(gj_ind)>30 && fabs(Gjeta->at(gj_ind))<2.4){  
 
  
-      vector<TLorentzVector> Gjetconst_vectortmp;
-      for(unsigned int gj=0; gj<GjNConst->at(gj_ind); gj++){
-    //    cout<<gj<<"  "<<GjConstId->at(gj+const_size)<<"  "<<GjConstPt->at(gj+const_size)<<endl;
+        vector<TLorentzVector> Gjetconst_vectortmp;
+        for(unsigned int gj=0; gj<GjNConst->at(gj_ind); gj++){
 
-        if(hasb(GjConstId->at(gj+const_size)))isbjet=true;
- 
-        TLorentzVector tmpc;
-        tmpc.SetPtEtaPhiE(GjConstPt->at(gj_ind),GjConstEta->at(gj_ind),GjConstPhi->at(gj_ind),GjConstE->at(gj_ind));
-        Gjetconst_vectortmp.push_back(tmpc);
-      }
 
-      if(isbjet!=0)cout<<isbjet<<endl;
- 
-
-      for(unsigned int gp3_ind=0;gp3_ind<St03Pt->size();gp3_ind++){
-      // cout<<gp3_ind<<"  "<<St03Id->at(gp3_ind)<<"  "<< St03Status->at(gp3_ind)<<endl;
-        if(St03Status->at(gp3_ind)==2 && hasb(St03Id->at(gp3_ind))){
-//          cout<<"aa"<<endl;
-           double dr_tmp=DeltaR(St03Eta->at(gp3_ind),Gjeta->at(gj_ind),St03Phi->at(gp3_ind),Gjphi->at(gj_ind));
-          // cout<<dr_tmp<<endl;
-           h_dr_tmp->Fill(dr_tmp);
-           if(dr_tmp<0.4)isbjet=true;
+          if(hasb(GjConstId->at(gj+const_size)))isbjet=true;
+          if(GjConstPt->at(gj_ind)<0.5)continue;
+          TLorentzVector tmpc;
+          tmpc.SetPtEtaPhiE(GjConstPt->at(gj_ind),GjConstEta->at(gj_ind),GjConstPhi->at(gj_ind),GjConstE->at(gj_ind));
+          Gjetconst_vectortmp.push_back(tmpc);
         }
+
+        if(isbjet!=0)cout<<isbjet<<endl;
+ 
+
+        for(unsigned int gp3_ind=0;gp3_ind<St03Pt->size();gp3_ind++){
+
+          if(St03Status->at(gp3_ind)==2 && hasb(St03Id->at(gp3_ind))){
+             double dr_tmp=DeltaR(St03Eta->at(gp3_ind),Gjeta->at(gj_ind),St03Phi->at(gp3_ind),Gjphi->at(gj_ind));
+             h_dr_tmp->Fill(dr_tmp);
+             if(dr_tmp<0.4)isbjet=true;
+          }
+        }
+        if(isbjet)GBjet_vector.push_back(tmp);
+        if(!isbjet)Gjet_vector.push_back(tmp);
+        if(!isbjet)Gjetconst_vector.push_back(Gjetconst_vectortmp);
+        if(isbjet)GBjetconst_vector.push_back(Gjetconst_vectortmp);
+        gnjet_30++; 
       }
-      if(isbjet)GBjet_vector.push_back(tmp);
-      if(!isbjet)Gjet_vector.push_back(tmp);
-      if(!isbjet)Gjetconst_vector.push_back(Gjetconst_vectortmp);
-       if(isbjet)GBjetconst_vector.push_back(Gjetconst_vectortmp);
+      if(GjPt->at(gj_ind)>15 && fabs(Gjeta->at(gj_ind))<2.4){  
+        gnjet_15++; 
+        if(GjPt->at(gj_ind)<30.)Gjet_vector_1530.push_back(tmp);
+      }
+
     }
-//    cout<<GBjet_vector.size()<<"  "<<Gjet_vector.size()<<endl;
 
     double Mmin=9999999.;
-//    cout<<st01_mu_vector.size()<<"  "<<st01_nu_vector.size()<<endl;
-    for(unsigned int lepind=0; lepind<st01_mu_vector.size();lepind++){
-      for(unsigned int nuind=0; nuind<st01_nu_vector.size();nuind++){
-        for(unsigned int jetind=0; jetind<Gjet_vector.size();jetind++){
-          for(unsigned int jetindd=jetind; jetindd<Gjet_vector.size();jetindd++){
-            if(jetind==jetindd)continue;
+    for(unsigned int jetind=0; jetind<Gjet_vector.size();jetind++){
+      ga_min.push_back(jetind);
+      for(unsigned int jetindd=jetind; jetindd<Gjet_vector.size();jetindd++){
+        if(jetind==jetindd)continue;
+        for(unsigned int lepind=0; lepind<st01_mu_vector.size();lepind++){
+          for(unsigned int nuind=0; nuind<st01_nu_vector.size();nuind++){
+
+
             double MLep=(st01_mu_vector[lepind]+st01_nu_vector[nuind]).M();
             double Mjj=(Gjet_vector[jetind]+Gjet_vector[jetindd]).M();
             double Mcheck=fabs(MLep-80.4) + fabs(Mjj-80.4);
@@ -1529,10 +1592,14 @@ void tt_uev_analyzer::Loop()
         }
       }
     }
-
-
+    for(unsigned int i=0;i<ga_min.size();i++){
+      if(ga_min[i]==j1ind||ga_min[i]==j2ind)continue;
+      gextra_jet_index=ga_min[i]; break;
+    }
+  //  if(gextra_jet_index==99 &&Gjet_vector_1530.size()>0 )gextra_jet_index_1530=0;
     double m[4];
-    if(!(lind>=1 && nind>=1) && lind!=-99 && GBjet_vector.size()>=2 &&GBjet_vector.size()==2){
+    if(!(lind>=1 && nind>=1) && lind!=9999 && GBjet_vector.size()>=2 &&GBjet_vector.size()==2){
+
     TLorentzVector genWlep=(st01_mu_vector[lind]+st01_nu_vector[nind]);
     TLorentzVector genWhad=(Gjet_vector[j1ind]+Gjet_vector[j2ind]);
       m[0]=(genWlep + GBjet_vector[0]).M();
@@ -1552,6 +1619,44 @@ void tt_uev_analyzer::Loop()
       }
 //      cout<<genWlep.M()<<"  "<<genWhad.M()<<"  "<<gtlep_vector.M()<<"  "<<gthad_vector.M()<<endl;
 
+
+      getab1=GBjet_vector[0].Eta();
+      getab2=GBjet_vector[1].Eta();
+
+      if(getab1<getab2)getamin=getab1;
+      else getamin=getab2;
+      gdeltaetabb=fabs(getab1-getab2);
+
+
+      for(unsigned int j_ind=0; j_ind<Gjet_vector.size();j_ind++){
+
+	if(j_ind==j1ind ||j_ind==j2ind)continue;
+
+      double dphi=fabs(DeltaPhi(gttbar_vector.Phi(),Gjet_vector[j_ind].Phi()))*180/pi;
+      if(dphi<60.)gnjet_toward++;
+      if(dphi>60. &&dphi<120.)gnjet_transverse++;
+      if(dphi>120. &&dphi<180.)gnjet_away++;
+
+      if(dphi<60.)gnjet_toward15++;
+      if(dphi>60. &&dphi<120.)gnjet_transverse15++;
+      if(dphi>120. &&dphi<180.)gnjet_away15++;
+
+
+	if(Gjet_vector[j_ind].Eta()>getamin && Gjet_vector[j_ind].Eta()<getamin+gdeltaetabb ) gnjet_bb++;
+      }
+      for(unsigned int jet_vector_1530_ind =0; jet_vector_1530_ind<jet_vector_1530.size();jet_vector_1530_ind++){
+	if(Gjet_vector_1530[jet_vector_1530_ind].Eta()>getamin && Gjet_vector_1530[jet_vector_1530_ind].Eta()<getamin+gdeltaetabb ) gnjet_bb++;
+//      cout<<fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))<<endl;           
+      double dphi=fabs(DeltaPhi(gttbar_vector.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))*180/pi;
+      if(dphi<60.)gnjet_toward15++;
+      if(dphi>60. &&dphi<120.)gnjet_transverse15++;
+      if(dphi>120. &&dphi<180.)gnjet_away15++;
+
+
+      }
+
+
+
       h_gen_mtlep->Fill(gtlep_vector.M());
       h_gen_mthad->Fill(gthad_vector.M());
       h_gen_mwlep->Fill(genWlep.M());
@@ -1564,8 +1669,25 @@ void tt_uev_analyzer::Loop()
 
       h_gen_ptttbar->Fill((gtlep_vector + gthad_vector).Pt());
       h_gen_mttbar->Fill((gtlep_vector + gthad_vector).M());
+      gttbar_vector=gtlep_vector+gthad_vector;
+
+      if(st01_mu_charge[lind]<0){
+        gtop_vector =gtlep_vector;
+        gatop_vector=gthad_vector;
+      }
+      if(st01_mu_charge[lind]>0){
+        gatop_vector=gtlep_vector;
+        gtop_vector =gthad_vector;
+      }
+
+      if(gextra_jet_index!=99)gttj_vector=gttbar_vector+Gjet_vector[gextra_jet_index];
+//      if(extra_jet_index==99 &&extra_jet_index_1530!=99 )ttj_vector=top_vector +atop_vector+jet_vector_1530[extra_jet_index_1530];
+
       for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
-        // cout<<gp_ind<<"  "<<Packed01Id->at(gp_ind)<<endl;
+        bool matchjet=false;
+//         cout<<gp_ind<<"  "<<Packed01Phi->at(gp_ind)<<endl;
+       if(Packed01Pt->at(gp_ind)<0.5 || fabs(Packed01Eta->at(gp_ind))>2.1 /*||Packed01Charge->at(gp_ind)==0*/)continue;
+//        cout<<gp_ind<<endl;
         double dr_gen_mu=DeltaR(Packed01Eta->at(gp_ind),st01_mu_vector[lind].Eta(),Packed01Phi->at(gp_ind),st01_mu_vector[lind].Phi());
         if(dr_gen_mu<0.1)continue;
 /*        double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),Gjet_vector[j1ind].Eta(),Packed01Phi->at(gp_ind),Gjet_vector[j1ind].Phi());
@@ -1575,14 +1697,103 @@ void tt_uev_analyzer::Loop()
 //        cout<<Gjetconst_vector[j1ind].size()<<endl;
 
        for(unsigned int const_gen_ind=0;const_gen_ind<Gjetconst_vector[j1ind].size();const_gen_ind++){
-           double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),Gjetconst_vector[j1ind][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),Gjetconst_vector[j1ind][const_gen_ind].Phi());
-           if(dr_gen_j1<0.1){
-             matchjet=true;break;
-           }
+         double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),Gjetconst_vector[j1ind][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),Gjetconst_vector[j1ind][const_gen_ind].Phi());
+         if(dr_gen_j1<0.1){
+           matchjet=true;break;
+         }    
        }
+
+       for(unsigned int const_gen_ind=0;const_gen_ind<Gjetconst_vector[j2ind].size();const_gen_ind++){
+         double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),Gjetconst_vector[j2ind][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),Gjetconst_vector[j2ind][const_gen_ind].Phi());
+         if(dr_gen_j1<0.1){
+           matchjet=true;break;
+         }
+       }
+
+       for(unsigned int const_gen_ind=0;const_gen_ind<GBjetconst_vector[0].size();const_gen_ind++){
+         double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GBjetconst_vector[0][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GBjetconst_vector[0][const_gen_ind].Phi());
+         if(dr_gen_j1<0.1){
+           matchjet=true;break;
+         }
+         
+       }
+
+       for(unsigned int const_gen_ind=0;const_gen_ind<GBjetconst_vector[1].size();const_gen_ind++){
+         double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GBjetconst_vector[1][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GBjetconst_vector[1][const_gen_ind].Phi());
+         if(dr_gen_j1<0.1){
+           matchjet=true;break;
+         }
+         
+       }
+       if(matchjet) continue;
+        gn_pf++;
+        gptsum_pf+=Packed01Pt->at(gp_ind);
+        double gdeltaphi_tt_pf=DeltaPhi(Packed01Phi->at(gp_ind),gttbar_vector.Phi())*180/pi;
+       // cout<<gdeltaphi_tt_pf<<endl;
+	if(fabs(gdeltaphi_tt_pf)>0 && fabs(gdeltaphi_tt_pf)<60){
+	  gn_pf_toward++;
+	  gptsum_pf_toward+=Packed01Pt->at(gp_ind);
+	}
+	if(fabs(gdeltaphi_tt_pf)>60 && fabs(gdeltaphi_tt_pf)<120){
+	  gn_pf_transverse++;
+	  gptsum_pf_transverse+=Packed01Pt->at(gp_ind);
+	}
+	if(fabs(gdeltaphi_tt_pf)>120 && fabs(gdeltaphi_tt_pf)<180){
+	  gn_pf_away++;
+	  gptsum_pf_away+=Packed01Pt->at(gp_ind);
+	}
+
+
+	for(int gdphiloop=0;gdphiloop<20;gdphiloop++){
+	  if(fabs(gdeltaphi_tt_pf)>gdphiloop*9 && fabs(gdeltaphi_tt_pf)<(gdphiloop+1)*9){
+	    gn_pf_dphi[gdphiloop]++;
+	    gptsum_pf_dphi[gdphiloop]+=Packed01Pt->at(gp_ind);
+	  }
+	}
+
 
       }
 
+
+       for(int pdfind=0; pdfind<pdfind_max;pdfind++){
+        // if(pdfind!=0)cout<<mcWeights_->at(8+pdfind)<<endl;
+	double weight=w;
+	if(dopdf&& pdfind!=0)weight=w*mcWeights_->at(8+pdfind);
+
+
+//	if(!dopdf&&pdfind!=0 &&puWeight.weight(int(PU_npT))!=0 )weight=puUp.weight(int(PU_npT))*w/puWeight.weight(int(PU_npT)); 
+       // cout<<"I am alive "<<pdfind<<"  "<<weight<<" "<<gn_pf<<" "<<gn_pf_transverse<<" "<<gn_pf_toward<<" "<<gn_pf_away<<endl;
+	h_npf_inclusive[2*pdfind]->Fill(gn_pf,weight);
+	h_npf_toward[2*pdfind]->Fill(gn_pf_toward,weight);
+	h_npf_transverse[2*pdfind]->Fill(gn_pf_transverse,weight);
+	h_npf_away[2*pdfind]->Fill(gn_pf_away,weight);
+
+	h_ptsumpf_inclusive[2*pdfind]->Fill(gptsum_pf,weight);
+	h_ptsumpf_toward[2*pdfind]->Fill(gptsum_pf_toward,weight);
+	h_ptsumpf_transverse[2*pdfind]->Fill(gptsum_pf_transverse,weight);
+	h_ptsumpf_away[2*pdfind]->Fill(gptsum_pf_away,weight);
+
+	if(gn_pf!=0)h_ptavepf_inclusive[2*pdfind]->Fill(gptsum_pf/gn_pf,weight);
+	if(gn_pf_toward!=0)h_ptavepf_toward[2*pdfind]->Fill(gptsum_pf_toward/gn_pf_toward,weight);
+	if(gn_pf_transverse!=0)h_ptavepf_transverse[2*pdfind]->Fill(gptsum_pf_transverse/gn_pf_transverse,weight);
+	if(gn_pf_away!=0)h_ptavepf_away[2*pdfind]->Fill(gptsum_pf_away/gn_pf_away,weight);
+
+
+
+
+	if(gn_pf!=0){
+	  for(int dphiloop=0;dphiloop<20;dphiloop++){
+	    if(gn_pf_dphi[dphiloop]==0)continue;
+	    h_dphi_npf[2*pdfind]->Fill(dphiloop*9,gn_pf_dphi[dphiloop],weight);
+	    h_dphi_ptsumpf[2*pdfind]->Fill(dphiloop*9,gptsum_pf_dphi[dphiloop],weight);
+	    h_dphi_ptaveragepf[2*pdfind]->Fill(dphiloop*9,gptsum_pf_dphi[dphiloop]/gn_pf_dphi[dphiloop],weight);
+	    h_profile_dphi_npf[2*pdfind]->Fill(dphiloop*9,gn_pf_dphi[dphiloop],weight);
+	    h_profile_dphi_ptsumpf[2*pdfind]->Fill(dphiloop*9,gptsum_pf_dphi[dphiloop],weight);
+	    h_profile_dphi_ptaveragepf[2*pdfind]->Fill(dphiloop*9,gptsum_pf_dphi[dphiloop]/gn_pf_dphi[dphiloop],weight);
+     
+          }
+        }
+      }
     }
 
 
@@ -1594,8 +1805,7 @@ void tt_uev_analyzer::Loop()
     // if(dottother &&st1mu==1 )continue;
     //cout<<"kkkkkkkkkkkkkkkkkkkkkkkkkk"<<endl;
    // cout<<st1mu<<endl;
-    double w=1;
-    if(mcWeights_->size()>0)w=mcWeights_->at(0);
+
     //cout<<"tttttttttttttttt"<<endl;
     if(!realdata && PU_npT>0){    
       //        wtot_write-=w;
@@ -2130,7 +2340,7 @@ void tt_uev_analyzer::Loop()
       }
 
       double mmin=9999;
-      unsigned int ljet_ind1=99, ljet_ind2=99, extra_jet_index=99,extra_jet_index_1530=99;
+      unsigned int ljet_ind1=99, ljet_ind2=99, extra_jet_index=99/*,extra_jet_index_1530=99*/;
       vector<unsigned int> a_min;
       for(unsigned int j_ind=0; j_ind<jet_vector.size();j_ind++){
 	if(j_ind==b_jet_index[0]|| j_ind==b_jet_index[1])continue;
@@ -2214,7 +2424,7 @@ void tt_uev_analyzer::Loop()
       }
 
 
-      if(extra_jet_index==99 &&jet_vector_1530.size()>0 )extra_jet_index_1530=0;
+//      if(extra_jet_index==99 &&jet_vector_1530.size()>0 )extra_jet_index_1530=0;
 
  
       int n_pf=0;
@@ -2328,7 +2538,7 @@ void tt_uev_analyzer::Loop()
       //cout<<n_pf<<"  "<<n_pf_dphi[0]<<"  "<<ptsum_pf_dphi[0]<<endl;
       TLorentzVector ttj_vector;
       if(extra_jet_index!=99)ttj_vector=top_vector +atop_vector+jet_vector[extra_jet_index];
-      if(extra_jet_index==99 &&extra_jet_index_1530!=99 )ttj_vector=top_vector +atop_vector+jet_vector_1530[extra_jet_index_1530];
+//      if(extra_jet_index==99 &&extra_jet_index_1530!=99 )ttj_vector=top_vector +atop_vector+jet_vector_1530[extra_jet_index_1530];
 
       //filling for pdf weights
 
@@ -2340,20 +2550,20 @@ void tt_uev_analyzer::Loop()
 
 	if(!dopdf&&pdfind!=0 &&puWeight.weight(int(PU_npT))!=0 )weight=puUp.weight(int(PU_npT))*w/puWeight.weight(int(PU_npT)); 
 
-	h_npf_inclusive[pdfind]->Fill(n_pf,weight);
-	h_npf_toward[pdfind]->Fill(n_pf_toward,weight);
-	h_npf_transverse[pdfind]->Fill(n_pf_transverse,weight);
-	h_npf_away[pdfind]->Fill(n_pf_away,weight);
+	h_npf_inclusive[2*pdfind +1]->Fill(n_pf,weight);
+	h_npf_toward[2*pdfind +1]->Fill(n_pf_toward,weight);
+	h_npf_transverse[2*pdfind +1]->Fill(n_pf_transverse,weight);
+	h_npf_away[2*pdfind +1]->Fill(n_pf_away,weight);
 
-	h_ptsumpf_inclusive[pdfind]->Fill(ptsum_pf,weight);
-	h_ptsumpf_toward[pdfind]->Fill(ptsum_pf_toward,weight);
-	h_ptsumpf_transverse[pdfind]->Fill(ptsum_pf_transverse,weight);
-	h_ptsumpf_away[pdfind]->Fill(ptsum_pf_away,weight);
+	h_ptsumpf_inclusive[2*pdfind +1]->Fill(ptsum_pf,weight);
+	h_ptsumpf_toward[2*pdfind +1]->Fill(ptsum_pf_toward,weight);
+	h_ptsumpf_transverse[2*pdfind +1]->Fill(ptsum_pf_transverse,weight);
+	h_ptsumpf_away[2*pdfind +1]->Fill(ptsum_pf_away,weight);
 
-	if(n_pf!=0)h_ptavepf_inclusive[pdfind]->Fill(ptsum_pf/n_pf,weight);
-	if(n_pf_toward!=0)h_ptavepf_toward[pdfind]->Fill(ptsum_pf_toward/n_pf_toward,weight);
-	if(n_pf_transverse!=0)h_ptavepf_transverse[pdfind]->Fill(ptsum_pf_transverse/n_pf_transverse,weight);
-	if(n_pf_away!=0)h_ptavepf_away[pdfind]->Fill(ptsum_pf_away/n_pf_away,weight);
+	if(n_pf!=0)h_ptavepf_inclusive[2*pdfind +1]->Fill(ptsum_pf/n_pf,weight);
+	if(n_pf_toward!=0)h_ptavepf_toward[2*pdfind +1]->Fill(ptsum_pf_toward/n_pf_toward,weight);
+	if(n_pf_transverse!=0)h_ptavepf_transverse[2*pdfind +1]->Fill(ptsum_pf_transverse/n_pf_transverse,weight);
+	if(n_pf_away!=0)h_ptavepf_away[2*pdfind +1]->Fill(ptsum_pf_away/n_pf_away,weight);
 
 
 
@@ -2361,354 +2571,354 @@ void tt_uev_analyzer::Loop()
 	if(n_pf!=0){
 	  for(int dphiloop=0;dphiloop<20;dphiloop++){
 	    if(n_pf_dphi[dphiloop]==0)continue;
-	    h_dphi_npf[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	    h_dphi_ptsumpf[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	    h_dphi_ptaveragepf[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
-	    h_profile_dphi_npf[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	    h_profile_dphi_ptsumpf[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	    h_profile_dphi_ptaveragepf[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	    h_dphi_npf[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	    h_dphi_ptsumpf[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	    h_dphi_ptaveragepf[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	    h_profile_dphi_npf[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	    h_profile_dphi_ptsumpf[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	    h_profile_dphi_ptaveragepf[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
 
 	    if(njet_15==4){
-	      h_dphi_npf_0j[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	      h_dphi_ptsumpf_0j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	      h_dphi_ptaveragepf_0j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_npf_0j[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_ptsumpf_0j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_ptaveragepf_0j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	      h_dphi_npf_0j[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	      h_dphi_ptsumpf_0j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	      h_dphi_ptaveragepf_0j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_npf_0j[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_ptsumpf_0j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_ptaveragepf_0j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
 	    }
 
 	    if(njet_15==5){
-	      h_dphi_npf_1j[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	      h_dphi_ptsumpf_1j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	      h_dphi_ptaveragepf_1j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_npf_1j[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_ptsumpf_1j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_ptaveragepf_1j[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	      h_dphi_npf_1j[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	      h_dphi_ptsumpf_1j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	      h_dphi_ptaveragepf_1j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_npf_1j[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_ptsumpf_1j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_ptaveragepf_1j[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
 	    }
 
 	    if(njet_15>=6){
-	      h_dphi_npf_2pj[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	      h_dphi_ptsumpf_2pj[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	      h_dphi_ptaveragepf_2pj[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_npf_2pj[pdfind]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_ptsumpf_2pj[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
-	      h_profile_dphi_ptaveragepf_2pj[pdfind]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	      h_dphi_npf_2pj[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	      h_dphi_ptsumpf_2pj[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	      h_dphi_ptaveragepf_2pj[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_npf_2pj[2*pdfind +1]->Fill(dphiloop*9,n_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_ptsumpf_2pj[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop],weight);
+	      h_profile_dphi_ptaveragepf_2pj[2*pdfind +1]->Fill(dphiloop*9,ptsum_pf_dphi[dphiloop]/n_pf_dphi[dphiloop],weight);
 	    }
 	  }
 
-	  h_nvtx_npf[pdfind]->Fill(EvtInfo_NumVtx,weight);
-	  h_profile_nvtx_npf[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
-	  h_profile_nvtx_sumpt[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
-          h_profile_nvtx_njet30[pdfind]->Fill(EvtInfo_NumVtx,jet_vector.size()-4,weight);
-          h_profile_nvtx_njet15[pdfind]->Fill(EvtInfo_NumVtx,njet_15-4,weight);
+	  h_nvtx_npf[2*pdfind +1]->Fill(EvtInfo_NumVtx,weight);
+	  h_profile_nvtx_npf[2*pdfind +1]->Fill(EvtInfo_NumVtx,n_pf,weight);
+	  h_profile_nvtx_sumpt[2*pdfind +1]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
+          h_profile_nvtx_njet30[2*pdfind +1]->Fill(EvtInfo_NumVtx,jet_vector.size()-4,weight);
+          h_profile_nvtx_njet15[2*pdfind +1]->Fill(EvtInfo_NumVtx,njet_15-4,weight);
           
            
 	  if(njet_15==4){
-	    h_nvtx_npf_0j[pdfind]->Fill(EvtInfo_NumVtx,weight);
-	    h_profile_nvtx_npf_0j[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
-	    h_profile_nvtx_sumpt_0j[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
+	    h_nvtx_npf_0j[2*pdfind +1]->Fill(EvtInfo_NumVtx,weight);
+	    h_profile_nvtx_npf_0j[2*pdfind +1]->Fill(EvtInfo_NumVtx,n_pf,weight);
+	    h_profile_nvtx_sumpt_0j[2*pdfind +1]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
 	  }
 	  if(njet_15==5){
-	    h_nvtx_npf_1j[pdfind]->Fill(EvtInfo_NumVtx,weight);
-	    h_profile_nvtx_npf_1j[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
-	    h_profile_nvtx_sumpt_1j[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
+	    h_nvtx_npf_1j[2*pdfind +1]->Fill(EvtInfo_NumVtx,weight);
+	    h_profile_nvtx_npf_1j[2*pdfind +1]->Fill(EvtInfo_NumVtx,n_pf,weight);
+	    h_profile_nvtx_sumpt_1j[2*pdfind +1]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
 	  }
 
 	  if(njet_15>=6){
-	    h_nvtx_npf_2pj[pdfind]->Fill(EvtInfo_NumVtx,weight);
-	    h_profile_nvtx_npf_2pj[pdfind]->Fill(EvtInfo_NumVtx,n_pf,weight);
-	    h_profile_nvtx_sumpt_2pj[pdfind]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
+	    h_nvtx_npf_2pj[2*pdfind +1]->Fill(EvtInfo_NumVtx,weight);
+	    h_profile_nvtx_npf_2pj[2*pdfind +1]->Fill(EvtInfo_NumVtx,n_pf,weight);
+	    h_profile_nvtx_sumpt_2pj[2*pdfind +1]->Fill(EvtInfo_NumVtx,ptsum_pf,weight);
 
 	  }
 
 
-	  h_profile_ptttbar_npf[pdfind]->Fill(ttbar.Pt(),n_pf,weight);
-	  h_profile_ptttbar_sumpt[pdfind]->Fill(ttbar.Pt(),ptsum_pf,weight);
-	  h_profile_ptttbar_avept[pdfind]->Fill(ttbar.Pt(),ptsum_pf/n_pf,weight);
-          h_profile_ptttbar_njet15[pdfind]->Fill(ttbar.Pt(),njet_15-4,weight);
-          h_profile_ptttbar_njet30[pdfind]->Fill(ttbar.Pt(),jet_vector.size()-4,weight);
+	  h_profile_ptttbar_npf[2*pdfind +1]->Fill(ttbar.Pt(),n_pf,weight);
+	  h_profile_ptttbar_sumpt[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf,weight);
+	  h_profile_ptttbar_avept[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf/n_pf,weight);
+          h_profile_ptttbar_njet15[2*pdfind +1]->Fill(ttbar.Pt(),njet_15-4,weight);
+          h_profile_ptttbar_njet30[2*pdfind +1]->Fill(ttbar.Pt(),jet_vector.size()-4,weight);
 
-	  if(n_pf_away!=0)h_profile_ptttbar_npf_away[pdfind]->Fill(ttbar.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptttbar_sumpt_away[pdfind]->Fill(ttbar.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptttbar_avept_away[pdfind]->Fill(ttbar.Pt(),ptsum_pf_away/n_pf_away,weight);
-          if(n_pf_away!=0)h_profile_ptttbar_njet15_away[pdfind]->Fill(ttbar.Pt(),njet_away15,weight);
-          if(n_pf_away!=0)h_profile_ptttbar_njet30_away[pdfind]->Fill(ttbar.Pt(),njet_away,weight);
+	  if(n_pf_away!=0)h_profile_ptttbar_npf_away[2*pdfind +1]->Fill(ttbar.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptttbar_sumpt_away[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptttbar_avept_away[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf_away/n_pf_away,weight);
+          if(n_pf_away!=0)h_profile_ptttbar_njet15_away[2*pdfind +1]->Fill(ttbar.Pt(),njet_away15,weight);
+          if(n_pf_away!=0)h_profile_ptttbar_njet30_away[2*pdfind +1]->Fill(ttbar.Pt(),njet_away,weight);
 
-	  if(n_pf_transverse!=0)h_profile_ptttbar_npf_transverse[pdfind]->Fill(ttbar.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptttbar_sumpt_transverse[pdfind]->Fill(ttbar.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptttbar_avept_transverse[pdfind]->Fill(ttbar.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-          if(n_pf_transverse!=0)h_profile_ptttbar_njet15_transverse[pdfind]->Fill(ttbar.Pt(),njet_transverse15,weight);
-          if(n_pf_transverse!=0)h_profile_ptttbar_njet30_transverse[pdfind]->Fill(ttbar.Pt(),njet_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptttbar_npf_transverse[2*pdfind +1]->Fill(ttbar.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptttbar_sumpt_transverse[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptttbar_avept_transverse[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+          if(n_pf_transverse!=0)h_profile_ptttbar_njet15_transverse[2*pdfind +1]->Fill(ttbar.Pt(),njet_transverse15,weight);
+          if(n_pf_transverse!=0)h_profile_ptttbar_njet30_transverse[2*pdfind +1]->Fill(ttbar.Pt(),njet_transverse,weight);
 
-	  if(n_pf_toward!=0)h_profile_ptttbar_npf_toward[pdfind]->Fill(ttbar.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptttbar_sumpt_toward[pdfind]->Fill(ttbar.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptttbar_avept_toward[pdfind]->Fill(ttbar.Pt(),ptsum_pf_toward/n_pf_toward,weight);
-          if(n_pf_toward!=0)h_profile_ptttbar_njet15_toward[pdfind]->Fill(ttbar.Pt(),njet_toward15,weight);
-          if(n_pf_toward!=0)h_profile_ptttbar_njet30_toward[pdfind]->Fill(ttbar.Pt(),njet_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptttbar_npf_toward[2*pdfind +1]->Fill(ttbar.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptttbar_sumpt_toward[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptttbar_avept_toward[2*pdfind +1]->Fill(ttbar.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+          if(n_pf_toward!=0)h_profile_ptttbar_njet15_toward[2*pdfind +1]->Fill(ttbar.Pt(),njet_toward15,weight);
+          if(n_pf_toward!=0)h_profile_ptttbar_njet30_toward[2*pdfind +1]->Fill(ttbar.Pt(),njet_toward,weight);
 
-	  h_profile_mttbar_npf[pdfind]->Fill(ttbar.M(),n_pf,weight);
-	  h_profile_mttbar_sumpt[pdfind]->Fill(ttbar.M(),ptsum_pf,weight);
-	  h_profile_mttbar_avept[pdfind]->Fill(ttbar.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_mttbar_npf_away[pdfind]->Fill(ttbar.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mttbar_sumpt_away[pdfind]->Fill(ttbar.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mttbar_avept_away[pdfind]->Fill(ttbar.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_mttbar_npf_transverse[pdfind]->Fill(ttbar.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mttbar_sumpt_transverse[pdfind]->Fill(ttbar.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mttbar_avept_transverse[pdfind]->Fill(ttbar.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_mttbar_npf_toward[pdfind]->Fill(ttbar.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mttbar_sumpt_toward[pdfind]->Fill(ttbar.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mttbar_avept_toward[pdfind]->Fill(ttbar.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_mttbar_npf[2*pdfind +1]->Fill(ttbar.M(),n_pf,weight);
+	  h_profile_mttbar_sumpt[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf,weight);
+	  h_profile_mttbar_avept[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_mttbar_npf_away[2*pdfind +1]->Fill(ttbar.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mttbar_sumpt_away[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mttbar_avept_away[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_mttbar_npf_transverse[2*pdfind +1]->Fill(ttbar.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mttbar_sumpt_transverse[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mttbar_avept_transverse[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_mttbar_npf_toward[2*pdfind +1]->Fill(ttbar.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mttbar_sumpt_toward[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mttbar_avept_toward[2*pdfind +1]->Fill(ttbar.M(),ptsum_pf_toward/n_pf_toward,weight);
 
  
 
 
-	  h_profile_ytt_npf[pdfind]->Fill(fabs(ttbar.Rapidity()),n_pf,weight);
-	  h_profile_ytt_sumpt[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf,weight);
-	  h_profile_ytt_avept[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ytt_npf_away[pdfind]->Fill(fabs(ttbar.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ytt_sumpt_away[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ytt_avept_away[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ytt_npf_transverse[pdfind]->Fill(fabs(ttbar.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ytt_sumpt_transverse[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ytt_avept_transverse[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ytt_npf_toward[pdfind]->Fill(fabs(ttbar.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ytt_sumpt_toward[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ytt_avept_toward[pdfind]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ytt_npf[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),n_pf,weight);
+	  h_profile_ytt_sumpt[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf,weight);
+	  h_profile_ytt_avept[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ytt_npf_away[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ytt_sumpt_away[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ytt_avept_away[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ytt_npf_transverse[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ytt_sumpt_transverse[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ytt_avept_transverse[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ytt_npf_toward[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ytt_sumpt_toward[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ytt_avept_toward[2*pdfind +1]->Fill(fabs(ttbar.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_pttop_npf[pdfind]->Fill(top_vector.Pt(),n_pf,weight);
-	  h_profile_pttop_sumpt[pdfind]->Fill(top_vector.Pt(),ptsum_pf,weight);
-	  h_profile_pttop_avept[pdfind]->Fill(top_vector.Pt(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_pttop_npf_away[pdfind]->Fill(top_vector.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_pttop_sumpt_away[pdfind]->Fill(top_vector.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_pttop_avept_away[pdfind]->Fill(top_vector.Pt(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_pttop_npf_transverse[pdfind]->Fill(top_vector.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_pttop_sumpt_transverse[pdfind]->Fill(top_vector.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_pttop_avept_transverse[pdfind]->Fill(top_vector.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_pttop_npf_toward[pdfind]->Fill(top_vector.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_pttop_sumpt_toward[pdfind]->Fill(top_vector.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_pttop_avept_toward[pdfind]->Fill(top_vector.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_pttop_npf[2*pdfind +1]->Fill(top_vector.Pt(),n_pf,weight);
+	  h_profile_pttop_sumpt[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf,weight);
+	  h_profile_pttop_avept[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_pttop_npf_away[2*pdfind +1]->Fill(top_vector.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_pttop_sumpt_away[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_pttop_avept_away[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_pttop_npf_transverse[2*pdfind +1]->Fill(top_vector.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_pttop_sumpt_transverse[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_pttop_avept_transverse[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_pttop_npf_toward[2*pdfind +1]->Fill(top_vector.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_pttop_sumpt_toward[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_pttop_avept_toward[2*pdfind +1]->Fill(top_vector.Pt(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_ptatop_npf[pdfind]->Fill(atop_vector.Pt(),n_pf,weight);
-	  h_profile_ptatop_sumpt[pdfind]->Fill(atop_vector.Pt(),ptsum_pf,weight);
-	  h_profile_ptatop_avept[pdfind]->Fill(atop_vector.Pt(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ptatop_npf_away[pdfind]->Fill(atop_vector.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptatop_sumpt_away[pdfind]->Fill(atop_vector.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptatop_avept_away[pdfind]->Fill(atop_vector.Pt(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ptatop_npf_transverse[pdfind]->Fill(atop_vector.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptatop_sumpt_transverse[pdfind]->Fill(atop_vector.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptatop_avept_transverse[pdfind]->Fill(atop_vector.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ptatop_npf_toward[pdfind]->Fill(atop_vector.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptatop_sumpt_toward[pdfind]->Fill(atop_vector.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptatop_avept_toward[pdfind]->Fill(atop_vector.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ptatop_npf[2*pdfind +1]->Fill(atop_vector.Pt(),n_pf,weight);
+	  h_profile_ptatop_sumpt[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf,weight);
+	  h_profile_ptatop_avept[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ptatop_npf_away[2*pdfind +1]->Fill(atop_vector.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptatop_sumpt_away[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptatop_avept_away[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ptatop_npf_transverse[2*pdfind +1]->Fill(atop_vector.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptatop_sumpt_transverse[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptatop_avept_transverse[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ptatop_npf_toward[2*pdfind +1]->Fill(atop_vector.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptatop_sumpt_toward[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptatop_avept_toward[2*pdfind +1]->Fill(atop_vector.Pt(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_mtop_npf[pdfind]->Fill(top_vector.M(),n_pf,weight);
-	  h_profile_mtop_sumpt[pdfind]->Fill(top_vector.M(),ptsum_pf,weight);
-	  h_profile_mtop_avept[pdfind]->Fill(top_vector.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_mtop_npf_away[pdfind]->Fill(top_vector.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mtop_sumpt_away[pdfind]->Fill(top_vector.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mtop_avept_away[pdfind]->Fill(top_vector.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_mtop_npf_transverse[pdfind]->Fill(top_vector.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mtop_sumpt_transverse[pdfind]->Fill(top_vector.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mtop_avept_transverse[pdfind]->Fill(top_vector.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_mtop_npf_toward[pdfind]->Fill(top_vector.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mtop_sumpt_toward[pdfind]->Fill(top_vector.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mtop_avept_toward[pdfind]->Fill(top_vector.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_mtop_npf[2*pdfind +1]->Fill(top_vector.M(),n_pf,weight);
+	  h_profile_mtop_sumpt[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf,weight);
+	  h_profile_mtop_avept[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_mtop_npf_away[2*pdfind +1]->Fill(top_vector.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mtop_sumpt_away[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mtop_avept_away[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_mtop_npf_transverse[2*pdfind +1]->Fill(top_vector.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mtop_sumpt_transverse[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mtop_avept_transverse[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_mtop_npf_toward[2*pdfind +1]->Fill(top_vector.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mtop_sumpt_toward[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mtop_avept_toward[2*pdfind +1]->Fill(top_vector.M(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_matop_npf[pdfind]->Fill(atop_vector.M(),n_pf,weight);
-	  h_profile_matop_sumpt[pdfind]->Fill(atop_vector.M(),ptsum_pf,weight);
-	  h_profile_matop_avept[pdfind]->Fill(atop_vector.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_matop_npf_away[pdfind]->Fill(atop_vector.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_matop_sumpt_away[pdfind]->Fill(atop_vector.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_matop_avept_away[pdfind]->Fill(atop_vector.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_matop_npf_transverse[pdfind]->Fill(atop_vector.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_matop_sumpt_transverse[pdfind]->Fill(atop_vector.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_matop_avept_transverse[pdfind]->Fill(atop_vector.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_matop_npf_toward[pdfind]->Fill(atop_vector.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_matop_sumpt_toward[pdfind]->Fill(atop_vector.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_matop_avept_toward[pdfind]->Fill(atop_vector.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_matop_npf[2*pdfind +1]->Fill(atop_vector.M(),n_pf,weight);
+	  h_profile_matop_sumpt[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf,weight);
+	  h_profile_matop_avept[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_matop_npf_away[2*pdfind +1]->Fill(atop_vector.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_matop_sumpt_away[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_matop_avept_away[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_matop_npf_transverse[2*pdfind +1]->Fill(atop_vector.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_matop_sumpt_transverse[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_matop_avept_transverse[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_matop_npf_toward[2*pdfind +1]->Fill(atop_vector.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_matop_sumpt_toward[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_matop_avept_toward[2*pdfind +1]->Fill(atop_vector.M(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_ytop_npf[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf,weight);
-	  h_profile_ytop_sumpt[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf,weight);
-	  h_profile_ytop_avept[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ytop_npf_away[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ytop_sumpt_away[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ytop_avept_away[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ytop_npf_transverse[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ytop_sumpt_transverse[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ytop_avept_transverse[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ytop_npf_toward[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ytop_sumpt_toward[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ytop_avept_toward[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ytop_npf[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf,weight);
+	  h_profile_ytop_sumpt[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf,weight);
+	  h_profile_ytop_avept[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ytop_npf_away[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ytop_sumpt_away[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ytop_avept_away[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ytop_npf_transverse[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ytop_sumpt_transverse[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ytop_avept_transverse[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ytop_npf_toward[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ytop_sumpt_toward[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ytop_avept_toward[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_yatop_npf[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf,weight);
-	  h_profile_yatop_sumpt[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf,weight);
-	  h_profile_yatop_avept[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_yatop_npf_away[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_yatop_sumpt_away[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_yatop_avept_away[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_yatop_npf_transverse[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_yatop_sumpt_transverse[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_yatop_avept_transverse[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_yatop_npf_toward[pdfind]->Fill(fabs(top_vector.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_yatop_sumpt_toward[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_yatop_avept_toward[pdfind]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_yatop_npf[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf,weight);
+	  h_profile_yatop_sumpt[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf,weight);
+	  h_profile_yatop_avept[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_yatop_npf_away[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_yatop_sumpt_away[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_yatop_avept_away[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_yatop_npf_transverse[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_yatop_sumpt_transverse[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_yatop_avept_transverse[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_yatop_npf_toward[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_yatop_sumpt_toward[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_yatop_avept_toward[2*pdfind +1]->Fill(fabs(top_vector.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_ptthad_npf[pdfind]->Fill(thad.Pt(),n_pf,weight);
-	  h_profile_ptthad_sumpt[pdfind]->Fill(thad.Pt(),ptsum_pf,weight);
-	  h_profile_ptthad_avept[pdfind]->Fill(thad.Pt(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ptthad_npf_away[pdfind]->Fill(thad.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptthad_sumpt_away[pdfind]->Fill(thad.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptthad_avept_away[pdfind]->Fill(thad.Pt(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ptthad_npf_transverse[pdfind]->Fill(thad.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptthad_sumpt_transverse[pdfind]->Fill(thad.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptthad_avept_transverse[pdfind]->Fill(thad.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ptthad_npf_toward[pdfind]->Fill(thad.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptthad_sumpt_toward[pdfind]->Fill(thad.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptthad_avept_toward[pdfind]->Fill(thad.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ptthad_npf[2*pdfind +1]->Fill(thad.Pt(),n_pf,weight);
+	  h_profile_ptthad_sumpt[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf,weight);
+	  h_profile_ptthad_avept[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ptthad_npf_away[2*pdfind +1]->Fill(thad.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptthad_sumpt_away[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptthad_avept_away[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ptthad_npf_transverse[2*pdfind +1]->Fill(thad.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptthad_sumpt_transverse[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptthad_avept_transverse[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ptthad_npf_toward[2*pdfind +1]->Fill(thad.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptthad_sumpt_toward[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptthad_avept_toward[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_pttlep_npf[pdfind]->Fill(tlep.Pt(),n_pf,weight);
-	  h_profile_pttlep_sumpt[pdfind]->Fill(tlep.Pt(),ptsum_pf,weight);
-	  h_profile_pttlep_avept[pdfind]->Fill(tlep.Pt(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_pttlep_npf_away[pdfind]->Fill(tlep.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_pttlep_sumpt_away[pdfind]->Fill(tlep.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_pttlep_avept_away[pdfind]->Fill(tlep.Pt(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_pttlep_npf_transverse[pdfind]->Fill(tlep.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_pttlep_sumpt_transverse[pdfind]->Fill(tlep.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_pttlep_avept_transverse[pdfind]->Fill(tlep.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_pttlep_npf_toward[pdfind]->Fill(tlep.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_pttlep_sumpt_toward[pdfind]->Fill(tlep.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_pttlep_avept_toward[pdfind]->Fill(tlep.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_pttlep_npf[2*pdfind +1]->Fill(tlep.Pt(),n_pf,weight);
+	  h_profile_pttlep_sumpt[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf,weight);
+	  h_profile_pttlep_avept[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_pttlep_npf_away[2*pdfind +1]->Fill(tlep.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_pttlep_sumpt_away[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_pttlep_avept_away[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_pttlep_npf_transverse[2*pdfind +1]->Fill(tlep.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_pttlep_sumpt_transverse[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_pttlep_avept_transverse[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_pttlep_npf_toward[2*pdfind +1]->Fill(tlep.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_pttlep_sumpt_toward[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_pttlep_avept_toward[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_mthad_npf[pdfind]->Fill(thad.M(),n_pf,weight);
-	  h_profile_mthad_sumpt[pdfind]->Fill(thad.M(),ptsum_pf,weight);
-	  h_profile_mthad_avept[pdfind]->Fill(thad.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_mthad_npf_away[pdfind]->Fill(thad.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mthad_sumpt_away[pdfind]->Fill(thad.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mthad_avept_away[pdfind]->Fill(thad.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_mthad_npf_transverse[pdfind]->Fill(thad.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mthad_sumpt_transverse[pdfind]->Fill(thad.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mthad_avept_transverse[pdfind]->Fill(thad.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_mthad_npf_toward[pdfind]->Fill(thad.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mthad_sumpt_toward[pdfind]->Fill(thad.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mthad_avept_toward[pdfind]->Fill(thad.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_mthad_npf[2*pdfind +1]->Fill(thad.M(),n_pf,weight);
+	  h_profile_mthad_sumpt[2*pdfind +1]->Fill(thad.M(),ptsum_pf,weight);
+	  h_profile_mthad_avept[2*pdfind +1]->Fill(thad.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_mthad_npf_away[2*pdfind +1]->Fill(thad.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mthad_sumpt_away[2*pdfind +1]->Fill(thad.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mthad_avept_away[2*pdfind +1]->Fill(thad.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_mthad_npf_transverse[2*pdfind +1]->Fill(thad.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mthad_sumpt_transverse[2*pdfind +1]->Fill(thad.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mthad_avept_transverse[2*pdfind +1]->Fill(thad.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_mthad_npf_toward[2*pdfind +1]->Fill(thad.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mthad_sumpt_toward[2*pdfind +1]->Fill(thad.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mthad_avept_toward[2*pdfind +1]->Fill(thad.M(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_mtlep_npf[pdfind]->Fill(tlep.M(),n_pf,weight);
-	  h_profile_mtlep_sumpt[pdfind]->Fill(tlep.M(),ptsum_pf,weight);
-	  h_profile_mtlep_avept[pdfind]->Fill(tlep.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_mtlep_npf_away[pdfind]->Fill(tlep.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mtlep_sumpt_away[pdfind]->Fill(tlep.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mtlep_avept_away[pdfind]->Fill(tlep.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_mtlep_npf_transverse[pdfind]->Fill(tlep.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mtlep_sumpt_transverse[pdfind]->Fill(tlep.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mtlep_avept_transverse[pdfind]->Fill(tlep.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_mtlep_npf_toward[pdfind]->Fill(tlep.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mtlep_sumpt_toward[pdfind]->Fill(tlep.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mtlep_avept_toward[pdfind]->Fill(tlep.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_mtlep_npf[2*pdfind +1]->Fill(tlep.M(),n_pf,weight);
+	  h_profile_mtlep_sumpt[2*pdfind +1]->Fill(tlep.M(),ptsum_pf,weight);
+	  h_profile_mtlep_avept[2*pdfind +1]->Fill(tlep.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_mtlep_npf_away[2*pdfind +1]->Fill(tlep.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mtlep_sumpt_away[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mtlep_avept_away[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_mtlep_npf_transverse[2*pdfind +1]->Fill(tlep.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mtlep_sumpt_transverse[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mtlep_avept_transverse[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_mtlep_npf_toward[2*pdfind +1]->Fill(tlep.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mtlep_sumpt_toward[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mtlep_avept_toward[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_ythad_npf[pdfind]->Fill(fabs(thad.Rapidity()),n_pf,weight);
-	  h_profile_ythad_sumpt[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
-	  h_profile_ythad_avept[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ythad_npf_away[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ythad_sumpt_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ythad_avept_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ythad_npf_transverse[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ythad_sumpt_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ythad_avept_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ythad_npf_toward[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ythad_sumpt_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ythad_avept_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ythad_npf[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf,weight);
+	  h_profile_ythad_sumpt[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
+	  h_profile_ythad_avept[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ythad_npf_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ythad_sumpt_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ythad_avept_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ythad_npf_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ythad_sumpt_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ythad_avept_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ythad_npf_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ythad_sumpt_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ythad_avept_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_ytlep_npf[pdfind]->Fill(fabs(thad.Rapidity()),n_pf,weight);
-	  h_profile_ytlep_sumpt[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
-	  h_profile_ytlep_avept[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ytlep_npf_away[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ytlep_sumpt_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ytlep_avept_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ytlep_npf_transverse[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ytlep_sumpt_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ytlep_avept_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ytlep_npf_toward[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ytlep_sumpt_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ytlep_avept_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ytlep_npf[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf,weight);
+	  h_profile_ytlep_sumpt[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
+	  h_profile_ytlep_avept[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ytlep_npf_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ytlep_sumpt_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ytlep_avept_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ytlep_npf_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ytlep_sumpt_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ytlep_avept_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ytlep_npf_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ytlep_sumpt_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ytlep_avept_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
 
-	  h_profile_ptt_npf[pdfind]->Fill(thad.Pt(),n_pf,weight);
-	  h_profile_ptt_sumpt[pdfind]->Fill(thad.Pt(),ptsum_pf,weight);
-	  h_profile_ptt_avept[pdfind]->Fill(thad.Pt(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ptt_npf_away[pdfind]->Fill(thad.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptt_sumpt_away[pdfind]->Fill(thad.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptt_avept_away[pdfind]->Fill(thad.Pt(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ptt_npf_transverse[pdfind]->Fill(thad.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptt_sumpt_transverse[pdfind]->Fill(thad.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptt_avept_transverse[pdfind]->Fill(thad.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ptt_npf_toward[pdfind]->Fill(thad.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptt_sumpt_toward[pdfind]->Fill(thad.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptt_avept_toward[pdfind]->Fill(thad.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ptt_npf[2*pdfind +1]->Fill(thad.Pt(),n_pf,weight);
+	  h_profile_ptt_sumpt[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf,weight);
+	  h_profile_ptt_avept[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ptt_npf_away[2*pdfind +1]->Fill(thad.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptt_sumpt_away[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptt_avept_away[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ptt_npf_transverse[2*pdfind +1]->Fill(thad.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptt_sumpt_transverse[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptt_avept_transverse[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ptt_npf_toward[2*pdfind +1]->Fill(thad.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptt_sumpt_toward[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptt_avept_toward[2*pdfind +1]->Fill(thad.Pt(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_ptt_npf[pdfind]->Fill(tlep.Pt(),n_pf,weight);
-	  h_profile_ptt_sumpt[pdfind]->Fill(tlep.Pt(),ptsum_pf,weight);
-	  h_profile_ptt_avept[pdfind]->Fill(tlep.Pt(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_ptt_npf_away[pdfind]->Fill(tlep.Pt(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptt_sumpt_away[pdfind]->Fill(tlep.Pt(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_ptt_avept_away[pdfind]->Fill(tlep.Pt(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_ptt_npf_transverse[pdfind]->Fill(tlep.Pt(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptt_sumpt_transverse[pdfind]->Fill(tlep.Pt(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_ptt_avept_transverse[pdfind]->Fill(tlep.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_ptt_npf_toward[pdfind]->Fill(tlep.Pt(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptt_sumpt_toward[pdfind]->Fill(tlep.Pt(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_ptt_avept_toward[pdfind]->Fill(tlep.Pt(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_ptt_npf[2*pdfind +1]->Fill(tlep.Pt(),n_pf,weight);
+	  h_profile_ptt_sumpt[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf,weight);
+	  h_profile_ptt_avept[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_ptt_npf_away[2*pdfind +1]->Fill(tlep.Pt(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptt_sumpt_away[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_ptt_avept_away[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_ptt_npf_transverse[2*pdfind +1]->Fill(tlep.Pt(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptt_sumpt_transverse[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_ptt_avept_transverse[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_ptt_npf_toward[2*pdfind +1]->Fill(tlep.Pt(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptt_sumpt_toward[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_ptt_avept_toward[2*pdfind +1]->Fill(tlep.Pt(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_mt_npf[pdfind]->Fill(thad.M(),n_pf,weight);
-	  h_profile_mt_sumpt[pdfind]->Fill(thad.M(),ptsum_pf,weight);
-	  h_profile_mt_avept[pdfind]->Fill(thad.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_mt_npf_away[pdfind]->Fill(thad.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mt_sumpt_away[pdfind]->Fill(thad.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mt_avept_away[pdfind]->Fill(thad.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_mt_npf_transverse[pdfind]->Fill(thad.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mt_sumpt_transverse[pdfind]->Fill(thad.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mt_avept_transverse[pdfind]->Fill(thad.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_mt_npf_toward[pdfind]->Fill(thad.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mt_sumpt_toward[pdfind]->Fill(thad.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mt_avept_toward[pdfind]->Fill(thad.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_mt_npf[2*pdfind +1]->Fill(thad.M(),n_pf,weight);
+	  h_profile_mt_sumpt[2*pdfind +1]->Fill(thad.M(),ptsum_pf,weight);
+	  h_profile_mt_avept[2*pdfind +1]->Fill(thad.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_mt_npf_away[2*pdfind +1]->Fill(thad.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mt_sumpt_away[2*pdfind +1]->Fill(thad.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mt_avept_away[2*pdfind +1]->Fill(thad.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_mt_npf_transverse[2*pdfind +1]->Fill(thad.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mt_sumpt_transverse[2*pdfind +1]->Fill(thad.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mt_avept_transverse[2*pdfind +1]->Fill(thad.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_mt_npf_toward[2*pdfind +1]->Fill(thad.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mt_sumpt_toward[2*pdfind +1]->Fill(thad.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mt_avept_toward[2*pdfind +1]->Fill(thad.M(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_mt_npf[pdfind]->Fill(tlep.M(),n_pf,weight);
-	  h_profile_mt_sumpt[pdfind]->Fill(tlep.M(),ptsum_pf,weight);
-	  h_profile_mt_avept[pdfind]->Fill(tlep.M(),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_mt_npf_away[pdfind]->Fill(tlep.M(),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mt_sumpt_away[pdfind]->Fill(tlep.M(),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_mt_avept_away[pdfind]->Fill(tlep.M(),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_mt_npf_transverse[pdfind]->Fill(tlep.M(),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mt_sumpt_transverse[pdfind]->Fill(tlep.M(),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_mt_avept_transverse[pdfind]->Fill(tlep.M(),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_mt_npf_toward[pdfind]->Fill(tlep.M(),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mt_sumpt_toward[pdfind]->Fill(tlep.M(),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_mt_avept_toward[pdfind]->Fill(tlep.M(),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_mt_npf[2*pdfind +1]->Fill(tlep.M(),n_pf,weight);
+	  h_profile_mt_sumpt[2*pdfind +1]->Fill(tlep.M(),ptsum_pf,weight);
+	  h_profile_mt_avept[2*pdfind +1]->Fill(tlep.M(),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_mt_npf_away[2*pdfind +1]->Fill(tlep.M(),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mt_sumpt_away[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_mt_avept_away[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_mt_npf_transverse[2*pdfind +1]->Fill(tlep.M(),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mt_sumpt_transverse[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_mt_avept_transverse[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_mt_npf_toward[2*pdfind +1]->Fill(tlep.M(),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mt_sumpt_toward[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_mt_avept_toward[2*pdfind +1]->Fill(tlep.M(),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_yt_npf[pdfind]->Fill(fabs(thad.Rapidity()),n_pf,weight);
-	  h_profile_yt_sumpt[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
-	  h_profile_yt_avept[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_yt_npf_away[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_yt_sumpt_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_yt_avept_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_yt_npf_transverse[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_yt_sumpt_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_yt_avept_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_yt_npf_toward[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_yt_sumpt_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_yt_avept_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_yt_npf[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf,weight);
+	  h_profile_yt_sumpt[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
+	  h_profile_yt_avept[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_yt_npf_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_yt_sumpt_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_yt_avept_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_yt_npf_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_yt_sumpt_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_yt_avept_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_yt_npf_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_yt_sumpt_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_yt_avept_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
-	  h_profile_yt_npf[pdfind]->Fill(fabs(thad.Rapidity()),n_pf,weight);
-	  h_profile_yt_sumpt[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
-	  h_profile_yt_avept[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
-	  if(n_pf_away!=0)h_profile_yt_npf_away[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_yt_sumpt_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
-	  if(n_pf_away!=0)h_profile_yt_avept_away[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	  if(n_pf_transverse!=0)h_profile_yt_npf_transverse[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_yt_sumpt_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
-	  if(n_pf_transverse!=0)h_profile_yt_avept_transverse[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	  if(n_pf_toward!=0)h_profile_yt_npf_toward[pdfind]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_yt_sumpt_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
-	  if(n_pf_toward!=0)h_profile_yt_avept_toward[pdfind]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
+	  h_profile_yt_npf[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf,weight);
+	  h_profile_yt_sumpt[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf,weight);
+	  h_profile_yt_avept[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf/n_pf,weight);
+	  if(n_pf_away!=0)h_profile_yt_npf_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_yt_sumpt_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away,weight);
+	  if(n_pf_away!=0)h_profile_yt_avept_away[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	  if(n_pf_transverse!=0)h_profile_yt_npf_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_yt_sumpt_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse,weight);
+	  if(n_pf_transverse!=0)h_profile_yt_avept_transverse[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	  if(n_pf_toward!=0)h_profile_yt_npf_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),n_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_yt_sumpt_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward,weight);
+	  if(n_pf_toward!=0)h_profile_yt_avept_toward[2*pdfind +1]->Fill(fabs(thad.Rapidity()),ptsum_pf_toward/n_pf_toward,weight);
 
 
 
@@ -2716,114 +2926,114 @@ void tt_uev_analyzer::Loop()
 
 
          
-	  if(extra_jet_index!=99 ||extra_jet_index_1530!=99 ){
-	    h_rec_ttjY[pdfind]->Fill(ttj_vector.Rapidity(),weight);
+	  if(extra_jet_index!=99/* ||extra_jet_index_1530!=99*/ ){
+	    h_rec_ttjY[2*pdfind +1]->Fill(ttj_vector.Rapidity(),weight);
 
-	    h_profile_yttj_npf[pdfind]->Fill(fabs(ttj_vector.Rapidity()),n_pf,weight);
-	    h_profile_yttj_sumpt[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf,weight);
-	    h_profile_yttj_avept[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf/n_pf,weight);
-	    if(n_pf_away!=0)h_profile_yttj_npf_away[pdfind]->Fill(fabs(ttj_vector.Rapidity()),n_pf_away,weight);
-	    if(n_pf_away!=0)h_profile_yttj_sumpt_away[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_away,weight);
-	    if(n_pf_away!=0)h_profile_yttj_avept_away[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_away/n_pf_away,weight);
-	    if(n_pf_transverse!=0)h_profile_yttj_npf_transverse[pdfind]->Fill(fabs(ttj_vector.Rapidity()),n_pf_transverse,weight);
-	    if(n_pf_transverse!=0)h_profile_yttj_sumpt_transverse[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_transverse,weight);
-	    if(n_pf_transverse!=0)h_profile_yttj_avept_transverse[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
-	    if(n_pf_toward!=0)h_profile_yttj_npf_toward[pdfind]->Fill(fabs(ttj_vector.Rapidity()),n_pf_toward,weight);
-	    if(n_pf_toward!=0)h_profile_yttj_sumpt_toward[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_toward,weight);
-	    if(n_pf_toward!=0)h_profile_yttj_avept_toward[pdfind]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_toward/n_pf_toward,weight); 
+	    h_profile_yttj_npf[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),n_pf,weight);
+	    h_profile_yttj_sumpt[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf,weight);
+	    h_profile_yttj_avept[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf/n_pf,weight);
+	    if(n_pf_away!=0)h_profile_yttj_npf_away[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),n_pf_away,weight);
+	    if(n_pf_away!=0)h_profile_yttj_sumpt_away[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_away,weight);
+	    if(n_pf_away!=0)h_profile_yttj_avept_away[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_away/n_pf_away,weight);
+	    if(n_pf_transverse!=0)h_profile_yttj_npf_transverse[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),n_pf_transverse,weight);
+	    if(n_pf_transverse!=0)h_profile_yttj_sumpt_transverse[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_transverse,weight);
+	    if(n_pf_transverse!=0)h_profile_yttj_avept_transverse[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_transverse/n_pf_transverse,weight);
+	    if(n_pf_toward!=0)h_profile_yttj_npf_toward[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),n_pf_toward,weight);
+	    if(n_pf_toward!=0)h_profile_yttj_sumpt_toward[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_toward,weight);
+	    if(n_pf_toward!=0)h_profile_yttj_avept_toward[2*pdfind +1]->Fill(fabs(ttj_vector.Rapidity()),ptsum_pf_toward/n_pf_toward,weight); 
 	  }
 
 	  //     }
 	  //   }
 
 	}
-	h_nvtx[pdfind]->Fill(EvtInfo_NumVtx,weight);
-	h_m_top[pdfind]->Fill(top_vector.M(),weight);
-	h_m_atop[pdfind]->Fill(atop_vector.M(),weight);
-	h_pt_top[pdfind]->Fill(top_vector.Pt(),weight);
-	h_pt_atop[pdfind]->Fill(atop_vector.Pt(),weight);
-	h_m_top_fixbin[pdfind]->Fill(top_vector.M(),weight);
-	h_m_atop_fixbin[pdfind]->Fill(atop_vector.M(),weight);
-	h_pt_top_fixbin[pdfind]->Fill(top_vector.Pt(),weight);
-	h_pt_atop_fixbin[pdfind]->Fill(atop_vector.Pt(),weight);
+	h_nvtx[2*pdfind +1]->Fill(EvtInfo_NumVtx,weight);
+	h_m_top[2*pdfind +1]->Fill(top_vector.M(),weight);
+	h_m_atop[2*pdfind +1]->Fill(atop_vector.M(),weight);
+	h_pt_top[2*pdfind +1]->Fill(top_vector.Pt(),weight);
+	h_pt_atop[2*pdfind +1]->Fill(atop_vector.Pt(),weight);
+	h_m_top_fixbin[2*pdfind +1]->Fill(top_vector.M(),weight);
+	h_m_atop_fixbin[2*pdfind +1]->Fill(atop_vector.M(),weight);
+	h_pt_top_fixbin[2*pdfind +1]->Fill(top_vector.Pt(),weight);
+	h_pt_atop_fixbin[2*pdfind +1]->Fill(atop_vector.Pt(),weight);
 
-	h_pt_ttbar_kinrec[pdfind]->Fill((tlep+thad).Pt(),weight);
-
-
-	h_MTW[pdfind]->Fill(MTW,weight);
-	h_mu_pt_meas[pdfind]->Fill(patMuonPt_->at(0),weight);
-	h_mu_eta_meas[pdfind]->Fill(patMuonEta_->at(0),weight);
-	h_mu_phi_meas[pdfind]->Fill(patMuonPhi_->at(0),weight);
-	h_mu_iso_meas[pdfind]->Fill(patMuonPfIsoDbeta_->at(0),weight);
-        h_m_thad[pdfind]->Fill(thad.M(),weight); 
-        h_m_tlep[pdfind]->Fill(tlep.M(),weight);   
-
-        h_pt_thad[pdfind]->Fill(thad.Pt(),weight); 
-        h_pt_tlep[pdfind]->Fill(tlep.Pt(),weight);   
-
-	h_m_thad_fixbin[pdfind]->Fill(thad.M(),weight); 
-        h_m_tlep_fixbin[pdfind]->Fill(tlep.M(),weight);   
-
-        h_pt_thad_fixbin[pdfind]->Fill(thad.Pt(),weight); 
-        h_pt_tlep_fixbin[pdfind]->Fill(tlep.Pt(),weight);   
-
-        h_y_thad[pdfind]->Fill(thad.Rapidity(),weight); 
-        h_y_tlep[pdfind]->Fill(tlep.Rapidity(),weight);   
+	h_pt_ttbar_kinrec[2*pdfind +1]->Fill((tlep+thad).Pt(),weight);
 
 
-        h_m_t[pdfind]->Fill(thad.M(),weight); 
-        h_m_t[pdfind]->Fill(tlep.M(),weight);   
+	h_MTW[2*pdfind +1]->Fill(MTW,weight);
+	h_mu_pt_meas[2*pdfind +1]->Fill(patMuonPt_->at(0),weight);
+	h_mu_eta_meas[2*pdfind +1]->Fill(patMuonEta_->at(0),weight);
+	h_mu_phi_meas[2*pdfind +1]->Fill(patMuonPhi_->at(0),weight);
+	h_mu_iso_meas[2*pdfind +1]->Fill(patMuonPfIsoDbeta_->at(0),weight);
+        h_m_thad[2*pdfind +1]->Fill(thad.M(),weight); 
+        h_m_tlep[2*pdfind +1]->Fill(tlep.M(),weight);   
 
-        h_pt_t[pdfind]->Fill(thad.Pt(),weight); 
-        h_pt_t[pdfind]->Fill(tlep.Pt(),weight);   
+        h_pt_thad[2*pdfind +1]->Fill(thad.Pt(),weight); 
+        h_pt_tlep[2*pdfind +1]->Fill(tlep.Pt(),weight);   
 
-        h_m_t_fixbin[pdfind]->Fill(thad.M(),weight); 
-        h_m_t_fixbin[pdfind]->Fill(tlep.M(),weight);   
+	h_m_thad_fixbin[2*pdfind +1]->Fill(thad.M(),weight); 
+        h_m_tlep_fixbin[2*pdfind +1]->Fill(tlep.M(),weight);   
 
-        h_pt_t_fixbin[pdfind]->Fill(thad.Pt(),weight); 
-        h_pt_t_fixbin[pdfind]->Fill(tlep.Pt(),weight);   
+        h_pt_thad_fixbin[2*pdfind +1]->Fill(thad.Pt(),weight); 
+        h_pt_tlep_fixbin[2*pdfind +1]->Fill(tlep.Pt(),weight);   
 
-        h_y_t[pdfind]->Fill(thad.Rapidity(),weight); 
-        h_y_t[pdfind]->Fill(tlep.Rapidity(),weight);   
+        h_y_thad[2*pdfind +1]->Fill(thad.Rapidity(),weight); 
+        h_y_tlep[2*pdfind +1]->Fill(tlep.Rapidity(),weight);   
+
+
+        h_m_t[2*pdfind +1]->Fill(thad.M(),weight); 
+        h_m_t[2*pdfind +1]->Fill(tlep.M(),weight);   
+
+        h_pt_t[2*pdfind +1]->Fill(thad.Pt(),weight); 
+        h_pt_t[2*pdfind +1]->Fill(tlep.Pt(),weight);   
+
+        h_m_t_fixbin[2*pdfind +1]->Fill(thad.M(),weight); 
+        h_m_t_fixbin[2*pdfind +1]->Fill(tlep.M(),weight);   
+
+        h_pt_t_fixbin[2*pdfind +1]->Fill(thad.Pt(),weight); 
+        h_pt_t_fixbin[2*pdfind +1]->Fill(tlep.Pt(),weight);   
+
+        h_y_t[2*pdfind +1]->Fill(thad.Rapidity(),weight); 
+        h_y_t[2*pdfind +1]->Fill(tlep.Rapidity(),weight);   
 
     
-        h_nu_pz[pdfind]->Fill(nu_vector.Pz(),weight);
-        h_nu_pt[pdfind]->Fill(nu_vector.Pt(),weight);
+        h_nu_pz[2*pdfind +1]->Fill(nu_vector.Pz(),weight);
+        h_nu_pt[2*pdfind +1]->Fill(nu_vector.Pt(),weight);
 
 
-	h_njet_bb[pdfind]->Fill(njet_bb,weight);
-	h_njet_15_ttbar[pdfind]->Fill(jet_vector_1530.size()+jet_vector.size()-4,weight);
-	if(njet_bb>=1)h_profile_deta_bb_njet_bb[pdfind]->Fill(deltaetabb,njet_bb,weight);
-	if((jet_vector_1530.size()+jet_vector.size())>=5)h_profile_deta_bb_njet_extra[pdfind]->Fill(deltaetabb,jet_vector_1530.size()+jet_vector.size()-4,weight);
-	h_ljet_pt[pdfind]->Fill(jet_vector[ljet_ind1].Pt(),weight);
-	h_ljet_eta[pdfind]->Fill(jet_vector[ljet_ind1].Eta(),weight);    
+	h_njet_bb[2*pdfind +1]->Fill(njet_bb,weight);
+	h_njet_15_ttbar[2*pdfind +1]->Fill(jet_vector_1530.size()+jet_vector.size()-4,weight);
+	if(njet_bb>=1)h_profile_deta_bb_njet_bb[2*pdfind +1]->Fill(deltaetabb,njet_bb,weight);
+	if((jet_vector_1530.size()+jet_vector.size())>=5)h_profile_deta_bb_njet_extra[2*pdfind +1]->Fill(deltaetabb,jet_vector_1530.size()+jet_vector.size()-4,weight);
+	h_ljet_pt[2*pdfind +1]->Fill(jet_vector[ljet_ind1].Pt(),weight);
+	h_ljet_eta[2*pdfind +1]->Fill(jet_vector[ljet_ind1].Eta(),weight);    
 
-	h_sljet_pt[pdfind]->Fill(jet_vector[ljet_ind2].Pt(),weight);
-	h_sljet_eta[pdfind]->Fill(jet_vector[ljet_ind2].Eta(),weight);  
-
-
-        h_lbjet_pt[pdfind]->Fill(jet_vector[b_jet_index[0]].Pt(),weight);
-	h_lbjet_eta[pdfind]->Fill(jet_vector[b_jet_index[0]].Eta(),weight);    
-
-	h_slbjet_pt[pdfind]->Fill(jet_vector[b_jet_index[1]].Pt(),weight);
-	h_slbjet_eta[pdfind]->Fill(jet_vector[b_jet_index[1]].Eta(),weight);  
-
-	h_dijet_mass[pdfind]->Fill((jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M(),weight);  
-	h_dijet_mass_narrow[pdfind]->Fill((jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M(),weight);  
+	h_sljet_pt[2*pdfind +1]->Fill(jet_vector[ljet_ind2].Pt(),weight);
+	h_sljet_eta[2*pdfind +1]->Fill(jet_vector[ljet_ind2].Eta(),weight);  
 
 
-	h_met_meas[pdfind]->Fill(mett.Pt(),weight);
+        h_lbjet_pt[2*pdfind +1]->Fill(jet_vector[b_jet_index[0]].Pt(),weight);
+	h_lbjet_eta[2*pdfind +1]->Fill(jet_vector[b_jet_index[0]].Eta(),weight);    
+
+	h_slbjet_pt[2*pdfind +1]->Fill(jet_vector[b_jet_index[1]].Pt(),weight);
+	h_slbjet_eta[2*pdfind +1]->Fill(jet_vector[b_jet_index[1]].Eta(),weight);  
+
+	h_dijet_mass[2*pdfind +1]->Fill((jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M(),weight);  
+	h_dijet_mass_narrow[2*pdfind +1]->Fill((jet_vector[ljet_ind1]+jet_vector[ljet_ind2]).M(),weight);  
 
 
-	h_m_ttbar[pdfind]->Fill(ttbar.M(),weight);
-	h_m_ttbar_fixbin[pdfind]->Fill(ttbar.M(),weight);
-	h_y_ttbar[pdfind]->Fill(ttbar.Rapidity(),weight);
-	h_y_top[pdfind]->Fill(top_vector.Rapidity(),weight);
-	h_y_atop[pdfind]->Fill(atop_vector.Rapidity(),weight);
-	h_phi_ttbar[pdfind]->Fill(ttbar.Phi(),weight);
+	h_met_meas[2*pdfind +1]->Fill(mett.Pt(),weight);
+
+
+	h_m_ttbar[2*pdfind +1]->Fill(ttbar.M(),weight);
+	h_m_ttbar_fixbin[2*pdfind +1]->Fill(ttbar.M(),weight);
+	h_y_ttbar[2*pdfind +1]->Fill(ttbar.Rapidity(),weight);
+	h_y_top[2*pdfind +1]->Fill(top_vector.Rapidity(),weight);
+	h_y_atop[2*pdfind +1]->Fill(atop_vector.Rapidity(),weight);
+	h_phi_ttbar[2*pdfind +1]->Fill(ttbar.Phi(),weight);
 	//cout<<ttbar.Phi()<<endl;
 
-	h_njet_ttbar[pdfind]->Fill(jet_vector.size(),weight);
+	h_njet_ttbar[2*pdfind +1]->Fill(jet_vector.size(),weight);
       }//pdfind loop
 
     }//mult sel

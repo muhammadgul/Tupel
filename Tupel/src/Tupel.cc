@@ -148,6 +148,7 @@ private:
   std::vector<double> Packed01Id;
   std::vector<double> Packed01Status;
   std::vector<double> Packed01MomId;
+  std::vector<double> Packed01Charge;
   std::vector<bool> Packed01IsPrompt;
   std::vector<bool> Packed01IsTauProd;
 
@@ -180,6 +181,7 @@ private:
 std::vector<double> GjConstId;
 std::vector<double> GjNConst;
 std::vector<double> GjConstPt;
+std::vector<double> GjConstCharge;
 std::vector<double> GjConstEta;
 std::vector<double> GjConstPhi;
 std::vector<double> GjConstE;
@@ -235,6 +237,7 @@ std::vector<double> GjConstE;
   std::vector<double> unc_;
 std::vector<double> patJetPfAk04ConstId;
 std::vector<double> patJetPfAk04ConstPt;
+std::vector<double> patJetPfAk04ConstCharge;
 std::vector<double> patJetPfAk04ConstEta;
 std::vector<double> patJetPfAk04ConstPhi;
 std::vector<double> patJetPfAk04ConstE;
@@ -551,7 +554,8 @@ patPfCandFromPv.clear();
     Packed01Id.clear();
     Packed01Status.clear();
   Packed01MomId.clear();
-          Packed01IsPrompt.clear();
+Packed01Charge.clear();
+         Packed01IsPrompt.clear();
           Packed01IsTauProd.clear();
 
     St03Pt.clear();
@@ -583,6 +587,7 @@ St03NumberMom.clear();
       GjConstId.clear();
 GjNConst.clear();
       GjConstPt.clear();
+GjConstCharge.clear();
       GjConstEta.clear();
       GjConstPhi.clear();
       GjConstE.clear();
@@ -635,6 +640,7 @@ patJetPfAk04PartonFlavour_.clear();
     patJetPfAk04BDiscCSVSLV1_.clear();
       patJetPfAk04ConstId.clear();
       patJetPfAk04ConstPt.clear();
+      patJetPfAk04ConstCharge.clear();
       patJetPfAk04ConstEta.clear();
       patJetPfAk04ConstPhi.clear();
       patJetPfAk04ConstE.clear();
@@ -966,6 +972,7 @@ bool isPrompt = gen[i].isPromptFinalState();
 	  Packed01Id.push_back(id);
 	  Packed01MomId.push_back(id);
 	  Packed01Status.push_back(st);
+          Packed01Charge.push_back(gen[i].charge());
       }
     }
 
@@ -1012,6 +1019,7 @@ bool isPrompt = gen[i].isPromptFinalState();
           //cout<<genjet[k].daughter(idx)->pt()<<"  "<<genjet[k].daughter(idx)->eta()<<"  "<<genjet[k].daughter(idx)->phi()<<"  "<<genjet[k].daughter(idx)->energy()<<endl<<endl;
             GjConstId.push_back(genjet[k].daughter(idx)->pdgId());
             GjConstPt.push_back(genjet[k].daughter(idx)->pt());
+            GjConstCharge.push_back(genjet[k].daughter(idx)->charge());
             GjConstEta.push_back(genjet[k].daughter(idx)->eta());
             GjConstPhi.push_back(genjet[k].daughter(idx)->phi());
             GjConstE.push_back(genjet[k].daughter(idx)->energy());
@@ -1497,6 +1505,7 @@ if(realdata){
      // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
       patJetPfAk04ConstId.push_back(jet.daughter(idx)->pdgId());
       patJetPfAk04ConstPt.push_back(jet.daughter(idx)->pt());
+      patJetPfAk04ConstCharge.push_back(jet.daughter(idx)->charge());
       patJetPfAk04ConstEta.push_back(jet.daughter(idx)->eta());
       patJetPfAk04ConstPhi.push_back(jet.daughter(idx)->phi());
       patJetPfAk04ConstE.push_back(jet.daughter(idx)->energy());
@@ -1615,6 +1624,7 @@ Tupel::beginJob()
     myTree->Branch("Packed01Id",&Packed01Id);
     myTree->Branch("Packed01Status",&Packed01Status);
   myTree->Branch("Packed01MomId",&Packed01MomId);
+  myTree->Branch("Packed01Charge",&Packed01Charge);
  myTree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
   myTree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
 
@@ -1650,6 +1660,7 @@ Tupel::beginJob()
     myTree->Branch("GjConstId",&GjConstId);
     myTree->Branch("GjNConst",&GjNConst);
     myTree->Branch("GjConstPt",&GjConstPt);
+    myTree->Branch("GjConstCharge",&GjConstCharge);
     myTree->Branch("GjConstEta",&GjConstEta);
     myTree->Branch("GjConstPhi",&GjConstPhi);
     myTree->Branch("GjConstE",&GjConstE);
@@ -1796,6 +1807,7 @@ Tupel::beginJob()
     myTree->Branch("patJetPfAk04PtDn_",&patJetPfAk04PtDn_); 
     myTree->Branch("patJetPfAk04ConstId",&patJetPfAk04ConstId);
     myTree->Branch("patJetPfAk04ConstPt",&patJetPfAk04ConstPt);
+    myTree->Branch("patJetPfAk04ConstCharge",&patJetPfAk04ConstCharge);
     myTree->Branch("patJetPfAk04ConstEta",&patJetPfAk04ConstEta);
     myTree->Branch("patJetPfAk04ConstPhi",&patJetPfAk04ConstPhi);
     myTree->Branch("patJetPfAk04ConstE",&patJetPfAk04ConstE);
