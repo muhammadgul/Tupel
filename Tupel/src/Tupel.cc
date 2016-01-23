@@ -1173,7 +1173,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       TLorentzVector genjetlv;
       genjetlv.SetPtEtaPhiE( genjet[k].pt(), genjet[k].eta(), genjet[k].phi(), genjet[k].energy());
       float mindr = 100.;
-      int mindr_stat = -1;
+      //      int mindr_stat = -1;
       int mindr_id =0;
           
       const std::vector<reco::GenParticle> & gen = *genParticles_h;
@@ -1190,7 +1190,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 
            if( dr < mindr ) {
                mindr = dr;
-               mindr_stat = gen[i].status();
+	       //       mindr_stat = gen[i].status();
                mindr_id = gen[i].pdgId();
 
            }
