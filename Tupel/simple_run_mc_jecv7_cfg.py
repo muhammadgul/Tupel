@@ -29,7 +29,7 @@ if runOnData:#
 	jecfile="Summer15_25nsV7_DATA"
 else:
 	jecfile="Summer15_25nsV7_MC"
-
+jecunctable_="Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt"
 dBFile = os.path.expandvars(jecfile+".db")
 process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
   #connect = cms.string( "sqlite_file://"+dBFile ),
@@ -156,10 +156,8 @@ process.TFileService = cms.Service("TFileService",
 #process.patJetPartonMatch.matched = cms.InputTag("prunedGenParticles")
 #process.patJetCorrFactors.primaryVertices=cms.InputTag("offlineSlimmedPrimaryVertices")
 
-if runOnData:
-    jetsrcc="slimmedJets"
-else :
-    jetsrcc="patJetsReapplyJEC"
+
+jetsrcc="patJetsReapplyJEC"
 
 process.tupel = cms.EDAnalyzer("Tupel",
 #  trigger      = cms.InputTag( "patTrigger" ),
@@ -181,6 +179,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
   mSrcRho      = cms.untracked.InputTag('fixedGridRhoFastjetAll'),#arbitrary rho now
   CalojetLabel = cms.untracked.InputTag('slimmedJets'), #same collection now BB 
+jecunctable = cms.string(jecunctable_),
   metSource = cms.VInputTag("slimmedMETs","slimmedMETsNoHF","slimmedMETs","slimmedMETs"), #no MET corr yet
   lheSource=cms.untracked.InputTag('source')
 

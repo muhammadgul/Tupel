@@ -1073,7 +1073,7 @@ bool isPrompt = gen[i].isPromptFinalState();
             vector<TLorentzVector> gj_vector_vector;
 
          
-              if(((fabs(l1->pdgId())==11 ||fabs(l1->pdgId())==13) || (fabs(l2->pdgId())==11 ||fabs(l2->pdgId())==13)) && !((fabs(l1->pdgId())==11 ||fabs(l1->pdgId())==13) && (fabs(l2->pdgId())==11 ||fabs(l2->pdgId())==13))
+              if(((fabs(l1->pdgId())==11 ||fabs(l1->pdgId())==13) || (fabs(l2->pdgId())==11 ||fabs(l2->pdgId())==13)) /*&& !((fabs(l1->pdgId())==11 ||fabs(l1->pdgId())==13) && (fabs(l2->pdgId())==11 ||fabs(l2->pdgId())==13))*/
              //||((fabs(nu1->pdgId())==11 ||fabs(nu1->pdgId())==13) || (fabs(nu2->pdgId())==11 ||fabs(nu2->pdgId())==13)) && !((fabs(nu1->pdgId())==11 ||fabs(nu1->pdgId())==13) && (fabs(nu2->pdgId())==11 ||fabs(nu2->pdgId())==13))
                   ){
        //         cout<<l1->pt()<<" "<<l1->eta()<<"  "<<l1->pdgId()<<"     "<<l2->pt()<<"  "<<l2->eta()<<" "<<l2->pdgId()<<"  "<<nu1->pt()<<" "<<nu1->eta()<<"  "<<nu1->pdgId()<<"     "<<nu2->pt()<<"  "<<nu2->eta()<<" "<<nu2->pdgId()<<"        "<<w1->pt()<<"  "<<w1->pdgId()<<"    "<<w2->pt()<<"  "<<w2->pdgId()<<"        "<<b1->pt()<<"  "<<b1->eta()<<"  "<<b1->pdgId()<<"     "<<b2->pt()<<"  "<<b2->eta()<<"  "<<b2->pdgId()<<"        "<<t1->pt()<<"  "<<t1->pdgId()<<"     "<<t2->pt()<<"  "<<t2->pdgId()<<endl;
@@ -1173,7 +1173,7 @@ bool isPrompt = gen[i].isPromptFinalState();
                 int nmatched=0;
                 for(unsigned int iii=0;iii<genjets.size();iii++){
                   //cout<<genjets.at(iii)->pt()<<"  "<<genjets.at(iii)->eta()<<endl;
-                  for(int ind_r=0;ind_r<4;ind_r++){
+                  for(unsigned int ind_r=0;ind_r<gj_vector_vector.size();ind_r++){
 //                    /*if(genjets.at(iii)->pt()==gj_vector_vector[ind_r].Pt())*/cout<<genjets.at(iii)->pt()<<"  "<<gj_vector_vector[ind_r].Pt()<<"  "<<gj_vector_vector.size()<<endl;
 //                    if(fabs(genjets.at(iii)->pt()-gj_vector_vector[ind_r].Pt())<0.001 &&fabs(genjets.at(iii)->eta()-gj_vector_vector[ind_r].Eta())<0.001 &&fabs(genjets.at(iii)->phi()-gj_vector_vector[ind_r].Phi())<0.001   )cout<<"FOUND!!!!!!! "<<genjets.at(iii)->pt()<<"  "<<gj_vector_vector[ind_r].Pt()<<"  "<<gj_vector_vector.size()<<endl;
 
@@ -1202,7 +1202,7 @@ bool isPrompt = gen[i].isPromptFinalState();
 			 pseudoTop_const_charge.push_back(genleps.at(iii)->daughter(idx)->charge());
                       }
                 }
-                if(nmatched!=4)cout<<"SHOOOUUUUUUUT "<<nmatched<<endl;
+                //if(nmatched!=4)cout<<"SHOOOUUUUUUUT "<<nmatched<<endl;
               }
             }
           }
