@@ -88,6 +88,7 @@ private:
   std::string elecMatch_;
   std::string muonMatch_;
   std::string muonMatch2_;
+  std::string jecunctable_;
   edm::InputTag photonSrc_;
   edm::InputTag elecSrc_;
   edm::InputTag muonSrc_;
@@ -101,6 +102,10 @@ private:
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
   edm::InputTag packedgenParticleSrc_;
+
+  const edm::EDGetTokenT<reco::GenParticleCollection > pseudoTopToken_;
+  const edm::EDGetTokenT<reco::GenJetCollection >pseudoTopjetToken_;
+  const edm::EDGetTokenT<reco::GenJetCollection >pseudoToplepToken_;
   std::vector<edm::InputTag> metSources;
   bool elecIdsListed_=false;
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
@@ -185,6 +190,23 @@ std::vector<double> GjConstCharge;
 std::vector<double> GjConstEta;
 std::vector<double> GjConstPhi;
 std::vector<double> GjConstE;
+
+
+std::vector<double> pseudoTop_const_pt;
+std::vector<double> pseudoTop_const_eta;
+std::vector<double> pseudoTop_const_phi;
+std::vector<double> pseudoTop_const_energy;
+std::vector<double> pseudoTop_const_pdgId;
+std::vector<double> pseudoTop_const_charge;
+std::vector<double> pseudoTop_pt;
+std::vector<double> pseudoTop_eta;
+std::vector<double> pseudoTop_phi;
+std::vector<double> pseudoTop_energy;
+std::vector<double> pseudoTop_pdgId;
+std::vector<double> pseudoTop_charge;
+
+
+
   std::vector<bool> matchGjet;
   std::vector<double> MGjPt;
   std::vector<double> MGjeta;
@@ -376,6 +398,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
   muonMatch_( iConfig.getParameter< std::string >( "muonMatch" ) ),
   muonMatch2_( iConfig.getParameter< std::string >( "muonMatch2" ) ),
+jecunctable_(iConfig.getParameter<std::string >("jecunctable")),
   photonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc")),
   elecSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
   muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),
@@ -388,11 +411,11 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
 genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
 packedgenParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("pgenSrc")),
+
+ pseudoTopToken_(consumes<reco::GenParticleCollection>(edm::InputTag("pseudoTop"))),
+ pseudoTopjetToken_(consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","jets"))),
+ pseudoToplepToken_(consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","leptons"))),
  metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"))
-
-  //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
-
-
 {
 }
 
@@ -418,8 +441,14 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   iEvent.getByLabel(genParticleSrc_, genParticles_h);
   const GenParticleCollection* genParticles  = genParticles_h.failedToGet () ? 0 : &*genParticles_h;
 
+   edm::Handle<reco::GenParticleCollection> pseudoTopHandle;
+    iEvent.getByToken(pseudoTopToken_, pseudoTopHandle);
 
+   edm::Handle<reco::GenJetCollection> pseudoTopjetHandle;
+    iEvent.getByToken(pseudoTopjetToken_, pseudoTopjetHandle);
 
+   edm::Handle<reco::GenJetCollection> pseudoToplepHandle;
+    iEvent.getByToken(pseudoToplepToken_, pseudoToplepHandle);
   edm::Handle<edm::View<pat::PackedGenParticle> > packedgenParticles_h;
   iEvent.getByLabel(packedgenParticleSrc_, packedgenParticles_h);
   const edm::View<pat::PackedGenParticle>* packedgenParticles  = packedgenParticles_h.failedToGet () ? 0 : &*packedgenParticles_h;
@@ -591,6 +620,23 @@ GjConstCharge.clear();
       GjConstEta.clear();
       GjConstPhi.clear();
       GjConstE.clear();
+
+pseudoTop_const_pt.clear();
+pseudoTop_const_eta.clear();
+pseudoTop_const_phi.clear();
+pseudoTop_const_energy.clear();
+pseudoTop_const_pdgId.clear();
+pseudoTop_const_charge.clear();
+pseudoTop_pt.clear();
+pseudoTop_eta.clear();
+pseudoTop_phi.clear();
+pseudoTop_energy.clear();
+pseudoTop_pdgId.clear();
+pseudoTop_charge.clear();
+
+
+
+
     matchGjet.clear();
     MGjPt.clear();
     MGjeta.clear();
@@ -984,45 +1030,232 @@ bool isPrompt = gen[i].isPromptFinalState();
       Handle<LHEEventProduct> lheH;
       iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
       if(lheH.isValid()) nup=lheH->hepeup().NUP;
-      edm::Handle<reco::GenJetCollection> genjetColl;
+
+      if (! pseudoTopHandle->empty() ){
+
+        std::vector<const reco::GenJet*> genjets;
+        for ( auto& x : *pseudoTopjetHandle ) {
+          genjets.push_back(&x);
+        }
+
+        std::vector<const reco::GenJet*> genleps;
+        for ( auto& x : *pseudoToplepHandle ) {
+          genleps.push_back(&x);
+        }
+        std::vector<const reco::GenParticle*> topquarks;
+        for ( auto& x : *pseudoTopHandle ) {
+          if ( std::abs(x.pdgId()) == 6 ) topquarks.push_back(&x);
+        }
+        if ( topquarks.size() >= 2 ) {
+//      std::nth_element(topquarks.begin(), topquarks.begin()+2, topquarks.end(), gtByPtPtr);
+
+          const auto t1 = topquarks.at(0);
+          const auto t2 = topquarks.at(1);
+          if ( t1->numberOfDaughters() >= 2 && t2->numberOfDaughters() >= 2 ) {
+
+            const auto w1 = t1->daughter(0);
+            const auto w2 = t2->daughter(0);
+
+//      if ( !w1 or !w2 ) break;
+
+            const auto b1 = t1->daughter(1);
+            const auto b2 = t2->daughter(1);
+//      if ( !b1 or !b2 ) break;
+
+            const auto l1 = w1->daughter(0);
+            const auto l2 = w2->daughter(0);
+
+           const auto nu1 = w1->daughter(1);
+            const auto nu2 = w2->daughter(1);
+
+//      if ( !l1 or !l2 ) break;
+            if ( w1 && w2&& b1 && b2 && l1 && l2 && nu1 && nu2){
+            vector<TLorentzVector> gj_vector_vector;
+
+         
+              if(((fabs(l1->pdgId())==11 ||fabs(l1->pdgId())==13) || (fabs(l2->pdgId())==11 ||fabs(l2->pdgId())==13)) && !((fabs(l1->pdgId())==11 ||fabs(l1->pdgId())==13) && (fabs(l2->pdgId())==11 ||fabs(l2->pdgId())==13))
+             //||((fabs(nu1->pdgId())==11 ||fabs(nu1->pdgId())==13) || (fabs(nu2->pdgId())==11 ||fabs(nu2->pdgId())==13)) && !((fabs(nu1->pdgId())==11 ||fabs(nu1->pdgId())==13) && (fabs(nu2->pdgId())==11 ||fabs(nu2->pdgId())==13))
+                  ){
+       //         cout<<l1->pt()<<" "<<l1->eta()<<"  "<<l1->pdgId()<<"     "<<l2->pt()<<"  "<<l2->eta()<<" "<<l2->pdgId()<<"  "<<nu1->pt()<<" "<<nu1->eta()<<"  "<<nu1->pdgId()<<"     "<<nu2->pt()<<"  "<<nu2->eta()<<" "<<nu2->pdgId()<<"        "<<w1->pt()<<"  "<<w1->pdgId()<<"    "<<w2->pt()<<"  "<<w2->pdgId()<<"        "<<b1->pt()<<"  "<<b1->eta()<<"  "<<b1->pdgId()<<"     "<<b2->pt()<<"  "<<b2->eta()<<"  "<<b2->pdgId()<<"        "<<t1->pt()<<"  "<<t1->pdgId()<<"     "<<t2->pt()<<"  "<<t2->pdgId()<<endl;
+                if( fabs(l1->pdgId())<6 ){
+//                  cout<<"a "<<l1->pdgId()<<"  "<<l1->pt()<<endl;
+                  TLorentzVector tmp;
+                  tmp.SetPtEtaPhiE(l1->pt(),l1->eta(),l1->phi(),l1->energy());
+                  gj_vector_vector.push_back(tmp);
+                }
+
+                if(fabs(l2->pdgId())<6){
+//                  cout<<"b "<<l2->pdgId()<<"  "<<l2->pt()<<endl;
+                  TLorentzVector tmp;
+                  tmp.SetPtEtaPhiE(l2->pt(),l2->eta(),l2->phi(),l2->energy());
+                  gj_vector_vector.push_back(tmp);
+                }
+
+                if(fabs(nu1->pdgId())<6){
+ //                 cout<<"c "<<nu1->pdgId()<<"  "<<nu1->pt()<<endl;
+                  TLorentzVector tmp;
+                  tmp.SetPtEtaPhiE(nu1->pt(),nu1->eta(),nu1->phi(),nu1->energy());
+                  gj_vector_vector.push_back(tmp);
+                }
+
+                if(fabs(nu2->pdgId())<6){
+//                  cout<<"d "<<nu2->pdgId()<<"  "<<nu2->pt()<<endl;
+                  TLorentzVector tmp;
+                  tmp.SetPtEtaPhiE(nu2->pt(),nu2->eta(),nu2->phi(),nu2->energy());
+                  gj_vector_vector.push_back(tmp);
+                }
+                TLorentzVector tmpb1;
+                tmpb1.SetPtEtaPhiE(b1->pt(),b1->eta(),b1->phi(),b1->energy());
+                TLorentzVector tmpb2;
+                tmpb2.SetPtEtaPhiE(b2->pt(),b2->eta(),b2->phi(),b2->energy());
+
+                gj_vector_vector.push_back(tmpb1);
+                gj_vector_vector.push_back(tmpb2);
+  //              cout<<"ee "<<tmpb1.Pt()<<endl;
+    //            cout<<"ee "<<tmpb2.Pt()<<endl;
+                
+                pseudoTop_pt.push_back(t1->pt());
+                pseudoTop_pt.push_back(t2->pt());
+                pseudoTop_pt.push_back(w1->pt());
+                pseudoTop_pt.push_back(w2->pt());
+                pseudoTop_pt.push_back(l1->pt());
+                pseudoTop_pt.push_back(nu1->pt());
+                pseudoTop_pt.push_back(l2->pt());
+                pseudoTop_pt.push_back(nu2->pt());
+
+                pseudoTop_eta.push_back(t1->eta());
+                pseudoTop_eta.push_back(t2->eta());
+                pseudoTop_eta.push_back(w1->eta());
+                pseudoTop_eta.push_back(w2->eta());
+                pseudoTop_eta.push_back(l1->eta());
+                pseudoTop_eta.push_back(nu1->eta());
+                pseudoTop_eta.push_back(l2->eta());
+                pseudoTop_eta.push_back(nu2->eta());
+
+                pseudoTop_phi.push_back(t1->phi());
+                pseudoTop_phi.push_back(t2->phi());
+                pseudoTop_phi.push_back(w1->phi());
+                pseudoTop_phi.push_back(w2->phi());
+                pseudoTop_phi.push_back(l1->phi());
+                pseudoTop_phi.push_back(nu1->phi());
+                pseudoTop_phi.push_back(l2->phi());
+                pseudoTop_phi.push_back(nu2->phi());
+
+                pseudoTop_energy.push_back(t1->energy());
+                pseudoTop_energy.push_back(t2->energy());
+                pseudoTop_energy.push_back(w1->energy());
+                pseudoTop_energy.push_back(w2->energy());
+                pseudoTop_energy.push_back(l1->energy());
+                pseudoTop_energy.push_back(nu1->energy());
+                pseudoTop_energy.push_back(l2->energy());
+                pseudoTop_energy.push_back(nu2->energy());
+
+                pseudoTop_pdgId.push_back(t1->pdgId());
+                pseudoTop_pdgId.push_back(t2->pdgId());
+                pseudoTop_pdgId.push_back(w1->pdgId());
+                pseudoTop_pdgId.push_back(w2->pdgId());
+                pseudoTop_pdgId.push_back(l1->pdgId());
+                pseudoTop_pdgId.push_back(nu1->pdgId());
+                pseudoTop_pdgId.push_back(l2->pdgId());
+                pseudoTop_pdgId.push_back(nu2->pdgId());
+
+                pseudoTop_charge.push_back(t1->charge());
+                pseudoTop_charge.push_back(t2->charge());
+                pseudoTop_charge.push_back(w1->charge());
+                pseudoTop_charge.push_back(w2->charge());
+                pseudoTop_charge.push_back(l1->charge());
+                pseudoTop_charge.push_back(nu1->charge());
+                pseudoTop_charge.push_back(l2->charge());
+                pseudoTop_charge.push_back(nu2->charge());
+
+
+
+                int nmatched=0;
+                for(unsigned int iii=0;iii<genjets.size();iii++){
+                  //cout<<genjets.at(iii)->pt()<<"  "<<genjets.at(iii)->eta()<<endl;
+                  for(int ind_r=0;ind_r<4;ind_r++){
+//                    /*if(genjets.at(iii)->pt()==gj_vector_vector[ind_r].Pt())*/cout<<genjets.at(iii)->pt()<<"  "<<gj_vector_vector[ind_r].Pt()<<"  "<<gj_vector_vector.size()<<endl;
+//                    if(fabs(genjets.at(iii)->pt()-gj_vector_vector[ind_r].Pt())<0.001 &&fabs(genjets.at(iii)->eta()-gj_vector_vector[ind_r].Eta())<0.001 &&fabs(genjets.at(iii)->phi()-gj_vector_vector[ind_r].Phi())<0.001   )cout<<"FOUND!!!!!!! "<<genjets.at(iii)->pt()<<"  "<<gj_vector_vector[ind_r].Pt()<<"  "<<gj_vector_vector.size()<<endl;
+
+                    if(fabs(genjets.at(iii)->pt()-gj_vector_vector[ind_r].Pt())<0.001 &&fabs(genjets.at(iii)->eta()-gj_vector_vector[ind_r].Eta())<0.001 &&fabs(genjets.at(iii)->phi()-gj_vector_vector[ind_r].Phi())<0.001 &&fabs(genjets.at(iii)->eta())<3.0){
+                       nmatched++;
+                       for(unsigned int idx =0; idx<genjets.at(iii)->numberOfDaughters();idx++){
+			 pseudoTop_const_pt.push_back(genjets.at(iii)->daughter(idx)->pt());
+			 pseudoTop_const_eta.push_back(genjets.at(iii)->daughter(idx)->eta());
+			 pseudoTop_const_phi.push_back(genjets.at(iii)->daughter(idx)->phi());
+			 pseudoTop_const_energy.push_back(genjets.at(iii)->daughter(idx)->energy());
+			 pseudoTop_const_pdgId.push_back(genjets.at(iii)->daughter(idx)->pdgId());
+			 pseudoTop_const_charge.push_back(genjets.at(iii)->daughter(idx)->charge());
+                      }
+                    }
+                  }
+                }
+                for(unsigned int iii=0;iii<genleps.size();iii++){
+//                   cout<<iii<<"  "<<genleps.at(iii)->pt()<<"  "<<genleps.at(iii)->numberOfDaughters()<<endl;
+                       for(unsigned int idx =0; idx<genleps.at(iii)->numberOfDaughters();idx++){
+//                         cout<<genleps.at(iii)->daughter(idx)->pt()<<"  "<<genleps.at(iii)->daughter(idx)->pdgId()<<endl;
+			 pseudoTop_const_pt.push_back(genleps.at(iii)->daughter(idx)->pt());
+			 pseudoTop_const_eta.push_back(genleps.at(iii)->daughter(idx)->eta());
+			 pseudoTop_const_phi.push_back(genleps.at(iii)->daughter(idx)->phi());
+			 pseudoTop_const_energy.push_back(genleps.at(iii)->daughter(idx)->energy());
+			 pseudoTop_const_pdgId.push_back(genleps.at(iii)->daughter(idx)->pdgId());
+			 pseudoTop_const_charge.push_back(genleps.at(iii)->daughter(idx)->charge());
+                      }
+                }
+                if(nmatched!=4)cout<<"SHOOOUUUUUUUT "<<nmatched<<endl;
+              }
+            }
+          }
+        } 
+
+
+
+
+
+
+
+
+
+
+//      edm::Handle<reco::GenJetCollection> genjetColl;
       //iEvent.getByLabel("ak5GenJets", genjetColl);
-          iEvent.getByLabel(gjetSrc_, genjetColl);
-      if(!genjetColl.failedToGet()){
-      const reco::GenJetCollection & genjet = *genjetColl;
-      for(unsigned int k=0; k<genjetColl->size(); ++k){
-	GjPt.push_back(genjet[k].pt());
-	Gjeta.push_back(genjet[k].eta());
-	Gjphi.push_back(genjet[k].phi());
-	GjE.push_back(genjet[k].energy());
-	GjPx.push_back(genjet[k].px());
-	GjPy.push_back(genjet[k].py());
-	GjPz.push_back(genjet[k].pz());
-    //    cout<<k<<"  "<<genjet[k].partonFlavour()<<endl;
+//          iEvent.getByLabel(gjetSrc_, genjetColl);
+//      if(!genjetColl.failedToGet()){
+//      const reco::GenJetCollection & genjet = *genjetColl;
+      for(unsigned int k=0; k<genjets.size(); ++k){
+	GjPt.push_back(genjets.at(k)->pt());
+	Gjeta.push_back(genjets.at(k)->eta());
+	Gjphi.push_back(genjets.at(k)->phi());
+	GjE.push_back(genjets.at(k)->energy());
+	GjPx.push_back(genjets.at(k)->px());
+	GjPy.push_back(genjets.at(k)->py());
+	GjPz.push_back(genjets.at(k)->pz());
+    //    cout<<k<<"  "<<genjets.at(k)->partonFlavour()<<endl;
 	//double isChargedJet=false;
 	double chargedFraction = 0.;
-//	std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
+//	std::vector<const GenParticle*> mcparticles = genjets.at(k)->getGenConstituents();
 //	for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
 //	  if ( (**thepart).charge()!=0 ){
 	    //isChargedJet=true;
 //	    chargedFraction += (**thepart).pt();
 //	  }
 //	}
-	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
-	GjChargedFraction.push_back(chargedFraction/genjet[k].pt());
+	//if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjets.at(k)->pt()<< endl;
+	GjChargedFraction.push_back(chargedFraction/genjets.at(k)->pt());
         double nconst=0;
-        if(fabs(genjet[k].eta())<3.0){
-          nconst=genjet[k].numberOfDaughters();
-          for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
+        if(fabs(genjets.at(k)->eta())<3.0){
+          nconst=genjets.at(k)->numberOfDaughters();
+          for(unsigned int idx =0; idx<genjets.at(k)->numberOfDaughters();idx++){
 
-          //cout<<genjet[k].eta()<<endl;
-          //cout<<genjet[k].numberOfDaughters()<< "  "<<idx<<"  "<<genjet[k].daughter(idx)->pdgId()<<"  "<<endl;
-          //cout<<genjet[k].daughter(idx)->pt()<<"  "<<genjet[k].daughter(idx)->eta()<<"  "<<genjet[k].daughter(idx)->phi()<<"  "<<genjet[k].daughter(idx)->energy()<<endl<<endl;
-            GjConstId.push_back(genjet[k].daughter(idx)->pdgId());
-            GjConstPt.push_back(genjet[k].daughter(idx)->pt());
-            GjConstCharge.push_back(genjet[k].daughter(idx)->charge());
-            GjConstEta.push_back(genjet[k].daughter(idx)->eta());
-            GjConstPhi.push_back(genjet[k].daughter(idx)->phi());
-            GjConstE.push_back(genjet[k].daughter(idx)->energy());
+          //cout<<genjets.at(k)->eta()<<endl;
+          //cout<<genjets.at(k)->numberOfDaughters()<< "  "<<idx<<"  "<<genjets.at(k)->daughter(idx)->pdgId()<<"  "<<endl;
+          //cout<<genjets.at(k)->daughter(idx)->pt()<<"  "<<genjets.at(k)->daughter(idx)->eta()<<"  "<<genjets.at(k)->daughter(idx)->phi()<<"  "<<genjets.at(k)->daughter(idx)->energy()<<endl<<endl;
+            GjConstId.push_back(genjets.at(k)->daughter(idx)->pdgId());
+            GjConstPt.push_back(genjets.at(k)->daughter(idx)->pt());
+            GjConstCharge.push_back(genjets.at(k)->daughter(idx)->charge());
+            GjConstEta.push_back(genjets.at(k)->daughter(idx)->eta());
+            GjConstPhi.push_back(genjets.at(k)->daughter(idx)->phi());
+            GjConstE.push_back(genjets.at(k)->daughter(idx)->energy());
 
           }
         }
@@ -1526,7 +1759,10 @@ if(realdata){
     }
     }//end jets
                 //cout<<"gggggggggggggggggggggg"<<endl;
-    myTree->Fill();
+
+
+
+      myTree->Fill();
                 //cout<<"hhhhhhhhhhhhhhhhhhhhh"<<endl;
 }
 
@@ -1553,7 +1789,8 @@ void
 Tupel::beginJob()
 {
   
-  jecUnc = new JetCorrectionUncertainty("Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+  jecUnc = new JetCorrectionUncertainty(jecunctable_);
+//jecUnc = new JetCorrectionUncertainty("aaaa");
     // register to the TFileService
     edm::Service<TFileService> fs;
     TFileDirectory TestDir = fs->mkdir("test");
@@ -1570,7 +1807,7 @@ Tupel::beginJob()
     myTree->Branch("patPfCandTrackHighPurity",&patPfCandTrackHighPurity);
     myTree->Branch("patPfCandPuppiWeight",&patPfCandPuppiWeight);
     myTree->Branch("patPfCandPuppiWeightNolep",&patPfCandPuppiWeightNolep);
-  myTree->Branch("patPfCandCharge",&patPfCandCharge);
+    myTree->Branch("patPfCandCharge",&patPfCandCharge);
     myTree->Branch("patPfCandDxy",&patPfCandDxy);
     myTree->Branch("patPfCandDxyerr",&patPfCandDxyerr);
     myTree->Branch("patPfCandDz",&patPfCandDz);
@@ -1603,9 +1840,9 @@ Tupel::beginJob()
     myTree->Branch("Dr01LepM",&Dr01LepM);
     myTree->Branch("Dr01LepId",&Dr01LepId);
     myTree->Branch("Dr01LepStatus",&Dr01LepStatus);
-  myTree->Branch("Dr01LepMomId",&Dr01LepMomId);
- myTree->Branch("Dr01LepIsPrompt",&Dr01LepIsPrompt);
-  myTree->Branch("Dr01LepIsTauProd",&Dr01LepIsTauProd);
+    myTree->Branch("Dr01LepMomId",&Dr01LepMomId);
+    myTree->Branch("Dr01LepIsPrompt",&Dr01LepIsPrompt);
+    myTree->Branch("Dr01LepIsTauProd",&Dr01LepIsTauProd);
 
     myTree->Branch("Bare01LepPt",&Bare01LepPt);
     myTree->Branch("Bare01LepEta",&Bare01LepEta);
@@ -1614,7 +1851,7 @@ Tupel::beginJob()
     myTree->Branch("Bare01LepM",&Bare01LepM);
     myTree->Branch("Bare01LepId",&Bare01LepId);
     myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
-      myTree->Branch("Bare01LepMomId",&Bare01LepMomId);      
+    myTree->Branch("Bare01LepMomId",&Bare01LepMomId);      
 
     myTree->Branch("Packed01Pt",&Packed01Pt);
     myTree->Branch("Packed01Eta",&Packed01Eta);
@@ -1623,11 +1860,11 @@ Tupel::beginJob()
     myTree->Branch("Packed01M",&Packed01M);
     myTree->Branch("Packed01Id",&Packed01Id);
     myTree->Branch("Packed01Status",&Packed01Status);
-  myTree->Branch("Packed01MomId",&Packed01MomId);
-  myTree->Branch("Packed01Charge",&Packed01Charge);
- myTree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
-  myTree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
-
+    myTree->Branch("Packed01MomId",&Packed01MomId);
+    myTree->Branch("Packed01Charge",&Packed01Charge);
+    myTree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
+    myTree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
+ 
     myTree->Branch("St03Pt",&St03Pt);
     myTree->Branch("St03Eta",&St03Eta);
     myTree->Branch("St03Phi",&St03Phi);
@@ -1635,7 +1872,7 @@ Tupel::beginJob()
     myTree->Branch("St03M",&St03M);
     myTree->Branch("St03Id",&St03Id);
     myTree->Branch("St03Status",&St03Status);
-   myTree->Branch("St03MotherId",&St03MotherId);
+    myTree->Branch("St03MotherId",&St03MotherId);
     myTree->Branch("St03NumberMom",&St03NumberMom);    
 
     
@@ -1664,6 +1901,20 @@ Tupel::beginJob()
     myTree->Branch("GjConstEta",&GjConstEta);
     myTree->Branch("GjConstPhi",&GjConstPhi);
     myTree->Branch("GjConstE",&GjConstE);
+
+    myTree->Branch("pseudoTop_const_pt",&pseudoTop_const_pt);
+    myTree->Branch("pseudoTop_const_eta",&pseudoTop_const_eta);
+    myTree->Branch("pseudoTop_const_phi",&pseudoTop_const_phi);
+    myTree->Branch("pseudoTop_const_energy",&pseudoTop_const_energy);
+    myTree->Branch("pseudoTop_const_pdgId",&pseudoTop_const_pdgId);
+    myTree->Branch("pseudoTop_const_charge",&pseudoTop_const_charge);
+    myTree->Branch("pseudoTop_pt",&pseudoTop_pt);
+    myTree->Branch("pseudoTop_eta",&pseudoTop_eta);
+    myTree->Branch("pseudoTop_phi",&pseudoTop_phi);
+    myTree->Branch("pseudoTop_energy",&pseudoTop_energy);
+    myTree->Branch("pseudoTop_pdgId",&pseudoTop_pdgId);
+    myTree->Branch("pseudoTop_charge",&pseudoTop_charge);
+
 
     myTree->Branch("matchGjet",&matchGjet);
     myTree->Branch("MGjPt",&MGjPt);
@@ -1732,7 +1983,7 @@ Tupel::beginJob()
     myTree->Branch("patMuon_Mu17_Mu8_Matched_",&patMuon_Mu17_Mu8_Matched_);
     myTree->Branch("patMuon_Mu17_TkMu8_Matched_",&patMuon_Mu17_TkMu8_Matched_);
 
-  myTree->Branch("patElecId_",&patElecId_);
+    myTree->Branch("patElecId_",&patElecId_);
     myTree->Branch("patElecdEtaIn_",&patElecdEtaIn_);
     myTree->Branch("patElecdPhiIn_",&patElecdPhiIn_);
     myTree->Branch("patElechOverE_",&patElechOverE_);

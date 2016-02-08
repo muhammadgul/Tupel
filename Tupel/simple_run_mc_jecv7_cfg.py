@@ -8,7 +8,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 from JetMETCorrections.Configuration.DefaultJEC_cff import *
 from JetMETCorrections.Configuration.JetCorrectionServices_cff import *
-runOnData= True #True #data/MC switch
+runOnData= False #True #data/MC switch
 
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 #from Configuration.AlCa.GlobalTag import GlobalTag
@@ -26,10 +26,10 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 from CondCore.DBCommon.CondDBSetup_cfi import *
 import os
 if runOnData:#
-	jecfile="Summer15_25nsV6_DATA"
+	jecfile="Summer15_25nsV7_DATA"
 else:
-	jecfile="Summer15_25nsV6_MC"
-jecunctable_="Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt"
+	jecfile="Summer15_25nsV7_MC"
+
 dBFile = os.path.expandvars(jecfile+".db")
 process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
   #connect = cms.string( "sqlite_file://"+dBFile ),
@@ -51,7 +51,7 @@ process.es_prefer_jec = cms.ESPrefer("PoolDBESSource",'jec')
 process.load("PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff")
 process.patJetCorrFactorsReapplyJEC = process.patJetCorrFactorsUpdated.clone(
   src = cms.InputTag("slimmedJets"),
-  levels = ['L1FastJet','L2Relative', 'L3Absolute','L2L3Residual'],
+  levels = ['L1FastJet','L2Relative', 'L3Absolute'],
   payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
 
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import patJetsUpdated
@@ -121,7 +121,6 @@ process.reapplyJEC = cms.Sequence( process.patJetCorrFactorsReapplyJEC + process
 
 #process.inclusiveSecondaryVertexFinderTagInfos.extSVCollection = cms.InputTag("unpackedTracksAndVertices","secondary","")
 #process.combinedSecondaryVertex.trackMultiplicityMin = 1 #silly sv, uses un filtered tracks.. i.e. any pt
-
 process.pseudoTop = cms.EDProducer("PseudoTopProducer",
     finalStates = cms.InputTag("packedGenParticles"),
     genParticles = cms.InputTag("prunedGenParticles"),
@@ -134,7 +133,6 @@ process.pseudoTop = cms.EDProducer("PseudoTopProducer",
     tMass = cms.double(172.5),
     wMass = cms.double(80.4)
 )
-
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string('withJEC_DYJetsToLL_ntuple.root' )
 )
@@ -158,9 +156,10 @@ process.TFileService = cms.Service("TFileService",
 #process.patJetPartonMatch.matched = cms.InputTag("prunedGenParticles")
 #process.patJetCorrFactors.primaryVertices=cms.InputTag("offlineSlimmedPrimaryVertices")
 
-
-
-jetsrcc="patJetsReapplyJEC"
+if runOnData:
+    jetsrcc="slimmedJets"
+else :
+    jetsrcc="patJetsReapplyJEC"
 
 process.tupel = cms.EDAnalyzer("Tupel",
 #  trigger      = cms.InputTag( "patTrigger" ),
@@ -182,7 +181,6 @@ process.tupel = cms.EDAnalyzer("Tupel",
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
   mSrcRho      = cms.untracked.InputTag('fixedGridRhoFastjetAll'),#arbitrary rho now
   CalojetLabel = cms.untracked.InputTag('slimmedJets'), #same collection now BB 
-jecunctable = cms.string(jecunctable_),
   metSource = cms.VInputTag("slimmedMETs","slimmedMETsNoHF","slimmedMETs","slimmedMETs"), #no MET corr yet
   lheSource=cms.untracked.InputTag('source')
 
@@ -221,9 +219,8 @@ process.options.allowUnscheduled = cms.untracked.bool(True)
 
 process.out = cms.OutputModule("PoolOutputModule",
     fileName = cms.untracked.string('test.root'),
-    outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*','keep *_pseudoTop_*_*'])
-#    outputCommands = cms.untracked.vstring(['drop *','keep genjets_genJets_*_*'])
-#    outputCommands = cms.untracked.vstring(['keep genJet*'])
+#    outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*'])
+    outputCommands = cms.untracked.vstring(['drop *'])
 )
 #process.endpath= cms.EndPath(process.out)
 
