@@ -80,7 +80,7 @@ cout<<"burda"<<endl;
  TProfile::SetDefaultSumw2();
    Long64_t nbytes = 0, nb = 0;
 
-   TFile* file_out = new TFile("/sdb2/Bugra/skimmed/" + name,"RECREATE"); 
+   TFile* file_out = new TFile("/sdb3/Bugra/skimmed/" + name,"RECREATE"); 
    file_out->cd();	
    TTree *weight_tree;
   weight_tree = new TTree("MuonTree","MuonTree");
@@ -103,6 +103,8 @@ cout<<"burda"<<endl;
     weight_tree->Branch("patPfCandDzAssociatedPV",&patPfCandDzAssociatedPV);
     weight_tree->Branch("patPfCandDzerr",&patPfCandDzerr);
     weight_tree->Branch("patPfCandFromPv",&patPfCandFromPv);
+    weight_tree->Branch("patPfCandVertexRef",&patPfCandVertexRef);
+    weight_tree->Branch("patPfpvAssociationQuality",&patPfpvAssociationQuality);
 
     weight_tree->Branch("METPt",&METPt);
     weight_tree->Branch("METPx",&METPx);
@@ -142,6 +144,7 @@ cout<<"burda"<<endl;
     weight_tree->Branch("Packed01MomId",&Packed01MomId);
     weight_tree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
     weight_tree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
+    weight_tree->Branch("Packed01Charge",&Packed01Charge);
     weight_tree->Branch("Bare01LepPt",&Bare01LepPt);
     weight_tree->Branch("Bare01LepEta",&Bare01LepEta);
     weight_tree->Branch("Bare01LepPhi",&Bare01LepPhi);
@@ -186,6 +189,20 @@ cout<<"burda"<<endl;
     weight_tree->Branch("GjConstPhi",&GjConstPhi);
     weight_tree->Branch("GjConstE",&GjConstE);
     weight_tree->Branch("GjNConst",&GjNConst);
+    weight_tree->Branch("pseudoTop_const_pt",&pseudoTop_const_pt);
+    weight_tree->Branch("pseudoTop_const_eta",&pseudoTop_const_eta);
+    weight_tree->Branch("pseudoTop_const_phi",&pseudoTop_const_phi);
+    weight_tree->Branch("pseudoTop_const_energy",&pseudoTop_const_energy);
+    weight_tree->Branch("pseudoTop_const_pdgId",&pseudoTop_const_pdgId);
+    weight_tree->Branch("pseudoTop_const_charge",&pseudoTop_const_charge);
+
+    weight_tree->Branch("pseudoTop_pt",&pseudoTop_pt);
+    weight_tree->Branch("pseudoTop_eta",&pseudoTop_eta);
+    weight_tree->Branch("pseudoTop_phi",&pseudoTop_phi);
+    weight_tree->Branch("pseudoTop_energy",&pseudoTop_energy);
+    weight_tree->Branch("pseudoTop_pdgId",&pseudoTop_pdgId);
+    weight_tree->Branch("pseudoTop_charge",&pseudoTop_charge);
+
     weight_tree->Branch("matchGjet",&matchGjet);
     weight_tree->Branch("MGjPt",&MGjPt);
     weight_tree->Branch("MGjeta",&MGjeta);
@@ -362,11 +379,13 @@ cout<<"burda"<<endl;
     weight_tree->Branch("wtot_write",&wtot_write);
     weight_tree->Branch("nup",&nup);   
    double wtot=0;
+//      ofstream Yfan;
+//      Yfan.open ("jec_MC.txt");
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      if(jentry%10000==0)cout<<"/sdb2/Bugra/skimmed/" <<name<<" << "<<jentry<<"/"<<nentries<<endl;
+      if(jentry%10000==0)cout<<"/sdb3/Bugra/skimmed/" <<name<<" << "<<jentry<<"/"<<nentries<<endl;
       bool found_mu=false;
       bool found_mu_gen=false;
       bool found4jet=false;
@@ -378,8 +397,10 @@ cout<<"burda"<<endl;
         }
       }
      int njet=0;
+
      for(unsigned int jet_ind=0; jet_ind<patJetPfAk04Pt_->size();jet_ind++){
         if( fabs(patJetPfAk04Eta_->at(jet_ind))>2.6 ||patJetPfAk04LooseId_->at(jet_ind)==0 ||patJetPfAk04Pt_->at(jet_ind)<15)continue;
+//        Yfan<<patJetPfAk04Eta_->at(jet_ind)<<"  "<<patJetPfAk04RawPt_->at(jet_ind)<<"  "<<patJetPfAk04Pt_->at(jet_ind)/patJetPfAk04RawPt_->at(jet_ind)<<endl;
         njet++;
         if(njet==4){found4jet=true;break;}
      }

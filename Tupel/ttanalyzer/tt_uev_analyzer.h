@@ -164,7 +164,9 @@ class tt_uev_analyzer {
   vector<double>  *patPfCandDzAssociatedPV;
   vector<double>  *patPfCandDzerr;
   vector<double>  *patPfCandFromPv;
-  vector<double>  *METPt;
+  vector<double>  *patPfCandVertexRef;
+   vector<double>  *patPfpvAssociationQuality; 
+ vector<double>  *METPt;
   vector<double>  *METPx;
   vector<double>  *METPy;
   vector<double>  *METPz;
@@ -203,7 +205,7 @@ class tt_uev_analyzer {
    vector<double>  *Packed01MomId;
   vector<bool>     *Packed01IsPrompt;
   vector<bool>     *Packed01IsTauProd;
-
+  vector<double>     *Packed01Charge;
 
   vector<double>  *Bare01LepPt;
   vector<double>  *Bare01LepEta;
@@ -246,6 +248,19 @@ class tt_uev_analyzer {
    vector<double> *GjConstPhi;
    vector<double> *GjConstE;
    vector<double> *GjNConst;
+   vector<double> *pseudoTop_const_pt;
+   vector<double> *pseudoTop_const_eta;
+   vector<double> *pseudoTop_const_phi;
+   vector<double> *pseudoTop_const_energy;
+   vector<double> *pseudoTop_const_pdgId;
+   vector<double> *pseudoTop_const_charge;
+   vector<double> *pseudoTop_pt;
+   vector<double> *pseudoTop_eta;
+   vector<double> *pseudoTop_phi;
+   vector<double> *pseudoTop_energy;
+   vector<double> *pseudoTop_pdgId;
+   vector<double> *pseudoTop_charge;
+
   vector<bool>    *matchGjet;
   vector<double>  *MGjPt;
   vector<double>  *MGjeta;
@@ -422,6 +437,8 @@ class tt_uev_analyzer {
   TBranch        *b_patPfCandDzAssociatedPV;   //!
   TBranch        *b_patPfCandDzerr;   //!
   TBranch        *b_patPfCandFromPv;
+  TBranch        *b_patPfCandVertexRef;
+   TBranch        *b_patPfpvAssociationQuality;
   TBranch        *b_METPt;   //!
   TBranch        *b_METPx;   //!
   TBranch        *b_METPy;   //!
@@ -460,7 +477,7 @@ class tt_uev_analyzer {
    TBranch        *b_Packed01MomId;   //!
    TBranch        *b_Packed01IsPrompt;
    TBranch        *b_Packed01IsTauProd;
-
+   TBranch        *b_Packed01Charge;
   TBranch        *b_Bare01LepPt;   //!
   TBranch        *b_Bare01LepEta;   //!
   TBranch        *b_Bare01LepPhi;   //!
@@ -502,6 +519,20 @@ class tt_uev_analyzer {
    TBranch        *b_GjConstPhi;
    TBranch        *b_GjConstE;
    TBranch        *b_GjNConst;
+   TBranch        *b_pseudoTop_const_pt;
+   TBranch        *b_pseudoTop_const_eta;
+   TBranch        *b_pseudoTop_const_phi;
+   TBranch        *b_pseudoTop_const_energy;
+   TBranch        *b_pseudoTop_const_pdgId;
+   TBranch        *b_pseudoTop_const_charge;
+
+   TBranch        *b_pseudoTop_pt;
+   TBranch        *b_pseudoTop_eta;
+   TBranch        *b_pseudoTop_phi;
+   TBranch        *b_pseudoTop_energy;
+   TBranch        *b_pseudoTop_pdgId;
+   TBranch        *b_pseudoTop_charge;
+
   TBranch        *b_matchGjet;   //!
   TBranch        *b_MGjPt;   //!
   TBranch        *b_MGjeta;   //!
@@ -708,12 +739,24 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
 
 /*    
       chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_reminiaod.root");
-      chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_prompt.root");
+//      chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_prompt.root");
       name="25ns_data_D_uev_newlist_2110_fromskimmed";
     
 */
 
+ /*  
+      chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_reminiaod_jecv7.root");
+//      chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_prompt_jecv7.root");
+      name="25ns_data_D_uev_newlist_2110_fromskimmed_jecv7";
+    
+*/
 
+    /*
+      chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_reminiaod_jecv6.root");
+//      chain->Add("/sdb2/Bugra/skimmed/25ns_data_D_prompt_jecv6.root");
+      name="25ns_data_D_uev_newlist_2110_fromskimmed_jecv6";
+
+*/
 
     /*
       chain->Add("/sdb5/Bugra/skimmed/25ns_wjet.root");
@@ -786,16 +829,22 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
 
 
 
-
-    chain->Add("/sdb2/Bugra/skimmed/25ns_tt_small_.root");
+//    std::cout<<"aaaaa"<<std::endl;
+    chain->Add("/sdb3/Bugra/skimmed/25ns_tt_50k_newcut.root");
     dosignal=true;
     name="25ns_tt_uev_miniaodv2_2110_fromskimmed_small";
+
+/*
+    chain->Add("/sdb2/Bugra/skimmed/25ns_tt_small_getcorr.root");
+    dosignal=true;
+    name="25ns_tt_uev_miniaodv2_2110_fromskimmed_small_newjec";
+*/
 
     tree = chain;
 
     name += "_isElec_";
     name += doe;
-    name += "_v22.root";
+    name += "_v24.root";
 #endif // SINGLE_TREE
 
   }
@@ -856,6 +905,8 @@ void tt_uev_analyzer::Init(TTree *tree)
   patPfCandDzAssociatedPV = 0;
   patPfCandDzerr = 0;
   patPfCandFromPv = 0;
+patPfCandVertexRef = 0;
+   patPfpvAssociationQuality = 0;
   METPt = 0;
   METPx = 0;
   METPy = 0;
@@ -885,6 +936,7 @@ void tt_uev_analyzer::Init(TTree *tree)
    Packed01MomId = 0;
    Packed01IsPrompt=0;
    Packed01IsTauProd=0;
+Packed01Charge=0;
   Bare01LepPt = 0;
   Bare01LepEta = 0;
   Bare01LepPhi = 0;
@@ -928,6 +980,20 @@ GjConstCharge = 0;
       GjConstPhi = 0;
       GjConstE = 0;
 GjNConst = 0;
+pseudoTop_const_pt = 0;
+pseudoTop_const_eta = 0;
+pseudoTop_const_phi = 0;
+pseudoTop_const_energy = 0;
+pseudoTop_const_pdgId = 0;
+pseudoTop_const_charge = 0;
+
+pseudoTop_pt = 0;
+pseudoTop_eta = 0;
+pseudoTop_phi = 0;
+pseudoTop_energy = 0;
+pseudoTop_pdgId = 0;
+pseudoTop_charge = 0;
+
   MGjPt = 0;
   MGjeta = 0;
   MGjphi = 0;
@@ -1081,6 +1147,8 @@ patJetPfAk04ConstCharge = 0;
   fChain->SetBranchAddress("patPfCandDzAssociatedPV", &patPfCandDzAssociatedPV, &b_patPfCandDzAssociatedPV);
   fChain->SetBranchAddress("patPfCandDzerr", &patPfCandDzerr, &b_patPfCandDzerr);
   fChain->SetBranchAddress("patPfCandFromPv",&patPfCandFromPv, &b_patPfCandFromPv);
+  fChain->SetBranchAddress("patPfCandVertexRef",&patPfCandVertexRef, &b_patPfCandVertexRef);
+    fChain->SetBranchAddress("patPfpvAssociationQuality",&patPfpvAssociationQuality, &b_patPfpvAssociationQuality);
   fChain->SetBranchAddress("METPt", &METPt, &b_METPt);
   fChain->SetBranchAddress("METPx", &METPx, &b_METPx);
   fChain->SetBranchAddress("METPy", &METPy, &b_METPy);
@@ -1119,7 +1187,7 @@ patJetPfAk04ConstCharge = 0;
    fChain->SetBranchAddress("Packed01MomId", &Packed01MomId, &b_Packed01MomId);
    fChain->SetBranchAddress("Packed01IsPrompt",&Packed01IsPrompt,&b_Packed01IsPrompt);
    fChain->SetBranchAddress("Packed01IsTauProd",&Packed01IsTauProd,&b_Packed01IsTauProd);
-
+   fChain->SetBranchAddress("Packed01Charge",&Packed01Charge,&b_Packed01Charge);
   fChain->SetBranchAddress("Bare01LepPt", &Bare01LepPt, &b_Bare01LepPt);
   fChain->SetBranchAddress("Bare01LepEta", &Bare01LepEta, &b_Bare01LepEta);
   fChain->SetBranchAddress("Bare01LepPhi", &Bare01LepPhi, &b_Bare01LepPhi);
@@ -1155,6 +1223,20 @@ patJetPfAk04ConstCharge = 0;
   fChain->SetBranchAddress("GjPz", &GjPz, &b_GjPz);
   fChain->SetBranchAddress("GjChargedFraction", &GjChargedFraction, &b_GjChargedFraction);
    fChain->SetBranchAddress("GjNConst",&GjNConst,&b_GjNConst);
+   fChain->SetBranchAddress("pseudoTop_const_pt",&pseudoTop_const_pt,&b_pseudoTop_const_pt);
+   fChain->SetBranchAddress("pseudoTop_const_eta",&pseudoTop_const_eta,&b_pseudoTop_const_eta);
+   fChain->SetBranchAddress("pseudoTop_const_phi",&pseudoTop_const_phi,&b_pseudoTop_const_phi);
+   fChain->SetBranchAddress("pseudoTop_const_energy",&pseudoTop_const_energy,&b_pseudoTop_const_energy);
+   fChain->SetBranchAddress("pseudoTop_const_pdgId",&pseudoTop_const_pdgId,&b_pseudoTop_const_pdgId);
+   fChain->SetBranchAddress("pseudoTop_const_charge",&pseudoTop_const_charge,&b_pseudoTop_const_charge);
+
+   fChain->SetBranchAddress("pseudoTop_pt",&pseudoTop_pt,&b_pseudoTop_pt);
+   fChain->SetBranchAddress("pseudoTop_eta",&pseudoTop_eta,&b_pseudoTop_eta);
+   fChain->SetBranchAddress("pseudoTop_phi",&pseudoTop_phi,&b_pseudoTop_phi);
+   fChain->SetBranchAddress("pseudoTop_energy",&pseudoTop_energy,&b_pseudoTop_energy);
+   fChain->SetBranchAddress("pseudoTop_pdgId",&pseudoTop_pdgId,&b_pseudoTop_pdgId);
+   fChain->SetBranchAddress("pseudoTop_charge",&pseudoTop_charge,&b_pseudoTop_charge);
+
    fChain->SetBranchAddress("GjConstId",&GjConstId,&b_GjConstId);
    fChain->SetBranchAddress("GjConstPt",&GjConstPt,&b_GjConstPt);
    fChain->SetBranchAddress("GjConstCharge",&GjConstCharge,&b_GjConstCharge);
