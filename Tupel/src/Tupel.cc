@@ -47,6 +47,7 @@
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "DataFormats/Common/interface/Handle.h"
+#include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
 #include "FWCore/Framework/interface/GenericHandle.h"
@@ -62,6 +63,16 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "DataFormats/BTauReco/interface/JetTag.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
+
+#include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
+
+typedef std::vector<reco::GenParticle> GenParticleCollection;
+using reco::GenParticleCollection;
+using edm::Handle;
+using edm::View;
+using edm::InputTag;
+
 
 #include "TreeHelper.h"
 
@@ -184,7 +195,10 @@ private:
 
   void processJets();
 
-  void processPhotons();
+  //void processPhotons();
+  void processPhotons(const edm::Event& iEvent, const edm::EventSetup& iSetup);
+
+  void processPfCands();
 
   /** Check if the argument is one of the
    * HLT trigger considered to be stored and if it is set
@@ -209,20 +223,64 @@ private:
   std::string elecMatch_;
   std::string muonMatch_;
   std::string muonMatch2_;
-  edm::InputTag photonSrc_;
-  edm::InputTag elecSrc_;
-  edm::InputTag muonSrc_;
+
+
+  ///G.N.
+  //edm::InputTag elecSrc_;
+  edm::EDGetTokenT<std::vector<pat::Electron> > elecSrcToken_;  
+  //edm::InputTag muonSrc_;  
+  edm::EDGetTokenT<std::vector<pat::Muon> > muonSrcToken_;
+
+  edm::EDGetTokenT<reco::ConversionCollection> conversionsToken_; 
+
+  //edm::InputTag jetSrc_;
+  edm::EDGetTokenT<std::vector<pat::Jet> > jetSrcToken_;
+
+  //edm::InputTag photonSrc_;
+  edm::EDGetTokenT<std::vector<pat::Photon> > photonSrcToken_; 
+  //edm::EDGetTokenT<pat::Photon> photonSrcToken_; 
+
+  //edm::InputTag candidateSrc_;
+  edm::EDGetTokenT<std::vector<pat::PackedCandidate> > candidateSrcToken_; 
+
+  edm::EDGetTokenT<std::vector<reco::Vertex> > vertexToken_;
+
+  //edm::InputTag mSrcRho_;
+  edm::EDGetTokenT<double> mSrcRhoToken_;
+
+  edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
+
+  //std::vector<edm::InputTag> metSources;
+  std::vector<edm::EDGetTokenT<std::vector<pat::MET> >  > metSourcesToken;
+
+  edm::EDGetTokenT<edm::TriggerResults> HLTTagToken_;
+
+  //edm::InputTag genParticleSrc_;
+  edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticleSrcToken_;  
+
+  //edm::InputTag gjetSrc_;
+  edm::EDGetTokenT<std::vector<reco::GenJet> > gjetSrcToken_;
+
+  //edm::InputTag puSrc_;
+  edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puSrcToken_;
+
+  edm::EDGetTokenT<GenEventInfoProduct> generatorToken_;
+  ///
+
+
   edm::InputTag tauSrc_;
-  edm::InputTag jetSrc_;
-  edm::InputTag gjetSrc_;
   edm::InputTag metSrc_;
-  edm::InputTag mSrcRho_;
   //  edm::InputTag CaloJet_;
   edm::InputTag lheSource_;
-  edm::InputTag genParticleSrc_;
-  std::vector<edm::InputTag> metSources;
   bool triggerStat_;
-  edm::InputTag puSrc_;
+
+
+  //for EcalClusterLazyTools
+  edm::EDGetTokenT<EcalRecHitCollection> ecalHitEBToken_;
+  edm::EDGetTokenT<EcalRecHitCollection> ecalHitEEToken_;
+  edm::EDGetTokenT<EcalRecHitCollection> ecalHitESToken_;
+
+
 
   /** Total number of events analyzed so far
    */
@@ -255,6 +313,8 @@ private:
   std::map<std::string, unsigned>  TrigHltMap_; //bit assignment
   std::auto_ptr<ULong64_t>         TrigHltPhot_;
   std::map<std::string, ULong64_t> TrigHltPhotMap_; //bit assignment
+  std::auto_ptr<ULong64_t>         TrigHltDiPhot_;
+  std::map<std::string, ULong64_t> TrigHltDiPhotMap_; //bit assignment
   std::auto_ptr<ULong64_t>         TrigHltMu_;
   std::map<std::string, ULong64_t> TrigHltMuMap_; //bit assignment
   std::auto_ptr<ULong64_t>         TrigHltDiMu_;
@@ -409,7 +469,11 @@ private:
   std::auto_ptr<std::vector<float> > 	ElEtaSc_;
   std::auto_ptr<std::vector<float> > 	ElPhi_;
   std::auto_ptr<std::vector<float> > 	ElE_;
+  std::auto_ptr<std::vector<float> >    ElScRawE_;
+  std::auto_ptr<std::vector<float> >    ElCorrE_;
   std::auto_ptr<std::vector<float> > 	ElCh_;
+  std::auto_ptr<std::vector<float> >    ElEcalIso_;
+  std::auto_ptr<std::vector<float> >    ElEcalPfIso_;
   std::auto_ptr<std::vector<unsigned> > ElId_;
   std::map<std::string, unsigned>    	ElIdMap_; //bit assignment
   std::auto_ptr<std::vector<float> > 	ElMvaTrig_;
@@ -434,13 +498,29 @@ private:
   std::auto_ptr<std::vector<float> > 	ElPfIsoDbeta_;
   std::auto_ptr<std::vector<float> > 	ElPfIsoRho_;
   std::auto_ptr<std::vector<float> > 	ElAEff_;
+  std::auto_ptr<std::vector<float> >    ElDr03TkSumPt_;
+  std::auto_ptr<std::vector<float> >    ElDr03EcalRecHitSumEt_;
+  std::auto_ptr<std::vector<float> >    ElDr03HcalTowerSumEt_;
 
-  std::auto_ptr<std::vector<float> > 	 charged_;
-  std::auto_ptr<std::vector<float> > 	 photon_;
-  std::auto_ptr<std::vector<float> > 	 neutral_;
-  std::auto_ptr<std::vector<float> > 	 charged_Tom_;
-  std::auto_ptr<std::vector<float> > 	 photon_Tom_;
-  std::auto_ptr<std::vector<float> > 	 neutral_Tom_;
+  //PF particle candidates
+  std::auto_ptr<std::vector<float> > PfCandPt_;
+  std::auto_ptr<std::vector<float> > PfCandEta_;
+  std::auto_ptr<std::vector<float> > PfCandPhi_;
+  std::auto_ptr<std::vector<float> > PfCandE_;  
+  std::auto_ptr<std::vector<float> > PfCandVx_;
+  std::auto_ptr<std::vector<float> > PfCandVy_;
+  std::auto_ptr<std::vector<float> > PfCandVz_;
+  std::auto_ptr<std::vector<float> > PfCandTkInPt_;
+  std::auto_ptr<std::vector<float> > PfCandTkInEta_;
+  std::auto_ptr<std::vector<float> > PfCandTkInPhi_;
+  std::auto_ptr<std::vector<float> > PfCandTkValidHitCnt_;
+  std::auto_ptr<std::vector<float> > PfCandTkValidFrac_;
+  std::auto_ptr<std::vector<float> > PfCandTkChi2_;
+  std::auto_ptr<std::vector<float> > PfCandDz_;
+  std::auto_ptr<std::vector<float> > PfCandDxy_;
+  std::auto_ptr<std::vector<float> > PfCandDz0_;
+  std::auto_ptr<std::vector<float> > PfCandDzPV_;  
+  std::auto_ptr<std::vector<float> > PfCandDxyPV_;
 
   //Photons
   //photon momenta
@@ -475,6 +555,14 @@ private:
   std::auto_ptr<std::vector<float> > PhotSigmaIphiIphi_;
   std::auto_ptr<std::vector<float> > PhotEtaWidth_;
   std::auto_ptr<std::vector<float> > PhotPhiWidth_;
+  std::auto_ptr<std::vector<float> > PhotR9_;
+  std::auto_ptr<std::vector<float> > PhotS4_;
+  std::auto_ptr<std::vector<float> > PhotE1x5Full5x5_;    
+  std::auto_ptr<std::vector<float> > PhotE2x5Full5x5_;
+  std::auto_ptr<std::vector<float> > PhotE3x3Full5x5_;
+  std::auto_ptr<std::vector<float> > PhotE5x5Full5x5_;
+  std::auto_ptr<std::vector<float> > PhotSigmaIetaIetaFull5x5_;
+  std::auto_ptr<std::vector<float> > PhotR9Full5x5_; 
 
   //photon preshower
   std::auto_ptr<std::vector<float> > PhotEsE_;
@@ -546,19 +634,20 @@ private:
   ///Event objects
   edm::Handle<GenParticleCollection> genParticles_h;
   const GenParticleCollection* genParticles;
-  edm::Handle<edm::View<pat::Muon> > muons;
-  const edm::View<pat::Muon> * muon;
-  edm::Handle<vector<pat::Electron> > electrons;
-  const vector<pat::Electron>  *electron;
+  edm::Handle<std::vector<pat::Muon> > muons;
+  const std::vector<pat::Muon> * muon;
+  edm::Handle<std::vector<pat::Electron> > electrons;
+  const std::vector<pat::Electron>  *electron;
   edm::Handle<reco::ConversionCollection> conversions_h;
-  edm::Handle<edm::View<pat::Tau> > taus;
-  edm::Handle<edm::View<pat::Jet> > jets;
-  const edm::View<pat::Jet> * jettt;
-  edm::Handle<edm::View<pat::MET> > mets;
-  const edm::View<pat::Photon>  *photons;
-  edm::Handle<edm::View<reco::Vertex> >  pvHandle;
+  edm::Handle<std::vector<pat::Tau> > taus;
+  edm::Handle<std::vector<pat::Jet> > jets;
+  const std::vector<pat::Jet> * jettt;
+  edm::Handle<std::vector<pat::MET> > mets;
+  const std::vector<pat::Photon>  *photons;
+  const std::vector<pat::PackedCandidate> *candidates;
+  edm::Handle<std::vector<reco::Vertex> >  pvHandle;
   edm ::Handle<reco::VertexCollection> vtx_h;
-  const edm::View<reco::Vertex> * vtxx;
+  const std::vector<reco::Vertex> * vtxx;
   double rhoIso;
   edm::Handle<reco::BeamSpot> beamSpotHandle;
   reco::BeamSpot beamSpot;
@@ -596,20 +685,61 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
   muonMatch_( iConfig.getParameter< std::string >( "muonMatch" ) ),
   muonMatch2_( iConfig.getParameter< std::string >( "muonMatch2" ) ),
-  photonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc")),
-  elecSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
-  muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),
+
+
+  ///G.N.
+  //elecSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
+  elecSrcToken_(consumes<vector<pat::Electron> >(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc"))),
+
+  //muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),  
+  muonSrcToken_(consumes<vector<pat::Muon> >(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc"))),
+
+  conversionsToken_(consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma","reducedConversions"))),
+
+  //jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
+  jetSrcToken_(consumes<vector<pat::Jet> >(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc"))),
+
+  //photonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc")),  
+  photonSrcToken_(consumes<vector<pat::Photon> >(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc"))),
+
+  //candidateSrc_(iConfig.getUntrackedParameter<edm::InputTag>("candidateSrc")), 
+  candidateSrcToken_(consumes<vector<pat::PackedCandidate> >(iConfig.getUntrackedParameter<edm::InputTag>("candidateSrc"))),
+ 
+  vertexToken_(consumes<vector<reco::Vertex> >(edm::InputTag("goodOfflinePrimaryVertices"))),
+
+  //mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
+  mSrcRhoToken_(consumes<double>(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" ))),
+
+  beamSpotToken_(consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"))),
+
+  //metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
+  metSourcesToken(),
+
+  HLTTagToken_(consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"))),
+
+  //genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
+  genParticleSrcToken_(consumes<vector<reco::GenParticle> >(iConfig.getUntrackedParameter<edm::InputTag>("genSrc"))),
+
+  //gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
+  gjetSrcToken_(consumes<vector<reco::GenJet> >(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc"))),
+
+  //puSrc_(iConfig.getUntrackedParameter<edm::InputTag> ("puSrc")),
+  puSrcToken_(consumes<vector<PileupSummaryInfo> >(edm::InputTag("puSrc"))),
+
+  generatorToken_(consumes<GenEventInfoProduct>(edm::InputTag("generator"))),
+  ///
+
+
   //tauSrc_(iConfig.getUntrackedParameter<edm::InputTag>("tauSrc" )),
-  jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
-  gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
   metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
-  mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
   //  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
-  genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
-  metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
+ 
   triggerStat_(iConfig.getUntrackedParameter<bool>("triggerStat", false)),
-  puSrc_(iConfig.getUntrackedParameter<edm::InputTag> ("puSrc")),
+
+  ecalHitEBToken_( consumes<EcalRecHitCollection>( iConfig.getParameter<edm::InputTag>( "reducedBarrelRecHitCollection" ) ) ),
+  ecalHitEEToken_( consumes<EcalRecHitCollection>( iConfig.getParameter<edm::InputTag>( "reducedEndcapRecHitCollection" ) ) ),
+  ecalHitESToken_( consumes<EcalRecHitCollection>( iConfig.getParameter<edm::InputTag>( "reducedPreshowerRecHitCollection" ) ) ),
   analyzedEventCnt_(0),
   photonIdsListed_(false),
   elecIdsListed_(false),
@@ -618,6 +748,13 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   //singleMuOnly_(0)
   //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
 {
+
+//G.N.
+auto metConfig = iConfig.getParameter<vector<edm::InputTag> >("metSource");
+for (auto& conf : metConfig) {
+  metSourcesToken.push_back(consumes<vector<pat::MET> >(conf));   
+}
+//
 }
 
 Tupel::~Tupel()
@@ -627,6 +764,7 @@ Tupel::~Tupel()
 void Tupel::defineBitFields(){
 
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltPhotMap_, TrigHltPhot_.get()));
+  trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltDiPhotMap_, TrigHltDiPhot_.get()));
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltMuMap_,   TrigHltMu_.get()));
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltDiMuMap_, TrigHltDiMu_.get()));
   trigHltMapList_.push_back(TrigHltMapRcd(&TrigHltElMap_,   TrigHltEl_.get()));
@@ -694,6 +832,17 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltPhot, 54, HLT_Photon90_R9Id90_HE10_Iso40_EBOnly);
   DEF_BIT2(TrigHltPhot, 55, HLT_Photon90_R9Id90_HE10_IsoM);
   DEF_BIT2(TrigHltPhot, 56, HLT_Photon90);
+
+  DEF_BIT2(TrigHltDiPhot, 1, HLT_DiSC30_18_EIso_AND_HE_Mass70);   //aggiunti per Boff
+  DEF_BIT2(TrigHltDiPhot, 2, HLT_DoublePhoton40);
+  DEF_BIT2(TrigHltDiPhot, 3, HLT_DoublePhoton50);
+  DEF_BIT2(TrigHltDiPhot, 4, HLT_DoublePhoton85);
+  DEF_BIT2(TrigHltDiPhot, 5, HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55); //aggiunti per Bon
+  DEF_BIT2(TrigHltDiPhot, 6, HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55);
+  DEF_BIT2(TrigHltDiPhot, 7, HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelSeedMatch_Mass70);
+  DEF_BIT2(TrigHltDiPhot, 8, HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95);
+  DEF_BIT2(TrigHltDiPhot, 9, HLT_Diphoton30_18_Solid_R9Id_AND_IsoCaloId_AND_HE_R9Id_Mass55);
+  DEF_BIT2(TrigHltDiPhot, 10, HLT_DoublePhoton60);
 
   DEF_BIT2(TrigHltDiMu, 1 ,HLT_DoubleMu33NoFiltersNoVtx);
   DEF_BIT2(TrigHltDiMu, 2 ,HLT_DoubleMu38NoFiltersNoVtx);
@@ -820,6 +969,10 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltDiEl, 7, HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf);
   DEF_BIT2(TrigHltDiEl, 8, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_MW);
   DEF_BIT2(TrigHltDiEl, 9, HLT_DoubleEle33_CaloIdL_GsfTrkIdVL);
+  DEF_BIT2(TrigHltDiEl, 10, HLT_DoubleEle25_CaloIdL_GsfTrkIdVL);  //aggiunto per Boff
+  DEF_BIT2(TrigHltDiEl, 11, HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT250); //aggiunti per Bon
+  DEF_BIT2(TrigHltDiEl, 12, HLT_Ele30WP60_Ele8_Mass55);
+  DEF_BIT2(TrigHltDiEl, 13, HLT_Ele30WP60_SC4_Mass55);
 
 
   DEF_BIT2(TrigHltElMu, 1, HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL);
@@ -870,27 +1023,41 @@ void Tupel::readEvent(const edm::Event& iEvent){
   *EvtIsRealData_ = iEvent.isRealData();
 
   const pat::helper::TriggerMatchHelper matchHelper;
-  iEvent.getByLabel(genParticleSrc_, genParticles_h);
+
+
+  ///G.N.
+
+  //iEvent.getByLabel(genParticleSrc_, genParticles_h);
+  iEvent.getByToken(genParticleSrcToken_, genParticles_h);
   genParticles  = genParticles_h.failedToGet () ? 0 : &*genParticles_h;
 
   // get muon collection
-  iEvent.getByLabel(muonSrc_,muons);
-  muon = muons.failedToGet () ? 0 : &*muons;
+  //iEvent.getByLabel(muonSrc_,muons);
+  iEvent.getByToken(muonSrcToken_, muons);
+  //muon = muons.failedToGet () ? 0 : &*muons;
+  muon = &*muons;
 
 
   // get electron collection
-  iEvent.getByLabel(elecSrc_,electrons);
-  electron = electrons.failedToGet () ? 0 :  &*electrons;
+  //iEvent.getByLabel(elecSrc_,electrons);
+  iEvent.getByToken(elecSrcToken_,electrons);
+  //electron = electrons.failedToGet () ? 0 :  &*electrons;
+  electron = &*electrons;
 
   // edm::Handle<reco::GsfElectronCollection> els_h;
   // iEvent.getByLabel("gsfElectrons", els_h);
-  iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);
+  
+
+  //iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);
+  iEvent.getByToken(conversionsToken_,conversions_h);
+
 
   // get tau collection
   iEvent.getByLabel(tauSrc_,taus);
 
   // get jet collection
-  iEvent.getByLabel(jetSrc_,jets);
+  //iEvent.getByLabel(jetSrc_,jets);
+  iEvent.getByToken(jetSrcToken_,jets);  
   //  jettt = jets.failedToGet () ? 0 : &*jets ;
   jettt = &*jets;
 
@@ -898,50 +1065,83 @@ void Tupel::readEvent(const edm::Event& iEvent){
   iEvent.getByLabel(metSrc_,mets);
 
   // get photon collection
-  edm::Handle<edm::View<pat::Photon> > hPhotons;
-  iEvent.getByLabel(photonSrc_, hPhotons);
+  //edm::Handle<edm::View<pat::Photon> > hPhotons;
+  edm::Handle<std::vector<pat::Photon> > hPhotons;
+
+  //iEvent.getByLabel(photonSrc_, hPhotons);
+  iEvent.getByToken(photonSrcToken_, hPhotons);
   //  photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
   photons = &*hPhotons;
 
+
+  // get track collection
+  //edm::Handle<edm::View<pat::PackedCandidate> > hCandidates;
+  edm::Handle<std::vector<pat::PackedCandidate> > hCandidates;  
+
+  //iEvent.getByLabel(candidateSrc_, hCandidates);
+  iEvent.getByToken(candidateSrcToken_, hCandidates);  
+  candidates = &*hCandidates;
+
+
   //get Gen jets
-  iEvent.getByLabel(gjetSrc_, genjetColl_);
+  //iEvent.getByLabel(gjetSrc_, genjetColl_);
+  iEvent.getByToken(gjetSrcToken_, genjetColl_);
 
-  iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
-  //vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
-  vtxx = &*pvHandle;
 
-  iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h);
+  //iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
+  iEvent.getByToken(vertexToken_, pvHandle);
+
+  vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
+  //vtxx = &*pvHandle;
+
+
+  //iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h);
+
   //  if(vtxx){
   //    int nvtx=vtx_h->size();
   //    if(nvtx==0) return;
   //    reco::VertexRef primVtx(vtx_h,0);
   //  }
 
-  iEvent.getByLabel(mSrcRho_, rho);
+
+  //iEvent.getByLabel(mSrcRho_, rho);
+  iEvent.getByToken(mSrcRhoToken_, rho);
+
   rhoIso=99;
   if(!rho.failedToGet()) rhoIso = *rho;
 
-  iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
+  
+  //iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
+  iEvent.getByToken(beamSpotToken_, beamSpotHandle);
+  ///
 
   if(!beamSpotHandle.failedToGet()) beamSpot = *beamSpotHandle;
 }
 
 void Tupel::processMET(const edm::Event& iEvent){
-  for(unsigned int imet=0;imet<metSources.size();imet++){
-    Handle<View<pat::MET> > metH;
-    iEvent.getByLabel(metSources[imet], metH);
+
+  ///G.N.
+  //for(unsigned int imet=0;imet<metSources.size();imet++){
+    //Handle<View<pat::MET> > metH;
+    //iEvent.getByLabel(metSources[imet], metH);
+ 
+  for(unsigned int imet=0;imet<metSourcesToken.size();imet++){
+    Handle<vector<pat::MET> > metH;  
+    iEvent.getByToken(metSourcesToken[imet], metH);
+  ///
+
     if(!metH.isValid())continue;
     //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
-    METPt_->push_back(metH->ptrAt(0)->pt());
-    METPx_->push_back(metH->ptrAt(0)->px());
-    METPy_->push_back(metH->ptrAt(0)->py());
-    METPz_->push_back(metH->ptrAt(0)->pz());
-    METE_->push_back(metH->ptrAt(0)->energy());
-    METsigx2_->push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,0));
-    METsigxy_->push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,1));
-    METsigy2_->push_back(metH->ptrAt(0)->getSignificanceMatrix()(1,1));
-    METsig_->push_back(metH->ptrAt(0)->significance());
+    METPt_->push_back(metH->at(0).pt());
+    METPx_->push_back(metH->at(0).px());
+    METPy_->push_back(metH->at(0).py());
+    METPz_->push_back(metH->at(0).pz());
+    METE_->push_back(metH->at(0).energy());
+    METsigx2_->push_back(metH->at(0).getSignificanceMatrix()(0,0));
+    METsigxy_->push_back(metH->at(0).getSignificanceMatrix()(0,1));
+    METsigy2_->push_back(metH->at(0).getSignificanceMatrix()(1,1));
+    METsig_->push_back(metH->at(0).significance());
     //Output object in EDM format
     //std::auto_ptr<llvvMet> metOut(new llvvMet());
     //llvvMet& met = *metOut;
@@ -960,7 +1160,11 @@ void Tupel::processMET(const edm::Event& iEvent){
 
 void Tupel::processVtx(){
   if(vtxx){
-    for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
+    ///G.N.
+    //for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
+    for (std::vector<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
+    ///
+
       if (vtx->isValid() && !vtx->isFake()) ++(*EvtVtxCnt_);
     }
   }
@@ -968,7 +1172,11 @@ void Tupel::processVtx(){
 
 void Tupel::processPu(const edm::Event& iEvent){
   Handle<std::vector< PileupSummaryInfo > >  PupInfo;
-  iEvent.getByLabel(puSrc_, PupInfo);
+  ///G.N.
+  //iEvent.getByLabel(puSrc_, PupInfo);
+  iEvent.getByToken(puSrcToken_, PupInfo);
+  ///
+
   if(!PupInfo.failedToGet()){
     std::vector<PileupSummaryInfo>::const_iterator PVI;
     float npT=-1.;
@@ -1080,7 +1288,11 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 	TLorentzVector genR1Pho1(0,0,0,0);
 
 	edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
-	iEvent.getByLabel(genParticleSrc_, genpart2);
+  ///G.N.
+  //iEvent.getByLabel(genParticleSrc_, genpart2);
+  iEvent.getByToken(genParticleSrcToken_, genpart2);
+  ///
+
 	const std::vector<reco::GenParticle> & gen2 = *genpart2;
 	//LOOP over photons//
 	if (st==1 && (abs(id)==13||abs(id)==11)){
@@ -1147,17 +1359,6 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       GJetAk04Eta_->push_back(genjet[k].eta());
       GJetAk04Phi_->push_back(genjet[k].phi());
       GJetAk04E_->push_back(genjet[k].energy());
-      //double isChargedJet=false;
-      //double chargedFraction = 0.;
-      //std::vector<const GenParticle*> mcparticles = genjet[k].getGenConstituents();
-      //for(std::vector <const GenParticle*>::const_iterator thepart =mcparticles.begin();thepart != mcparticles.end(); ++ thepart ) {
-      //  if ( (**thepart).charge()!=0 ){
-      //isChargedJet=true;
-      //    chargedFraction += (**thepart).pt();
-      //  }
-      //}
-      //if ( chargedFraction == 0 ) cout << " is chargeid: " << isChargedJet << "   " << chargedFraction/genjet[k].pt()<< endl;
-      //GJetAk04ChargedFraction_->push_back(chargedFraction/genjet[k].pt());
       GJetAk04ConstCnt_->push_back(genjet[k].numberOfDaughters());
       /*if(genjet[k].numberOfDaughters()>0){
 	for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
@@ -1173,7 +1374,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       TLorentzVector genjetlv;
       genjetlv.SetPtEtaPhiE( genjet[k].pt(), genjet[k].eta(), genjet[k].phi(), genjet[k].energy());
       float mindr = 100.;
-      //      int mindr_stat = -1;
+      //int mindr_stat = -1;
       int mindr_id =0;
           
       const std::vector<reco::GenParticle> & gen = *genParticles_h;
@@ -1190,7 +1391,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 
            if( dr < mindr ) {
                mindr = dr;
-	       //       mindr_stat = gen[i].status();
+               //mindr_stat = gen[i].status();
                mindr_id = gen[i].pdgId();
 
            }
@@ -1205,7 +1406,9 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 
 void Tupel::processPdfInfo(const edm::Event& iEvent){
   edm::Handle<GenEventInfoProduct> genEventInfoProd;
-  if (iEvent.getByLabel("generator", genEventInfoProd)) {
+  ///G.N.
+  //if (iEvent.getByLabel("generator", genEventInfoProd)) {
+  if (iEvent.getByToken(generatorToken_, genEventInfoProd)) {
     if (genEventInfoProd->hasBinningValues()){
       *GBinningValue_ = genEventInfoProd->binningValues()[0];
     }
@@ -1213,7 +1416,10 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
   }
   /// now get the PDF information
   edm::Handle<GenEventInfoProduct> pdfInfoHandle;
-  if (iEvent.getByLabel("generator", pdfInfoHandle)) {
+  //if (iEvent.getByLabel("generator", pdfInfoHandle)) {
+  if (iEvent.getByToken(generatorToken_, pdfInfoHandle)) {
+  ///
+
     if (pdfInfoHandle->pdf()) {
       GPdfId1_->push_back(pdfInfoHandle->pdf()->id.first);
       GPdfId2_->push_back(pdfInfoHandle->pdf()->id.second);
@@ -1231,10 +1437,16 @@ void Tupel::processTrigger(const edm::Event& iEvent){
   bool trigNameFilled = trigNames_.size();
   int ntrigs;
   edm::Handle< edm::TriggerResults > HLTResHandle;
-  edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
+  ///G.N.
+  //edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
+
   std::vector<int> trigIndexList;
   if(triggerStat_) trigIndexList.reserve(30);
-  iEvent.getByLabel(HLTTag, HLTResHandle);
+
+  //iEvent.getByLabel(HLTTag, HLTResHandle);
+  iEvent.getByToken(HLTTagToken_, HLTResHandle);  
+  ///
+
   std::ofstream f;
   if(analyzedEventCnt_==1){
     f.open("trigger_list.txt");
@@ -1297,7 +1509,8 @@ void Tupel::processMuons(){
   double MuFill = 0;
 
   for (unsigned int j = 0; j < muons->size(); ++j){
-    const edm::View<pat::Muon> & mu = *muons;
+    const vector<pat::Muon> & mu = *muons;
+
     if(mu[j].isGlobalMuon()){
       //const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
       //if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
@@ -1312,7 +1525,7 @@ void Tupel::processMuons(){
       if(vtxx){
 	unsigned bit = 0;
 	unsigned muonTightIds = 0;
-	for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
+	for (std::vector<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
 	  if(vtx->isValid() && !vtx->isFake() && mu[j].isTightMuon(*vtx)){
 	    muonTightIds |= (1 <<bit);
 	  }
@@ -1346,10 +1559,14 @@ void Tupel::processMuons(){
 	muonHits      = mu[j].globalTrack()->hitPattern().numberOfValidMuonHits();
 	nMatches      = mu[j].numberOfMatchedStations();
 	normChi2      = mu[j].globalTrack()->normalizedChi2();
-	if( !pvHandle->empty() && !pvHandle->front().isFake() ) {
-	  const reco::Vertex &vtx = pvHandle->front();
-	  dZ= mu[j].muonBestTrack()->dz(vtx.position());
-	}
+
+
+	 if( !pvHandle->empty() && !pvHandle->front().isFake() ) {
+	    const reco::Vertex &vtx = pvHandle->front();
+	   dZ= mu[j].muonBestTrack()->dz(vtx.position());
+  	}
+
+
       }
       MuTkNormChi2_->push_back(normChi2);
       MuTkHitCnt_->push_back(muonHits);
@@ -1470,9 +1687,15 @@ void Tupel::processElectrons(){
       ooEmooP_ = fabs(1.0/el.ecalEnergy() - el.eSuperClusterOverP()/el.ecalEnergy() );
     }
 
-    if(vtx_h->size() > 0){
-      d0_ = (-1) * el.gsfTrack()->dxy((*vtx_h)[0].position() );
-      dz_ = el.gsfTrack()->dz( (*vtx_h)[0].position() );
+    ///G.N.
+    //if(vtx_h->size() > 0){
+    //  d0_ = (-1) * el.gsfTrack()->dxy((*vtx_h)[0].position() );
+    //  dz_ = el.gsfTrack()->dz( (*vtx_h)[0].position() );
+    //}
+
+    if(pvHandle->size() > 0){
+      d0_ = (-1) * el.gsfTrack()->dxy((*pvHandle)[0].position() );
+      dz_ = el.gsfTrack()->dz( (*pvHandle)[0].position() );
     }
 
 
@@ -1514,6 +1737,14 @@ void Tupel::processElectrons(){
     ElE_->push_back(el.energy());
     ElCh_->push_back(el.charge());
 
+    ///G. N.
+    ElScRawE_->push_back(el.superCluster()->rawEnergy());
+    ElCorrE_->push_back(el.correctedEcalEnergy());
+
+    ElEcalIso_->push_back(el.ecalIso());
+    ElEcalPfIso_->push_back(el.ecalPFClusterIso());
+    ///
+
     double aeff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, el.superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012);
     ElAEff_->push_back(aeff);
 
@@ -1532,6 +1763,12 @@ void Tupel::processElectrons(){
     double rhoPrime = std::max(0., rhoIso);
 
     ElPfIsoRho_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - rhoPrime*(aeff)) )/ el.pt());
+
+
+    ElDr03TkSumPt_->push_back(el.dr03TkSumPt());
+    ElDr03EcalRecHitSumEt_->push_back(el.dr03EcalRecHitSumEt());
+    ElDr03HcalTowerSumEt_->push_back(el.dr03HcalTowerSumEt());
+
 
     bool myTrigPresel = false;
     if(fabs(el.superCluster()->eta()) < 1.479){
@@ -1671,9 +1908,51 @@ void Tupel::processJets(){
   }
 }
 
-void Tupel::processPhotons(){
+void Tupel::processPfCands()
+{
+  for (unsigned j = 0; j < candidates->size(); ++j){
+    const pat::PackedCandidate& cand = (*candidates)[j];
+    const reco::Track* track = cand.bestTrack();
+
+    double tDxy_ = -99.;
+    double tDz_ = -99.;
+    
+    if(pvHandle->size() > 0){
+      tDxy_ = (-1) * cand.dxy( (*pvHandle)[0].position() );
+      tDz_ = cand.dz( (*pvHandle)[0].position() );
+    }
+
+    PfCandPt_->push_back(cand.pt());
+    PfCandEta_->push_back(cand.eta());
+    PfCandPhi_->push_back(cand.phi());
+    PfCandE_->push_back(cand.energy());
+    PfCandVx_->push_back(cand.vx());
+    PfCandVy_->push_back(cand.vy());
+    PfCandVz_->push_back(cand.vz());
+    PfCandDz_->push_back(tDz_);
+    PfCandDxy_->push_back(tDxy_);
+    PfCandDzPV_->push_back(cand.dzAssociatedPV());
+    PfCandDxyPV_->push_back(cand.dxy());
+    if(track){
+      PfCandTkInPt_->push_back(track->pt());
+      PfCandTkInEta_->push_back(track->eta());
+      PfCandTkInPhi_->push_back(track->phi());
+      PfCandTkValidHitCnt_->push_back(track->numberOfValidHits());
+      PfCandTkValidFrac_->push_back(track->validFraction());
+      PfCandTkChi2_->push_back(track->normalizedChi2());
+    }
+  }
+}
+
+
+void Tupel::processPhotons(const edm::Event& iEvent, const edm::EventSetup& iSetup){
+
+  EcalClusterLazyTools lazyTool(iEvent, iSetup, ecalHitEBToken_, ecalHitEEToken_, ecalHitESToken_ );
+
   for (unsigned j = 0; j < photons->size(); ++j){
     const pat::Photon& photon = (*photons)[j];
+    const reco::CaloClusterPtr  seed_clu = photon.superCluster()->seed();
+
     //photon momentum
     PhotPt_->push_back(photon.pt());
     PhotEta_->push_back(photon.eta());
@@ -1696,25 +1975,26 @@ void Tupel::processPhotons(){
     //photon cluster shape
     PhotE3x3_->push_back(photon.e3x3());
     PhotE1x5_->push_back(photon.e1x5());
-    //PhotE1x3_->push_back(...);
-    //PhotE2x2_->push_back(...);
+    PhotE1x3_->push_back( lazyTool.e1x3( *seed_clu ) );
+    PhotE2x2_->push_back( lazyTool.e2x2( *seed_clu ) );
     PhotE2x5_->push_back(photon.e2x5());
     PhotE5x5_->push_back(photon.e5x5());
     PhotSigmaIetaIeta_->push_back(photon.sigmaIetaIeta());
     //PhotSigmaIetaIphi_->push_back(...);
     //PhotSigmaIphiIphi_->push_back(...);
-    PhotEtaWidth_->push_back(photon.sigmaEtaEta());
-    //PhotPhiWidth_->push_back(...);
 
-    //preshower
-    //PhotEsE_->push_back(...);
-    //PhotEsSigmaIxIx_->push_back(...);
-    //PhotEsSigmaIyIy_->push_back(...);
-    //PhotEsSigmaIrIr_->push_back(sqrt(std::pow(PhotEsSigmaIxIx_, 2)
-    //                                  + std::pow(PhotEsSigmaIyIy_, 2));
+    PhotEtaWidth_->push_back(photon.superCluster()->etaWidth());
+    PhotPhiWidth_->push_back(photon.superCluster()->phiWidth());
+    PhotR9_->push_back(photon.r9());
+    PhotS4_->push_back( lazyTool.e2x2( *seed_clu ) / lazyTool.e5x5( *seed_clu ) );
 
-    //photon time
-    //PhotTime_->push_back(...);
+
+    PhotE1x5Full5x5_->push_back(photon.full5x5_e1x5());    
+    PhotE2x5Full5x5_->push_back(photon.full5x5_e2x5());
+    PhotE3x3Full5x5_->push_back(photon.full5x5_e3x3());
+    PhotE5x5Full5x5_->push_back(photon.full5x5_e5x5());
+    PhotSigmaIetaIetaFull5x5_->push_back(photon.full5x5_sigmaIetaIeta());
+    PhotR9Full5x5_->push_back(photon.full5x5_r9());   
 
     //photon ids:
     std::vector<std::pair<std::string,Bool_t> > idlist = photon.photonIDs();
@@ -1739,7 +2019,6 @@ void Tupel::processPhotons(){
 }
 
 void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
-  using namespace edm; //ADD
   ++analyzedEventCnt_;
 
   readEvent(iEvent);
@@ -1747,10 +2026,6 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   // PAT trigger EvtNum
   //edm::Handle<pat::TriggerEvent>  triggerEvent;
   //iEvent.getByLabel( triggerEvent_, triggerEvent );
-
-
-  // edm::Handle<edm::ValueMap<float> > full5x5sieie;
-  // iEvent.getByToken(full5x5SigmaIEtaIEtaMapToken_,full5x5sieie);
 
   processMET(iEvent);
 
@@ -1774,7 +2049,11 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   if(jettt) processJets();
 
   //photons. Ph. G.
-  if(photons) processPhotons();
+  //if(photons) processPhotons(); 
+  if(photons) processPhotons(iEvent, iSetup);
+
+  //tracks G.N.
+  if(candidates) processPfCands();
 
   //Stores the EvtNum in the output tree
   treeHelper_->fill();
@@ -1835,10 +2114,11 @@ Tupel::beginJob()
   //Trigger
   ADD_BRANCH_D(TrigHlt, "HLT triggger bits. See BitField.TrigHlt for bit description.");
   ADD_BRANCH_D(TrigHltPhot, "HLT Photon triggger bits. See BitField.TrigHltPhot for bit description.");
+  ADD_BRANCH_D(TrigHltDiPhot, "HLT Diphoton triggger bits. See BitField.TrigHltDiPhot for bit description.");  
   ADD_BRANCH_D(TrigHltMu, "HLT Muon triggger bits. See BitField.TrigHltMu for bit description.");
   ADD_BRANCH_D(TrigHltDiMu, "HLT Dimuon triggger bits. See BitField.TrigHltDiMu for bit description.");
   ADD_BRANCH_D(TrigHltEl, "HLT Electron triggger bits. See BitField.TrigHltEl for bit description.");
-  ADD_BRANCH_D(TrigHltDiEl, "HLT Dielecton triggger bits. See BitField.TrigHltDiEl for bit description.");
+  ADD_BRANCH_D(TrigHltDiEl, "HLT Dielectron triggger bits. See BitField.TrigHltDiEl for bit description.");
   ADD_BRANCH_D(TrigHltElMu, "HLT Muon + Electron triggger bits. See BitField.TrigHltElMu for bit description.");
 
   //Missing Energy
@@ -1972,6 +2252,12 @@ Tupel::beginJob()
   ADD_BRANCH(ElE);
   ADD_BRANCH(ElId);
   ADD_BRANCH(ElCh);
+  //G.N.
+  ADD_BRANCH_D(ElScRawE, "Electron Supercluster uncorrected energy");
+  ADD_BRANCH_D(ElCorrE, "Electron ncorrected energy");
+  ADD_BRANCH_D(ElEcalIso, "ECAL-only isolation");
+  ADD_BRANCH_D(ElEcalPfIso, "ECAL-only PFcluster isolation");
+  //
   ADD_BRANCH(ElMvaTrig);
   ADD_BRANCH(ElMvaNonTrig);
   ADD_BRANCH(ElMvaPresel);
@@ -1994,20 +2280,36 @@ Tupel::beginJob()
   ADD_BRANCH(ElPfIsoDbeta);
   ADD_BRANCH(ElPfIsoRho);
   ADD_BRANCH_D(ElAEff, "Electron effecive area");
+  ADD_BRANCH(ElDr03TkSumPt);
+  ADD_BRANCH(ElDr03EcalRecHitSumEt);
+  ADD_BRANCH(ElDr03HcalTowerSumEt);
 
-  ADD_BRANCH(charged);
-  ADD_BRANCH(photon);
-  ADD_BRANCH(neutral);
-  ADD_BRANCH(charged_Tom);
-  ADD_BRANCH(photon_Tom);
-  ADD_BRANCH(neutral_Tom);
-
+  //tracks
+  treeHelper_->addDescription("PfCands", "PF particle candidates");
+  ADD_BRANCH(PfCandPt);
+  ADD_BRANCH(PfCandEta);
+  ADD_BRANCH(PfCandPhi);
+  ADD_BRANCH(PfCandE);
+  ADD_BRANCH(PfCandTkInPt);
+  ADD_BRANCH(PfCandTkInEta);
+  ADD_BRANCH(PfCandTkInPhi);
+  ADD_BRANCH(PfCandVx);
+  ADD_BRANCH(PfCandVy);
+  ADD_BRANCH(PfCandVz);
+  ADD_BRANCH(PfCandTkValidHitCnt);
+  ADD_BRANCH(PfCandTkValidFrac);
+  ADD_BRANCH(PfCandTkChi2);
+  ADD_BRANCH(PfCandDz);
+  ADD_BRANCH(PfCandDxy);
+  ADD_BRANCH(PfCandDz0);
+  ADD_BRANCH(PfCandDzPV);
+  ADD_BRANCH(PfCandDxyPV);
 
   //photon momenta
   treeHelper_->addDescription("Phot", "Particle flow photons");
-  ADD_BRANCH(PhotPt);;
-  ADD_BRANCH(PhotEta);;
-  ADD_BRANCH(PhotPhi);;
+  ADD_BRANCH(PhotPt);
+  ADD_BRANCH(PhotEta);
+  ADD_BRANCH(PhotPhi);
   ADD_BRANCH_D(PhotScRawE, "Photon Supercluster uncorrected energy");
   ADD_BRANCH_D(PhotScEta, "Photon Supercluster eta");
   ADD_BRANCH_D(PhotScPhi, "Photon Supercluster phi");
@@ -2026,16 +2328,24 @@ Tupel::beginJob()
   //photon cluster shapes
   ADD_BRANCH_D(PhotE3x3, "Photon energy deposited in 3x3 ECAL crystal array. Divide this quantity by PhotScRawE to obtain the R9 variable.");
   ADD_BRANCH(PhotE1x5);
-  //ADD_BRANCH(PhotE1x3);
-  //ADD_BRANCH(PhotE2x2);
   ADD_BRANCH(PhotE2x5);
   ADD_BRANCH(PhotE5x5);
   ADD_BRANCH(PhotSigmaIetaIeta);
   //ADD_BRANCH(PhotSigmaIetaIphi);
   //ADD_BRANCH(PhotSigmaIphiIphi);
+  ADD_BRANCH(PhotHoE);
   ADD_BRANCH(PhotEtaWidth);
   ADD_BRANCH(PhotPhiWidth);
-  ADD_BRANCH(PhotHoE);
+  ADD_BRANCH(PhotR9);
+  ADD_BRANCH(PhotE1x3);  
+  ADD_BRANCH(PhotE2x2);
+  ADD_BRANCH(PhotS4);
+  ADD_BRANCH(PhotE1x5Full5x5);
+  ADD_BRANCH(PhotE2x5Full5x5);
+  ADD_BRANCH(PhotE3x3Full5x5);
+  ADD_BRANCH(PhotE5x5Full5x5);
+  ADD_BRANCH(PhotSigmaIetaIetaFull5x5);
+  ADD_BRANCH(PhotR9Full5x5);
 
   //photon ES
   //ADD_BRANCH_D(PhotEsE, "Photon. Energy deposited in the preshower");
