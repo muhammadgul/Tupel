@@ -62,6 +62,7 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "DataFormats/BTauReco/interface/JetTag.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
+#include "CondFormats/DataRecord/interface/HBHENegativeEFilterRcd.h"
 
 #include "TreeHelper.h"
 
@@ -177,6 +178,8 @@ private:
   void processPdfInfo(const edm::Event& iEvent);
 
   void processTrigger(const edm::Event& iEvent);
+    
+  void processMETFilter(const edm::Event& iEvent);
 
   void processMuons();
 
@@ -249,6 +252,9 @@ private:
   std::auto_ptr<int> 	  EvtPuCntTruth_;
   std::auto_ptr<std::vector<double> > EvtWeights_;
   std::auto_ptr<float>    EvtFastJetRho_;
+    
+  // MET Filter
+  std::auto_ptr<ULong64_t>         TrigMET_;
 
   //Trigger
   std::auto_ptr<unsigned>          TrigHlt_;
@@ -282,6 +288,11 @@ private:
   std::auto_ptr<std::vector<float> > METPy_;
   std::auto_ptr<std::vector<float> > METPz_;
   std::auto_ptr<std::vector<float> > METE_;
+  std::auto_ptr<std::vector<float> > GMETPt_;
+  std::auto_ptr<std::vector<float> > GMETPx_;
+  std::auto_ptr<std::vector<float> > GMETPy_;
+  std::auto_ptr<std::vector<float> > GMETPz_;
+  std::auto_ptr<std::vector<float> > GMETE_;
   std::auto_ptr<std::vector<float> > METsigx2_;
   std::auto_ptr<std::vector<float> > METsigxy_;
   std::auto_ptr<std::vector<float> > METsigy2_;
@@ -523,6 +534,7 @@ private:
   std::auto_ptr<std::vector<float> > JetAk04BDiscSsvhe_;
   std::auto_ptr<std::vector<float> > JetAk04BDiscSsvhp_;
   std::auto_ptr<std::vector<float> > JetAk04PartFlav_;
+  std::auto_ptr<std::vector<float> > JetAk04HadFlav_;
   std::auto_ptr<std::vector<float> > JetAk04JecUncUp_;
   std::auto_ptr<std::vector<float> > JetAk04JecUncDwn_;
   std::auto_ptr<std::vector<int> >   JetAk04ConstId_;
@@ -932,6 +944,7 @@ void Tupel::processMET(const edm::Event& iEvent){
     iEvent.getByLabel(metSources[imet], metH);
     if(!metH.isValid())continue;
     //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
+    //cout << " GMETPx_ " << metH->ptrAt(0)->genMET()->px() << " GMETE_ " << metH->ptrAt(0)->genMET()->energy() << " GMETPt_ " << metH->ptrAt(0)->genMET()->pt() << " met.pt() " << metH->ptrAt(0)->pt() << " met.px() " << metH->ptrAt(0)->px() << " corr Px " << metH->ptrAt(0)->px() - metH->ptrAt(0)->uncorPx() << " met.uncorPt() " << metH->ptrAt(0)->uncorPt() << " met.uncorPhi() " << metH->ptrAt(0)->uncorPhi() << " met.uncorPx() " << metH->ptrAt(0)->uncorPx() << endl;
 
     METPt_->push_back(metH->ptrAt(0)->pt());
     METPx_->push_back(metH->ptrAt(0)->px());
@@ -942,6 +955,14 @@ void Tupel::processMET(const edm::Event& iEvent){
     METsigxy_->push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,1));
     METsigy2_->push_back(metH->ptrAt(0)->getSignificanceMatrix()(1,1));
     METsig_->push_back(metH->ptrAt(0)->significance());
+      if(!*EvtIsRealData_){
+          GMETPt_->push_back(metH->ptrAt(0)->genMET()->pt());
+          GMETPx_->push_back(metH->ptrAt(0)->genMET()->px());
+          GMETPy_->push_back(metH->ptrAt(0)->genMET()->py());
+          GMETPz_->push_back(metH->ptrAt(0)->genMET()->pz());
+          GMETE_->push_back(metH->ptrAt(0)->genMET()->energy());
+      }
+      
     //Output object in EDM format
     //std::auto_ptr<llvvMet> metOut(new llvvMet());
     //llvvMet& met = *metOut;
@@ -1140,6 +1161,9 @@ void Tupel::processGenJets(const edm::Event& iEvent){
   Handle<LHEEventProduct> lheH;
   iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
   if(lheH.isValid()) *GNup_ = lheH->hepeup().NUP;
+    //*GNup_ = lheH->hepeup().NUP;
+    //cout << " lheH.isValid() " << lheH.isValid() << " GNup_ " << *GNup_ << endl;
+    
   if(!genjetColl_.failedToGet()){
     const reco::GenJetCollection & genjet = *genjetColl_;
     for(unsigned int k=0; k < genjet.size(); ++k){
@@ -1173,7 +1197,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       TLorentzVector genjetlv;
       genjetlv.SetPtEtaPhiE( genjet[k].pt(), genjet[k].eta(), genjet[k].phi(), genjet[k].energy());
       float mindr = 100.;
-      //      int mindr_stat = -1;
+      //int mindr_stat = -1;
       int mindr_id =0;
           
       const std::vector<reco::GenParticle> & gen = *genParticles_h;
@@ -1190,7 +1214,7 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 
            if( dr < mindr ) {
                mindr = dr;
-	       //       mindr_stat = gen[i].status();
+               //mindr_stat = gen[i].status();
                mindr_id = gen[i].pdgId();
 
            }
@@ -1225,6 +1249,39 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
     }
   }
 }
+
+void Tupel::processMETFilter(const edm::Event& iEvent){
+    edm::Handle< edm::TriggerResults > MetFilHandle;
+    edm::InputTag MetFilTag = edm::InputTag( "TriggerResults", "", "PAT");
+    iEvent.getByLabel(MetFilTag, MetFilHandle);
+    
+    if ( MetFilHandle.isValid() && !MetFilHandle.failedToGet() ) {
+        edm::RefProd<edm::TriggerNames> MetFilNames( &(iEvent.triggerNames( *MetFilHandle )) );
+        int nMetFil = (int)MetFilNames->size();
+        
+        // 0    Flag_HBHENoiseFilter    TO BE USED
+        // 1    Flag_HBHENoiseIsoFilter TO BE USED
+        // 2    Flag_CSCTightHaloFilter TO BE USED
+        // 3    Flag_hcalLaserEventFilter
+        // 4    Flag_EcalDeadCellTriggerPrimitiveFilter
+        // 5    Flag_EcalDeadCellBoundaryEnergyFilter
+        // 6    Flag_goodVertices       TO BE USED
+        // 7    Flag_eeBadScFilter      TO BE USED
+        // 8    Flag_ecalLaserCorrFilter
+        // 9    Flag_trkPOGFilters
+        // 10   Flag_trkPOG_manystripclus53X
+        // 11   Flag_trkPOG_toomanystripclus53X
+        // 12   Flag_trkPOG_logErrorTooManyClusters
+        // 13   Flag_METFilters
+        
+        for (int i = 0; i < nMetFil; i++) {
+            //cout << MetFilNames->triggerName(i) << "  " <<  MetFilHandle->accept(i) << " " << MetFilHandle.product()->accept(i) <<  "  ";
+            if (MetFilHandle->accept(i)) *TrigMET_ |= 1LL <<i;
+            //cout << *TrigMET_ << endl;
+        }
+    }
+}
+
 
 
 void Tupel::processTrigger(const edm::Event& iEvent){
@@ -1565,8 +1622,7 @@ void Tupel::processJets(){
   double nemf = 0;
   double cmult = 0;
   double nconst = 0;
-
-
+    
   for ( unsigned int i=0; i<jets->size(); ++i ) {
     const pat::Jet & jet = jets->at(i);
 
@@ -1593,7 +1649,11 @@ void Tupel::processJets(){
     JetAk04BDiscSsvhe_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
     JetAk04BDiscSsvhp_->push_back(jet.bDiscriminator("pfSimpleSecondaryVertexHighPurBJetTags"));
     JetAk04PartFlav_->push_back(jet.partonFlavour());
+    JetAk04HadFlav_->push_back(jet.hadronFlavour());
 
+    //cout << " JetAk04HadFlav_ " << jet.hadronFlavour() << " " << jet.partonFlavour() << endl;
+    //cout << " jet.pt() " << jet.pt() << " corr " << jet.pt()/jet.correctedJet(0).pt() << " jet.correctedJet(0).pt() " << jet.correctedJet(0).pt() << " " << jet.eta() << endl;
+      
     JetAk04E_->push_back(jet.energy());
     JetAk04Pt_->push_back(jet.pt());
     JetAk04Eta_->push_back(jet.eta());
@@ -1742,6 +1802,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   using namespace edm; //ADD
   ++analyzedEventCnt_;
 
+  //cout << " ------ New Event ----- "  << endl;
   readEvent(iEvent);
 
   // PAT trigger EvtNum
@@ -1764,6 +1825,8 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   }
 
   processTrigger(iEvent);
+    
+  processMETFilter(iEvent);
 
   if(muon) processMuons();
 
@@ -1831,6 +1894,8 @@ Tupel::beginJob()
   ADD_BRANCH_D(EvtPuCntTruth, "True number of pile-up events");
   ADD_BRANCH(EvtWeights); //description filled in endRun()
   ADD_BRANCH_D(EvtFastJetRho, "Fastjet pile-up variable \\rho");
+    
+  ADD_BRANCH(TrigMET);
 
   //Trigger
   ADD_BRANCH_D(TrigHlt, "HLT triggger bits. See BitField.TrigHlt for bit description.");
@@ -1852,6 +1917,14 @@ Tupel::beginJob()
   ADD_BRANCH(METsigxy);
   ADD_BRANCH(METsigy2);
   ADD_BRANCH(METsig);
+
+  //Generator MET
+  treeHelper_->addDescription("MET", "Generator level MET");
+  ADD_BRANCH(GMETPt);
+  ADD_BRANCH(GMETPx);
+  ADD_BRANCH(GMETPy);
+  ADD_BRANCH(GMETPz);
+  ADD_BRANCH(GMETE);
 
   //Generator level leptons.
   treeHelper_->addDescription("GLepDr01", "Generator-level leptons. Muons and electrons and their antiparticles are dressed using a cone of radius R = 0.1");
@@ -2084,7 +2157,8 @@ Tupel::beginJob()
   ADD_BRANCH_D(JetAk04BDiscTchp, "pfTrackCountingHighPurBJetTags");
   ADD_BRANCH_D(JetAk04BDiscSsvhe, "pfSimpleSecondaryVertexHighEffBJetTags");
   ADD_BRANCH_D(JetAk04BDiscSsvhp, "pfSimpleSecondaryVertexHighPurBJetTags");
-  ADD_BRANCH_D(JetAk04PartFlav, "Quark-based jet.");
+  ADD_BRANCH_D(JetAk04PartFlav, "Quark-based jet flavor.");
+  ADD_BRANCH_D(JetAk04HadFlav, "Hadron-based jet flavor.");
   ADD_BRANCH(JetAk04JecUncUp);
   ADD_BRANCH(JetAk04JecUncDwn);
   ADD_BRANCH(JetAk04ConstId);
