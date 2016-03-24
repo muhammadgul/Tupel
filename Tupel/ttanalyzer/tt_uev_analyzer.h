@@ -707,6 +707,7 @@ class tt_uev_analyzer {
   bool dosignal=false;
   bool dopdf=false;
   bool doe=false;
+  int nev=-1;
   int idd=13;
   int jes=0;
   double pi = 3.1415926535897932384626433832795028841971693;
@@ -728,14 +729,95 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
     if (!f || !f->IsOpen()) {
       f = new TFile("Memory Directory");
     }
-    f->GetObject("MuonTree",tree);
+    f->GetObject("tupel/MuonTree",tree);
 
 #else // SINGLE_TREE
 
       // The following code should be used if you want this class to access a chain
       // of trees.
-    TChain * chain = new TChain("MuonTree","");
+    TChain * chain = new TChain("tupel/MuonTree","");
     if(doe)idd=11;
+    /*
+    #include "25ns_data_D_prompt_local.h"
+    #include "25ns_data_D_reminiaod_local.h"
+    name="25ns_data_D_uev_newlist_20160307_fromskimmed";
+    */
+    /*  
+    #include "25ns_wjet_local.h"
+    name="25ns_wjet_uev_miniaodv2_20160307_fromskimmed";
+    */
+    /*
+    #include "25ns_tt_local.h"
+    dosignal=true;
+    nev=1000000;
+    name="25ns_tt_uev_miniaodv2_20160307_fromskimmed";
+    */
+    /*
+    #include "25ns_st_t_top_uev_local.h"
+    name="25ns_st_t_top_uev_20160307_fromskimmed";
+    */
+    /*
+    #include "25ns_st_t_atop_uev_local.h"
+    name="25ns_st_t_atop_uev_20160307_fromskimmed";
+    */
+    /*
+    #include "25ns_st_tw_atop_uev_local.h"
+    name="25ns_st_tw_top_uev_20160307_fromskimmed";
+    */
+    /*
+    #include "25ns_st_tw_top_uev_local.h"
+    name="25ns_st_tw_atop_uev_20160307_fromskimmed";
+    */
+    /*
+    #include "25ns_powheg_hpp_local.h"
+    name="powheg_hpp";
+    */
+    /*
+    #include "25ns_powheg_sdn_local.h"
+    name="powheg_sdn";
+    */
+    /*
+    #include "25ns_powheg_sup_local.h"
+    name="powheg_up";
+    */
+    /*
+    #include "25ns_data_D_prompt_local.h"
+    #include "25ns_data_D_reminiaod_local.h"
+    name="25ns_data_D_uev_newlist_2110_fromskimmed_jes_1";
+    jes=1;
+    */
+
+
+    /*
+    #include "25ns_data_D_prompt_local.h"
+    #include "25ns_data_D_reminiaod_local.h"
+    name="25ns_data_D_uev_newlist_2110_fromskimmed_jes_-1";
+    jes=-1;
+    */
+
+
+    
+    #include "25ns_tt_local.h"
+    nev=1000000;
+    dosignal=true;
+    dopdf=true;
+    name="25ns_tt_uev_miniaodv2_2110_fromskimmed_pdfvar";
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*    
       chain->Add("/sdb4/Bugra/skimmed/25ns_data_D_reminiaod.root");
@@ -762,16 +844,45 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
       chain->Add("/sdb5/Bugra/skimmed/25ns_wjet.root");
       name="25ns_wjet_uev_miniaodv2_2110_fromskimmed";
     */
-  /*  
-    chain->Add("/sdb2/Bugra/skimmed/25ns_tt_.root");
-    chain->Add("/sdb2/Bugra/skimmed/25ns_tt__1.root");
-    chain->Add("/sdb2/Bugra/skimmed/25ns_tt__2.root");
-    chain->Add("/sdb2/Bugra/skimmed/25ns_tt__3.root");
+    
+//    chain->Add("/sdb2/Bugra/skimmed/25ns_tt_.root");
+//    chain->Add("/sdb2/Bugra/skimmed/25ns_tt__1.root");
+//    chain->Add("/sdb2/Bugra/skimmed/25ns_tt__2.root");
+//    chain->Add("/sdb2/Bugra/skimmed/25ns_tt__3.root");
+
+//    #include "25ns_tt_uev_miniaodv2_0202_forskimmer.h"
+//    chain->Add("/sdb4/Bugra/skimmed/withJEC_DYJetsToLL_ntuple_13.root");
+/*    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_1.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_10.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_100.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_101.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_102.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_103.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_105.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_106.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_107.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_108.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_109.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_11.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_110.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_111.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_112.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_113.root");
+    chain->Add("/sdb4/Bugra/skimmed/TT_TuneCUETP8M1_13TeV-powheg-pythia8/withJEC_DYJetsToLL_ntuple_114.root");
+
     dosignal=true;
     name="25ns_tt_uev_miniaodv2_2110_fromskimmed";
-    */
-
-
+   */ 
+/*
+    chain->Add("../Sskimmed.root");
+    dosignal=true;
+    name="25ns_tt_uev_miniaodv2_2110_skimmedversion";
+*/
+/*
+    chain->Add("../Snotskimmed.root");
+    dosignal=true;
+    name="25ns_tt_uev_miniaodv2_2110_nonskimmedversion";
+*/
     /*
       chain->Add("/sdb4/Bugra/skimmed/25ns_st_t_top.root");
       name="25ns_st_t_top_uev_2110_fromskimmed";
@@ -830,10 +941,11 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
 
 
 //    std::cout<<"aaaaa"<<std::endl;
+/*
     chain->Add("/sdb3/Bugra/skimmed/25ns_tt_50k_newcut.root");
     dosignal=true;
     name="25ns_tt_uev_miniaodv2_2110_fromskimmed_small";
-
+*/
 /*
     chain->Add("/sdb2/Bugra/skimmed/25ns_tt_small_getcorr.root");
     dosignal=true;

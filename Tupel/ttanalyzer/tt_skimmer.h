@@ -737,48 +737,7 @@ tt_skimmer::tt_skimmer(TTree *tree) : fChain(0)
       // of trees.
       TChain * chain = new TChain("tupel/MuonTree","");
       if(doe)idd=11;
-/*
-chain->Add("/afs/cern.ch/work/b/bbilin/Tupel_13_tev_miniaod/CMSSW_7_4_14/src/Tupel/Tupel/withJEC_DYJetsToLL_ntuple.root");
-name="small_forbageff_25ns_tt_.root";
-*/
-/*
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_1.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_2.root");
 
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_3.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_4.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_5.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_6.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_7.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_8.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_9.root");
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_10.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_11.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_12.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_13.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_14.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_01022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160201_210910/0000/withJEC_DYJetsToLL_ntuple_15.root");
-
-
-name="25ns_tt_small_getcorr.root";
-
-*/
-
-/*
-#include "25ns_data_D_prompt_uev_newlist_0202_forskimmer_jecv6.h"
-name="25ns_data_D_prompt_jecv6.root";
-*/
-/*
-#include "25ns_data_D_reminiaod_uev_newlist_0202_forskimmer_jecv6.h"
-name="25ns_data_D_reminiaod_jecv6.root";
-*/
 
 /*
 #include "25ns_data_D_prompt_uev_newlist_0202_forskimmer_jecv7.h"
@@ -788,14 +747,7 @@ name="25ns_data_D_prompt_jecv7.root";
 #include "25ns_data_D_reminiaod_uev_newlist_0202_forskimmer_jecv7.h"
 name="25ns_data_D_reminiaod_jecv7.root";
 */
-/*
-#include "25ns_data_D_prompt_uev_newlist_0202_forskimmer.h"
-name="25ns_data_D_prompt.root";
-*/
-/*
-#include "25ns_data_D_reminiaod_uev_newlist_0202_forskimmer.h"
-name="25ns_data_D_reminiaod.root";
-*/
+
 /*
 #include "25ns_wjet_uev_miniaodv2_0202_forskimmer.h"
 name="25ns_wjet.root";
@@ -828,37 +780,18 @@ name="powheg_hpp.root";
 #include "inlist_powheg_sdn.h"
 name="powheg_sdn.root";
 */
-/*
+
 #include "inlist_powheg_sup.h"
 name="powheg_up.root";
-*/
 
 
 
+//small tree produced locally
 
 /*
-
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_100.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_101.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_102.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_103.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_104.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_105.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_106.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_107.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_108.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_109.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_10.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_110.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_111.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_112.root");
-chain->Add("root://eoscms//eos/cms/store/group/phys_top/bbilin/n-tupel/25ns_pf_reduced_08022016/TT_TuneCUETP8M1_13TeV-powheg-pythia8/TT_TuneCUETP8M1_13TeV-powheg-pythia8_RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/160208_162540/0000/withJEC_DYJetsToLL_ntuple_113.root");
-name="25ns_tt_small.root";
-
-*/
 chain->Add("../withJEC_DYJetsToLL_ntuple.root");
 name="25ns_tt_50k_newcut.root";
-
+*/
 
 
       tree = chain;

@@ -88,7 +88,7 @@ void tt_uev_analyzer::Loop()
 
   standalone_LumiReWeighting puWeight(201525,0), puUp(201525,1), puDown(201525,-1);
   Long64_t nentries = fChain->GetEntries();
-  //   if(nentries > 1)nentries = 1000;
+     if(nev > 1)nentries = nev;
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
@@ -161,7 +161,6 @@ void tt_uev_analyzer::Loop()
   TH1* h_miss_eta[pdfind_max*2];
   TH1* h_miss_mult[pdfind_max*2];
 
-  //cout<<"aaaaaaaaaaaaaaa"<<endl;
   TH1* h_ljet_pt[pdfind_max*2];
   TH1* h_ljet_eta[pdfind_max*2];
   TH1* h_sljet_pt[pdfind_max*2];
@@ -1516,71 +1515,14 @@ void tt_uev_analyzer::Loop()
   //cout<<"bbbbbbbbbb"<<endl;
 
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    // cout<<"cccccccccc"<<endl;
+
+    wtot+=wtot_write;
+
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     if(jentry%10000==0)cout<<name<<" << "<<jentry<<"/"<<nentries<<endl;
 
-
-    int gn_pf_nott=0;
-    int n_pf_nott=0;
-    int n_pf_nott_1=0;
-    int n_pf_nott_2=0;
-
-      for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
-	if(Packed01Pt->at(gp_ind)<0.5 || fabs(Packed01Eta->at(gp_ind))>2.1 ||Packed01Charge->at(gp_ind)==0)continue;
-      gn_pf_nott++;
-    }
-          double ww=1.;
-          if (PU_npT>0)ww=puWeight.weight(int(PU_npT));
-    for(unsigned int pfind =0; pfind<patPfCandPt->size();pfind++){
-      if(patPfCandPt->at(pfind)<0.5 || fabs(patPfCandEta->at(pfind))>2.1||patPfCandCharge->at(pfind)==0 )continue;
-      n_pf_nott++;
-//||patPfCandFromPv->at(pfind)<2||fabs(patPfCandDxy->at(pfind))>1 ||fabs(patPfCandDz->at(pfind))>3 ||patPfCandEta->at(pfind)>2.1
- //     if(patPfCandFromPv->at(pfind)>=2)n_pf_nott_1++;
- //     if(patPfCandFromPv->at(pfind)>=2&&fabs(patPfCandDxy->at(pfind))<=1 &&fabs(patPfCandDz->at(pfind))<=3 )n_pf_nott_2++;
-
-      if(patPfpvAssociationQuality->at(pfind)>4 && patPfCandVertexRef->at(pfind)==0){
-        n_pf_nott_1++;
-       // if(patPfCandDxyerr->at(pfind)==0||patPfCandDzerr->at(pfind)==0)cout<<patPfCandDxy->at(pfind)/patPfCandDxyerr->at(pfind)<<"  "<<patPfCandDz->at(pfind)/patPfCandDzerr->at(pfind)<<endl;
-       // if(patPfCandDxyerr->at(pfind)==0)cout<<patPfCandDxy->at(pfind)<<endl;
-       // if(patPfCandDzerr->at(pfind)==0)cout<<patPfCandDz->at(pfind)<<endl;
-        h_sig_DXY->Fill(patPfCandDxy->at(pfind)/patPfCandDxyerr->at(pfind),ww);
-        h_sig_DZ->Fill(patPfCandDz->at(pfind)/patPfCandDzerr->at(pfind),ww);
-        h_sig_DXY_DZ->Fill(patPfCandDxy->at(pfind)/patPfCandDxyerr->at(pfind),patPfCandDz->at(pfind)/patPfCandDzerr->at(pfind),ww);
-        h_track_high_purity->Fill(patPfCandTrackHighPurity->at(pfind),ww);
-        if(patPfCandDxyerr->at(pfind)==0||patPfCandDzerr->at(pfind)==0){
-          h_zeroerr_DXY->Fill(patPfCandDxy->at(pfind),ww);
-          h_zeroerr_DZ->Fill(patPfCandDz->at(pfind),ww);
-          h_zeroerr_DXY_DZ->Fill(patPfCandDxy->at(pfind),patPfCandDz->at(pfind),ww);
-        }
-        if(!(patPfCandDxyerr->at(pfind)==0||patPfCandDzerr->at(pfind)==0)){
-          h_nzeroerr_DXY->Fill(patPfCandDxy->at(pfind),ww);
-          h_nzeroerr_DZ->Fill(patPfCandDz->at(pfind),ww);
-          h_nzeroerr_DXY_DZ->Fill(patPfCandDxy->at(pfind),patPfCandDz->at(pfind),ww);
-        }
-
-      }
-      if(patPfpvAssociationQuality->at(pfind)>4 && patPfCandVertexRef->at(pfind)==0 &&patPfCandTrackHighPurity->at(pfind)!=0 /*&&
-        ((patPfCandDxyerr->at(pfind)==0&& patPfCandDzerr->at(pfind)==0) ||(fabs(patPfCandDxy->at(pfind)/patPfCandDxyerr->at(pfind))<15. &&fabs(patPfCandDz->at(pfind)/patPfCandDzerr->at(pfind))<15.))*/ ){
-        n_pf_nott_2++;
-      }
-    }
-
-
-	  h_1d_npf_nott[0]->Fill(gn_pf_nott);
-      //    cout<<puWeight.weight(int(PU_npT))<<endl;
-
-
-	  h_1d_npf_nott[1]->Fill(n_pf_nott,ww);
-
-	  h_1d_npf_nott[2]->Fill(n_pf_nott_1,puWeight.weight(int(PU_npT)));
-	  h_1d_npf_nott[3]->Fill(n_pf_nott_2,puWeight.weight(int(PU_npT)));
-
-    // if (Cut(ientry) < 0) continue;
-    //cout<<int(PU_npT)<<"  "<<puWeight.weight(int(PU_npT))<<endl;
-    //if(run>258158)continue;
     int mu_index=0;	
     int mu_index20=0;	
     vector<TLorentzVector>mu_vector;
@@ -1600,9 +1542,6 @@ void tt_uev_analyzer::Loop()
     vector<vector<double> >jet_ConstE;
     int st1mu=0;
     vector<TLorentzVector> vector_vector_gp;
-  //  vector<TLorentzVector> st01_mu_vector;
-  //  vector<int> st01_mu_charge;
-  //  vector<TLorentzVector> st01_nu_vector;
     TLorentzVector st01_mu_vector;
     TLorentzVector st01_nu_vector;
     
@@ -1640,18 +1579,6 @@ void tt_uev_analyzer::Loop()
     int gn_pf_dphi[20];
     double gptsum_pf_dphi[20];
 
-    /*         int n_pf_ttpt[10];
-	       double ptsum_pf_ttpt[10];
-
-	       int n_pf_ttpt_away[10];
-	       double ptsum_pf_ttpt_away[10];
-
-	       int n_pf_ttpt_transverse[10];
-	       double ptsum_pf_ttpt_transverse[10];
-
-	       int n_pf_ttpt_toward[10];
-	       double ptsum_pf_ttpt_toward[10];*/
-
     double gptsum_pf=0;
     double gptsum_pf_away=0;
     double gptsum_pf_transverse=0;
@@ -1667,28 +1594,7 @@ void tt_uev_analyzer::Loop()
     double w=1;
     if(mcWeights_->size()>0)w=mcWeights_->at(0);
 
-    //    vector<TLorentzVector> Gpart_vector;
-
-    //cout<<"1111111111"<<endl;
-/*    for(unsigned int st1_ind=0; st1_ind<Dr01LepPt->size();st1_ind++){
-      // cout<<Bare01LepId->at(st1_ind)<<"  "<<Bare01LepStatus->at(st1_ind)<<endl;
-      //      if(fabs(Dr01LepId->at(st1_ind))==13)st1mu++;
-      //      if(fabs(Dr01LepId->at(st1_ind))==13&&)
-      //      cout<<st1_ind<<"  "<<Dr01LepId->at(st1_ind)<<"  "<<Dr01LepMomId->at(st1_ind)<<"  "<<Dr01LepIsPrompt->at(st1_ind)<<"  "<<Dr01LepIsTauProd->at(st1_ind)<<endl;
-      TLorentzVector st1tmp;
-      st1tmp.SetPtEtaPhiE(Dr01LepPt->at(st1_ind),Dr01LepEta->at(st1_ind),Dr01LepPhi->at(st1_ind),Dr01LepE->at(st1_ind));
-      if(fabs(Dr01LepId->at(st1_ind))==13 &&Dr01LepPt->at(st1_ind)>22 && fabs(Dr01LepEta->at(st1_ind))<2.4 /*&&Dr01LepIsPrompt->at(st1_ind)// ){
-	st1mu++;
-	st01_mu_vector.push_back(st1tmp);
-	st01_mu_charge.push_back(-1*Dr01LepId->at(st1_ind));  
-      }
-      if(fabs(Dr01LepId->at(st1_ind))==14 /*&&Dr01LepPt->at(st1_ind)>22 && fabs(Dr01LepEta->at(st1_ind))<2.4 &&Dr01LepIsPrompt->at(st1_ind) ){
-
-	st01_nu_vector.push_back(st1tmp);
-      }
-
-    }*/
-    //    cout<<st01_mu_vector.size()<<" "<<st01_nu_vector.size()<<endl;
+ 
     unsigned int const_size=0;
     int gnjet_30=0;
     int gnjet_15=0;
@@ -1698,19 +1604,9 @@ void tt_uev_analyzer::Loop()
       bool isbjet=false;       
       if(gj_ind!=0)const_size+=GjNConst->at(gj_ind-1);
 
-
-/*      bool ismatchedtolep=false;
-      for(unsigned int st1_ind=0; st1_ind<Dr01LepPt->size();st1_ind++){
-	if(fabs(Dr01LepId->at(st1_ind))==13 || fabs(Dr01LepId->at(st1_ind))==11){
-	  double dr_tmp_l_j=DeltaR(Dr01LepEta->at(st1_ind),Gjeta->at(gj_ind),Dr01LepPhi->at(st1_ind),Gjphi->at(gj_ind));
-	  if(dr_tmp_l_j<0.4){ismatchedtolep=true;break;}
-	}
-      }
-      if(ismatchedtolep)continue;*/
       TLorentzVector tmp;
       tmp.SetPtEtaPhiE(GjPt->at(gj_ind),Gjeta->at(gj_ind),Gjphi->at(gj_ind),GjE->at(gj_ind));
       if(GjPt->at(gj_ind)>30 && fabs(Gjeta->at(gj_ind))<2.4){  
-
 
 
 
@@ -1723,20 +1619,10 @@ void tt_uev_analyzer::Loop()
 	  TLorentzVector tmpc;
 	  tmpc.SetPtEtaPhiE(GjConstPt->at(gj+const_size),GjConstEta->at(gj+const_size),GjConstPhi->at(gj+const_size),GjConstE->at(gj+const_size));
 	  Gjetconst_vectortmp.push_back(tmpc);
-         // if(hasb(GjConstId->at(gj+const_size))isbjet=true;
+
 	}
 
-	//        if(isbjet!=0)cout<<isbjet<<endl;
 
-
-/*	for(unsigned int gp3_ind=0;gp3_ind<St03Pt->size();gp3_ind++){
-
-	  if(St03Status->at(gp3_ind)==2 && hasb(St03Id->at(gp3_ind))){
-	    double dr_tmp=DeltaR(St03Eta->at(gp3_ind),Gjeta->at(gj_ind),St03Phi->at(gp3_ind),Gjphi->at(gj_ind));
-	    h_dr_tmp->Fill(dr_tmp);
-	    if(dr_tmp<0.4)isbjet=true;
-	  }
-	}*/
 	if(isbjet)GBjet_vector.push_back(tmp);
 	if(!isbjet)Gjet_vector.push_back(tmp);
 	if(!isbjet)Gjetconst_vector.push_back(Gjetconst_vectortmp);
@@ -1749,46 +1635,17 @@ void tt_uev_analyzer::Loop()
       }
 
     }
-/*
-    double Mmin=9999999.;
-    for(unsigned int jetind=0; jetind<Gjet_vector.size();jetind++){
-      ga_min.push_back(jetind);
-      for(unsigned int jetindd=jetind; jetindd<Gjet_vector.size();jetindd++){
-	if(jetind==jetindd)continue;
-	for(unsigned int lepind=0; lepind<st01_mu_vector.size();lepind++){
-	  for(unsigned int nuind=0; nuind<st01_nu_vector.size();nuind++){
 
-
-	    double MLep=(st01_mu_vector[lepind]+st01_nu_vector[nuind]).M();
-	    double Mjj=(Gjet_vector[jetind]+Gjet_vector[jetindd]).M();
-	    double Mcheck=fabs(MLep-80.4) + fabs(Mjj-80.4);
-	    if(Mcheck<Mmin){
-	      Mmin=Mcheck;
-	      //cout<<MLep<<"  "<<Mjj<<"  "<<Mmin<<endl;
-	      lind=  lepind;
-	      nind=  nuind;
-	      j1ind=jetind;
-	      j2ind=jetindd;
-	    }
-	  }
-	}
-      }
-    }*//*
-    for(unsigned int i=0;i<ga_min.size();i++){
-      if(ga_min[i]==j1ind||ga_min[i]==j2ind)continue;
-      gextra_jet_index=ga_min[i]; break;
-    }*/
     //  if(gextra_jet_index==99 &&Gjet_vector_1530.size()>0 )gextra_jet_index_1530=0;
 
     double m[4];
-//    if(!(lind>=1 && nind>=1) && lind!=9999 && GBjet_vector.size()>=2 &&GBjet_vector.size()==2){
-     //cout<<pseudoTop_pdgId->size()<<endl;
+    //cout<<"1"<<endl;
     if(pseudoTop_pdgId->size()>0&& GBjet_vector.size()==2&& Gjet_vector.size()>1){
     if(
        ( fabs(pseudoTop_pdgId->at(4))==13 && fabs(pseudoTop_pdgId->at(6))<6 &&pseudoTop_pt->at(4)>22 && fabs(pseudoTop_eta->at(4))<2.4 &&pseudoTop_pt->at(6)>30 && fabs(pseudoTop_eta->at(6))<2.4  )
      ||( fabs(pseudoTop_pdgId->at(6))==13 && fabs(pseudoTop_pdgId->at(4))<6 &&pseudoTop_pt->at(6)>22 && fabs(pseudoTop_eta->at(6))<2.4 &&pseudoTop_pt->at(4)>30 && fabs(pseudoTop_eta->at(4))<2.4  ) 
       ){
-      //cout<<"asda"<<endl;
+    //cout<<"2"<<endl;
       TLorentzVector genWlep;
       TLorentzVector genWhad;
       if( fabs(pseudoTop_pdgId->at(4)) ==13){
@@ -1797,43 +1654,22 @@ void tt_uev_analyzer::Loop()
         genWlep.SetPtEtaPhiE(pseudoTop_pt->at(2),pseudoTop_eta->at(2),pseudoTop_phi->at(2),pseudoTop_energy->at(2));
         genWhad.SetPtEtaPhiE(pseudoTop_pt->at(3),pseudoTop_eta->at(3),pseudoTop_phi->at(3),pseudoTop_energy->at(3));
       }
-      //cout<<"asdala"<<endl;
+
       if( fabs(pseudoTop_pdgId->at(6))==13){
         st01_nu_vector.SetPtEtaPhiE(pseudoTop_pt->at(7),pseudoTop_eta->at(7),pseudoTop_phi->at(7),pseudoTop_energy->at(7));
         st01_mu_vector.SetPtEtaPhiE(pseudoTop_pt->at(6),pseudoTop_eta->at(6),pseudoTop_phi->at(6),pseudoTop_energy->at(6));
         genWlep.SetPtEtaPhiE(pseudoTop_pt->at(3),pseudoTop_eta->at(3),pseudoTop_phi->at(3),pseudoTop_energy->at(3));
         genWhad.SetPtEtaPhiE(pseudoTop_pt->at(2),pseudoTop_eta->at(2),pseudoTop_phi->at(2),pseudoTop_energy->at(2));
       }
-      //cout<<"asdalavista"<<endl;
-     //cout<<"aaaaaaaaaaaaaaaa "<<GBjet_vector.size()<<endl;
-/*
-      TLorentzVector genWlep=(st01_mu_vector[lind]+st01_nu_vector[nind]);
-      TLorentzVector genWhad=(Gjet_vector[j1ind]+Gjet_vector[j2ind]);
-      m[0]=(genWlep + GBjet_vector[0]).M();
-      m[1]=(genWlep + GBjet_vector[1]).M();
-      m[2]=(genWhad + GBjet_vector[0]).M();
-      m[3]=(genWhad + GBjet_vector[1]).M();
-      double mtmin1= fabs(m[0]-172.5) + fabs(m[3]-172.5);
-      double mtmin2= fabs(m[1]-172.5) + fabs(m[2]-172.5);
-      if(mtmin1<mtmin2) {
-	gtlep_vector=genWlep + GBjet_vector[0];
-	gthad_vector=genWhad + GBjet_vector[1];
-
-      }
-      if(mtmin1>mtmin2) {
-	gtlep_vector=genWlep + GBjet_vector[1];
-	gthad_vector=genWhad + GBjet_vector[0];
-      }*/
-      //      cout<<genWlep.M()<<"  "<<genWhad.M()<<"  "<<gtlep_vector.M()<<"  "<<gthad_vector.M()<<endl;
-
+    //cout<<"3"<<endl;
 
       getab1=GBjet_vector[0].Eta();
       getab2=GBjet_vector[1].Eta();
-     //cout<<"cccccccccccasdad"<<endl;
+
       if(getab1<getab2)getamin=getab1;
       else getamin=getab2;
       gdeltaetabb=fabs(getab1-getab2);
-     //cout<<"bbbbbbbbbbbbbbbbbb"<<endl;
+
 
       for(unsigned int j_ind=0; j_ind<Gjet_vector.size();j_ind++){
 
@@ -1853,13 +1689,13 @@ void tt_uev_analyzer::Loop()
       }
       for(unsigned int jet_vector_1530_ind =0; jet_vector_1530_ind<jet_vector_1530.size();jet_vector_1530_ind++){
 	if(Gjet_vector_1530[jet_vector_1530_ind].Eta()>getamin && Gjet_vector_1530[jet_vector_1530_ind].Eta()<getamin+gdeltaetabb ) gnjet_bb++;
-	//      cout<<fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))<<endl;           
+
 	double dphi=fabs(DeltaPhi(gttbar_vector.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))*180/pi;
 	if(dphi<60.)gnjet_toward15++;
 	if(dphi>60. &&dphi<120.)gnjet_transverse15++;
 	if(dphi>120. &&dphi<180.)gnjet_away15++;
       }
-
+    //cout<<"4"<<endl;
       if(fabs(pseudoTop_pdgId->at(4))==13  ){
 	gtlep_vector.SetPtEtaPhiE(pseudoTop_pt->at(0),pseudoTop_eta->at(0),pseudoTop_phi->at(0),pseudoTop_energy->at(0));
 	gthad_vector.SetPtEtaPhiE(pseudoTop_pt->at(1),pseudoTop_eta->at(1),pseudoTop_phi->at(1),pseudoTop_energy->at(1));
@@ -1874,7 +1710,7 @@ void tt_uev_analyzer::Loop()
 	gtop_vector.SetPtEtaPhiE(pseudoTop_pt->at(0),pseudoTop_eta->at(0),pseudoTop_phi->at(0),pseudoTop_energy->at(0));
 	gatop_vector.SetPtEtaPhiE(pseudoTop_pt->at(1),pseudoTop_eta->at(1),pseudoTop_phi->at(1),pseudoTop_energy->at(1));
       }
-
+    //cout<<"5"<<endl;
       if(pseudoTop_pdgId->at(0)==-6){
 	gtop_vector.SetPtEtaPhiE(pseudoTop_pt->at(1),pseudoTop_eta->at(1),pseudoTop_phi->at(1),pseudoTop_energy->at(1));
 	gatop_vector.SetPtEtaPhiE(pseudoTop_pt->at(0),pseudoTop_eta->at(0),pseudoTop_phi->at(0),pseudoTop_energy->at(0));
@@ -1889,21 +1725,11 @@ void tt_uev_analyzer::Loop()
       h_gen_ptthad->Fill(gthad_vector.Pt());
       h_gen_ptwlep->Fill(genWlep.Pt());
       h_gen_ptwhad->Fill(genWhad.Pt());
-     //cout<<"ccccccccccccccccccc"<<endl;
+
       h_gen_ptttbar->Fill((gtlep_vector + gthad_vector).Pt());
       h_gen_mttbar->Fill((gtlep_vector + gthad_vector).M());
       gttbar_vector=gtlep_vector+gthad_vector;
-
-      /*     if(st01_mu_charge[lind]<0){
-	     gtop_vector =gtlep_vector;
-	     gatop_vector=gthad_vector;
-	     }
-	     if(st01_mu_charge[lind]>0){
-	     gatop_vector=gtlep_vector;
-	     gtop_vector =gthad_vector;
-	     }
-      */
-
+    //cout<<"6"<<endl;
       //use pseudotop products
 
       if(pseudoTop_pdgId->at(0)==6){
@@ -1915,76 +1741,30 @@ void tt_uev_analyzer::Loop()
 	gtop_vector.SetPtEtaPhiE(pseudoTop_pt->at(1),pseudoTop_eta->at(1),pseudoTop_phi->at(1),pseudoTop_energy->at(1));
 	gatop_vector.SetPtEtaPhiE(pseudoTop_pt->at(0),pseudoTop_eta->at(0),pseudoTop_phi->at(0),pseudoTop_energy->at(0));
       }
-     //cout<<"ddddddddddddddddddddd"<<endl;
+
       if(gextra_jet_index!=99)gttj_vector=gttbar_vector+Gjet_vector[gextra_jet_index];
       //      if(extra_jet_index==99 &&extra_jet_index_1530!=99 )ttj_vector=top_vector +atop_vector+jet_vector_1530[extra_jet_index_1530];
 
       for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
 	bool matchjet=false;
-	//         cout<<gp_ind<<"  "<<Packed01Phi->at(gp_ind)<<endl;
+	//         //cout<<gp_ind<<"  "<<Packed01Phi->at(gp_ind)<<endl;
 	if(Packed01Pt->at(gp_ind)<0.5 || fabs(Packed01Eta->at(gp_ind))>2.1 ||Packed01Charge->at(gp_ind)==0)continue;
-	//        cout<<gp_ind<<endl;
-	/*       if(Packed01Id->at(gp_ind)==12 ||Packed01Id->at(gp_ind)==14 ||Packed01Id->at(gp_ind)==16)cout<<"ACHTUNG- neutrinos in the gencoll"<<endl;
-		 double dr_gen_mu=DeltaR(Packed01Eta->at(gp_ind),st01_mu_vector[lind].Eta(),Packed01Phi->at(gp_ind),st01_mu_vector[lind].Phi());
-		 if(dr_gen_mu<0.1)continue;
-
-
-		 for(unsigned int const_gen_ind=0;const_gen_ind<Gjetconst_vector[j1ind].size();const_gen_ind++){
-		 double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),Gjetconst_vector[j1ind][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),Gjetconst_vector[j1ind][const_gen_ind].Phi());
-		 if(dr_gen_j1<0.1){
-		 matchjet=true;break;
-		 }    
-		 }
-
-		 for(unsigned int const_gen_ind=0;const_gen_ind<Gjetconst_vector[j2ind].size();const_gen_ind++){
-		 double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),Gjetconst_vector[j2ind][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),Gjetconst_vector[j2ind][const_gen_ind].Phi());
-		 if(dr_gen_j1<0.1){
-		 matchjet=true;break;
-		 }
-		 }
-
-		 for(unsigned int const_gen_ind=0;const_gen_ind<GBjetconst_vector[0].size();const_gen_ind++){
-		 double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GBjetconst_vector[0][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GBjetconst_vector[0][const_gen_ind].Phi());
-		 if(dr_gen_j1<0.1){
-		 matchjet=true;break;
-		 }
-
-		 }
-
-		 for(unsigned int const_gen_ind=0;const_gen_ind<GBjetconst_vector[1].size();const_gen_ind++){
-		 double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GBjetconst_vector[1][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GBjetconst_vector[1][const_gen_ind].Phi());
-		 if(dr_gen_j1<0.1){
-		 matchjet=true;break;
-		 }
-
-		 }
-	*/
 
 	    for(unsigned int const_gen_ind=0;const_gen_ind<pseudoTop_const_pt->size();const_gen_ind++){
 	      double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),pseudoTop_const_eta->at(const_gen_ind),Packed01Phi->at(gp_ind),pseudoTop_const_phi->at(const_gen_ind));
-     //         cout<<dr_gen_j1<<"  "<<pseudoTop_const_pdgId->at(const_gen_ind)<<"  "<< Packed01Id->at(gp_ind)<<endl;
 //	      if(dr_gen_j1<0.0001&&pseudoTop_const_pdgId->at(const_gen_ind)==Packed01Id->at(gp_ind) ){
 	      if(dr_gen_j1<0.05 ){
 
-//              cout<<dr_gen_j1<<"  "<<pseudoTop_const_pdgId->at(const_gen_ind)<<"  "<< Packed01Id->at(gp_ind)<<endl;
 	      matchjet=true;break;
 	      }
 	      }
 	 
-	//        double dr_gen_j1j=DeltaR(Packed01Eta->at(gp_ind),Gjet_vector[j1ind].Eta(),Packed01Phi->at(gp_ind),Gjet_vector[j1ind].Phi());
-	//        double dr_gen_j2j=DeltaR(Packed01Eta->at(gp_ind),Gjet_vector[j2ind].Eta(),Packed01Phi->at(gp_ind),Gjet_vector[j2ind].Phi());
-	//        double dr_gen_j1bj=DeltaR(Packed01Eta->at(gp_ind),GBjet_vector[0].Eta(),Packed01Phi->at(gp_ind),Gjet_vector[0].Phi());
-	//        double dr_gen_j2bj=DeltaR(Packed01Eta->at(gp_ind),GBjet_vector[1].Eta(),Packed01Phi->at(gp_ind),Gjet_vector[1].Phi());
-
-	//if(matchjet) continue;
-	//        if(dr_gen_j1j<0.4 ||dr_gen_j2j<0.4 ||dr_gen_j1bj<0.4 ||dr_gen_j2bj<0.4)continue;
 	gn_pf++;
 	gptsum_pf+=Packed01Pt->at(gp_ind);
         TLorentzVector gptmp;
         gptmp.SetPtEtaPhiE(Packed01Pt->at(gp_ind),Packed01Eta->at(gp_ind),Packed01Phi->at(gp_ind),Packed01E->at(gp_ind));
         vector_vector_gp.push_back(gptmp);
 	double gdeltaphi_tt_pf=DeltaPhi(Packed01Phi->at(gp_ind),gttbar_vector.Phi())*180/pi;
-	// cout<<gdeltaphi_tt_pf<<endl;
 	if(fabs(gdeltaphi_tt_pf)>0 && fabs(gdeltaphi_tt_pf)<60){
 	  gn_pf_toward++;
 	  gptsum_pf_toward+=Packed01Pt->at(gp_ind);
@@ -2008,16 +1788,13 @@ void tt_uev_analyzer::Loop()
 
 
       }
-     //cout<<"eeeeeeeeeeeeeeeeeeeeeee"<<endl;
-     //cout<<"ffffffffffffffffffffffffff"<<endl;
+    //cout<<"7"<<endl;
       for(int pdfind=0; pdfind<pdfind_max;pdfind++){
-	// if(pdfind!=0)cout<<mcWeights_->at(8+pdfind)<<endl;
+	// if(pdfind!=0)//cout<<mcWeights_->at(8+pdfind)<<endl;
 	double weight=w;
 	if(dopdf&& pdfind!=0)weight=w*mcWeights_->at(8+pdfind);
-	if(pdfind==1)continue;
+	//if(pdfind==1)continue;
 
-	//	if(!dopdf&&pdfind!=0 &&puWeight.weight(int(PU_npT))!=0 )weight=puUp.weight(int(PU_npT))*w/puWeight.weight(int(PU_npT)); 
-	// cout<<"I am alive "<<pdfind<<"  "<<weight<<" "<<gn_pf<<" "<<gn_pf_transverse<<" "<<gn_pf_toward<<" "<<gn_pf_away<<endl;
 	h_npf_inclusive[2*pdfind]->Fill(gn_pf,weight);
 	h_npf_toward[2*pdfind]->Fill(gn_pf_toward,weight);
 	h_npf_transverse[2*pdfind]->Fill(gn_pf_transverse,weight);
@@ -2033,10 +1810,6 @@ void tt_uev_analyzer::Loop()
 	if(gn_pf_transverse!=0)h_ptavepf_transverse[2*pdfind]->Fill(gptsum_pf_transverse/gn_pf_transverse,weight);
 	if(gn_pf_away!=0)h_ptavepf_away[2*pdfind]->Fill(gptsum_pf_away/gn_pf_away,weight);
 
-     //cout<<"ggggggggggggggggggg"<<endl;
-
-
-
 	if(gn_pf!=0){
 	  h_1d_npf[2*pdfind]->Fill(gn_pf,weight);
 	  h_1d_ptsumpf[2*pdfind]->Fill(gptsum_pf,weight);
@@ -2047,12 +1820,8 @@ void tt_uev_analyzer::Loop()
 	      if(gn_pf>=200.)h_1d_ptttbar_npf[2*pdfind]->Fill(dphiloop*50.+49.9,weight);
 	    }
 	  }
-
-     //cout<<"hhhhhhhhhhhhhhhhhhhhh"<<endl;
 	  for(int dphiloop=0;dphiloop<20;dphiloop++){
 	    if(gn_pf_dphi[dphiloop]==0)continue;
-
-	    //            //cout<<dphiloop*10.+gn_pf_dphi[dphiloop]/10.<<endl;
 	    if(gn_pf_dphi[dphiloop]<100)h_1d_dphi_npf[2*pdfind]->Fill(dphiloop*10.+gn_pf_dphi[dphiloop]/10.,weight);
 	    if(gn_pf_dphi[dphiloop]>=100)h_1d_dphi_npf[2*pdfind]->Fill(dphiloop*10.+9.9,weight);
 
@@ -2090,7 +1859,6 @@ void tt_uev_analyzer::Loop()
 	      h_profile_dphi_ptaveragepf_2pj[2*pdfind]->Fill(dphiloop*9,gptsum_pf_dphi[dphiloop]/gn_pf_dphi[dphiloop],weight);
 	    }
 	  }
-     //cout<<"iiiiiiiiiiiiiiiiiiiiiiii"<<endl;
 	  h_nvtx_npf[2*pdfind]->Fill(EvtInfo_NumVtx,weight);
 	  h_profile_nvtx_npf[2*pdfind]->Fill(EvtInfo_NumVtx,gn_pf,weight);
 	  h_profile_nvtx_sumpt[2*pdfind]->Fill(EvtInfo_NumVtx,gptsum_pf,weight);
@@ -2116,7 +1884,6 @@ void tt_uev_analyzer::Loop()
 
 	  }
 
-     //cout<<"jjjjjjjjjjjjjjjjjjjjjj"<<endl;
 	  h_profile_ptttbar_npf[2*pdfind]->Fill(gttbar_vector.Pt(),gn_pf,weight);
 	  h_profile_ptttbar_sumpt[2*pdfind]->Fill(gttbar_vector.Pt(),gptsum_pf,weight);
 	  h_profile_ptttbar_avept[2*pdfind]->Fill(gttbar_vector.Pt(),gptsum_pf/gn_pf,weight);
@@ -2155,8 +1922,6 @@ void tt_uev_analyzer::Loop()
 	  if(gn_pf_toward!=0)h_profile_mttbar_avept_toward[2*pdfind]->Fill(gttbar_vector.M(),gptsum_pf_toward/gn_pf_toward,weight);
 
 
-
-     //cout<<"kkkkkkkkkkkkkkkkkkkkkkkkk"<<endl;
 	  h_profile_ytt_npf[2*pdfind]->Fill(fabs(gttbar_vector.Rapidity()),gn_pf,weight);
 	  h_profile_ytt_sumpt[2*pdfind]->Fill(fabs(gttbar_vector.Rapidity()),gptsum_pf,weight);
 	  h_profile_ytt_avept[2*pdfind]->Fill(fabs(gttbar_vector.Rapidity()),gptsum_pf/gn_pf,weight);
@@ -2312,7 +2077,7 @@ void tt_uev_analyzer::Loop()
 	  if(gn_pf_toward!=0)h_profile_ythad_npf_toward[2*pdfind]->Fill(fabs(gthad_vector.Rapidity()),gn_pf_toward,weight);
 	  if(gn_pf_toward!=0)h_profile_ythad_sumpt_toward[2*pdfind]->Fill(fabs(gthad_vector.Rapidity()),gptsum_pf_toward,weight);
 	  if(gn_pf_toward!=0)h_profile_ythad_avept_toward[2*pdfind]->Fill(fabs(gthad_vector.Rapidity()),gptsum_pf_toward/gn_pf_toward,weight);
-     //cout<<"lllllllllllllllllllllll"<<endl;
+
 	  h_profile_ytlep_npf[2*pdfind]->Fill(fabs(gthad_vector.Rapidity()),gn_pf,weight);
 	  h_profile_ytlep_sumpt[2*pdfind]->Fill(fabs(gthad_vector.Rapidity()),gptsum_pf,weight);
 	  h_profile_ytlep_avept[2*pdfind]->Fill(fabs(gthad_vector.Rapidity()),gptsum_pf/gn_pf,weight);
@@ -2408,9 +2173,6 @@ void tt_uev_analyzer::Loop()
 
 
 
-     //cout<<"mmmmmmmmmmmmmmmmmmmmmmmmmmmm"<<endl;
-
-
 	  if(gextra_jet_index!=99 /*||extra_jet_index_1530!=99*/ ){
 	    h_rec_ttjY[2*pdfind]->Fill(gttj_vector.Rapidity(),weight);
 
@@ -2427,7 +2189,6 @@ void tt_uev_analyzer::Loop()
 	    if(gn_pf_toward!=0)h_profile_yttj_sumpt_toward[2*pdfind]->Fill(fabs(gttj_vector.Rapidity()),gptsum_pf_toward,weight);
 	    if(gn_pf_toward!=0)h_profile_yttj_avept_toward[2*pdfind]->Fill(fabs(gttj_vector.Rapidity()),gptsum_pf_toward/gn_pf_toward,weight); 
 	  }
-     //cout<<"mmmmmmmmmmmmmmmmmmmmmmmmmmmm"<<"11111111111111111"<<endl;
 	  //     }
 	  //   }
 
@@ -2443,7 +2204,6 @@ void tt_uev_analyzer::Loop()
 	h_pt_atop_fixbin[2*pdfind]->Fill(gatop_vector.Pt(),weight);
 
 	h_pt_ttbar_kinrec[2*pdfind]->Fill((gtlep_vector+gthad_vector).Pt(),weight);
-     //cout<<"mmmmmmmmmmmmmmmmmmmmmmmmmmmm"<<"22222222222222222222"<<endl;
 
 	//	h_MTW[2*pdfind]->Fill(MTW,weight);
 	h_mu_pt_meas[2*pdfind]->Fill(st01_mu_vector.Pt(),weight);
@@ -2465,7 +2225,6 @@ void tt_uev_analyzer::Loop()
 	h_y_thad[2*pdfind]->Fill(gthad_vector.Rapidity(),weight); 
 	h_y_tlep[2*pdfind]->Fill(gtlep_vector.Rapidity(),weight);   
 
-     //cout<<"mmmmmmmmmmmmmmmmmmmmmmmmmmmm"<<"333333333333333333333333333"<<endl;
 	h_m_t[2*pdfind]->Fill(gthad_vector.M(),weight); 
 	h_m_t[2*pdfind]->Fill(gtlep_vector.M(),weight);   
 
@@ -2485,7 +2244,6 @@ void tt_uev_analyzer::Loop()
 	h_nu_pz[2*pdfind]->Fill(st01_nu_vector.Pz(),weight);
 	h_nu_pt[2*pdfind]->Fill(st01_nu_vector.Pt(),weight);
 
-     //cout<<"nnnnnnnnnnnnnnnnnnnnnnnnnnnnn"<<endl;
 	h_njet_bb[2*pdfind]->Fill(gnjet_bb,weight);
 	h_njet_15_ttbar[2*pdfind]->Fill(Gjet_vector_1530.size()+Gjet_vector.size()+GBjet_vector.size()-4,weight);
 	if(gnjet_bb>=1)h_profile_deta_bb_njet_bb[2*pdfind]->Fill(gdeltaetabb,gnjet_bb,weight);
@@ -2516,23 +2274,13 @@ void tt_uev_analyzer::Loop()
 	h_y_top[2*pdfind]->Fill(gtop_vector.Rapidity(),weight);
 	h_y_atop[2*pdfind]->Fill(gatop_vector.Rapidity(),weight);
 	h_phi_ttbar[2*pdfind]->Fill(gttbar_vector.Phi(),weight);
-	////cout<<gttbar_vector.Phi()<<endl;
 
 	h_njet_ttbar[2*pdfind]->Fill(Gjet_vector.size()+GBjet_vector.size(),weight);
       }
     }
     }
 
-
-
-     //cout<<"ooooooooooooooooooooooooooooooooooooooo"<<endl;
-
-    // if(dosignal &&st1mu!=1 ) continue;
-    // if(dottother &&st1mu==1 )continue;
-    ////cout<<"kkkkkkkkkkkkkkkkkkkkkkkkkk"<<endl;
-    // //cout<<st1mu<<endl;
-
-    ////cout<<"tttttttttttttttt"<<endl;
+    //////cout<<"tttttttttttttttt"<<endl;
     if(!realdata && PU_npT>0){    
       //        wtot_write-=w;
       w*=puWeight.weight(int(PU_npT)); 
@@ -2543,9 +2291,10 @@ void tt_uev_analyzer::Loop()
     }
     h_puweight[0]->Fill(puWeight.weight(int(PU_npT)));
     h_puweight_weighted[0]->Fill(puWeight.weight(int(PU_npT)),w);
-    wtot+=wtot_write;
-    ////cout<<"aaaaaaaaaaaaaaaaaaaaaaa"<<endl;
-    if(!HLT_IsoTkMu20&&!HLT_IsoMu20) continue; //OR requirement of IsoTkMu20 and IsoMu20
+
+
+    if(!HLT_IsoTkMu20&&!HLT_IsoMu20) continue; //OR requirement of IsoTkMu20 and IsoMu20,
+
     for(unsigned int mu_ind=0; mu_ind<patMuonPt_->size();mu_ind++){
       if(patMuonCombId_->at(mu_ind)>0&& fabs(patMuonEta_->at(mu_ind))<2.1){
 	h_mu_pt[0]->Fill(patMuonPt_->at(mu_ind),w);
@@ -2566,7 +2315,7 @@ void tt_uev_analyzer::Loop()
     }
 
     double nom=1, denom=1;
-    ////cout<<"2222222222"<<endl;
+
     int ind_jet_const=0;
     double csvmax=-99., csvmax2=-99.;
     for(unsigned int jet_ind=0; jet_ind<patJetPfAk04Pt_->size();jet_ind++){
@@ -2590,7 +2339,7 @@ void tt_uev_analyzer::Loop()
       //jet_part_flav.push_back(patJetPfAk04PartonFlavour_->at(jet_ind));
       if(mu_index==1 &&mu_index20==1)h_csv[0]->Fill(patJetPfAk04BDiscCSVv2_->at(jet_ind),w);
       if(patJetPfAk04BDiscCSVv2_->at(jet_ind)>0.89)b_jet_index.push_back(jet_index);
-      // //cout<<"nconst "<<jet_ind<<" "<<patJetPfAk04nconst_->at(jet_ind)<<"  "<<patJetPfAk04ConstId->size()<<endl;
+
 
       if(patJetPfAk04BDiscCSVv2_->at(jet_ind)>csvmax)csvmax=patJetPfAk04BDiscCSVv2_->at(jet_ind);
       if(patJetPfAk04BDiscCSVv2_->at(jet_ind)>csvmax2 && patJetPfAk04BDiscCSVv2_->at(jet_ind)<csvmax)csvmax2=patJetPfAk04BDiscCSVv2_->at(jet_ind);
@@ -2603,8 +2352,7 @@ void tt_uev_analyzer::Loop()
 
 
       for(unsigned int jet_const_ind=0;jet_const_ind< patJetPfAk04nconst_->at(jet_ind);jet_const_ind++){
-	////cout<<ind_jet_const<<"  "<<jet_const_ind<<"  "<<ind_jet_const+jet_const_ind<<endl;
-	//          //cout<<patJetPfAk04ConstPt->at(ind_jet_const+jet_const_ind)<<endl;
+
 	tmp1.push_back(patJetPfAk04ConstId->at(ind_jet_const+jet_const_ind));
 	tmp2.push_back(patJetPfAk04ConstPt->at(ind_jet_const+jet_const_ind));
 	tmp3.push_back(patJetPfAk04ConstEta->at(ind_jet_const+jet_const_ind));
@@ -2624,8 +2372,7 @@ void tt_uev_analyzer::Loop()
       double jet_scalefactor=-99;
       double jet_eff=-99;
       if(dosignal){
-	// //cout<<patJetPfAk04PartonFlavour_->at(jet_ind)<<endl;
-	//    //cout<<BTagEntry::FLAV_B (0)<<"  "<<BTagEntry::FLAV_C (1)<<"  "<<	BTagEntry::FLAV_UDSG (2)<<endl;
+
 	if (new_pt < 670. ) {
 	  if(fabs(patJetPfAk04PartonFlavour_->at(jet_ind))==5){
 	    jet_scalefactor = reader.eval(BTagEntry::FLAV_B, patJetPfAk04Eta_->at(jet_ind),new_pt); 
@@ -2639,8 +2386,7 @@ void tt_uev_analyzer::Loop()
 	    //         jet_scalefactor = reader.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),new_pt); 
 	    // jet_scalefactor =1;
 	    jet_scalefactor = reader.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),new_pt); //no udsg SF in the csv table, use C for now.
-	    //  //cout<<BTagEntry::FLAV_UDSG<<endl;
-	    //  //cout<<reader.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),new_pt) <<"  "<<reader.eval(BTagEntry::FLAV_B, patJetPfAk04Eta_->at(jet_ind),new_pt)<<endl; 
+
 	    jet_eff = reader2.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),new_pt); 
 	  }
 	}
@@ -2657,13 +2403,13 @@ void tt_uev_analyzer::Loop()
 	  }
 	  else{
 	    //         jet_scalefactor = reader.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),669); 
-	    //   //cout<<BTagEntry::FLAV_UDSG<<endl;
+
 	    //jet_scalefactor =1;
 	    jet_scalefactor = reader.eval(BTagEntry::FLAV_C, patJetPfAk04Eta_->at(jet_ind),669); //no udsg SF in the csv table, use C for now.
 	    jet_eff = reader2.eval(BTagEntry::FLAV_UDSG, patJetPfAk04Eta_->at(jet_ind),669); 
 	  }
 	}
-	////cout<<jet_scalefactor<<endl;
+
 
 	//  double eff_b=0.640272;
 	//  double eff_l=0.024801;
@@ -2737,8 +2483,7 @@ void tt_uev_analyzer::Loop()
       if(gn_pf!=0){
 
 
-//        cout<<"reco nmu, njet, nbjet "<<mu_index<<"  "<<jet_vector.size()<<"  "<<b_jet_index.size()<<endl;
-//        cout<<"gen nmu, njet, nbjet "<<1<<"  "<<Gjet_vector.size()+GBjet_vector.size()<<"  "<<GBjet_vector.size()<<endl;
+
         h_miss_mult[0]->Fill(gn_pf,w);
         h_miss_sumpt[0]->Fill(gptsum_pf,w);
         h_miss_avept[0]->Fill(gptsum_pf/gn_pf,w);
@@ -2755,7 +2500,7 @@ void tt_uev_analyzer::Loop()
     }
     if (jet_vector.size()>=4 && b_jet_index.size()==2 && mu_index==1 &&mu_index20==1){//at least 4 jets, 2 of b jets, 1 muon
       ntottt++;
-      //      if(!realdata)//cout<<btagweight<<endl;
+
       if(HLT_IsoMu20)N_HLT_Mu20++;
       if(HLT_IsoTkMu20)N_HLT_TkMu20++;
       if(HLT_IsoTkMu20||HLT_IsoMu20)N_HLT_TkMu20ORMu20++;
@@ -2794,12 +2539,12 @@ void tt_uev_analyzer::Loop()
       double C= (El*El*ptnu*ptnu- mu*mu)/(ptl*ptl);
       double D=0;
 
-      //////cout<<MTW<<endl;
+      //////////cout<<MTW<<endl;
 
       TLorentzVector nu_complex;
       bool found=false;  
       if((B-C)<0){
-	////cout<<"new complex event "<<MTW<<endl;
+	////////cout<<"new complex event "<<MTW<<endl;
 
 	double min_i=0;
 	double max_i=80;
@@ -2812,14 +2557,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new1=DeltaPhi(mu_vector[0].Phi(), met_new1.Phi());
 	    double cdphi_new1= cos(deltaphi_new1);
 	    double MTW_new1=sqrt(2*ptl*met_new1.Pt()*(1 -cdphi_new1 ));
-	    if(MTW_new1>80.399&&MTW_new1<80.401){////cout<<"MTW old, px var +, py var +, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new1<<endl;
+	    if(MTW_new1>80.399&&MTW_new1<80.401){////////cout<<"MTW old, px var +, py var +, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new1<<endl;
 	      double ptnun=met_new1.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new1;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      //double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      ////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      ////////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new1;
 	      found=true;
@@ -2830,14 +2575,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new2=DeltaPhi(mu_vector[0].Phi(), met_new2.Phi());
 	    double cdphi_new2= cos(deltaphi_new2);
 	    double MTW_new2=sqrt(2*ptl*met_new2.Pt()*(1 -cdphi_new2 ));
-	    if(MTW_new2>80.399&&MTW_new2<80.401){////cout<<"MTW old, px var +, py var -, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new2<<endl;
+	    if(MTW_new2>80.399&&MTW_new2<80.401){////////cout<<"MTW old, px var +, py var -, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new2<<endl;
 	      double ptnun=met_new2.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new2;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      //double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new2;
 	      found=true;
@@ -2849,14 +2594,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new3=DeltaPhi(mu_vector[0].Phi(), met_new3.Phi());
 	    double cdphi_new3= cos(deltaphi_new3);
 	    double MTW_new3=sqrt(2*ptl*met_new3.Pt()*(1 -cdphi_new3 ));
-	    if(MTW_new3>80.399&&MTW_new3<80.401){//cout<<"MTW old, px var -, py var +, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new3<<endl;
+	    if(MTW_new3>80.399&&MTW_new3<80.401){//////cout<<"MTW old, px var -, py var +, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new3<<endl;
 	      double ptnun=met_new3.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new3;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      //double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new3;
 	      found=true;
@@ -2868,14 +2613,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new4=DeltaPhi(mu_vector[0].Phi(), met_new4.Phi());
 	    double cdphi_new4= cos(deltaphi_new4);
 	    double MTW_new4=sqrt(2*ptl*met_new4.Pt()*(1 -cdphi_new4 ));
-	    if(MTW_new4>80.399&&MTW_new4<80.401){//cout<<"MTW old, px var -, py var -, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new4<<endl;
+	    if(MTW_new4>80.399&&MTW_new4<80.401){//////cout<<"MTW old, px var -, py var -, MTW new "<<MTW<<"  "<<px_var<<"  "<<py_var<<"  "<<MTW_new4<<endl;
 	      double ptnun=met_new4.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new4;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      //double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new4;
 	      found=true;
@@ -2886,14 +2631,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new5=DeltaPhi(mu_vector[0].Phi(), met_new5.Phi());
 	    double cdphi_new5= cos(deltaphi_new5);
 	    double MTW_new5=sqrt(2*ptl*met_new5.Pt()*(1 -cdphi_new5 ));
-	    if(MTW_new5>80.399&&MTW_new5<80.401){//cout<<"MTW old, px var +, py var +, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new5<<endl;
+	    if(MTW_new5>80.399&&MTW_new5<80.401){//////cout<<"MTW old, px var +, py var +, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new5<<endl;
 	      double ptnun=met_new5.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new5;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      //double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new5;
 	      found=true;
@@ -2904,14 +2649,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new6=DeltaPhi(mu_vector[0].Phi(), met_new6.Phi());
 	    double cdphi_new6= cos(deltaphi_new6);
 	    double MTW_new6=sqrt(2*ptl*met_new6.Pt()*(1 -cdphi_new6 ));
-	    if(MTW_new6>80.399&&MTW_new6<80.401){//cout<<"MTW old, px var +, py var -, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new6<<endl;
+	    if(MTW_new6>80.399&&MTW_new6<80.401){//////cout<<"MTW old, px var +, py var -, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new6<<endl;
 	      double ptnun=met_new6.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new6;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      //double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new6;
 	      found=true;
@@ -2923,14 +2668,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new7=DeltaPhi(mu_vector[0].Phi(), met_new7.Phi());
 	    double cdphi_new7= cos(deltaphi_new7);
 	    double MTW_new7=sqrt(2*ptl*met_new7.Pt()*(1 -cdphi_new7 ));
-	    if(MTW_new7>80.399&&MTW_new7<80.401){//cout<<"MTW old, px var -, py var +, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new7<<endl;
+	    if(MTW_new7>80.399&&MTW_new7<80.401){//////cout<<"MTW old, px var -, py var +, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new7<<endl;
 	      double ptnun=met_new7.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new7;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      // double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new7;
 	      found=true;
@@ -2942,14 +2687,14 @@ void tt_uev_analyzer::Loop()
 	    double deltaphi_new8=DeltaPhi(mu_vector[0].Phi(), met_new8.Phi());
 	    double cdphi_new8= cos(deltaphi_new8);
 	    double MTW_new8=sqrt(2*ptl*met_new8.Pt()*(1 -cdphi_new8 ));
-	    if(MTW_new8>80.399&&MTW_new8<80.401){//cout<<"MTW old, px var -, py var -, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new8<<endl;
+	    if(MTW_new8>80.399&&MTW_new8<80.401){//////cout<<"MTW old, px var -, py var -, MTW new "<<MTW<<"  "<<py_var<<"  "<<px_var<<"  "<<MTW_new8<<endl;
 	      double ptnun=met_new8.Pt();
 	      double mun= MW*MW/2 + ptl*ptnun*cdphi_new8;
 	      double An=mun*pzl/(ptl*ptl);
 	      //double Bn=mun*mun*pzl*pzl/(pow(ptl,4));
 	      // double Cn= (El*El*ptnun*ptnun- mun*mun)/(ptl*ptl);
 	      //double Dn=0;
-	      //cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
+	      //////cout<<"B, C, B-C old; B, C, B-C new"<<B<<"  "<<C<<"  "<<B-C<<"  "<<Bn<<"  "<<Cn<<"  "<<Bn-Cn<<endl;
 	      A=An;
 	      nu_complex=met_new8;
 	      found=true;
@@ -2964,9 +2709,9 @@ void tt_uev_analyzer::Loop()
       }
 
 
-      //cout<<"still alive 4"<<endl;
+      ////cout<<"still alive 4"<<endl;
 
-
+    //cout<<"16"<<endl;
 
 
 
@@ -2998,7 +2743,7 @@ void tt_uev_analyzer::Loop()
 	//          nu_vector2.SetPxPyPzE(METPx->at(1),METPy->at(1),pz2,new_E2);
 	nu_vector2.SetPxPyPzE(nu_complex.Px(),nu_complex.Py(),pz2,new_E2);
       }
-      //  cout<<" nu1 b1, nu2 b1, nu1 b2, nu2 b2 "<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]).M()<<endl;
+      //  //cout<<" nu1 b1, nu2 b1, nu1 b2, nu2 b2 "<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]).M()<<"  "<<(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[1]]).M()<<"  "<<(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[1]]).M()<<endl;
 
       double m1=(mu_vector[0]+nu_vector1+jet_vector[b_jet_index[0]]).M();
       double m2=(mu_vector[0]+nu_vector2+jet_vector[b_jet_index[0]]).M();
@@ -3033,7 +2778,7 @@ void tt_uev_analyzer::Loop()
 	}
       }
 
-
+    //cout<<"17"<<endl;
       if(fabs(m1-172.5) > fabs(m2-172.5)){
 	if(fabs(m3-172.5) < fabs(m4-172.5)){
 	  if(fabs(m2-172.5) <fabs(m3-172.5)){//m2
@@ -3083,11 +2828,11 @@ void tt_uev_analyzer::Loop()
 	a_min.push_back(j_ind);
 	for(unsigned int j_indd=j_ind; j_indd<jet_vector.size();j_indd++){
 	  if(j_ind==j_indd || j_indd==b_jet_index[0]|| j_indd==b_jet_index[1])continue;
-	  //cout<<j_ind<<"  "<<j_indd<<endl;
+	  ////cout<<j_ind<<"  "<<j_indd<<endl;
 	  double mmin_temp=(jet_vector[j_ind]+jet_vector[j_indd]).M();
 	  if(fabs(mmin_temp-80.4)<fabs(mmin-80.4)){
 	    mmin=mmin_temp;ljet_ind1=j_ind;ljet_ind2=j_indd;
-	    //cout<<ljet_ind1<<"  "<<ljet_ind2<<"  "<<mmin<<endl;
+	    ////cout<<ljet_ind1<<"  "<<ljet_ind2<<"  "<<mmin<<endl;
 	  }
 	}
       }
@@ -3134,7 +2879,7 @@ void tt_uev_analyzer::Loop()
       for(unsigned int j_ind=0; j_ind<jet_vector.size();j_ind++){
 
 	if(j_ind==b_jet_index[0]|| j_ind==b_jet_index[1]||j_ind==ljet_ind1 ||j_ind==ljet_ind2)continue;
-	//cout<<fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector[j_ind].Phi()))<<endl;           
+	////cout<<fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector[j_ind].Phi()))<<endl;           
 	//           if(fabs(jet_vector[j_ind].Eta())<fabs(etab1) &&fabs(jet_vector[j_ind].Eta())<fabs(etab2) )njet_bb++;
 	double dphi=fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector[j_ind].Phi()))*180/pi;
 	if(dphi<60.)njet_toward++;
@@ -3150,7 +2895,7 @@ void tt_uev_analyzer::Loop()
       }
       for(unsigned int jet_vector_1530_ind =0; jet_vector_1530_ind<jet_vector_1530.size();jet_vector_1530_ind++){
 	if(jet_vector_1530[jet_vector_1530_ind].Eta()>etamin && jet_vector_1530[jet_vector_1530_ind].Eta()<etamin+deltaetabb ) njet_bb++;
-	//      cout<<fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))<<endl;           
+	//      //cout<<fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))<<endl;           
 	double dphi=fabs(DeltaPhi(ttbar_tmp.Phi(),jet_vector_1530[jet_vector_1530_ind].Phi()))*180/pi;
 	if(dphi<60.)njet_toward15++;
 	if(dphi>60. &&dphi<120.)njet_transverse15++;
@@ -3213,7 +2958,7 @@ void tt_uev_analyzer::Loop()
         !(patPfpvAssociationQuality->at(pfind)>4 && patPfCandVertexRef->at(pfind)==0 &&patPfCandTrackHighPurity->at(pfind)!=0 /*&&
         ((patPfCandDxyerr->at(pfind)==0&& patPfCandDzerr->at(pfind)==0) ||(fabs(patPfCandDxy->at(pfind)/patPfCandDxyerr->at(pfind))<15. &&fabs(patPfCandDz->at(pfind)/patPfCandDzerr->at(pfind))<15.)) */))continue;
 
-	//cout<<jet_ConstId[ljet_ind1].size()<<endl;
+	////cout<<jet_ConstId[ljet_ind1].size()<<endl;
 	unsigned int array_jetind[]={ljet_ind1,ljet_ind2,b_jet_index[0],b_jet_index[1]};
 	double dr_pf_jetpf_min=9999;
 	double dr_pf_jet_min=9999;
@@ -3226,7 +2971,7 @@ void tt_uev_analyzer::Loop()
 	  double deltar_pf_jet=DeltaR(patPfCandEta->at(pfind),jet_vector[jettt].Eta(),patPfCandPhi->at(pfind),jet_vector[jettt].Phi());
 	  if(deltar_pf_jet<dr_pf_jet_min)dr_pf_jet_min=deltar_pf_jet;
 	  for(unsigned int jetpfind=0;jetpfind<jet_ConstId[array_jetind[jettt]].size();jetpfind++){
-	    //cout<<jet_ConstPt[ljet_ind1][jetpfind]<<"  "<<patPfCandPt->at(pfind)<<"  "<<jet_ConstEta[ljet_ind1][jetpfind]<<"  "<<patPfCandEta->at(pfind)<<endl;
+	    ////cout<<jet_ConstPt[ljet_ind1][jetpfind]<<"  "<<patPfCandPt->at(pfind)<<"  "<<jet_ConstEta[ljet_ind1][jetpfind]<<"  "<<patPfCandEta->at(pfind)<<endl;
 	    double deltar_pf_jetpf=DeltaR(patPfCandEta->at(pfind),jet_ConstEta[array_jetind[jettt]][jetpfind],patPfCandPhi->at(pfind),jet_ConstPhi[array_jetind[jettt]][jetpfind]);
          //   jet_ConstId[array_jetind[jettt]][jetpfind]!=
 	    if(deltar_pf_jetpf<dr_pf_jetpf_min)dr_pf_jetpf_min=deltar_pf_jetpf;
@@ -3299,7 +3044,7 @@ void tt_uev_analyzer::Loop()
         }
       }
       }
-
+    //cout<<"18"<<endl;
       int gn_pf_matched=0;
       double gpt_pf_matched=0;
       /* for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
@@ -3382,7 +3127,7 @@ void tt_uev_analyzer::Loop()
 	}
 	GMjetconst_vector.push_back(Gjetconst_vectortmp);
       }
-      //      cout<<gljMind1<<" "<<gljMind2<<" "<<gljMindb1<<" "<<gljMindb2<<" "<<endl;
+      //      //cout<<gljMind1<<" "<<gljMind2<<" "<<gljMindb1<<" "<<gljMindb2<<" "<<endl;
 
       /*
 	for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
@@ -3392,7 +3137,7 @@ void tt_uev_analyzer::Loop()
 
 	}
       */
-
+    //cout<<"19"<<endl;
       if(gljMind1!=99 && gljMind2!=99 &&gljMindb1!=99 && gljMindb2!=99 ){
 
 	for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
@@ -3437,7 +3182,7 @@ void tt_uev_analyzer::Loop()
 
 
 
-
+    //cout<<"20"<<endl;
 
 
 
@@ -3460,6 +3205,7 @@ void tt_uev_analyzer::Loop()
 	    }
 
 	  }
+    //cout<<"201"<<endl;
 	  h_drmin_rec_gen_part->Fill(drmin_gen_rec);  
 	  h_drmin_rec_gen_part_samecharge->Fill(drmin_gen_rec_samecharge);    
 
@@ -3470,8 +3216,8 @@ void tt_uev_analyzer::Loop()
 	  h_drmin_rec_gen_part_oppcharge->Fill(drmin_gen_rec_oppcharge);                
 	}
       }
-
-      if(gn_pf!=0&& n_pf!=0){
+    //cout<<"202"<<endl;
+ /*     if(gn_pf!=0&& n_pf!=0){
 	  h_1d_npf[2]->Fill(gn_pf,w);
 	  h_1d_ptsumpf[2]->Fill(gptsum_pf,w);
 	  h_1d_ptavepf[2]->Fill(gptsum_pf/gn_pf,w);
@@ -3484,18 +3230,18 @@ void tt_uev_analyzer::Loop()
 	  h_1d_ptsumpf[3]->Fill(ptsum_pf,w);
 	  h_1d_ptavepf[3]->Fill(ptsum_pf/n_pf,w);
 
-      }
+      }*/
 
-
+    //cout<<"203"<<endl;
 
      
 
 
+    //cout<<"21"<<endl;
 
 
 
-
-      //cout<<n_pf<<"  "<<n_pf_dphi[0]<<"  "<<ptsum_pf_dphi[0]<<endl;
+      ////cout<<n_pf<<"  "<<n_pf_dphi[0]<<"  "<<ptsum_pf_dphi[0]<<endl;
       TLorentzVector ttj_vector;
       if(extra_jet_index!=99)ttj_vector=top_vector +atop_vector+jet_vector[extra_jet_index];
       //      if(extra_jet_index==99 &&extra_jet_index_1530!=99 )ttj_vector=top_vector +atop_vector+jet_vector_1530[extra_jet_index_1530];
@@ -3503,9 +3249,9 @@ void tt_uev_analyzer::Loop()
       //filling for pdf weights
 
       for(int pdfind=0; pdfind<pdfind_max;pdfind++){
-	// if(pdfind!=0)cout<<mcWeights_->at(8+pdfind)<<endl;
+	// if(pdfind!=0)//cout<<mcWeights_->at(8+pdfind)<<endl;
 	double weight=w;
-        if(pdfind>0)continue;
+        //if(pdfind>0)continue;
 	if(dopdf&& pdfind!=0)weight=w*mcWeights_->at(8+pdfind);
           
 
@@ -3541,7 +3287,7 @@ void tt_uev_analyzer::Loop()
 	  }
 	  for(int dphiloop=0;dphiloop<10;dphiloop++){// 10 bins in pt, [0,1000] GeV
 	    if(ttbar.Pt()>dphiloop*100. &&ttbar.Pt()<(dphiloop+1)*100. ){
-	      //                cout<<ttbar.Pt()<<"  "<<dphiloop*5<<"  "<<n_pf/4<<endl; 
+	      //                //cout<<ttbar.Pt()<<"  "<<dphiloop*5<<"  "<<n_pf/4<<endl; 
 	      if(n_pf<200.)h_1d_ptttbar_npf[2*pdfind +1]->Fill(dphiloop*50.+n_pf/4.,weight);
 	      if(n_pf>=200.)h_1d_ptttbar_npf[2*pdfind +1]->Fill(dphiloop*50.+49.9,weight);
 	      if(gn_pf!=0){
@@ -3557,7 +3303,7 @@ void tt_uev_analyzer::Loop()
 	    }
 	  }
 
-
+    //cout<<"22"<<endl;
 	  for(int dphiloop=0;dphiloop<20;dphiloop++){
 	    if(n_pf_dphi[dphiloop]==0)continue;
 
@@ -3963,7 +3709,7 @@ void tt_uev_analyzer::Loop()
 	h_pt_atop_fixbin[2*pdfind +1]->Fill(atop_vector.Pt(),weight);
 
 	h_pt_ttbar_kinrec[2*pdfind +1]->Fill((tlep+thad).Pt(),weight);
-
+    //cout<<"23"<<endl;
 
 	h_MTW[2*pdfind +1]->Fill(MTW,weight);
 	h_mu_pt_meas[2*pdfind +1]->Fill(patMuonPt_->at(0),weight);
@@ -4036,7 +3782,7 @@ void tt_uev_analyzer::Loop()
 	h_y_top[2*pdfind +1]->Fill(top_vector.Rapidity(),weight);
 	h_y_atop[2*pdfind +1]->Fill(atop_vector.Rapidity(),weight);
 	h_phi_ttbar[2*pdfind +1]->Fill(ttbar.Phi(),weight);
-	//cout<<ttbar.Phi()<<endl;
+	////cout<<ttbar.Phi()<<endl;
 
 	h_njet_ttbar[2*pdfind +1]->Fill(jet_vector.size(),weight);
       }//pdfind loop
@@ -4044,7 +3790,7 @@ void tt_uev_analyzer::Loop()
     }//mult sel
   }//event loop
 
-
+    //cout<<"24"<<endl;
 
 
 
