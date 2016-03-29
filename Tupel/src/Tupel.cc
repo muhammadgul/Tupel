@@ -50,6 +50,7 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 #include "FWCore/Framework/interface/GenericHandle.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
@@ -81,8 +82,6 @@ const double pi = 4*atan(1.);
 #define QUOTE2(a) #a
 #define QUOTE(a) QUOTE2(a)
 const static char* checksum = QUOTE(MYFILE_CHECKSUM);
-
-#define QUICK_FIX_RUND
 
 /**
  * Define a bit of a bit field.
@@ -217,61 +216,51 @@ private:
   bool compTrigger(const char* triggerBasename, const char* triggerName) const;
   
   // input tags
-  //edm::InputTag trigger_;
-  //edm::InputTag triggerEvent_;
-  //edm::InputTag triggerSummaryLabel_;
   std::string elecMatch_;
   std::string muonMatch_;
   std::string muonMatch2_;
 
 
-  ///G.N.
-  //edm::InputTag elecSrc_;
-  edm::EDGetTokenT<std::vector<pat::Electron> > elecSrcToken_;  
-  //edm::InputTag muonSrc_;  
-  edm::EDGetTokenT<std::vector<pat::Muon> > muonSrcToken_;
+  edm::EDGetTokenT<std::vector<pat::Electron> > elecToken_;  
+
+  edm::EDGetTokenT<std::vector<pat::Muon> > muonToken_;
 
   edm::EDGetTokenT<reco::ConversionCollection> conversionsToken_; 
 
-  //edm::InputTag jetSrc_;
-  edm::EDGetTokenT<std::vector<pat::Jet> > jetSrcToken_;
+  edm::EDGetTokenT<edm::View<pat::Jet> > jetToken_;
 
-  //edm::InputTag photonSrc_;
-  edm::EDGetTokenT<std::vector<pat::Photon> > photonSrcToken_; 
-  //edm::EDGetTokenT<pat::Photon> photonSrcToken_; 
+  std::string photonSw_;
+  edm::EDGetTokenT<std::vector<pat::Photon> > photonToken_; 
 
-  //edm::InputTag candidateSrc_;
-  edm::EDGetTokenT<std::vector<pat::PackedCandidate> > candidateSrcToken_; 
+  std::string candidateSw_;
+  edm::EDGetTokenT<std::vector<pat::PackedCandidate> > candidateToken_; 
 
   edm::EDGetTokenT<std::vector<reco::Vertex> > vertexToken_;
 
-  //edm::InputTag mSrcRho_;
   edm::EDGetTokenT<double> mSrcRhoToken_;
 
   edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
 
-  //std::vector<edm::InputTag> metSources;
   std::vector<edm::EDGetTokenT<std::vector<pat::MET> >  > metSourcesToken;
 
   edm::EDGetTokenT<edm::TriggerResults> HLTTagToken_;
 
-  //edm::InputTag genParticleSrc_;
-  edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticleSrcToken_;  
+  edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticleToken_;  
 
-  //edm::InputTag gjetSrc_;
-  edm::EDGetTokenT<std::vector<reco::GenJet> > gjetSrcToken_;
+  edm::EDGetTokenT<std::vector<reco::GenJet> > gjetToken_;
 
-  //edm::InputTag puSrc_;
-  edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puSrcToken_;
+  edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puToken_;
 
   edm::EDGetTokenT<GenEventInfoProduct> generatorToken_;
-  ///
 
-
-  edm::InputTag tauSrc_;
+  edm::InputTag tauTpken_;
   edm::InputTag metSrc_;
-  //  edm::InputTag CaloJet_;
   edm::InputTag lheSource_;
+
+  edm::EDGetTokenT<edm::ValueMap<StoredPileupJetIdentifier> > puJetIdsToken_;
+  const edm::ValueMap<StoredPileupJetIdentifier>*  puJetIds_;
+  std::string puMvaName_;
+
   bool triggerStat_;
 
 
@@ -590,10 +579,11 @@ private:
   std::auto_ptr<std::vector<float> > JetAk04RawE_;
   std::auto_ptr<std::vector<float> > JetAk04HfHadE_;
   std::auto_ptr<std::vector<float> > JetAk04HfEmE_;
-  std::auto_ptr<std::vector<float> > JetAk04JetBetaClassic_;
-  std::auto_ptr<std::vector<float> > JetAk04JetBeta_;
-  std::auto_ptr<std::vector<float> > JetAk04JetBetaStar_;
-  std::auto_ptr<std::vector<float> > JetAk04JetBetaStarClassic_;
+  std::auto_ptr<std::vector<float> > JetAk04BetaClassic_;
+  std::auto_ptr<std::vector<float> > JetAk04Beta_;
+  std::auto_ptr<std::vector<float> > JetAk04BetaStar_;
+  std::auto_ptr<std::vector<float> > JetAk04BetaStarClassic_;
+  std::auto_ptr<std::vector<float> > JetAk04Rms_;
   std::auto_ptr<std::vector<float> > JetAk04ChHadFrac_;
   std::auto_ptr<std::vector<float> > JetAk04NeutralHadAndHfFrac_;
   std::auto_ptr<std::vector<float> > JetAk04ChEmFrac_;
@@ -640,9 +630,8 @@ private:
   const std::vector<pat::Electron>  *electron;
   edm::Handle<reco::ConversionCollection> conversions_h;
   edm::Handle<std::vector<pat::Tau> > taus;
-  edm::Handle<std::vector<pat::Jet> > jets;
-  const std::vector<pat::Jet> * jettt;
-  edm::Handle<std::vector<pat::MET> > mets;
+  edm::Handle<edm::View<pat::Jet> > jets;
+  const edm::View<pat::Jet> * jettt;
   const std::vector<pat::Photon>  *photons;
   const std::vector<pat::PackedCandidate> *candidates;
   edm::Handle<std::vector<reco::Vertex> >  pvHandle;
@@ -658,7 +647,8 @@ private:
   std::vector<std::vector<int> > trigAccept_;
   std::vector<std::string> trigNames_;
 
-
+  enum { candidatesOff = 0, candidatesOn, candidatesWithTrack } candidateMode_;
+  enum { photonsOff = 0, photonsOn } photonMode_;
   //  std::vector<bool> elIdEnabled_;
   
   bool trigStatValid_;
@@ -675,68 +665,33 @@ private:
 
 };
 
-using namespace std;
-using namespace reco;
-//int ccnevent=0;
+//using namespace std;
+//using namespace reco;
+
 Tupel::Tupel(const edm::ParameterSet& iConfig):
-  //trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
-  //triggerEvent_( iConfig.getParameter< edm::InputTag >( "triggerEvent" ) ),
-  //triggerSummaryLabel_( iConfig.getParameter< edm::InputTag >( "triggerSummaryLabel" ) ), //added by jyhan
   elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
   muonMatch_( iConfig.getParameter< std::string >( "muonMatch" ) ),
   muonMatch2_( iConfig.getParameter< std::string >( "muonMatch2" ) ),
-
-
-  ///G.N.
-  //elecSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
-  elecSrcToken_(consumes<vector<pat::Electron> >(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc"))),
-
-  //muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),  
-  muonSrcToken_(consumes<vector<pat::Muon> >(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc"))),
-
+  elecToken_(consumes<std::vector<pat::Electron> >(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc"))),
+  muonToken_(consumes<std::vector<pat::Muon> >(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc"))),
   conversionsToken_(consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma","reducedConversions"))),
-
-  //jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
-  jetSrcToken_(consumes<vector<pat::Jet> >(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc"))),
-
-  //photonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc")),  
-  photonSrcToken_(consumes<vector<pat::Photon> >(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc"))),
-
-  //candidateSrc_(iConfig.getUntrackedParameter<edm::InputTag>("candidateSrc")), 
-  candidateSrcToken_(consumes<vector<pat::PackedCandidate> >(iConfig.getUntrackedParameter<edm::InputTag>("candidateSrc"))),
- 
-  vertexToken_(consumes<vector<reco::Vertex> >(edm::InputTag("goodOfflinePrimaryVertices"))),
-
-  //mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
+  jetToken_(consumes<edm::View<pat::Jet> >(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc"))),
+  photonSw_(iConfig.getUntrackedParameter<std::string>("photonSw")),
+  candidateSw_(iConfig.getUntrackedParameter<std::string>("candidateSw")),
+  vertexToken_(consumes<std::vector<reco::Vertex> >(iConfig.getUntrackedParameter<edm::InputTag>("pvSrc"))),
   mSrcRhoToken_(consumes<double>(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" ))),
-
   beamSpotToken_(consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"))),
-
-  //metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource")),
-  metSourcesToken(),
-
   HLTTagToken_(consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"))),
-
-  //genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
-  genParticleSrcToken_(consumes<vector<reco::GenParticle> >(iConfig.getUntrackedParameter<edm::InputTag>("genSrc"))),
-
-  //gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
-  gjetSrcToken_(consumes<vector<reco::GenJet> >(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc"))),
-
-  //puSrc_(iConfig.getUntrackedParameter<edm::InputTag> ("puSrc")),
-  puSrcToken_(consumes<vector<PileupSummaryInfo> >(edm::InputTag("puSrc"))),
-
+  genParticleToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getUntrackedParameter<edm::InputTag>("genSrc"))),
+  gjetToken_(consumes<std::vector<reco::GenJet> >(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc"))),
+  puToken_(consumes<std::vector<PileupSummaryInfo> >(iConfig.getUntrackedParameter<edm::InputTag>("puSrc"))),
   generatorToken_(consumes<GenEventInfoProduct>(edm::InputTag("generator"))),
-  ///
-
-
-  //tauSrc_(iConfig.getUntrackedParameter<edm::InputTag>("tauSrc" )),
   metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
-  //  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
   lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
- 
+  puJetIdsToken_(consumes<edm::ValueMap<StoredPileupJetIdentifier> >(iConfig.getUntrackedParameter<edm::InputTag>("puJetIdSrc"))),
+  puJetIds_(0),
+  puMvaName_(iConfig.getUntrackedParameter<std::string>("puMvaName")),
   triggerStat_(iConfig.getUntrackedParameter<bool>("triggerStat", false)),
-
   ecalHitEBToken_( consumes<EcalRecHitCollection>( iConfig.getParameter<edm::InputTag>( "reducedBarrelRecHitCollection" ) ) ),
   ecalHitEEToken_( consumes<EcalRecHitCollection>( iConfig.getParameter<edm::InputTag>( "reducedEndcapRecHitCollection" ) ) ),
   ecalHitESToken_( consumes<EcalRecHitCollection>( iConfig.getParameter<edm::InputTag>( "reducedPreshowerRecHitCollection" ) ) ),
@@ -745,16 +700,27 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   elecIdsListed_(false),
   hltListed_(false),
   trigStatValid_(true)
-  //singleMuOnly_(0)
-  //full5x5SigmaIEtaIEtaMapToken_(consumes<edm::ValueMap<float> >(iConfig.getParameter<edm::InputTag>("full5x5SigmaIEtaIEtaMap")))
 {
-
-//G.N.
-auto metConfig = iConfig.getParameter<vector<edm::InputTag> >("metSource");
-for (auto& conf : metConfig) {
-  metSourcesToken.push_back(consumes<vector<pat::MET> >(conf));   
-}
-//
+  std::vector<edm::InputTag> metConfig = iConfig.getParameter<std::vector<edm::InputTag> >("metSource");
+  for (auto& conf : metConfig) {
+    metSourcesToken.push_back(consumes<std::vector<pat::MET> >(conf));   
+  }
+  if(photonSw_ == std::string("on")){
+    photonMode_ = photonsOn;
+    photonToken_ = consumes<std::vector<pat::Photon> >(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc"));
+  } else if(photonSw_ == std::string("off")){
+    photonMode_ = photonsOff;
+  } else{
+    throw cms::Exception(TString::Format("Invalid value (%s) for photonSw parameter. Valid values are on and off.", photonSw_.c_str()));
+  }
+  if(candidateSw_==std::string("on") || candidateSw_==std::string("withTrack")){
+    candidateToken_ = consumes<std::vector<pat::PackedCandidate> >(iConfig.getUntrackedParameter<edm::InputTag>("candidateSrc"));
+    if(candidateSw_ == std::string("on")) candidateMode_ = candidatesOn;
+  } else if(photonSw_ == std::string("off")){
+    candidateMode_ = candidatesOff;
+  } else{
+    throw cms::Exception(TString::Format("Invalid value (%s) for candidateSw parameter. Valid values are: all, withTrack, and off.", candidateSw_.c_str()));
+  }
 }
 
 Tupel::~Tupel()
@@ -916,7 +882,7 @@ void Tupel::defineBitFields(){
   DEF_BIT2(TrigHltMu, 45, HLT_Mu34);
   DEF_BIT2(TrigHltMu, 46, HLT_IsoMu22);
   DEF_BIT2(TrigHltMu, 47, HLT_IsoMu18);
-  DEF_BIT2(TrigHltMu, 47, HLT_IsoTkMu18);
+  DEF_BIT2(TrigHltMu, 48, HLT_IsoTkMu18);
 
   DEF_BIT2(TrigHltEl,  1, HLT_Ele25WP60_Ele8_Mass55);
   DEF_BIT2(TrigHltEl,  2, HLT_Ele25WP60_SC4_Mass55);
@@ -1025,112 +991,73 @@ void Tupel::readEvent(const edm::Event& iEvent){
   const pat::helper::TriggerMatchHelper matchHelper;
 
 
-  ///G.N.
-
-  //iEvent.getByLabel(genParticleSrc_, genParticles_h);
-  iEvent.getByToken(genParticleSrcToken_, genParticles_h);
+  // get gen particle collection
+  iEvent.getByToken(genParticleToken_, genParticles_h);
   genParticles  = genParticles_h.failedToGet () ? 0 : &*genParticles_h;
 
   // get muon collection
-  //iEvent.getByLabel(muonSrc_,muons);
-  iEvent.getByToken(muonSrcToken_, muons);
-  //muon = muons.failedToGet () ? 0 : &*muons;
-  muon = &*muons;
-
+  iEvent.getByToken(muonToken_, muons);
+  muon = muons.failedToGet () ? 0 : &*muons;
 
   // get electron collection
-  //iEvent.getByLabel(elecSrc_,electrons);
-  iEvent.getByToken(elecSrcToken_,electrons);
-  //electron = electrons.failedToGet () ? 0 :  &*electrons;
-  electron = &*electrons;
+  iEvent.getByToken(elecToken_,electrons);
+  electron = electrons.failedToGet () ? 0 :  &*electrons;
 
-  // edm::Handle<reco::GsfElectronCollection> els_h;
-  // iEvent.getByLabel("gsfElectrons", els_h);
-  
-
-  //iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);
-  iEvent.getByToken(conversionsToken_,conversions_h);
-
-
-  // get tau collection
-  iEvent.getByLabel(tauSrc_,taus);
+  //get photon conversion collection
+  iEvent.getByToken(conversionsToken_, conversions_h);
 
   // get jet collection
-  //iEvent.getByLabel(jetSrc_,jets);
-  iEvent.getByToken(jetSrcToken_,jets);  
-  //  jettt = jets.failedToGet () ? 0 : &*jets ;
-  jettt = &*jets;
-
-  // get met collection
-  iEvent.getByLabel(metSrc_,mets);
+  iEvent.getByToken(jetToken_, jets);  
+  jettt = jets.failedToGet () ? 0 : &*jets ;
+  
+  edm::Handle<edm::ValueMap<StoredPileupJetIdentifier> > puJetIdHandle;
+  iEvent.getByToken(puJetIdsToken_, puJetIdHandle);
+  puJetIds_ = puJetIdHandle.failedToGet() ? 0 : &* puJetIdHandle;
 
   // get photon collection
-  //edm::Handle<edm::View<pat::Photon> > hPhotons;
-  edm::Handle<std::vector<pat::Photon> > hPhotons;
+  if(photonMode_){
+    edm::Handle<std::vector<pat::Photon> > hPhotons;  
+    iEvent.getByToken(photonToken_, hPhotons);
+    photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
+  } else{
+    photons = 0;
+  }
 
-  //iEvent.getByLabel(photonSrc_, hPhotons);
-  iEvent.getByToken(photonSrcToken_, hPhotons);
-  //  photons = hPhotons.failedToGet () ? 0 :  &*hPhotons;
-  photons = &*hPhotons;
-
-
-  // get track collection
-  //edm::Handle<edm::View<pat::PackedCandidate> > hCandidates;
-  edm::Handle<std::vector<pat::PackedCandidate> > hCandidates;  
-
-  //iEvent.getByLabel(candidateSrc_, hCandidates);
-  iEvent.getByToken(candidateSrcToken_, hCandidates);  
-  candidates = &*hCandidates;
-
+  // get PF candidate collection
+  if(candidateMode_){
+    edm::Handle<std::vector<pat::PackedCandidate> > hCandidates;  
+    iEvent.getByToken(candidateToken_, hCandidates);  
+    candidates = hCandidates.failedToGet() ? 0 : &*hCandidates;
+  } else{
+    candidates = 0;
+  }
 
   //get Gen jets
-  //iEvent.getByLabel(gjetSrc_, genjetColl_);
-  iEvent.getByToken(gjetSrcToken_, genjetColl_);
+  iEvent.getByToken(gjetToken_, genjetColl_);
 
-
-  //iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
+  //get primary vertex collection
   iEvent.getByToken(vertexToken_, pvHandle);
-
   vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
-  //vtxx = &*pvHandle;
 
-
-  //iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h);
-
-  //  if(vtxx){
-  //    int nvtx=vtx_h->size();
-  //    if(nvtx==0) return;
-  //    reco::VertexRef primVtx(vtx_h,0);
-  //  }
-
-
-  //iEvent.getByLabel(mSrcRho_, rho);
+  //get rho information
   iEvent.getByToken(mSrcRhoToken_, rho);
 
   rhoIso=99;
   if(!rho.failedToGet()) rhoIso = *rho;
-
   
-  //iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
+  //get beam spot information
   iEvent.getByToken(beamSpotToken_, beamSpotHandle);
-  ///
-
-  if(!beamSpotHandle.failedToGet()) beamSpot = *beamSpotHandle;
+  beamSpot = beamSpotHandle.failedToGet() ? reco::BeamSpot() : *beamSpotHandle;
 }
 
 void Tupel::processMET(const edm::Event& iEvent){
 
-  ///G.N.
-  //for(unsigned int imet=0;imet<metSources.size();imet++){
-    //Handle<View<pat::MET> > metH;
-    //iEvent.getByLabel(metSources[imet], metH);
- 
   for(unsigned int imet=0;imet<metSourcesToken.size();imet++){
-    Handle<vector<pat::MET> > metH;  
+    Handle<std::vector<pat::MET> > metH;  
     iEvent.getByToken(metSourcesToken[imet], metH);
-  ///
 
-    if(!metH.isValid())continue;
+    if(!metH.isValid()) continue;
+    
     //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
     METPt_->push_back(metH->at(0).pt());
@@ -1142,29 +1069,12 @@ void Tupel::processMET(const edm::Event& iEvent){
     METsigxy_->push_back(metH->at(0).getSignificanceMatrix()(0,1));
     METsigy2_->push_back(metH->at(0).getSignificanceMatrix()(1,1));
     METsig_->push_back(metH->at(0).significance());
-    //Output object in EDM format
-    //std::auto_ptr<llvvMet> metOut(new llvvMet());
-    //llvvMet& met = *metOut;
-
-    //////////////////////////////////
-
-    // met.SetPxPyPzE(metH->ptrAt(0)->px(), metH->ptrAt(0)->py(), metH->ptrAt(0)->pz(), metH->ptrAt(0)->energy());
-    //met.sigx2 = metH->ptrAt(0)->getSignificanceMatrix()(0,0);
-    //met.sigxy = metH->ptrAt(0)->getSignificanceMatrix()(0,1);
-    //met.sigy2 = metH->ptrAt(0)->getSignificanceMatrix()(1,1);
-    //met.sig   = metH->ptrAt(0)->significance();
-
-    //iEvent.put(metOut, metSources[imet].label()); //save the object to the EvtNum here, to keep it in the loop
   }
 }
 
 void Tupel::processVtx(){
   if(vtxx){
-    ///G.N.
-    //for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
     for (std::vector<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
-    ///
-
       if (vtx->isValid() && !vtx->isFake()) ++(*EvtVtxCnt_);
     }
   }
@@ -1172,10 +1082,7 @@ void Tupel::processVtx(){
 
 void Tupel::processPu(const edm::Event& iEvent){
   Handle<std::vector< PileupSummaryInfo > >  PupInfo;
-  ///G.N.
-  //iEvent.getByLabel(puSrc_, PupInfo);
-  iEvent.getByToken(puSrcToken_, PupInfo);
-  ///
+  iEvent.getByToken(puToken_, PupInfo);
 
   if(!PupInfo.failedToGet()){
     std::vector<PileupSummaryInfo>::const_iterator PVI;
@@ -1205,7 +1112,6 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
   const std::vector<reco::GenParticle> & gen = *genParticles_h;
   for (size_t i=0; i<genParticles->size(); ++i){
     TLorentzVector genR1DressLep1(0,0,0,0);
-    //      TLorentzVector genPho(0,0,0,0);
     int st = gen[i].status();
     int id = gen[i].pdgId();
 
@@ -1219,7 +1125,8 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
       GPhotEta_->push_back(gen[i].eta());
       GPhotPhi_->push_back(gen[i].phi());
       GPhotE_->push_back(gen[i].energy());
-      GPhotMotherId_->push_back(gen[i].mother()->pdgId());
+      int motherId = gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : 0 ;
+      GPhotMotherId_->push_back(motherId);
       GPhotSt_->push_back(gen[i].status());
 
       //--- search for stable particles around photon in DR=0.3,0.4 and 0.5 cone around the photon
@@ -1264,86 +1171,82 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
     
     if (11 <= abs(id) && abs(id) <= 18 //lepton or neutrino
 	&& (abs(st)==23 || abs(st)==22 || abs(st)==21 || abs(st)==61 || abs(st)==3 || abs(st)==2)){
-	TLorentzVector genLep3(0,0,0,0);
-	if(abs(st)!=21)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-	if(abs(st)==21)genLep3.SetPxPyPzE(0.001,0.001,gen[i].pz(),gen[i].energy());
-	GLepSt3Pt_->push_back(genLep3.Pt());
-	GLepSt3Eta_->push_back(eta(genLep3));
-	GLepSt3Phi_->push_back(genLep3.Phi());
-	GLepSt3E_->push_back(genLep3.Energy());
-	GLepSt3Mother0Id_->push_back(gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : -1);
-	GLepSt3Id_->push_back(id);
-	GLepSt3St_->push_back(st);
-      }
+      TLorentzVector genLep3(0,0,0,0);
+      if(abs(st)!=21)genLep3.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+      if(abs(st)==21)genLep3.SetPxPyPzE(0.001,0.001,gen[i].pz(),gen[i].energy());
+      GLepSt3Pt_->push_back(genLep3.Pt());
+      GLepSt3Eta_->push_back(eta(genLep3));
+      GLepSt3Phi_->push_back(genLep3.Phi());
+      GLepSt3E_->push_back(genLep3.Energy());
+      GLepSt3Mother0Id_->push_back(gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : -1);
+      GLepSt3Id_->push_back(id);
+      GLepSt3St_->push_back(st);
+    }
     
-      GLepSt3MotherCnt_->push_back(gen[i].numberOfMothers());
+    GLepSt3MotherCnt_->push_back(gen[i].numberOfMothers());
 
-      int momId = gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : -1 ;
+    int momId = gen[i].numberOfMothers() ? gen[i].mother()->pdgId() : -1 ;
       
-      if (st==1 && (abs(id)==11 || abs(id)==13 || abs(id)==15
-		    || abs(id)==12|| abs(id)==14|| abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
+    if (st==1 && (abs(id)==11 || abs(id)==13 || abs(id)==15
+		  || abs(id)==12|| abs(id)==14|| abs(id)==16) /*&& gen[i].pt() > 0.1 && fabs(gen[i].eta())<3.0*/){
 	
-	TLorentzVector genLep1(0,0,0,0);
-	genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-	TLorentzVector genR1Pho1(0,0,0,0);
+      TLorentzVector genLep1(0,0,0,0);
+      genLep1.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+      TLorentzVector genR1Pho1(0,0,0,0);
 
-	edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
-  ///G.N.
-  //iEvent.getByLabel(genParticleSrc_, genpart2);
-  iEvent.getByToken(genParticleSrcToken_, genpart2);
-  ///
+      edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
+      iEvent.getByToken(genParticleToken_, genpart2);
+      const std::vector<reco::GenParticle> & gen2 = *genpart2;
+      //LOOP over photons//
+      if (st==1 && (abs(id)==13||abs(id)==11)){
+	for(unsigned int j=0; j<genpart2->size(); ++j){
+	  if(gen2[j].numberOfMothers()){
+	    if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
+	    TLorentzVector thisPho1(0,0,0,0);
+	    thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
+	    double dR = genLep1.DeltaR(thisPho1);
+	    if(dR<0.1){
+	      genR1Pho1+=thisPho1;
+	    }
 
-	const std::vector<reco::GenParticle> & gen2 = *genpart2;
-	//LOOP over photons//
-	if (st==1 && (abs(id)==13||abs(id)==11)){
-	  for(unsigned int j=0; j<genpart2->size(); ++j){
-	    if(gen2[j].numberOfMothers()){
-	      if( gen2[j].status()!=1|| gen2[j].pdgId()!=22 || gen2[j].energy()<0.000001 /*|| fabs(MomId2)!=fabs(id)*/) continue;
-	      TLorentzVector thisPho1(0,0,0,0);
-	      thisPho1.SetPtEtaPhiE(gen2[j].pt(),gen2[j].eta(),gen2[j].phi(),gen2[j].energy());
-	      double dR = genLep1.DeltaR(thisPho1);
-	      if(dR<0.1){
-		genR1Pho1+=thisPho1;
-	      }
-
-	      if(dR<0.2){
-		GLepClosePhotPt_->push_back(thisPho1.Pt());
-		GLepClosePhotEta_->push_back(thisPho1.Eta());
-		GLepClosePhotPhi_->push_back(thisPho1.Phi());
-		GLepClosePhotE_->push_back(thisPho1.Energy());
-		GLepClosePhotId_->push_back(gen2[j].pdgId());
-		GLepClosePhotMother0Id_->push_back(fabs(gen2[j].mother()->pdgId()));
-		GLepClosePhotMotherCnt_->push_back(gen2[j].numberOfMothers());
-		GLepClosePhotSt_->push_back(gen2[j].status());
-	      }
+	    if(dR<0.2){
+	      GLepClosePhotPt_->push_back(thisPho1.Pt());
+	      GLepClosePhotEta_->push_back(thisPho1.Eta());
+	      GLepClosePhotPhi_->push_back(thisPho1.Phi());
+	      GLepClosePhotE_->push_back(thisPho1.Energy());
+	      GLepClosePhotId_->push_back(gen2[j].pdgId());
+	      GLepClosePhotMother0Id_->push_back(fabs(gen2[j].mother()->pdgId()));
+	      GLepClosePhotMotherCnt_->push_back(gen2[j].numberOfMothers());
+	      GLepClosePhotSt_->push_back(gen2[j].status());
 	    }
 	  }
-	}//photon loop
+	}
+      }//photon loop
 
-	bool isPrompt = gen[i].isPromptFinalState();
-	bool tauProd  = gen[i].isDirectPromptTauDecayProductFinalState();
+      bool isPrompt = gen[i].isPromptFinalState();
+      bool tauProd  = gen[i].isDirectPromptTauDecayProductFinalState();
 	
-	genR1DressLep1 = genLep1+genR1Pho1;
-	GLepDr01Pt_->push_back(genR1DressLep1.Pt());
-	GLepDr01Eta_->push_back(genR1DressLep1.Eta());
-	GLepDr01Phi_->push_back(genR1DressLep1.Phi());
-	GLepDr01E_->push_back(genR1DressLep1.Energy());
-	GLepDr01Id_->push_back(id);
-	GLepDr01MomId_->push_back(momId);
-	GLepDr01St_->push_back(st);
-	GLepDr01Prompt_->push_back(isPrompt);
-	GLepDr01TauProd_->push_back(tauProd);
+      genR1DressLep1 = genLep1+genR1Pho1;
+      GLepDr01Pt_->push_back(genR1DressLep1.Pt());
+      GLepDr01Eta_->push_back(genR1DressLep1.Eta());
+      GLepDr01Phi_->push_back(genR1DressLep1.Phi());
+      GLepDr01E_->push_back(genR1DressLep1.Energy());
+      GLepDr01Id_->push_back(id);
+      GLepDr01MomId_->push_back(momId);
+      GLepDr01St_->push_back(st);
+      GLepDr01Prompt_->push_back(isPrompt);
+      GLepDr01TauProd_->push_back(tauProd);
 
-	GLepBarePt_->push_back(genLep1.Pt());
-	GLepBareEta_->push_back(genLep1.Eta());
-	GLepBarePhi_->push_back(genLep1.Phi());
-	GLepBareE_->push_back(genLep1.Energy());
-	GLepBareId_->push_back(id);
-	GLepBareMomId_->push_back(momId);
-	GLepBareSt_->push_back(st);
-	GLepBarePrompt_->push_back(isPrompt);
-	GLepBareTauProd_->push_back(tauProd);
-      } //status lepton or neutrino
+      GLepBarePt_->push_back(genLep1.Pt());
+      GLepBareEta_->push_back(genLep1.Eta());
+      GLepBarePhi_->push_back(genLep1.Phi());
+      GLepBareE_->push_back(genLep1.Energy());
+      GLepBareId_->push_back(id);
+      GLepBareMomId_->push_back(momId);
+      GLepBareSt_->push_back(st);
+      GLepBarePrompt_->push_back(isPrompt);
+      GLepBareTauProd_->push_back(tauProd);
+    } //status lepton or neutrino
   } //gen particle loop
 }
 
@@ -1380,21 +1283,21 @@ void Tupel::processGenJets(const edm::Event& iEvent){
       const std::vector<reco::GenParticle> & gen = *genParticles_h;
       for (size_t i=0; i<genParticles->size(); ++i){
 
-           int id = gen[i].pdgId();
-           if( !( id == 21 || abs(id) < 6 )  ) continue; // only consider quarks or gluons
+	int id = gen[i].pdgId();
+	if( !( id == 21 || abs(id) < 6 )  ) continue; // only consider quarks or gluons
 
-           if( gen[i].pt() < 0.0000001 ) continue; // prevent from using 0 pT  particles (DeltaR fails)
+	if( gen[i].pt() < 0.0000001 ) continue; // prevent from using 0 pT  particles (DeltaR fails)
 
-           TLorentzVector genobj(0,0,0,0);
-           genobj.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
-           float dr = genjetlv.DeltaR( genobj );
+	TLorentzVector genobj(0,0,0,0);
+	genobj.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+	float dr = genjetlv.DeltaR( genobj );
 
-           if( dr < mindr ) {
-               mindr = dr;
-               //mindr_stat = gen[i].status();
-               mindr_id = gen[i].pdgId();
+	if( dr < mindr ) {
+	  mindr = dr;
+	  //mindr_stat = gen[i].status();
+	  mindr_id = gen[i].pdgId();
 
-           }
+	}
       }
 
       GJetAk04MatchedPartonID_->push_back(mindr_id);
@@ -1509,7 +1412,7 @@ void Tupel::processMuons(){
   double MuFill = 0;
 
   for (unsigned int j = 0; j < muons->size(); ++j){
-    const vector<pat::Muon> & mu = *muons;
+    const std::vector<pat::Muon> & mu = *muons;
 
     if(mu[j].isGlobalMuon()){
       //const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
@@ -1628,7 +1531,7 @@ void Tupel::processMuons(){
 
 void Tupel::processElectrons(){
   int ElecFill=0;
-  auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
+  std::auto_ptr<std::vector<pat::Electron> > electronColl( new std::vector<pat::Electron> (*electrons) );
   for (unsigned int j=0; j < electronColl->size();++j){
     pat::Electron & el = (*electronColl)[j];
 
@@ -1726,8 +1629,8 @@ void Tupel::processElectrons(){
     int hltMatch = 0;
 
     ElHltMatch_->push_back(hltMatch);//no matching yet...BB
-    const string mvaTrigV0 = "mvaTrigV0";
-    const string mvaNonTrigV0 = "mvaNonTrigV0";
+    const std::string mvaTrigV0 = "mvaTrigV0";
+    const std::string mvaNonTrigV0 = "mvaNonTrigV0";
 
     ElPt_->push_back(el.pt());
     ElEta_->push_back(el.eta());
@@ -1737,13 +1640,10 @@ void Tupel::processElectrons(){
     ElE_->push_back(el.energy());
     ElCh_->push_back(el.charge());
 
-    ///G. N.
     ElScRawE_->push_back(el.superCluster()->rawEnergy());
     ElCorrE_->push_back(el.correctedEcalEnergy());
-
     ElEcalIso_->push_back(el.ecalIso());
     ElEcalPfIso_->push_back(el.ecalPFClusterIso());
-    ///
 
     double aeff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso03, el.superCluster()->eta(), ElectronEffectiveArea::kEleEAData2012);
     ElAEff_->push_back(aeff);
@@ -1757,12 +1657,12 @@ void Tupel::processElectrons(){
     ElPfIsoIso_->push_back(phIso03_);
     ElPfIsoPuChHad_->push_back(puChIso03_);
     ElPfIsoRaw_->push_back(( chIso03_ + nhIso03_ + phIso03_ ) / el.pt());
-    ElPfIsoDbeta_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - 0.5*puChIso03_) )/ el.pt());
+    ElPfIsoDbeta_->push_back(( chIso03_ + std::max(0.0, nhIso03_ + phIso03_ - 0.5*puChIso03_) )/ el.pt());
 
     *EvtFastJetRho_ =  rhoIso;
     double rhoPrime = std::max(0., rhoIso);
 
-    ElPfIsoRho_->push_back(( chIso03_ + max(0.0, nhIso03_ + phIso03_ - rhoPrime*(aeff)) )/ el.pt());
+    ElPfIsoRho_->push_back(( chIso03_ + std::max(0.0, nhIso03_ + phIso03_ - rhoPrime*(aeff)) )/ el.pt());
 
 
     ElDr03TkSumPt_->push_back(el.dr03TkSumPt());
@@ -1807,7 +1707,26 @@ void Tupel::processJets(){
   for ( unsigned int i=0; i<jets->size(); ++i ) {
     const pat::Jet & jet = jets->at(i);
 
-    JetAk04PuMva_->push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
+    if(i==0 && analyzedEventCnt_== 1){
+      std::cout << "Jet user float list:\n";
+      for(unsigned j = 0; j < jet.userFloatNames().size(); ++j){
+	std::cout << jet.userFloatNames()[j] << "\n";
+      }
+      std::cout << std::endl;
+    }
+
+    if(jet.hasUserFloat(puMvaName_)) JetAk04PuMva_->push_back(jet.userFloat(puMvaName_));
+    else JetAk04PuMva_->push_back(-99.);
+    //else cerr << "No PU MVA " << analyzedEventCnt_ << ". " << i << "\n";
+
+    if(puJetIds_){
+      const StoredPileupJetIdentifier& thisJetIds = (*puJetIds_)[jets->refAt(i)->originalObjectRef()];
+      JetAk04Beta_->push_back(           thisJetIds.beta());
+      JetAk04BetaClassic_->push_back(    thisJetIds.betaStar());
+      JetAk04BetaStar_->push_back(       thisJetIds.betaClassic());
+      JetAk04BetaStarClassic_->push_back(thisJetIds.betaStarClassic());
+      JetAk04Rms_->push_back(thisJetIds.dR2Mean());      
+    }
 
     chf = jet.chargedHadronEnergyFraction();
     nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
@@ -1914,6 +1833,8 @@ void Tupel::processPfCands()
     const pat::PackedCandidate& cand = (*candidates)[j];
     const reco::Track* track = cand.bestTrack();
 
+    if(candidateMode_ == candidatesWithTrack && !track) continue;
+    
     double tDxy_ = -99.;
     double tDz_ = -99.;
     
@@ -2076,8 +1997,8 @@ Tupel::writeHeader(){
   t->Branch("Hostname", &hostname_);
 
   edm::TimeOfDay ts;
-  stringstream s;
-  s << setprecision(0) << ts;
+  std::stringstream s;
+  s << std::setprecision(0) << ts;
   TString ts_(s.str().c_str());
   t->Branch("CreationTime", &ts_);
 
@@ -2284,81 +2205,85 @@ Tupel::beginJob()
   ADD_BRANCH(ElDr03EcalRecHitSumEt);
   ADD_BRANCH(ElDr03HcalTowerSumEt);
 
-  //tracks
-  treeHelper_->addDescription("PfCands", "PF particle candidates");
-  ADD_BRANCH(PfCandPt);
-  ADD_BRANCH(PfCandEta);
-  ADD_BRANCH(PfCandPhi);
-  ADD_BRANCH(PfCandE);
-  ADD_BRANCH(PfCandTkInPt);
-  ADD_BRANCH(PfCandTkInEta);
-  ADD_BRANCH(PfCandTkInPhi);
-  ADD_BRANCH(PfCandVx);
-  ADD_BRANCH(PfCandVy);
-  ADD_BRANCH(PfCandVz);
-  ADD_BRANCH(PfCandTkValidHitCnt);
-  ADD_BRANCH(PfCandTkValidFrac);
-  ADD_BRANCH(PfCandTkChi2);
-  ADD_BRANCH(PfCandDz);
-  ADD_BRANCH(PfCandDxy);
-  ADD_BRANCH(PfCandDz0);
-  ADD_BRANCH(PfCandDzPV);
-  ADD_BRANCH(PfCandDxyPV);
+  //PF candidates
+  if(candidateMode_ != candidatesOff){
+    treeHelper_->addDescription("PfCands", "PF particle candidates");
+    ADD_BRANCH(PfCandPt);
+    ADD_BRANCH(PfCandEta);
+    ADD_BRANCH(PfCandPhi);
+    ADD_BRANCH(PfCandE);
+    ADD_BRANCH(PfCandTkInPt);
+    ADD_BRANCH(PfCandTkInEta);
+    ADD_BRANCH(PfCandTkInPhi);
+    ADD_BRANCH(PfCandVx);
+    ADD_BRANCH(PfCandVy);
+    ADD_BRANCH(PfCandVz);
+    ADD_BRANCH(PfCandTkValidHitCnt);
+    ADD_BRANCH(PfCandTkValidFrac);
+    ADD_BRANCH(PfCandTkChi2);
+    ADD_BRANCH(PfCandDz);
+    ADD_BRANCH(PfCandDxy);
+    ADD_BRANCH(PfCandDz0);
+    ADD_BRANCH(PfCandDzPV);
+    ADD_BRANCH(PfCandDxyPV);
+  }
 
-  //photon momenta
-  treeHelper_->addDescription("Phot", "Particle flow photons");
-  ADD_BRANCH(PhotPt);
-  ADD_BRANCH(PhotEta);
-  ADD_BRANCH(PhotPhi);
-  ADD_BRANCH_D(PhotScRawE, "Photon Supercluster uncorrected energy");
-  ADD_BRANCH_D(PhotScEta, "Photon Supercluster eta");
-  ADD_BRANCH_D(PhotScPhi, "Photon Supercluster phi");
+  if(photonMode_ != photonsOff){
+    //photon momenta
+    treeHelper_->addDescription("Phot", "Particle flow photons");
+    ADD_BRANCH(PhotPt);
+    ADD_BRANCH(PhotEta);
+    ADD_BRANCH(PhotPhi);
+    ADD_BRANCH_D(PhotScRawE, "Photon Supercluster uncorrected energy");
+    ADD_BRANCH_D(PhotScEta, "Photon Supercluster eta");
+    ADD_BRANCH_D(PhotScPhi, "Photon Supercluster phi");
 
-  //photon isolations
-  ADD_BRANCH(PhotIsoEcal);
-  ADD_BRANCH(PhotIsoHcal);
-  ADD_BRANCH(PhotIsoTk);
-  ADD_BRANCH(PhotPfIsoChHad);
-  ADD_BRANCH(PhotPfIsoNeutralHad);
-  ADD_BRANCH(PhotPfIsoPhot);
-  ADD_BRANCH(PhotPfIsoPuChHad);
-  ADD_BRANCH(PhotPfIsoEcalClus);
-  ADD_BRANCH(PhotPfIsoHcalClus);
+    //photon isolations
+    ADD_BRANCH(PhotIsoEcal);
+    ADD_BRANCH(PhotIsoHcal);
+    ADD_BRANCH(PhotIsoTk);
+    ADD_BRANCH(PhotPfIsoChHad);
+    ADD_BRANCH(PhotPfIsoNeutralHad);
+    ADD_BRANCH(PhotPfIsoPhot);
+    ADD_BRANCH(PhotPfIsoPuChHad);
+    ADD_BRANCH(PhotPfIsoEcalClus);
+    ADD_BRANCH(PhotPfIsoHcalClus);
 
-  //photon cluster shapes
-  ADD_BRANCH_D(PhotE3x3, "Photon energy deposited in 3x3 ECAL crystal array. Divide this quantity by PhotScRawE to obtain the R9 variable.");
-  ADD_BRANCH(PhotE1x5);
-  ADD_BRANCH(PhotE2x5);
-  ADD_BRANCH(PhotE5x5);
-  ADD_BRANCH(PhotSigmaIetaIeta);
-  //ADD_BRANCH(PhotSigmaIetaIphi);
-  //ADD_BRANCH(PhotSigmaIphiIphi);
-  ADD_BRANCH(PhotHoE);
-  ADD_BRANCH(PhotEtaWidth);
-  ADD_BRANCH(PhotPhiWidth);
-  ADD_BRANCH(PhotR9);
-  ADD_BRANCH(PhotE1x3);  
-  ADD_BRANCH(PhotE2x2);
-  ADD_BRANCH(PhotS4);
-  ADD_BRANCH(PhotE1x5Full5x5);
-  ADD_BRANCH(PhotE2x5Full5x5);
-  ADD_BRANCH(PhotE3x3Full5x5);
-  ADD_BRANCH(PhotE5x5Full5x5);
-  ADD_BRANCH(PhotSigmaIetaIetaFull5x5);
-  ADD_BRANCH(PhotR9Full5x5);
+    //photon cluster shapes
+    ADD_BRANCH_D(PhotE3x3, "Photon energy deposited in 3x3 ECAL crystal array. Divide this quantity by PhotScRawE to obtain the R9 variable.");
+    ADD_BRANCH(PhotE1x5);
+    ADD_BRANCH(PhotE2x5);
+    ADD_BRANCH(PhotE5x5);
+    ADD_BRANCH(PhotSigmaIetaIeta);
+    //ADD_BRANCH(PhotSigmaIetaIphi);
+    //ADD_BRANCH(PhotSigmaIphiIphi);
+    ADD_BRANCH(PhotHoE);
+    ADD_BRANCH(PhotEtaWidth);
+    ADD_BRANCH(PhotPhiWidth);
+    ADD_BRANCH(PhotR9);
+    ADD_BRANCH(PhotE1x3);  
+    ADD_BRANCH(PhotE2x2);
+    ADD_BRANCH(PhotS4);
+    ADD_BRANCH(PhotE1x5Full5x5);
+    ADD_BRANCH(PhotE2x5Full5x5);
+    ADD_BRANCH(PhotE3x3Full5x5);
+    ADD_BRANCH(PhotE5x5Full5x5);
+    ADD_BRANCH(PhotSigmaIetaIetaFull5x5);
+    ADD_BRANCH(PhotR9Full5x5);
 
-  //photon ES
-  //ADD_BRANCH_D(PhotEsE, "Photon. Energy deposited in the preshower");
-  //ADD_BRANCH_D(PhotEsSigmaIxIx, "Photon. Preshower cluster extend along x-axis");
-  //ADD_BRANCH_D(PhotEsSigmaIyIy, "Photon. Preshower cluster extend along y-axis");
-  //ADD_BRANCH_D(PhotEsSigmaIrIr, "Photon. \\sqrt(PhotEsSigmaIxIx**2+PhotEsSigmaIyIy**2)");
+    //photon ES
+    //ADD_BRANCH_D(PhotEsE, "Photon. Energy deposited in the preshower");
+    //ADD_BRANCH_D(PhotEsSigmaIxIx, "Photon. Preshower cluster extend along x-axis");
+    //ADD_BRANCH_D(PhotEsSigmaIyIy, "Photon. Preshower cluster extend along y-axis");
+    //ADD_BRANCH_D(PhotEsSigmaIrIr, "Photon. \\sqrt(PhotEsSigmaIxIx**2+PhotEsSigmaIyIy**2)");
 
-  //photon ID
-  ADD_BRANCH_D(PhotId, "Photon Id. Field of bits described in BitFields.PhotId");
-  ADD_BRANCH_D(PhotHasPixelSeed, "Pixel and tracker based variable to discreminate photons from electrons");
+    //photon ID
+    ADD_BRANCH_D(PhotId, "Photon Id. Field of bits described in BitFields.PhotId");
+    ADD_BRANCH_D(PhotHasPixelSeed, "Pixel and tracker based variable to discreminate photons from electrons");
 
-  //photon timing
-  //ADD_BRANCH_D(PhotTime, "Photon. Timing from ECAL");
+    //photon timing
+    //ADD_BRANCH_D(PhotTime, "Photon. Timing from ECAL");
+  }
 
   //PF Jets
   treeHelper_->addDescription("JetAk04", "Reconstricuted jets clustered with the anti-ket algorithm with distance parameter R = 0.4");
@@ -2379,10 +2304,11 @@ Tupel::beginJob()
   ADD_BRANCH(JetAk04NeutralEmFrac);
   ADD_BRANCH(JetAk04ChMult);
   ADD_BRANCH(JetAk04ConstCnt);
-  ADD_BRANCH(JetAk04JetBeta);
-  ADD_BRANCH(JetAk04JetBetaClassic);
-  ADD_BRANCH(JetAk04JetBetaStar);
-  ADD_BRANCH(JetAk04JetBetaStarClassic);
+  ADD_BRANCH(JetAk04Beta);
+  ADD_BRANCH(JetAk04BetaClassic);
+  ADD_BRANCH(JetAk04BetaStar);
+  ADD_BRANCH(JetAk04BetaStarClassic);
+  ADD_BRANCH(JetAk04Rms);
   treeHelper_->addDescription("JetAk04BTag", "B tagging with different algorithms");
   ADD_BRANCH_D(JetAk04BTagCsv, "combinedSecondaryVertexBJetTags");
   ADD_BRANCH_D(JetAk04BTagCsvV1, "combinedSecondaryVertexV1BJetTags");
