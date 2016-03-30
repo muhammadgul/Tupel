@@ -197,7 +197,6 @@ private:
 
   void processJets();
 
-  //void processPhotons();
   void processPhotons(const edm::Event& iEvent, const edm::EventSetup& iSetup);
 
   void processPfCands();
@@ -248,6 +247,8 @@ private:
 
   edm::EDGetTokenT<edm::TriggerResults> HLTTagToken_;
 
+  edm::EDGetTokenT<edm::TriggerResults> metFilTagToken_;
+
   edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticleToken_;  
 
   edm::EDGetTokenT<std::vector<reco::GenJet> > gjetToken_;
@@ -256,8 +257,8 @@ private:
 
   edm::EDGetTokenT<GenEventInfoProduct> generatorToken_;
 
-  edm::InputTag tauTpken_;
-  edm::InputTag lheSrc_;
+  edm::EDGetTokenT<LHEEventProduct> lheEventToken_;
+  edm::EDGetTokenT<LHERunInfoProduct> lheRunToken_;
 
   edm::EDGetTokenT<edm::ValueMap<StoredPileupJetIdentifier> > puJetIdsToken_;
   const edm::ValueMap<StoredPileupJetIdentifier>*  puJetIds_;
@@ -693,11 +694,13 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   mSrcRhoToken_(consumes<double>(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" ))),
   beamSpotToken_(consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"))),
   HLTTagToken_(consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "HLT"))),
+  metFilTagToken_(consumes<edm::TriggerResults>(edm::InputTag("TriggerResults", "", "PAT"))),
   genParticleToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getUntrackedParameter<edm::InputTag>("genSrc"))),
   gjetToken_(consumes<std::vector<reco::GenJet> >(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc"))),
   puToken_(consumes<std::vector<PileupSummaryInfo> >(iConfig.getUntrackedParameter<edm::InputTag>("puSrc"))),
   generatorToken_(consumes<GenEventInfoProduct>(edm::InputTag("generator"))),
-  lheSrc_(iConfig.getUntrackedParameter<edm::InputTag>("lheSrc")),
+  lheEventToken_(consumes<LHEEventProduct>(iConfig.getUntrackedParameter<edm::InputTag>("lheSrc"))),
+  lheRunToken_(consumes<LHERunInfoProduct, edm::InRun>(iConfig.getUntrackedParameter<edm::InputTag>("lheSrc"))),
   puJetIdsToken_(consumes<edm::ValueMap<StoredPileupJetIdentifier> >(iConfig.getUntrackedParameter<edm::InputTag>("puJetIdSrc"))),
   puJetIds_(0),
   puMvaName_(iConfig.getUntrackedParameter<std::string>("puMvaName")),
@@ -1270,8 +1273,8 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 
 void Tupel::processGenJets(const edm::Event& iEvent){
   //matrix element info
-  Handle<LHEEventProduct> lheH;
-  iEvent.getByLabel(lheSrc_,lheH);//to be modularized!!!
+  edm::Handle<LHEEventProduct> lheH;
+  iEvent.getByToken(lheEventToken_, lheH);
   if(lheH.isValid()) *GNup_ = lheH->hepeup().NUP;
     //*GNup_ = lheH->hepeup().NUP;
     //cout << " lheH.isValid() " << lheH.isValid() << " GNup_ " << *GNup_ << endl;
@@ -1327,8 +1330,6 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 
 void Tupel::processPdfInfo(const edm::Event& iEvent){
   edm::Handle<GenEventInfoProduct> genEventInfoProd;
-  ///G.N.
-  //if (iEvent.getByLabel("generator", genEventInfoProd)) {
   if (iEvent.getByToken(generatorToken_, genEventInfoProd)) {
     if (genEventInfoProd->hasBinningValues()){
       *GBinningValue_ = genEventInfoProd->binningValues()[0];
@@ -1337,9 +1338,7 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
   }
   /// now get the PDF information
   edm::Handle<GenEventInfoProduct> pdfInfoHandle;
-  //if (iEvent.getByLabel("generator", pdfInfoHandle)) {
   if (iEvent.getByToken(generatorToken_, pdfInfoHandle)) {
-  ///
 
     if (pdfInfoHandle->pdf()) {
       GPdfId1_->push_back(pdfInfoHandle->pdf()->id.first);
@@ -1354,13 +1353,12 @@ void Tupel::processPdfInfo(const edm::Event& iEvent){
 }
 
 void Tupel::processMETFilter(const edm::Event& iEvent){
-    edm::Handle< edm::TriggerResults > MetFilHandle;
-    edm::InputTag MetFilTag = edm::InputTag( "TriggerResults", "", "PAT");
-    iEvent.getByLabel(MetFilTag, MetFilHandle);
+    edm::Handle< edm::TriggerResults > metFilHandle;
+    iEvent.getByToken(metFilTagToken_, metFilHandle);
     
-    if ( MetFilHandle.isValid() && !MetFilHandle.failedToGet() ) {
-        edm::RefProd<edm::TriggerNames> MetFilNames( &(iEvent.triggerNames( *MetFilHandle )) );
-        int nMetFil = (int)MetFilNames->size();
+    if ( metFilHandle.isValid() && !metFilHandle.failedToGet() ) {
+        edm::RefProd<edm::TriggerNames> metFilNames( &(iEvent.triggerNames( *metFilHandle )) );
+        int nMetFil = (int)metFilNames->size();
         
         // 0    Flag_HBHENoiseFilter    TO BE USED
         // 1    Flag_HBHENoiseIsoFilter TO BE USED
@@ -1378,8 +1376,8 @@ void Tupel::processMETFilter(const edm::Event& iEvent){
         // 13   Flag_METFilters
         
         for (int i = 0; i < nMetFil; i++) {
-            //cout << MetFilNames->triggerName(i) << "  " <<  MetFilHandle->accept(i) << " " << MetFilHandle.product()->accept(i) <<  "  ";
-            if (MetFilHandle->accept(i)) *TrigMET_ |= 1LL <<i;
+            //cout << metFilNames->triggerName(i) << "  " <<  metFilHandle->accept(i) << " " << metFilHandle.product()->accept(i) <<  "  ";
+            if (metFilHandle->accept(i)) *TrigMET_ |= 1LL <<i;
             //cout << *TrigMET_ << endl;
         }
     }
@@ -1391,15 +1389,9 @@ void Tupel::processTrigger(const edm::Event& iEvent){
   bool trigNameFilled = trigNames_.size();
   int ntrigs;
   edm::Handle< edm::TriggerResults > HLTResHandle;
-  ///G.N.
-  //edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
-
   std::vector<int> trigIndexList;
   if(triggerStat_) trigIndexList.reserve(30);
-
-  //iEvent.getByLabel(HLTTag, HLTResHandle);
   iEvent.getByToken(HLTTagToken_, HLTResHandle);  
-  ///
 
   std::ofstream f;
   if(analyzedEventCnt_==1){
@@ -2474,7 +2466,7 @@ Tupel::endRun(edm::Run const& iRun, edm::EventSetup const&){
 
   std::string desc = "List of MC event weights. The first weight is the default weight to use when filling histograms.";
   edm::Handle<LHERunInfoProduct> lheRun;
-  iRun.getByLabel(lheSrc_, lheRun );
+  iRun.getByToken(lheRunToken_, lheRun );
 
   if(!lheRun.failedToGet ()){
     const LHERunInfoProduct& myLHERunInfoProduct = *(lheRun.product());
