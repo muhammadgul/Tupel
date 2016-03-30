@@ -244,7 +244,7 @@ private:
 
   edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
 
-  std::vector<edm::EDGetTokenT<std::vector<pat::MET> >  > metSourcesToken;
+  std::vector<edm::EDGetTokenT<edm::View<pat::MET> >  > metSrcsToken;
 
   edm::EDGetTokenT<edm::TriggerResults> HLTTagToken_;
 
@@ -257,8 +257,7 @@ private:
   edm::EDGetTokenT<GenEventInfoProduct> generatorToken_;
 
   edm::InputTag tauTpken_;
-  edm::InputTag metSrc_;
-  edm::InputTag lheSource_;
+  edm::InputTag lheSrc_;
 
   edm::EDGetTokenT<edm::ValueMap<StoredPileupJetIdentifier> > puJetIdsToken_;
   const edm::ValueMap<StoredPileupJetIdentifier>*  puJetIds_;
@@ -698,8 +697,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   gjetToken_(consumes<std::vector<reco::GenJet> >(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc"))),
   puToken_(consumes<std::vector<PileupSummaryInfo> >(iConfig.getUntrackedParameter<edm::InputTag>("puSrc"))),
   generatorToken_(consumes<GenEventInfoProduct>(edm::InputTag("generator"))),
-  metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
-  lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
+  lheSrc_(iConfig.getUntrackedParameter<edm::InputTag>("lheSrc")),
   puJetIdsToken_(consumes<edm::ValueMap<StoredPileupJetIdentifier> >(iConfig.getUntrackedParameter<edm::InputTag>("puJetIdSrc"))),
   puJetIds_(0),
   puMvaName_(iConfig.getUntrackedParameter<std::string>("puMvaName")),
@@ -713,9 +711,9 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   hltListed_(false),
   trigStatValid_(true)
 {
-  std::vector<edm::InputTag> metConfig = iConfig.getParameter<std::vector<edm::InputTag> >("metSource");
+  std::vector<edm::InputTag> metConfig = iConfig.getParameter<std::vector<edm::InputTag> >("metSrcs");
   for (auto& conf : metConfig) {
-    metSourcesToken.push_back(consumes<std::vector<pat::MET> >(conf));   
+    metSrcsToken.push_back(consumes<edm::View<pat::MET> >(conf));   
   }
   if(photonSw_ == std::string("on")){
     photonMode_ = photonsOn;
@@ -1064,13 +1062,13 @@ void Tupel::readEvent(const edm::Event& iEvent){
 
 void Tupel::processMET(const edm::Event& iEvent){
 
-  for(unsigned int imet=0;imet<metSourcesToken.size();imet++){
+  for(unsigned int imet=0;imet<metSrcsToken.size();imet++){
     Handle<edm::View<pat::MET> > metH;  
-    iEvent.getByToken(metSourcesToken[imet], metH);
+    iEvent.getByToken(metSrcsToken[imet], metH);
 
     if(!metH.isValid()) continue;
     
-    //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
+    //cout<<"MET"<<imet<<"  "<<metSrcs[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
     //cout << " GMETPx_ " << metH->ptrAt(0)->genMET()->px() << " GMETE_ " << metH->ptrAt(0)->genMET()->energy() << " GMETPt_ " << metH->ptrAt(0)->genMET()->pt() << " met.pt() " << metH->ptrAt(0)->pt() << " met.px() " << metH->ptrAt(0)->px() << " corr Px " << metH->ptrAt(0)->px() - metH->ptrAt(0)->uncorPx() << " met.uncorPt() " << metH->ptrAt(0)->uncorPt() << " met.uncorPhi() " << metH->ptrAt(0)->uncorPhi() << " met.uncorPx() " << metH->ptrAt(0)->uncorPx() << endl;
 
     METPt_->push_back(metH->ptrAt(0)->pt());
@@ -1273,7 +1271,7 @@ void Tupel::processGenParticles(const edm::Event& iEvent){
 void Tupel::processGenJets(const edm::Event& iEvent){
   //matrix element info
   Handle<LHEEventProduct> lheH;
-  iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
+  iEvent.getByLabel(lheSrc_,lheH);//to be modularized!!!
   if(lheH.isValid()) *GNup_ = lheH->hepeup().NUP;
     //*GNup_ = lheH->hepeup().NUP;
     //cout << " lheH.isValid() " << lheH.isValid() << " GNup_ " << *GNup_ << endl;
@@ -2476,7 +2474,7 @@ Tupel::endRun(edm::Run const& iRun, edm::EventSetup const&){
 
   std::string desc = "List of MC event weights. The first weight is the default weight to use when filling histograms.";
   edm::Handle<LHERunInfoProduct> lheRun;
-  iRun.getByLabel(lheSource_, lheRun );
+  iRun.getByLabel(lheSrc_, lheRun );
 
   if(!lheRun.failedToGet ()){
     const LHERunInfoProduct& myLHERunInfoProduct = *(lheRun.product());
