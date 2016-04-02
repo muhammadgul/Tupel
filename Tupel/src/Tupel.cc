@@ -729,7 +729,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
   if(candidateSw_==std::string("on") || candidateSw_==std::string("withTrack")){
     candidateToken_ = consumes<std::vector<pat::PackedCandidate> >(iConfig.getUntrackedParameter<edm::InputTag>("candidateSrc"));
     if(candidateSw_ == std::string("on")) candidateMode_ = candidatesOn;
-  } else if(photonSw_ == std::string("off")){
+  } else if(candidateSw_ == std::string("off")){
     candidateMode_ = candidatesOff;
   } else{
     throw cms::Exception(TString::Format("Invalid value (%s) for candidateSw parameter. Valid values are: all, withTrack, and off.", candidateSw_.c_str()));
