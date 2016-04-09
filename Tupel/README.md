@@ -1,15 +1,15 @@
 Instructions to install ntuple producer code of Tupel_MiniAOD branch
 --------------------------------------------------------------------
 
-1. Set up a CMSSW environment. Current code is for CMSSW_7_6_X miniaod format. The code has been tested with CMSSW_7_6_3_patch
+* Set up a CMSSW environment. Current code is for CMSSW_7_6_X miniaod format. The code has been tested with CMSSW_7_6_3_patch
 ```
 cmsrel CMSSW_7_6_3_patch2
 cd CMSSW_7_6_3_patch2/src
 cmsenv
 ```
-2. Clone the github repository to download the code
+* Clone the github repository to download the code
 `git clone -b Tupel_MiniAOD git@github.com:UGent/Tupel`
-3. Compile the code
+* Compile the code
 `scram b -j 10`
 
 Instructions to run the ntuple producer
