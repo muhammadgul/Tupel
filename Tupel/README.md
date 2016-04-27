@@ -9,6 +9,8 @@ cmsenv
 ```
 * Clone the github repository to download the code
 `git clone -b Tupel_MiniAOD git@github.com:UGent/Tupel`
+* Apply the CMSSW patch you wil find in https://gitlab.cern.ch/shears/shears/blob/master/ntuple_production/cmssw-patches/CMSSW_7_6_3_patch2-mod.tgz
+`tar xzf CMSSW_7_6_3_patch2-mod.tgz`
 * Compile the code
 `scram b -j 10`
 
