@@ -14,7 +14,9 @@ cmsenv
 tar xzf CMSSW_7_6_3_patch2-mod.tgz
 ```
 * Compile the code
-`scram b -j 10`
+```
+scram b -j 10
+```
 
 Instructions to run the ntuple producer
 ---------------------------------------
