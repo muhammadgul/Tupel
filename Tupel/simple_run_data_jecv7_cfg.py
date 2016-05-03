@@ -123,18 +123,18 @@ process.reapplyJEC = cms.Sequence( process.patJetCorrFactorsReapplyJEC + process
 
 #process.inclusiveSecondaryVertexFinderTagInfos.extSVCollection = cms.InputTag("unpackedTracksAndVertices","secondary","")
 #process.combinedSecondaryVertex.trackMultiplicityMin = 1 #silly sv, uses un filtered tracks.. i.e. any pt
-process.pseudoTop = cms.EDProducer("PseudoTopProducer",
-    finalStates = cms.InputTag("packedGenParticles"),
-    genParticles = cms.InputTag("prunedGenParticles"),
-    jetConeSize = cms.double(0.4),
-    jetMaxEta = cms.double(2.4),
-    jetMinPt = cms.double(20),
-    leptonConeSize = cms.double(0.1),
-    leptonMaxEta = cms.double(2.4),
-    leptonMinPt = cms.double(20),
-    tMass = cms.double(172.5),
-    wMass = cms.double(80.4)
-)
+#process.pseudoTop = cms.EDProducer("PseudoTopProducer",
+#    finalStates = cms.InputTag("packedGenParticles"),
+#    genParticles = cms.InputTag("prunedGenParticles"),
+#    jetConeSize = cms.double(0.4),
+#    jetMaxEta = cms.double(2.4),
+#    jetMinPt = cms.double(20),
+#    leptonConeSize = cms.double(0.1),
+#    leptonMaxEta = cms.double(2.4),
+#    leptonMinPt = cms.double(20),
+#    tMass = cms.double(172.5),
+#    wMass = cms.double(80.4)
+#)
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string('withJEC_DYJetsToLL_ntuple.root' )
 )
@@ -178,6 +178,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   muonMatch    = cms.string( 'muonTriggerMatchHLTMuons' ),
   muonMatch2    = cms.string( 'muonTriggerMatchHLTMuons2' ),
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
+  channel    = cms.string( 'smu' ),
   mSrcRho      = cms.untracked.InputTag('fixedGridRhoFastjetAll'),#arbitrary rho now
   CalojetLabel = cms.untracked.InputTag('slimmedJets'), #same collection now BB 
 jecunctable = cms.string(jecunctable_),
@@ -206,8 +207,8 @@ process.p = cms.Path(
 #+process.selectedElectrons 
 # +process.goodOfflinePrimaryVertices 
 #+process.kt6PFJets
-process.pseudoTop
-+ process.tupel 
+#process.pseudoTop
+process.tupel 
 )
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")

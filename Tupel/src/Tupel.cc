@@ -85,6 +85,7 @@ private:
   //edm::InputTag trigger_;
   //edm::InputTag triggerEvent_;
   //edm::InputTag triggerSummaryLabel_;
+  std::string channel_;
   std::string elecMatch_;
   std::string muonMatch_;
   std::string muonMatch2_;
@@ -116,6 +117,8 @@ private:
   unsigned int event,run,lumi;
   int realdata,bxnumber;
   double EvtInfo_NumVtx,PU_npT,PU_npIT,nup;
+    double wtot_write=0;
+    bool accept=false;
   //particles
   std::vector<double> METPt;
   std::vector<double> METPx;
@@ -340,8 +343,10 @@ std::vector<double>  patPfCandDxy;
 std::vector<double>  patPfCandDxyerr;
 std::vector<double> patPfCandDz;
 std::vector<double>  patPfCandDzerr;
+std::vector<double>  patPfpvAssociationQuality;
 std::vector<double> patPfCandDzAssociatedPV;
 std::vector<double> patPfCandFromPv;
+std::vector<double> patPfCandVertexRef;
        std::vector<double>  patElecchIso03_;
        std::vector<double>  patElecnhIso03_;
        std::vector<double>  patElecphIso03_;
@@ -395,6 +400,7 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
 //trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
   //triggerEvent_( iConfig.getParameter< edm::InputTag >( "triggerEvent" ) ),
   //triggerSummaryLabel_( iConfig.getParameter< edm::InputTag >( "triggerSummaryLabel" ) ), //added by jyhan
+  channel_( iConfig.getParameter< std::string >( "channel" ) ),
   elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
   muonMatch_( iConfig.getParameter< std::string >( "muonMatch" ) ),
   muonMatch2_( iConfig.getParameter< std::string >( "muonMatch2" ) ),
@@ -534,7 +540,9 @@ patPfCandPuppiWeightNolep.clear();
       patPfCandDz.clear();
 patPfCandDzAssociatedPV.clear();
        patPfCandDzerr.clear();
+patPfpvAssociationQuality.clear();
 patPfCandFromPv.clear();
+patPfCandVertexRef.clear();
     event=0;
     realdata=0;
     run=0;
@@ -839,21 +847,33 @@ patJetPfAk04PartonFlavour_.clear();
 
 
     if(pfcands){
+    //  int cout_ind=0;
       for( unsigned int i=0; i<pfcands->size(); ++i){
         const pat::PackedCandidate & pf = pfcands->at(i);
-       if(pf.charge()==0 || pf.pt()<0.3 ||(fabs(pf.dzError())!=0&&fabs(pf.dzAssociatedPV()/pf.dzError())>10) ||  (fabs(pf.dxyError())!=0&&fabs(pf.dxy()/pf.dxyError())>10) ||fabs(pf.dzError())==0||fabs(pf.dxyError())==0) continue;
-
+   //    if(pf.charge()==0 || pf.pt()<0.3 ||(fabs(pf.dzError())!=0&&fabs(pf.dzAssociatedPV()/pf.dzError())>10) ||  (fabs(pf.dxyError())!=0&&fabs(pf.dxy()/pf.dxyError())>10) ||fabs(pf.dzError())==0||fabs(pf.dxyError())==0) continue;
+       if(pf.charge()==0 || pf.pt()<0.3 ||pf.vertexRef().key()!=0||fabs(pf.eta())>3.0) continue;
        //if(pf.charge()!=0){cout<<pf.charge()<<"  "<<pf.dzError()<<"  "<<pf.dz()<<"  "<<" "<<pf.vx()<<"  "<<pf.vz()<<"  "<<endl;}
-       //cout<< pf.fromPV()<<endl;      
-patPfCandFromPv.push_back(pf.fromPV());
-patPfCandPt.push_back(pf.pt());
+       //cout<< pf.fromPV()<<endl;   
+       double frompv;
+	  //if( !pvHandle->empty() && !pvHandle->front().isFake() ) {
+	  //  const reco::Vertex &vtx = pvHandle->front();
+ //           cout<<vtx.position()<<"  "<<pvHandle->at(0).position()<<"  "<<pf.vertexRef().key()<<endl;
+	    frompv= pf.fromPV();
+      //      cout_ind=1;
+
+	  //}   
+       patPfCandVertexRef.push_back(pf.vertexRef().key());
+       patPfCandFromPv.push_back(frompv);
+    //   if(pf.dxyError()==0||pf.dzError()==0)cout<<pf.dxy()<<"  "<<pf.dxyError()<<"  "<<pf.dz()<<"  "<<pf.dzError()<<"                 "<<frompv<<"  "<<pf.vertexRef().key()<<"  "<<pf.pvAssociationQuality()<<endl;
+       patPfCandPt.push_back(pf.pt());
        patPfCandCharge.push_back(pf.charge());
        patPfCandDxy.push_back(pf.dxy());
        patPfCandDxyerr.push_back(pf.dxyError());
       patPfCandDz.push_back(pf.dz());
       patPfCandDzAssociatedPV.push_back(pf.dzAssociatedPV());
        patPfCandDzerr.push_back(pf.dzError());
-
+       //cout<<pf.pvAssociationQuality()<<endl;
+       patPfpvAssociationQuality.push_back(pf.pvAssociationQuality());
        patPfCandEta.push_back(pf.eta());
        patPfCandPhi.push_back(pf.phi());
        patPfCandE.push_back(pf.energy());
@@ -992,7 +1012,12 @@ bool isPrompt = gen[i].isPromptFinalState();
     }
     }
 
-
+bool gendielec=false;
+bool genemu=false;
+bool gendimu=false;
+bool gensingleelec=false;
+bool gensinglemu=false;
+int ngjets=0;
     if (!realdata && packedgenParticles){  
 
 
@@ -1077,6 +1102,12 @@ bool isPrompt = gen[i].isPromptFinalState();
              //||((fabs(nu1->pdgId())==11 ||fabs(nu1->pdgId())==13) || (fabs(nu2->pdgId())==11 ||fabs(nu2->pdgId())==13)) && !((fabs(nu1->pdgId())==11 ||fabs(nu1->pdgId())==13) && (fabs(nu2->pdgId())==11 ||fabs(nu2->pdgId())==13))
                   ){
        //         cout<<l1->pt()<<" "<<l1->eta()<<"  "<<l1->pdgId()<<"     "<<l2->pt()<<"  "<<l2->eta()<<" "<<l2->pdgId()<<"  "<<nu1->pt()<<" "<<nu1->eta()<<"  "<<nu1->pdgId()<<"     "<<nu2->pt()<<"  "<<nu2->eta()<<" "<<nu2->pdgId()<<"        "<<w1->pt()<<"  "<<w1->pdgId()<<"    "<<w2->pt()<<"  "<<w2->pdgId()<<"        "<<b1->pt()<<"  "<<b1->eta()<<"  "<<b1->pdgId()<<"     "<<b2->pt()<<"  "<<b2->eta()<<"  "<<b2->pdgId()<<"        "<<t1->pt()<<"  "<<t1->pdgId()<<"     "<<t2->pt()<<"  "<<t2->pdgId()<<endl;
+
+                if( fabs(l1->pdgId())==11 &&fabs(l2->pdgId())==11 )gendielec=true;
+                if( (fabs(l1->pdgId())==11 &&fabs(l2->pdgId())==13) || (fabs(l1->pdgId())==13 &&fabs(l2->pdgId())==11) )genemu=true;
+                if( fabs(l1->pdgId())==13 &&fabs(l2->pdgId())==13 )gendimu=true;
+                if( (fabs(l1->pdgId())==11 ||fabs(l2->pdgId())==11) && !(fabs(l1->pdgId())==11 &&fabs(l2->pdgId())==11))gensingleelec=true;
+                if( (fabs(l1->pdgId())==13 ||fabs(l2->pdgId())==13) && !(fabs(l1->pdgId())==13 &&fabs(l2->pdgId())==13))gensinglemu=true;
                 if( fabs(l1->pdgId())<6 ){
 //                  cout<<"a "<<l1->pdgId()<<"  "<<l1->pt()<<endl;
                   TLorentzVector tmp;
@@ -1118,6 +1149,8 @@ bool isPrompt = gen[i].isPromptFinalState();
                 pseudoTop_pt.push_back(t2->pt());
                 pseudoTop_pt.push_back(w1->pt());
                 pseudoTop_pt.push_back(w2->pt());
+                pseudoTop_pt.push_back(b1->pt());
+                pseudoTop_pt.push_back(b2->pt());
                 pseudoTop_pt.push_back(l1->pt());
                 pseudoTop_pt.push_back(nu1->pt());
                 pseudoTop_pt.push_back(l2->pt());
@@ -1127,6 +1160,8 @@ bool isPrompt = gen[i].isPromptFinalState();
                 pseudoTop_eta.push_back(t2->eta());
                 pseudoTop_eta.push_back(w1->eta());
                 pseudoTop_eta.push_back(w2->eta());
+                pseudoTop_eta.push_back(b1->eta());
+                pseudoTop_eta.push_back(b2->eta());
                 pseudoTop_eta.push_back(l1->eta());
                 pseudoTop_eta.push_back(nu1->eta());
                 pseudoTop_eta.push_back(l2->eta());
@@ -1136,6 +1171,8 @@ bool isPrompt = gen[i].isPromptFinalState();
                 pseudoTop_phi.push_back(t2->phi());
                 pseudoTop_phi.push_back(w1->phi());
                 pseudoTop_phi.push_back(w2->phi());
+                pseudoTop_phi.push_back(b1->phi());
+                pseudoTop_phi.push_back(b2->phi());
                 pseudoTop_phi.push_back(l1->phi());
                 pseudoTop_phi.push_back(nu1->phi());
                 pseudoTop_phi.push_back(l2->phi());
@@ -1145,6 +1182,8 @@ bool isPrompt = gen[i].isPromptFinalState();
                 pseudoTop_energy.push_back(t2->energy());
                 pseudoTop_energy.push_back(w1->energy());
                 pseudoTop_energy.push_back(w2->energy());
+                pseudoTop_energy.push_back(b1->energy());
+                pseudoTop_energy.push_back(b2->energy());
                 pseudoTop_energy.push_back(l1->energy());
                 pseudoTop_energy.push_back(nu1->energy());
                 pseudoTop_energy.push_back(l2->energy());
@@ -1154,6 +1193,8 @@ bool isPrompt = gen[i].isPromptFinalState();
                 pseudoTop_pdgId.push_back(t2->pdgId());
                 pseudoTop_pdgId.push_back(w1->pdgId());
                 pseudoTop_pdgId.push_back(w2->pdgId());
+                pseudoTop_pdgId.push_back(b1->pdgId());
+                pseudoTop_pdgId.push_back(b2->pdgId());
                 pseudoTop_pdgId.push_back(l1->pdgId());
                 pseudoTop_pdgId.push_back(nu1->pdgId());
                 pseudoTop_pdgId.push_back(l2->pdgId());
@@ -1163,6 +1204,8 @@ bool isPrompt = gen[i].isPromptFinalState();
                 pseudoTop_charge.push_back(t2->charge());
                 pseudoTop_charge.push_back(w1->charge());
                 pseudoTop_charge.push_back(w2->charge());
+                pseudoTop_charge.push_back(b1->charge());
+                pseudoTop_charge.push_back(b2->charge());
                 pseudoTop_charge.push_back(l1->charge());
                 pseudoTop_charge.push_back(nu1->charge());
                 pseudoTop_charge.push_back(l2->charge());
@@ -1223,6 +1266,8 @@ bool isPrompt = gen[i].isPromptFinalState();
 //      if(!genjetColl.failedToGet()){
 //      const reco::GenJetCollection & genjet = *genjetColl;
       for(unsigned int k=0; k<genjets.size(); ++k){
+
+        if(genjets.at(k)->pt()<15 ||fabs(genjets.at(k)->eta())>2.5)continue;
 	GjPt.push_back(genjets.at(k)->pt());
 	Gjeta.push_back(genjets.at(k)->eta());
 	Gjphi.push_back(genjets.at(k)->phi());
@@ -1260,6 +1305,7 @@ bool isPrompt = gen[i].isPromptFinalState();
           }
         }
         GjNConst.push_back(nconst);
+        if(genjets.at(k)->pt()>30)ngjets++;
       }
 
       }
@@ -1267,6 +1313,8 @@ bool isPrompt = gen[i].isPromptFinalState();
     
     //cout<<"bbbbbbbbb"<<endl;
     ////Add 08/27/13//////
+      double w=1;
+
     if(!realdata){
       edm::Handle<GenEventInfoProduct>   genEventInfoProd;
       if (iEvent.getByLabel("generator",genEventInfoProd)) {
@@ -1293,7 +1341,7 @@ bool isPrompt = gen[i].isPromptFinalState();
       if (iEvent.getByLabel("externalLHEProducer",lheEventInfoProd)) {
         //mcWeights_ = genEventInfoProd->weights();
 //        cout<<lheEventInfoProd->weights().size()<<endl;
-
+              if(lheEventInfoProd->weights().size()>0)w=lheEventInfoProd->weights()[0].wgt;
         for(unsigned int size=0;size<lheEventInfoProd->weights().size();size++){
           mcWeights_.push_back(lheEventInfoProd->weights()[size].wgt);
         }
@@ -1393,6 +1441,7 @@ bool isPrompt = gen[i].isPromptFinalState();
     for (unsigned int j = 0; j < muons->size(); ++j){
       const edm::View<pat::Muon> & mu = *muons;
       if(mu[j].isGlobalMuon()){ 
+        if(mu[j].pt()<15 || abs(mu[j].eta())>2.4)continue;
 	//const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
 	//if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
 	//  Mu17_Mu8_Matched=1;
@@ -1493,7 +1542,7 @@ bool isPrompt = gen[i].isPromptFinalState();
 	patMuon_PF_IsoSumChargedHadronPt_.push_back(mu[j].pfIsolationR03().sumChargedHadronPt);
 	patMuon_PF_IsoSumNeutralHadronEt_.push_back(mu[j].pfIsolationR03().sumNeutralHadronEt);
 	patMuon_PF_IsoDY_.push_back((mu[j].pfIsolationR03().sumChargedHadronPt+mu[j].pfIsolationR03().sumNeutralHadronEt)/mu[j].pt());
-	MuFill++;
+	if(mu[j].pt()>22 && abs(mu[j].eta())<2.4 &&idpass>0 &&fabs(RelativeIsolationDBetaCorr)<0.15)MuFill++;
       }
     }
     }
@@ -1506,7 +1555,7 @@ bool isPrompt = gen[i].isPromptFinalState();
     auto_ptr<vector<pat::Electron> > electronColl( new vector<pat::Electron> (*electrons) );
     for (unsigned int j=0; j < electronColl->size();++j){
       pat::Electron & el = (*electronColl)[j];
-
+        if(el.pt()<10 || abs(el.eta())>3.0)continue;
   double dEtaIn_;
   double dPhiIn_;
   double hOverE_;
@@ -1661,11 +1710,12 @@ if(realdata){
 	  }
       
       patElec_mva_presel_.push_back(myTrigPresel);
-      ElecFill++; 
+      if(el.pt()>20)ElecFill++; 
     }
     }
             //cout<<"fffffffffffffffffffff"<<endl;
-    //double PFjetFill=0;
+    double PFjetFill=0;
+    double PFjetFill_b=0;
     double chf = 0;
     double nhf = 0;
     double cemf = 0;
@@ -1676,7 +1726,10 @@ if(realdata){
     //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
     if(jettt){
     for ( unsigned int i=0; i<jets->size(); ++i ) {
+
+
       const pat::Jet & jet = jets->at(i);
+        if(jet.pt()<15 || abs(jet.eta())>2.5 )continue;
     //  cout<<"I am here"<<endl;
       patJetPfAk04jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
       chf = jet.chargedHadronEnergyFraction();
@@ -1733,7 +1786,8 @@ if(realdata){
 	if ((nhf<0.9)&&(nemf<0.9)&&(nconst>1))tempJetID=3;
       }
       patJetPfAk04LooseId_.push_back(tempJetID);//ala 
-      //PFjetFill++;
+      if(jet.pt()>30 &&tempJetID>0)PFjetFill++;
+      if(jet.pt()>30 &&tempJetID>0&& jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>=0.89)PFjetFill_b++;
       for(unsigned int idx =0; idx<jet.numberOfDaughters();idx++){
      // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
       patJetPfAk04ConstId.push_back(jet.daughter(idx)->pdgId());
@@ -1759,11 +1813,21 @@ if(realdata){
     }
     }//end jets
                 //cout<<"gggggggggggggggggggggg"<<endl;
-
-
-
+       accept=false;
+     wtot_write+= w;
+     //cout<<wtot_write<<endl;
+if((channel_=="dimu" && ((MuFill>=2&&PFjetFill>=2&&PFjetFill_b>=2)  ||(gendimu &&ngjets>=2))  )
+||(channel_=="smu" && ((MuFill==1&&PFjetFill>=4&&PFjetFill_b>=2 )  ||(gensinglemu&&ngjets>=4))   )
+||(channel_=="dielec" && ((ElecFill>=2&&PFjetFill>=2&&PFjetFill_b>=2)  ||(gendielec&&ngjets>=2))  )
+||(channel_=="emu" && ((ElecFill>=1&&MuFill>=1&&PFjetFill>=2&&PFjetFill_b>=2)  ||(genemu&&ngjets>=2))  )
+||(channel_=="selec" && ((ElecFill>=1&&PFjetFill>=4&&PFjetFill_b>=2)  ||(gensingleelec&&ngjets>=4))   )   ){
+     // cout<<"accept "<<accept<<"  "<<wtot_write<<endl;
+//    cout<<(MuFill==1&&PFjetFill>=4&&PFjetFill_b>=2 )<<"  "<<(gensinglemu &&ngjets>=4)<<"  "<<((MuFill==1&&PFjetFill>=4&&PFjetFill_b>=2 )  ||(gensinglemu&&ngjets>=4))<<endl;
       myTree->Fill();
-                //cout<<"hhhhhhhhhhhhhhhhhhhhh"<<endl;
+      wtot_write=0;
+      accept=true;
+   //        cout<<"accept after "<<accept<<"  "<<wtot_write<<endl;
+   }               //cout<<"hhhhhhhhhhhhhhhhhhhhh"<<endl;
 }
 
 void
@@ -1795,7 +1859,8 @@ Tupel::beginJob()
     edm::Service<TFileService> fs;
     TFileDirectory TestDir = fs->mkdir("test");
     myTree = new TTree("MuonTree","MuonTree");
-
+    myTree->Branch("wtot_write",&wtot_write);
+    myTree->Branch("accept",&accept);
     myTree->Branch("patPfCandPt",&patPfCandPt);
     myTree->Branch("patPfCandEta",&patPfCandEta);
     myTree->Branch("patPfCandPhi",&patPfCandPhi);
@@ -1814,7 +1879,8 @@ Tupel::beginJob()
     myTree->Branch("patPfCandDzAssociatedPV",&patPfCandDzAssociatedPV);
     myTree->Branch("patPfCandDzerr",&patPfCandDzerr);
     myTree->Branch("patPfCandFromPv",&patPfCandFromPv);
-
+    myTree->Branch("patPfCandVertexRef",&patPfCandVertexRef);
+    myTree->Branch("patPfpvAssociationQuality",&patPfpvAssociationQuality);
     myTree->Branch("METPt",&METPt);
     myTree->Branch("METPx",&METPx);
     myTree->Branch("METPy",&METPy);
@@ -2089,7 +2155,9 @@ void
 Tupel::endJob() 
 {
   delete jecUnc;
+if(!accept)myTree->Fill();
   myTree->Print();
+//  if(!accept)cout<<"ended job"<<endl;
 }
 
 DEFINE_FWK_MODULE(Tupel);

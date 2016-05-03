@@ -180,6 +180,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   muonMatch    = cms.string( 'muonTriggerMatchHLTMuons' ),
   muonMatch2    = cms.string( 'muonTriggerMatchHLTMuons2' ),
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
+  channel    = cms.string( 'smu' ),
   mSrcRho      = cms.untracked.InputTag('fixedGridRhoFastjetAll'),#arbitrary rho now
   CalojetLabel = cms.untracked.InputTag('slimmedJets'), #same collection now BB 
 jecunctable = cms.string(jecunctable_),

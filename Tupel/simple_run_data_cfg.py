@@ -121,6 +121,18 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(300) )
 #,cms.InputTag("combinedMVABJetTags")
 #) 
 
+process.pseudoTop = cms.EDProducer("PseudoTopProducer",
+    finalStates = cms.InputTag("packedGenParticles"),
+    genParticles = cms.InputTag("prunedGenParticles"),
+    jetConeSize = cms.double(0.4),
+    jetMaxEta = cms.double(2.4),
+    jetMinPt = cms.double(20),
+    leptonConeSize = cms.double(0.1),
+    leptonMaxEta = cms.double(2.4),
+    leptonMinPt = cms.double(20),
+    tMass = cms.double(172.5),
+    wMass = cms.double(80.4)
+)
 
 #process.inclusiveSecondaryVertexFinderTagInfos.extSVCollection = cms.InputTag("unpackedTracksAndVertices","secondary","")
 #process.combinedSecondaryVertex.trackMultiplicityMin = 1 #silly sv, uses un filtered tracks.. i.e. any pt
@@ -198,6 +210,7 @@ process.p = cms.Path(
 #+process.selectedElectrons 
 # +process.goodOfflinePrimaryVertices 
 #+process.kt6PFJets
+process.pseudoTop*
  process.tupel 
 )
 
