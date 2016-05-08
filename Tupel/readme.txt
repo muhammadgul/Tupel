@@ -18,4 +18,13 @@ cmsRun simple_run_76X_cfg.py
 cmsRun simple_run_76X_data_cfg.py
 (or crab ...)
 
+extra info:
 
+  channel    = cms.string( 'smu' ), 
+
+is for skimming the trees at production level. Options:
+dimu, smu, dielec,selec, 
+for no skimming, use noselection
+
+  keepparticlecoll    = cms.bool(False),
+to keep the particle flow objects and gen level particles. Needed for UE studies. To keep, switch to True
