@@ -89,11 +89,21 @@ process.pseudoTop = cms.EDProducer("PseudoTopProducer",
     finalStates = cms.InputTag("packedGenParticles"),
     genParticles = cms.InputTag("prunedGenParticles"),
     jetConeSize = cms.double(0.4),
-    jetMaxEta = cms.double(2.4),
-    jetMinPt = cms.double(20),
+    maxJetEta = cms.double(2.4),
+    minJetPt = cms.double(20),
     leptonConeSize = cms.double(0.1),
-    leptonMaxEta = cms.double(2.4),
-    leptonMinPt = cms.double(20),
+
+     minLeptonPt = cms.double(20),#new?
+     maxLeptonEta= cms.double(2.4),#new?
+     minLeptonPtDilepton = cms.double(20),#new?
+     maxLeptonEtaDilepton= cms.double(2.4),#new?
+     minDileptonMassDilepton= cms.double(0.),#new?
+     minLeptonPtSemilepton = cms.double(20),#new?
+     maxLeptonEtaSemilepton= cms.double(2.4),#new?
+     minVetoLeptonPtSemilepton= cms.double(15.),#new?
+     maxVetoLeptonEtaSemilepton= cms.double(2.4),#new?
+     minMETSemiLepton=cms.double(0.),#new?
+     minMtWSemiLepton=cms.double(0.),#new?
     tMass = cms.double(172.5),
     wMass = cms.double(80.4)
 )
