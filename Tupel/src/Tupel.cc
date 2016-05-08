@@ -86,28 +86,54 @@ private:
   //edm::InputTag triggerEvent_;
   //edm::InputTag triggerSummaryLabel_;
   std::string channel_;
+  bool keepparticlecoll_;
   std::string elecMatch_;
   std::string muonMatch_;
   std::string muonMatch2_;
   std::string jecunctable_;
-  edm::InputTag photonSrc_;
+/*  edm::InputTag photonSrc_;
   edm::InputTag elecSrc_;
   edm::InputTag muonSrc_;
-  edm::InputTag tauSrc_;
+//  edm::InputTag tauSrc_;
   edm::InputTag pfcandSrc_;
   edm::InputTag jetSrc_;
   edm::InputTag gjetSrc_;
   edm::InputTag metSrc_;
   edm::InputTag mSrcRho_;
-  edm::InputTag CaloJet_;
+//  edm::InputTag CaloJet_;
   edm::InputTag lheSource_;
   edm::InputTag genParticleSrc_;
-  edm::InputTag packedgenParticleSrc_;
+  edm::InputTag packedgenParticleSrc_;*/
 
-  const edm::EDGetTokenT<reco::GenParticleCollection > pseudoTopToken_;
-  const edm::EDGetTokenT<reco::GenJetCollection >pseudoTopjetToken_;
-  const edm::EDGetTokenT<reco::GenJetCollection >pseudoToplepToken_;
-  std::vector<edm::InputTag> metSources;
+  edm::EDGetTokenT<pat::Photon> photonSrc_;
+  edm::EDGetTokenT<pat::ElectronCollection> elecSrc_;
+  edm::EDGetTokenT<pat::MuonCollection> muonSrc_;
+  edm::EDGetTokenT<pat::PackedCandidate> pfcandSrc_;
+  edm::EDGetTokenT<pat::JetCollection> jetSrc_;
+  edm::EDGetTokenT<reco::GenJetCollection> gjetSrc_;
+//  edm::EDGetTokenT<pat::METCollection> metSrc_;
+  std::vector<edm::EDGetTokenT<pat::MET > > metSources;
+  edm::EDGetTokenT<double> mSrcRho_;
+  edm::EDGetTokenT<LHEEventProduct> lheSource_;
+  edm::EDGetTokenT<reco::GenParticleCollection> genParticleSrc_;
+  edm::EDGetTokenT<pat::PackedGenParticle> packedgenParticleSrc_;
+
+
+
+  edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
+  edm::EDGetTokenT<reco::VertexCollection> vertexToken_;
+  edm::EDGetTokenT<reco::ConversionCollection> convToken_;
+  edm::EDGetTokenT<GenEventInfoProduct> genInfoToken_;
+  edm::EDGetTokenT<edm::TriggerResults> HLTToken_;
+
+edm::EDGetTokenT<LHEEventProduct> lheEventSrc_;
+edm::EDGetTokenT<std::vector<PileupSummaryInfo> > PupSrc_;
+
+
+   edm::EDGetTokenT<reco::GenParticleCollection > pseudoTopToken_;
+   edm::EDGetTokenT<reco::GenJetCollection >pseudoTopjetToken_;
+   edm::EDGetTokenT<reco::GenJetCollection >pseudoToplepToken_;
+
   bool elecIdsListed_=false;
   //edm::EDGetTokenT<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMapToken_;
 
@@ -216,7 +242,7 @@ std::vector<double> pseudoTop_charge;
   std::vector<double> MGjphi;
   std::vector<double> MGjE;
   //CaloJets
-  std::vector<double> caloJetPt_;
+ /* std::vector<double> caloJetPt_;
   std::vector<double> caloJetRawPt_;
   std::vector<double> caloJetEn_;
   std::vector<double> caloJetEta_;
@@ -224,7 +250,7 @@ std::vector<double> pseudoTop_charge;
   std::vector<double> caloJetHadEHF_;
   std::vector<double> caloJetEmEHF_;
   std::vector<double> caloJetEmFrac_;
-  std::vector<double> caloJetn90_;
+  std::vector<double> caloJetn90_;*/
   ///pfjets
   std::vector<double> patJetPfAk04En_;
   std::vector<double> patJetPfAk04Pt_;
@@ -396,33 +422,50 @@ std::vector<double> patPfCandVertexRef;
 using namespace std;
 using namespace reco;
 int ccnevent=0;
-Tupel::Tupel(const edm::ParameterSet& iConfig):
+Tupel::Tupel(const edm::ParameterSet& iConfig)
+
+
+
+{
 //trigger_( iConfig.getParameter< edm::InputTag >( "trigger" ) ),
   //triggerEvent_( iConfig.getParameter< edm::InputTag >( "triggerEvent" ) ),
   //triggerSummaryLabel_( iConfig.getParameter< edm::InputTag >( "triggerSummaryLabel" ) ), //added by jyhan
-  channel_( iConfig.getParameter< std::string >( "channel" ) ),
-  elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
-  muonMatch_( iConfig.getParameter< std::string >( "muonMatch" ) ),
-  muonMatch2_( iConfig.getParameter< std::string >( "muonMatch2" ) ),
-jecunctable_(iConfig.getParameter<std::string >("jecunctable")),
-  photonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("photonSrc")),
-  elecSrc_(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc")),
-  muonSrc_(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc")),
-  pfcandSrc_(iConfig.getUntrackedParameter<edm::InputTag>("pfcandSrc" )),
-  jetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc" )),
-  gjetSrc_(iConfig.getUntrackedParameter<edm::InputTag>("gjetSrc" )),
-  metSrc_(iConfig.getUntrackedParameter<edm::InputTag>("metSrc" )),
-  mSrcRho_(iConfig.getUntrackedParameter<edm::InputTag>("mSrcRho" )),
-  CaloJet_(iConfig.getUntrackedParameter<edm::InputTag>("CalojetLabel")),
-  lheSource_(iConfig.getUntrackedParameter<edm::InputTag>("lheSource")),
-genParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("genSrc")),
-packedgenParticleSrc_(iConfig.getUntrackedParameter<edm::InputTag >("pgenSrc")),
+  channel_= iConfig.getParameter< std::string >( "channel" ) ;
+keepparticlecoll_= iConfig.getParameter< bool >( "keepparticlecoll" ) ;
+  elecMatch_= iConfig.getParameter< std::string >( "elecMatch" ) ;
+  muonMatch_= iConfig.getParameter< std::string >( "muonMatch" ) ;
+  muonMatch2_= iConfig.getParameter< std::string >( "muonMatch2" ) ;
+jecunctable_=iConfig.getParameter<std::string >("jecunctable");
 
- pseudoTopToken_(consumes<reco::GenParticleCollection>(edm::InputTag("pseudoTop"))),
- pseudoTopjetToken_(consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","jets"))),
- pseudoToplepToken_(consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","leptons"))),
- metSources(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"))
-{
+  photonSrc_=consumes<pat::Photon>(iConfig.getParameter<edm::InputTag>("photonSrc"));
+  elecSrc_=consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electronSrc"));
+  muonSrc_=consumes<pat::MuonCollection>(iConfig.getParameter<edm::InputTag>("muonSrc"));
+  pfcandSrc_=consumes<pat::PackedCandidate>(iConfig.getParameter<edm::InputTag>("pfcandSrc"));
+  jetSrc_=consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jetSrc" ));
+  gjetSrc_=consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("gjetSrc" ));
+//  metSrc_=consumes<pat::METCollection>(iConfig.getParameter<edm::InputTag>("metSrc"));
+  mSrcRho_=consumes<double>(edm::InputTag("fixedGridRhoFastjetAll" ));//hardcode
+  lheSource_=consumes<LHEEventProduct>(edm::InputTag ("externalLHEProducer"));//hardcode
+
+
+ // metSources(consumes<std::vector< pat::MET > >(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"));
+
+  genParticleSrc_=consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("genSrc"));
+  packedgenParticleSrc_=consumes<pat::PackedGenParticle>(iConfig.getParameter<edm::InputTag>("pgenSrc"));
+
+
+  beamSpotToken_=consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));//hardcode
+  vertexToken_=consumes<reco::VertexCollection>(edm::InputTag("goodOfflinePrimaryVertices"));//hardcode
+  convToken_=consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma","reducedConversions"));//hardcode
+  genInfoToken_=consumes<GenEventInfoProduct>(edm::InputTag ("generator"));//hardcode
+  HLTToken_=consumes<edm::TriggerResults>(edm::InputTag ("TriggerResults","","HLT"));//hardcode
+  lheEventSrc_=consumes<LHEEventProduct>(edm::InputTag ("externalLHEProducer"));//hardcode
+  PupSrc_=consumes<std::vector< PileupSummaryInfo> >(edm::InputTag ("slimmedAddPileupInfo"));//hardcode
+
+  pseudoTopToken_=consumes<reco::GenParticleCollection>(edm::InputTag("pseudoTop"));//hardcode
+  pseudoTopjetToken_=consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","jets"));//hardcode
+  pseudoToplepToken_=consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","leptons"));//hardcode
+ for (edm::InputTag const & tag : iConfig.getParameter< std::vector<edm::InputTag> > ("metSource"))metSources.push_back(consumes<pat::MET>(tag));
 }
 
 Tupel::~Tupel()
@@ -430,12 +473,13 @@ Tupel::~Tupel()
 }
 
 void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
+
   using namespace edm; //ADD
   ++ccnevent;
  
   // PAT trigger event
   //edm::Handle<pat::TriggerEvent>  triggerEvent;
-  //iEvent.getByLabel( triggerEvent_, triggerEvent );
+  //iEvent.getByToken( triggerEvent_, triggerEvent );
   
 
  // edm::Handle<edm::ValueMap<float> > full5x5sieie;
@@ -444,7 +488,7 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
   const pat::helper::TriggerMatchHelper matchHelper;	
   edm::Handle<GenParticleCollection> genParticles_h;
-  iEvent.getByLabel(genParticleSrc_, genParticles_h);
+  iEvent.getByToken(genParticleSrc_, genParticles_h);
   const GenParticleCollection* genParticles  = genParticles_h.failedToGet () ? 0 : &*genParticles_h;
 
    edm::Handle<reco::GenParticleCollection> pseudoTopHandle;
@@ -456,72 +500,72 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
    edm::Handle<reco::GenJetCollection> pseudoToplepHandle;
     iEvent.getByToken(pseudoToplepToken_, pseudoToplepHandle);
   edm::Handle<edm::View<pat::PackedGenParticle> > packedgenParticles_h;
-  iEvent.getByLabel(packedgenParticleSrc_, packedgenParticles_h);
+  iEvent.getByToken(packedgenParticleSrc_, packedgenParticles_h);
   const edm::View<pat::PackedGenParticle>* packedgenParticles  = packedgenParticles_h.failedToGet () ? 0 : &*packedgenParticles_h;
 
 
   
   // get muon collection
-  edm::Handle<edm::View<pat::Muon> > muons;
-  iEvent.getByLabel(muonSrc_,muons);
-  const edm::View<pat::Muon> * muon = muons.failedToGet () ? 0 : &*muons;
+  edm::Handle<pat::MuonCollection > muons;
+  iEvent.getByToken(muonSrc_,muons);
+  const std::vector<pat::Muon> * muon = muons.failedToGet () ? 0 : &*muons;
 
   
   // get electron collection
-  edm::Handle<vector<pat::Electron> > electrons;
-  iEvent.getByLabel(elecSrc_,electrons);
+  edm::Handle<pat::ElectronCollection > electrons;
+  iEvent.getByToken(elecSrc_,electrons);
 
   const vector<pat::Electron>  *electron = electrons.failedToGet () ? 0 :  &*electrons;
 			      
  // edm::Handle<reco::GsfElectronCollection> els_h;
- // iEvent.getByLabel("gsfElectrons", els_h);			       
+ // iEvent.getByToken("gsfElectrons", els_h);			       
   edm::Handle<reco::ConversionCollection> conversions_h;
-  iEvent.getByLabel(InputTag("reducedEgamma","reducedConversions"), conversions_h);
+  iEvent.getByToken(convToken_, conversions_h);
   
   
   
   // get tau collection 
-  edm::Handle<edm::View<pat::Tau> > taus;
-  iEvent.getByLabel(tauSrc_,taus);
+//  edm::Handle<edm::View<pat::Tau> > taus;
+//  iEvent.getByToken(tauSrc_,taus);
 					
 
   edm::Handle<edm::View<pat::PackedCandidate> > pfcand;
-  iEvent.getByLabel(pfcandSrc_,pfcand);
+  iEvent.getByToken(pfcandSrc_,pfcand);
   const edm::View<pat::PackedCandidate> * pfcands = pfcand.failedToGet () ? 0 : &*pfcand ;
   // get jet collection
-  edm::Handle<edm::View<pat::Jet> > jets;
-  iEvent.getByLabel(jetSrc_,jets);
-  const edm::View<pat::Jet> * jettt = jets.failedToGet () ? 0 : &*jets ;
+  edm::Handle<pat::JetCollection> jets;
+  iEvent.getByToken(jetSrc_,jets);
+
   
   // get met collection  
-  edm::Handle<edm::View<pat::MET> > mets;
-  iEvent.getByLabel(metSrc_,mets);
+ // edm::Handle<edm::View<pat::MET> > mets;
+//  iEvent.getByToken(metSrc_,mets);
   
   // get photon collection  
   edm::Handle<edm::View<pat::Photon> > photons;
-  iEvent.getByLabel(photonSrc_,photons);
+  iEvent.getByToken(photonSrc_,photons);
   
-  edm::Handle<edm::View<reco::Vertex> >  pvHandle;
-  iEvent.getByLabel("goodOfflinePrimaryVertices", pvHandle);
-  const edm::View<reco::Vertex> * vtxx = pvHandle.failedToGet () ? 0 : &*pvHandle ;
+  edm::Handle<reco::VertexCollection >  pvHandle;
+  iEvent.getByToken(vertexToken_, pvHandle);
+  reco::VertexCollection vtxx = *pvHandle;
 			  
   edm ::Handle<reco::VertexCollection> vtx_h;
-  iEvent.getByLabel("goodOfflinePrimaryVertices", vtx_h); 
-  if(vtxx){
+  iEvent.getByToken(vertexToken_, vtx_h); 
+  if(pvHandle.isValid()){
   int nvtx=vtx_h->size();
   if(nvtx==0) return;
   reco::VertexRef primVtx(vtx_h,0);
   }
   edm::Handle<double>  rho_;
-  iEvent.getByLabel(mSrcRho_, rho_);
+  iEvent.getByToken(mSrcRho_, rho_);
   double rhoIso=99;
   if(!rho_.failedToGet())rhoIso = *rho_;
   reco::BeamSpot beamSpot;
   edm::Handle<reco::BeamSpot> beamSpotHandle;
-  iEvent.getByLabel("offlineBeamSpot", beamSpotHandle);
+  iEvent.getByToken(beamSpotToken_, beamSpotHandle);
   if(!beamSpotHandle.failedToGet())beamSpot = *beamSpotHandle;
   edm::Handle<double> rho;
-  iEvent.getByLabel(mSrcRho_,rho);
+  iEvent.getByToken(mSrcRho_,rho);
 
 patPfCandPt.clear();
 patPfCandEta.clear();
@@ -650,7 +694,7 @@ pseudoTop_charge.clear();
     MGjeta.clear();
     MGjphi.clear();
     MGjE.clear();
-    caloJetPt_.clear();
+/*    caloJetPt_.clear();
     caloJetRawPt_.clear();
     caloJetEn_.clear();
     caloJetEta_.clear();
@@ -658,7 +702,7 @@ pseudoTop_charge.clear();
     caloJetHadEHF_.clear();
     caloJetEmEHF_.clear();
     caloJetEmFrac_.clear();
-    caloJetn90_.clear();
+    caloJetn90_.clear();*/
     patJetPfAk04En_.clear();
     patJetPfAk04Pt_.clear();
     patJetPfAk04Eta_.clear();
@@ -815,7 +859,7 @@ patJetPfAk04PartonFlavour_.clear();
 
      for(unsigned int imet=0;imet<metSources.size();imet++){
         Handle<View<pat::MET> > metH;
-        iEvent.getByLabel(metSources[imet], metH);
+        iEvent.getByToken(metSources[imet], metH);
         if(!metH.isValid())continue;
         //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
@@ -891,14 +935,14 @@ patJetPfAk04PartonFlavour_.clear();
 
 
     EvtInfo_NumVtx = 0;
-    if(vtxx){
-    for (edm::View<reco::Vertex>::const_iterator vtx = pvHandle->begin(); vtx != pvHandle->end(); ++vtx){
+    if(pvHandle.isValid()){
+    for (reco::VertexCollection::const_iterator vtx = vtxx.begin(); vtx !=vtxx.end(); ++vtx){
       if (vtx->isValid() && !vtx->isFake()) ++EvtInfo_NumVtx ;
     }
     }
     if(!realdata){
       Handle<std::vector< PileupSummaryInfo > >  PupInfo;
-      iEvent.getByLabel("slimmedAddPileupInfo", PupInfo);
+      iEvent.getByToken(PupSrc_, PupInfo);
       if(!PupInfo.failedToGet()){
       std::vector<PileupSummaryInfo>::const_iterator PVI;
       float npT=-1.;
@@ -958,7 +1002,7 @@ patJetPfAk04PartonFlavour_.clear();
 	  TLorentzVector genR1Pho1(0,0,0,0);
 
        	  edm::Handle<std::vector<reco::GenParticle> > genpart2;//DONT know why we Need to handle another collection
-          iEvent.getByLabel(genParticleSrc_, genpart2);
+          iEvent.getByToken(genParticleSrc_, genpart2);
           const std::vector<reco::GenParticle> & gen2 = *genpart2;
             //LOOP over photons//
 	  if (st==1 && (abs(id)==13||abs(id)==11)){
@@ -1053,7 +1097,7 @@ int ngjets=0;
     if (!realdata){
       //matrix element info
       Handle<LHEEventProduct> lheH;
-      iEvent.getByLabel(lheSource_,lheH);//to be modularized!!!
+      iEvent.getByToken(lheSource_,lheH);//to be modularized!!!
       if(lheH.isValid()) nup=lheH->hepeup().NUP;
 
       if (! pseudoTopHandle->empty() ){
@@ -1261,8 +1305,8 @@ int ngjets=0;
 
 
 //      edm::Handle<reco::GenJetCollection> genjetColl;
-      //iEvent.getByLabel("ak5GenJets", genjetColl);
-//          iEvent.getByLabel(gjetSrc_, genjetColl);
+      //iEvent.getByToken("ak5GenJets", genjetColl);
+//          iEvent.getByToken(gjetSrc_, genjetColl);
 //      if(!genjetColl.failedToGet()){
 //      const reco::GenJetCollection & genjet = *genjetColl;
       for(unsigned int k=0; k<genjets.size(); ++k){
@@ -1317,7 +1361,7 @@ int ngjets=0;
 
     if(!realdata){
       edm::Handle<GenEventInfoProduct>   genEventInfoProd;
-      if (iEvent.getByLabel("generator",genEventInfoProd)) {
+      if (iEvent.getByToken(genInfoToken_,genEventInfoProd)) {
 	if (genEventInfoProd->hasBinningValues())
 	  ptHat_ = genEventInfoProd->binningValues()[0];
 	mcWeight_ = genEventInfoProd->weight();
@@ -1325,7 +1369,7 @@ int ngjets=0;
       }
       /// now get the PDF information
       edm::Handle<GenEventInfoProduct> pdfInfoHandle;
-      if (iEvent.getByLabel("generator", pdfInfoHandle)) {
+      if (iEvent.getByToken(genInfoToken_, pdfInfoHandle)) {
 	if (pdfInfoHandle->pdf()) {
 	  id1_pdfInfo_.push_back(pdfInfoHandle->pdf()->id.first);
 	  id2_pdfInfo_.push_back(pdfInfoHandle->pdf()->id.second);
@@ -1338,7 +1382,8 @@ int ngjets=0;
       } 
 
       edm::Handle<LHEEventProduct>   lheEventInfoProd;
-      if (iEvent.getByLabel("externalLHEProducer",lheEventInfoProd)) {
+
+      if (iEvent.getByToken(lheEventSrc_,lheEventInfoProd)) {
         //mcWeights_ = genEventInfoProd->weights();
 //        cout<<lheEventInfoProd->weights().size()<<endl;
               if(lheEventInfoProd->weights().size()>0)w=lheEventInfoProd->weights()[0].wgt;
@@ -1376,8 +1421,8 @@ int ngjets=0;
     vector<string> trigname;
     vector<bool> trigaccept;
     edm::Handle< edm::TriggerResults > HLTResHandle;
-    edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
-    iEvent.getByLabel(HLTTag, HLTResHandle);
+    //edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
+    iEvent.getByToken(HLTToken_, HLTResHandle);
     if ( HLTResHandle.isValid() && !HLTResHandle.failedToGet() ) {
       edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *HLTResHandle )) );
       ntrigs = (int)trigNames->size();
@@ -1439,7 +1484,7 @@ int ngjets=0;
         //cout<<"dddddddddddddddddd"<<endl;
     if(muon){
     for (unsigned int j = 0; j < muons->size(); ++j){
-      const edm::View<pat::Muon> & mu = *muons;
+      const std::vector<pat::Muon> & mu = *muons;
       if(mu[j].isGlobalMuon()){ 
         if(mu[j].pt()<15 || abs(mu[j].eta())>2.4)continue;
 	//const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
@@ -1724,14 +1769,14 @@ if(realdata){
     double nconst = 0;
     
     //for(edm::View<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
-    if(jettt){
+
     for ( unsigned int i=0; i<jets->size(); ++i ) {
 
 
       const pat::Jet & jet = jets->at(i);
         if(jet.pt()<15 || abs(jet.eta())>2.5 )continue;
-    //  cout<<"I am here"<<endl;
-      patJetPfAk04jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));
+    //  cout<<"I am here"<<endl;                     
+      //patJetPfAk04jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));//not available!
       chf = jet.chargedHadronEnergyFraction();
       nhf = (jet.neutralHadronEnergy()+jet.HFHadronEnergy())/jet.correctedJet(0).energy();
       cemf = jet.chargedEmEnergyFraction();
@@ -1811,16 +1856,19 @@ if(realdata){
 	matchGjet.push_back(matchGen);
       }
     }
-    }//end jets
+    //end jets
                 //cout<<"gggggggggggggggggggggg"<<endl;
        accept=false;
      wtot_write+= w;
      //cout<<wtot_write<<endl;
-if((channel_=="dimu" && ((MuFill>=2&&PFjetFill>=2&&PFjetFill_b>=2)  ||(gendimu &&ngjets>=2))  )
+if(
+  (channel_=="dimu" && ((MuFill>=2&&PFjetFill>=2&&PFjetFill_b>=2)  ||(gendimu &&ngjets>=2))  )
 ||(channel_=="smu" && ((MuFill==1&&PFjetFill>=4&&PFjetFill_b>=2 )  ||(gensinglemu&&ngjets>=4))   )
 ||(channel_=="dielec" && ((ElecFill>=2&&PFjetFill>=2&&PFjetFill_b>=2)  ||(gendielec&&ngjets>=2))  )
 ||(channel_=="emu" && ((ElecFill>=1&&MuFill>=1&&PFjetFill>=2&&PFjetFill_b>=2)  ||(genemu&&ngjets>=2))  )
-||(channel_=="selec" && ((ElecFill>=1&&PFjetFill>=4&&PFjetFill_b>=2)  ||(gensingleelec&&ngjets>=4))   )   ){
+||(channel_=="selec" && ( (ElecFill>=1&&PFjetFill>=4&&PFjetFill_b>=2)  ||(gensingleelec&&ngjets>=4) )   )  
+||(channel_=="noselection")
+ ){
      // cout<<"accept "<<accept<<"  "<<wtot_write<<endl;
 //    cout<<(MuFill==1&&PFjetFill>=4&&PFjetFill_b>=2 )<<"  "<<(gensinglemu &&ngjets>=4)<<"  "<<((MuFill==1&&PFjetFill>=4&&PFjetFill_b>=2 )  ||(gensinglemu&&ngjets>=4))<<endl;
       myTree->Fill();
@@ -1837,8 +1885,8 @@ edm::Handle<LHERunInfoProduct> run;
  
 typedef std::vector<LHERunInfoProduct::Header>::const_iterator headers_const_iterator;
  
-iRun.getByLabel( "externalLHEProducer", run );
-// iRun.getByLabel( "source", run );
+iRun.getByToken( "externalLHEProducer", run );
+// iRun.getByToken( "source", run );
 LHERunInfoProduct myLHERunInfoProduct = *(run.product());
  
 for (headers_const_iterator iter=myLHERunInfoProduct.headers_begin(); iter!=myLHERunInfoProduct.headers_end(); iter++){
@@ -1861,6 +1909,24 @@ Tupel::beginJob()
     myTree = new TTree("MuonTree","MuonTree");
     myTree->Branch("wtot_write",&wtot_write);
     myTree->Branch("accept",&accept);
+    if(keepparticlecoll_){
+      myTree->Branch("Packed01Pt",&Packed01Pt);
+      myTree->Branch("Packed01Eta",&Packed01Eta);
+      myTree->Branch("Packed01Phi",&Packed01Phi);
+      myTree->Branch("Packed01E",&Packed01E);
+      myTree->Branch("Packed01M",&Packed01M);
+      myTree->Branch("Packed01Id",&Packed01Id);
+      myTree->Branch("Packed01Status",&Packed01Status);
+      myTree->Branch("Packed01MomId",&Packed01MomId);
+      myTree->Branch("Packed01Charge",&Packed01Charge);
+      myTree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
+      myTree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
+      myTree->Branch("pseudoTop_const_pt",&pseudoTop_const_pt);
+      myTree->Branch("pseudoTop_const_eta",&pseudoTop_const_eta);
+    myTree->Branch("pseudoTop_const_phi",&pseudoTop_const_phi);
+    myTree->Branch("pseudoTop_const_energy",&pseudoTop_const_energy);
+    myTree->Branch("pseudoTop_const_pdgId",&pseudoTop_const_pdgId);
+    myTree->Branch("pseudoTop_const_charge",&pseudoTop_const_charge);
     myTree->Branch("patPfCandPt",&patPfCandPt);
     myTree->Branch("patPfCandEta",&patPfCandEta);
     myTree->Branch("patPfCandPhi",&patPfCandPhi);
@@ -1881,6 +1947,8 @@ Tupel::beginJob()
     myTree->Branch("patPfCandFromPv",&patPfCandFromPv);
     myTree->Branch("patPfCandVertexRef",&patPfCandVertexRef);
     myTree->Branch("patPfpvAssociationQuality",&patPfpvAssociationQuality);
+    }
+
     myTree->Branch("METPt",&METPt);
     myTree->Branch("METPx",&METPx);
     myTree->Branch("METPy",&METPy);
@@ -1919,18 +1987,6 @@ Tupel::beginJob()
     myTree->Branch("Bare01LepStatus",&Bare01LepStatus);
     myTree->Branch("Bare01LepMomId",&Bare01LepMomId);      
 
-    myTree->Branch("Packed01Pt",&Packed01Pt);
-    myTree->Branch("Packed01Eta",&Packed01Eta);
-    myTree->Branch("Packed01Phi",&Packed01Phi);
-    myTree->Branch("Packed01E",&Packed01E);
-    myTree->Branch("Packed01M",&Packed01M);
-    myTree->Branch("Packed01Id",&Packed01Id);
-    myTree->Branch("Packed01Status",&Packed01Status);
-    myTree->Branch("Packed01MomId",&Packed01MomId);
-    myTree->Branch("Packed01Charge",&Packed01Charge);
-    myTree->Branch("Packed01IsPrompt",&Packed01IsPrompt);
-    myTree->Branch("Packed01IsTauProd",&Packed01IsTauProd);
- 
     myTree->Branch("St03Pt",&St03Pt);
     myTree->Branch("St03Eta",&St03Eta);
     myTree->Branch("St03Phi",&St03Phi);
@@ -1968,12 +2024,7 @@ Tupel::beginJob()
     myTree->Branch("GjConstPhi",&GjConstPhi);
     myTree->Branch("GjConstE",&GjConstE);
 
-    myTree->Branch("pseudoTop_const_pt",&pseudoTop_const_pt);
-    myTree->Branch("pseudoTop_const_eta",&pseudoTop_const_eta);
-    myTree->Branch("pseudoTop_const_phi",&pseudoTop_const_phi);
-    myTree->Branch("pseudoTop_const_energy",&pseudoTop_const_energy);
-    myTree->Branch("pseudoTop_const_pdgId",&pseudoTop_const_pdgId);
-    myTree->Branch("pseudoTop_const_charge",&pseudoTop_const_charge);
+
     myTree->Branch("pseudoTop_pt",&pseudoTop_pt);
     myTree->Branch("pseudoTop_eta",&pseudoTop_eta);
     myTree->Branch("pseudoTop_phi",&pseudoTop_phi);
@@ -2130,7 +2181,7 @@ Tupel::beginJob()
     myTree->Branch("patJetPfAk04ConstE",&patJetPfAk04ConstE);
 
     //CaloJets
-    myTree->Branch("caloJetPt_",&caloJetPt_);
+ /*   myTree->Branch("caloJetPt_",&caloJetPt_);
     myTree->Branch("caloJetRawPt_",&caloJetRawPt_);
     myTree->Branch("caloJetEn_",&caloJetEn_);
     myTree->Branch("caloJetEta_",&caloJetEta_);
@@ -2138,7 +2189,7 @@ Tupel::beginJob()
     myTree->Branch("caloJetHadEHF_",&caloJetHadEHF_);
     myTree->Branch("caloJetEmEHF_",&caloJetEmEHF_);
     myTree->Branch("caloJetEmFrac_",&caloJetEmFrac_);
-    myTree->Branch("caloJetn90_",&caloJetn90_);
+    myTree->Branch("caloJetn90_",&caloJetn90_);*/
     
     myTree->Branch("id1_pdfInfo_",&id1_pdfInfo_);
     myTree->Branch("id2_pdfInfo_",&id2_pdfInfo_);
