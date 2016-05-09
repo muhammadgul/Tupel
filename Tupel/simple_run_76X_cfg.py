@@ -25,13 +25,13 @@ else:
 #process.GlobalTag.globaltag = '76X_mcRun2_asymptotic_RunIIFall15DR76_v1::All'
 
 
-jecunctable_="Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt"
+#jecunctable_="Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt"
 
 
 
 process.source = cms.Source("PoolSource",
 #    fileNames = cms.untracked.vstring("/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/00000/0066F143-F8FD-E411-9A0B-D4AE526A0D2E.root")
-  fileNames = cms.untracked.vstring("/store/mc/RunIISpring15DR74/TT_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v2/00000/0AB045B5-BB0C-E511-81FD-0025905A60B8.root")
+  fileNames = cms.untracked.vstring("/store/mc/RunIIFall15MiniAODv2/TT_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext3-v1/00000/00DF0A73-17C2-E511-B086-E41D2D08DE30.root")
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
@@ -143,7 +143,6 @@ process.tupel = cms.EDAnalyzer("Tupel",
   #tauSrc      = cms.untracked.InputTag("slimmedPatTaus"),
 #  jetSrc      = cms.untracked.InputTag("slimmedJets"),
     pfcandSrc	   = cms.InputTag("packedPFCandidates"),
-
     jetSrc      = cms.InputTag(jetsrcc),
   metSrc      = cms.InputTag("patMETsPF"),
   genSrc      = cms.InputTag("prunedGenParticles"),
@@ -153,11 +152,12 @@ process.tupel = cms.EDAnalyzer("Tupel",
   muonMatch2    = cms.string( 'muonTriggerMatchHLTMuons2' ),
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
   channel    = cms.string( 'smu' ),
-  keepparticlecoll    = cms.bool(False),
+  keepparticlecoll    = cms.bool(True),
   mSrcRho      = cms.InputTag('fixedGridRhoFastjetAll'),#arbitrary rho now
   CalojetLabel = cms.InputTag('slimmedJets'), #same collection now BB 
-  jecunctable = cms.string(jecunctable_),
-  metSource = cms.VInputTag("slimmedMETs","slimmedMETsNoHF","slimmedMETs","slimmedMETs"), #no MET corr yet
+#  jecunctable = cms.string(jecunctable_),
+  #metSource = cms.VInputTag("slimmedMETs","slimmedMETs","slimmedMETs","slimmedMETs"), #no MET corr yet
+  metSource = cms.VInputTag("slimmedMETs","slimmedMETsPuppi"),
   lheSource=cms.InputTag('source')
 
 )

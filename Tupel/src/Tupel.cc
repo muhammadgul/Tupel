@@ -61,7 +61,7 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "DataFormats/BTauReco/interface/JetTag.h"
-
+#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 class TTree;
 class Tupel : public edm::EDAnalyzer {
 
@@ -90,7 +90,7 @@ private:
   std::string elecMatch_;
   std::string muonMatch_;
   std::string muonMatch2_;
-  std::string jecunctable_;
+ // std::string jecunctable_;
 /*  edm::InputTag photonSrc_;
   edm::InputTag elecSrc_;
   edm::InputTag muonSrc_;
@@ -108,15 +108,15 @@ private:
   edm::EDGetTokenT<pat::Photon> photonSrc_;
   edm::EDGetTokenT<pat::ElectronCollection> elecSrc_;
   edm::EDGetTokenT<pat::MuonCollection> muonSrc_;
-  edm::EDGetTokenT<pat::PackedCandidate> pfcandSrc_;
+  edm::EDGetTokenT<pat::PackedCandidateCollection> pfcandSrc_;
   edm::EDGetTokenT<pat::JetCollection> jetSrc_;
   edm::EDGetTokenT<reco::GenJetCollection> gjetSrc_;
 //  edm::EDGetTokenT<pat::METCollection> metSrc_;
-  std::vector<edm::EDGetTokenT<pat::MET > > metSources;
+  std::vector<edm::EDGetTokenT<pat::METCollection> > metSources;
   edm::EDGetTokenT<double> mSrcRho_;
   edm::EDGetTokenT<LHEEventProduct> lheSource_;
   edm::EDGetTokenT<reco::GenParticleCollection> genParticleSrc_;
-  edm::EDGetTokenT<pat::PackedGenParticle> packedgenParticleSrc_;
+  edm::EDGetTokenT<pat::PackedGenParticleCollection> packedgenParticleSrc_;
 
 
 
@@ -435,12 +435,12 @@ keepparticlecoll_= iConfig.getParameter< bool >( "keepparticlecoll" ) ;
   elecMatch_= iConfig.getParameter< std::string >( "elecMatch" ) ;
   muonMatch_= iConfig.getParameter< std::string >( "muonMatch" ) ;
   muonMatch2_= iConfig.getParameter< std::string >( "muonMatch2" ) ;
-jecunctable_=iConfig.getParameter<std::string >("jecunctable");
+//jecunctable_=iConfig.getParameter<std::string >("jecunctable");
 
   photonSrc_=consumes<pat::Photon>(iConfig.getParameter<edm::InputTag>("photonSrc"));
   elecSrc_=consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electronSrc"));
   muonSrc_=consumes<pat::MuonCollection>(iConfig.getParameter<edm::InputTag>("muonSrc"));
-  pfcandSrc_=consumes<pat::PackedCandidate>(iConfig.getParameter<edm::InputTag>("pfcandSrc"));
+  pfcandSrc_=consumes<pat::PackedCandidateCollection>(iConfig.getParameter<edm::InputTag>("pfcandSrc"));
   jetSrc_=consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jetSrc" ));
   gjetSrc_=consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("gjetSrc" ));
 //  metSrc_=consumes<pat::METCollection>(iConfig.getParameter<edm::InputTag>("metSrc"));
@@ -451,7 +451,7 @@ jecunctable_=iConfig.getParameter<std::string >("jecunctable");
  // metSources(consumes<std::vector< pat::MET > >(iConfig.getParameter<std::vector<edm::InputTag> >("metSource"));
 
   genParticleSrc_=consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("genSrc"));
-  packedgenParticleSrc_=consumes<pat::PackedGenParticle>(iConfig.getParameter<edm::InputTag>("pgenSrc"));
+  packedgenParticleSrc_=consumes<pat::PackedGenParticleCollection>(iConfig.getParameter<edm::InputTag>("pgenSrc"));
 
 
   beamSpotToken_=consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot"));//hardcode
@@ -465,7 +465,7 @@ jecunctable_=iConfig.getParameter<std::string >("jecunctable");
   pseudoTopToken_=consumes<reco::GenParticleCollection>(edm::InputTag("pseudoTop"));//hardcode
   pseudoTopjetToken_=consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","jets"));//hardcode
   pseudoToplepToken_=consumes<reco::GenJetCollection>(edm::InputTag("pseudoTop","leptons"));//hardcode
- for (edm::InputTag const & tag : iConfig.getParameter< std::vector<edm::InputTag> > ("metSource"))metSources.push_back(consumes<pat::MET>(tag));
+ for (edm::InputTag const & tag : iConfig.getParameter< std::vector<edm::InputTag> > ("metSource"))metSources.push_back(consumes<pat::METCollection>(tag));
 }
 
 Tupel::~Tupel()
@@ -486,6 +486,12 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
  // iEvent.getByToken(full5x5SigmaIEtaIEtaMapToken_,full5x5sieie);
 
 
+edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
+iSetup.get<JetCorrectionsRecord>().get("AK4PFchs",JetCorParColl); 
+JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
+JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar);
+
+
   const pat::helper::TriggerMatchHelper matchHelper;	
   edm::Handle<GenParticleCollection> genParticles_h;
   iEvent.getByToken(genParticleSrc_, genParticles_h);
@@ -499,9 +505,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
    edm::Handle<reco::GenJetCollection> pseudoToplepHandle;
     iEvent.getByToken(pseudoToplepToken_, pseudoToplepHandle);
-  edm::Handle<edm::View<pat::PackedGenParticle> > packedgenParticles_h;
+  edm::Handle<pat::PackedGenParticleCollection > packedgenParticles_h;
   iEvent.getByToken(packedgenParticleSrc_, packedgenParticles_h);
-  const edm::View<pat::PackedGenParticle>* packedgenParticles  = packedgenParticles_h.failedToGet () ? 0 : &*packedgenParticles_h;
+  const vector<pat::PackedGenParticle>* packedgenParticles  = packedgenParticles_h.failedToGet () ? 0 : &*packedgenParticles_h;
 
 
   
@@ -529,9 +535,9 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 //  iEvent.getByToken(tauSrc_,taus);
 					
 
-  edm::Handle<edm::View<pat::PackedCandidate> > pfcand;
+  edm::Handle<pat::PackedCandidateCollection > pfcand;
   iEvent.getByToken(pfcandSrc_,pfcand);
-  const edm::View<pat::PackedCandidate> * pfcands = pfcand.failedToGet () ? 0 : &*pfcand ;
+  const vector<pat::PackedCandidate> * pfcands = pfcand.failedToGet () ? 0 : &*pfcand ;
   // get jet collection
   edm::Handle<pat::JetCollection> jets;
   iEvent.getByToken(jetSrc_,jets);
@@ -858,20 +864,20 @@ patJetPfAk04PartonFlavour_.clear();
     
 
      for(unsigned int imet=0;imet<metSources.size();imet++){
-        Handle<View<pat::MET> > metH;
+        Handle<pat::METCollection> metH;
         iEvent.getByToken(metSources[imet], metH);
         if(!metH.isValid())continue;
         //cout<<"MET"<<imet<<"  "<<metSources[imet]<<"  "<<metH->ptrAt(0)->pt()<<endl;
 
-        METPt.push_back(metH->ptrAt(0)->pt()); 
-        METPx.push_back(metH->ptrAt(0)->px()); 
-        METPy.push_back(metH->ptrAt(0)->py()); 
-        METPz.push_back(metH->ptrAt(0)->pz()); 
-        METE.push_back(metH->ptrAt(0)->energy()); 
-        METsigx2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,0)); 
-        METsigxy.push_back(metH->ptrAt(0)->getSignificanceMatrix()(0,1)); 
-        METsigy2.push_back(metH->ptrAt(0)->getSignificanceMatrix()(1,1)); 
-        METsig.push_back(metH->ptrAt(0)->significance()); 
+        METPt.push_back(metH->at(0).pt()); 
+        METPx.push_back(metH->at(0).px()); 
+        METPy.push_back(metH->at(0).py()); 
+        METPz.push_back(metH->at(0).pz()); 
+        METE.push_back(metH->at(0).energy()); 
+        METsigx2.push_back(metH->at(0).getSignificanceMatrix()(0,0)); 
+        METsigxy.push_back(metH->at(0).getSignificanceMatrix()(0,1)); 
+        METsigy2.push_back(metH->at(0).getSignificanceMatrix()(1,1)); 
+        METsig.push_back(metH->at(0).significance()); 
         //Output object in EDM format
         //std::auto_ptr<llvvMet> metOut(new llvvMet());
         //llvvMet& met = *metOut;
@@ -1065,7 +1071,7 @@ int ngjets=0;
     if (!realdata && packedgenParticles){  
 
 
-      const edm::View<pat::PackedGenParticle> & gen = *packedgenParticles_h;
+      const vector<pat::PackedGenParticle> & gen = *packedgenParticles_h;
       for (size_t i=0; i<packedgenParticles->size(); ++i){
 
       int st = gen[i].status();
@@ -1901,7 +1907,9 @@ void
 Tupel::beginJob()
 {
   
-  jecUnc = new JetCorrectionUncertainty(jecunctable_);
+//  jecUnc = new JetCorrectionUncertainty(jecunctable_);
+
+
 //jecUnc = new JetCorrectionUncertainty("aaaa");
     // register to the TFileService
     edm::Service<TFileService> fs;
@@ -2205,7 +2213,7 @@ Tupel::beginJob()
 void 
 Tupel::endJob() 
 {
-  delete jecUnc;
+//  delete jecUnc;
 if(!accept)myTree->Fill();
   myTree->Print();
 //  if(!accept)cout<<"ended job"<<endl;
