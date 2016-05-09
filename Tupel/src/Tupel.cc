@@ -125,6 +125,7 @@ private:
   edm::EDGetTokenT<reco::ConversionCollection> convToken_;
   edm::EDGetTokenT<GenEventInfoProduct> genInfoToken_;
   edm::EDGetTokenT<edm::TriggerResults> HLTToken_;
+  edm::EDGetTokenT<edm::TriggerResults> HLTTokenFilters_;
 
 edm::EDGetTokenT<LHEEventProduct> lheEventSrc_;
 edm::EDGetTokenT<std::vector<PileupSummaryInfo> > PupSrc_;
@@ -414,7 +415,15 @@ std::vector<double> patPfCandVertexRef;
     double HLT_Mu18;
     double HLT_TkMu18;
 
-  double HLT_Elec17_Elec8;
+  double HLT_Elec17_Elec8; //TO BE USED
+  double Flag_HBHENoiseFilter; //TO BE USED
+  double Flag_HBHENoiseIsoFilter; //TO BE USED
+  double Flag_CSCTightHalo2015Filter; //TO BE USED
+  double Flag_EcalDeadCellTriggerPrimitiveFilter; //TO BE USED
+  double Flag_goodVertices; //TO BE USED
+  double Flag_eeBadScFilter; //TO BE USED
+  double Flag_chargedHadronTrackResolutionFilter; //do not use - those are under study 76X
+  double Flag_muonBadTrackFilter; //do not use - those are under study for 76X
 
   JetCorrectionUncertainty *jecUnc;
 };
@@ -459,6 +468,7 @@ keepparticlecoll_= iConfig.getParameter< bool >( "keepparticlecoll" ) ;
   convToken_=consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma","reducedConversions"));//hardcode
   genInfoToken_=consumes<GenEventInfoProduct>(edm::InputTag ("generator"));//hardcode
   HLTToken_=consumes<edm::TriggerResults>(edm::InputTag ("TriggerResults","","HLT"));//hardcode
+  HLTTokenFilters_=consumes<edm::TriggerResults>(edm::InputTag ("TriggerResults","","RECO"));//hardcode
   lheEventSrc_=consumes<LHEEventProduct>(edm::InputTag ("externalLHEProducer"));//hardcode
   PupSrc_=consumes<std::vector< PileupSummaryInfo> >(edm::InputTag ("slimmedAddPileupInfo"));//hardcode
 
@@ -1435,7 +1445,7 @@ int ngjets=0;
       for (int i = 0; i < ntrigs; i++) {
 	trigname.push_back(trigNames->triggerName(i));
 	trigaccept.push_back(HLTResHandle->accept(i));
-        //cout<<trigNames->triggerName(i)<<endl;
+
 	if (trigaccept[i]){
 	  if(std::string(trigname[i]).find("HLT_IsoMu24_eta2p1")!=std::string::npos) IsoMu24_eta2p1=1;
 	  if(std::string(trigname[i]).find("HLT_Mu17_Mu8")!=std::string::npos) Mu17_Mu8=1;
@@ -1462,6 +1472,7 @@ int ngjets=0;
 	}
       }
     }
+
     HLT_Mu17_Mu8=Mu17_Mu8;
     HLT_IsoMu24_eta2p1=IsoMu24_eta2p1;
 
@@ -1484,6 +1495,37 @@ int ngjets=0;
       HLT_IsoTkMu18_eta2p1=IsoTkMu18_eta2p1;
       HLT_Mu18=Mu18;
       HLT_TkMu18=TkMu18;
+
+    edm::Handle< edm::TriggerResults > HLTResFiltersHandle;
+    //edm::InputTag HLTTag = edm::InputTag( "TriggerResults", "", "HLT");
+    iEvent.getByToken(HLTTokenFilters_, HLTResFiltersHandle);
+    Flag_HBHENoiseFilter=0;
+    Flag_HBHENoiseIsoFilter=0;
+    Flag_CSCTightHalo2015Filter=0;
+    Flag_EcalDeadCellTriggerPrimitiveFilter=0;
+    Flag_goodVertices=0;
+    Flag_eeBadScFilter=0;
+    Flag_chargedHadronTrackResolutionFilter =0;
+    Flag_muonBadTrackFilter =0;
+
+    if ( HLTResFiltersHandle.isValid() && !HLTResFiltersHandle.failedToGet() ) {
+      edm::RefProd<edm::TriggerNames> trigNames( &(iEvent.triggerNames( *HLTResFiltersHandle )) );
+      ntrigs = (int)trigNames->size();
+      for (int i = 0; i < ntrigs; i++) {
+
+        if(HLTResHandle->accept(i)){
+
+          if(std::string(trigNames->triggerName(i)).find("Flag_HBHENoiseFilter")!=std::string::npos)Flag_HBHENoiseFilter=1.;
+          if(std::string(trigNames->triggerName(i)).find("Flag_HBHENoiseIsoFilter")!=std::string::npos)Flag_HBHENoiseIsoFilter=1.;
+          if(std::string(trigNames->triggerName(i)).find("Flag_CSCTightHalo2015Filter")!=std::string::npos)Flag_CSCTightHalo2015Filter=1.;
+          if(std::string(trigNames->triggerName(i)).find("Flag_EcalDeadCellTriggerPrimitiveFilter")!=std::string::npos)Flag_EcalDeadCellTriggerPrimitiveFilter=1.;
+          if(std::string(trigNames->triggerName(i)).find("Flag_goodVertices")!=std::string::npos)Flag_goodVertices=1.;
+          if(std::string(trigNames->triggerName(i)).find("Flag_eeBadScFilter")!=std::string::npos)Flag_eeBadScFilter=1.;
+          if(std::string(trigNames->triggerName(i)).find("Flag_chargedHadronTrackResolutionFilter")!=std::string::npos)Flag_chargedHadronTrackResolutionFilter=1.; 
+          if(std::string(trigNames->triggerName(i)).find("Flag_muonBadTrackFilter")!=std::string::npos)Flag_muonBadTrackFilter=1.; 
+        }
+      }
+    }
     double MuFill=0;
     double Mu17_Mu8_Matched=0;
     double Mu17_TkMu8_Matched=0;
@@ -2067,7 +2109,14 @@ Tupel::beginJob()
      myTree->Branch("HLT_IsoTkMu18_eta2p1",&HLT_IsoTkMu18_eta2p1); 
      myTree->Branch("HLT_Mu18",&HLT_Mu18); 
      myTree->Branch("HLT_TkMu18",&HLT_TkMu18); 
-
+     myTree->Branch("Flag_HBHENoiseFilter",&Flag_HBHENoiseFilter); 
+     myTree->Branch("Flag_HBHENoiseIsoFilter",&Flag_HBHENoiseIsoFilter); 
+     myTree->Branch("Flag_CSCTightHalo2015Filter",&Flag_CSCTightHalo2015Filter); 
+     myTree->Branch("Flag_EcalDeadCellTriggerPrimitiveFilter",&Flag_EcalDeadCellTriggerPrimitiveFilter); 
+     myTree->Branch("Flag_goodVertices",&Flag_goodVertices); 
+     myTree->Branch("Flag_eeBadScFilter",&Flag_eeBadScFilter); 
+     myTree->Branch("Flag_chargedHadronTrackResolutionFilter",&Flag_chargedHadronTrackResolutionFilter ); 
+     myTree->Branch("Flag_muonBadTrackFilter",&Flag_muonBadTrackFilter); 
 
     
     //Muons
