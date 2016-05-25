@@ -78,7 +78,7 @@ private:
   virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   /// everything that needs to be done after the event loop
-
+   double getJER(double jetEta, int sysType);
   virtual void endJob() ;
 
   // input tags
@@ -253,6 +253,9 @@ std::vector<double> pseudoTop_charge;
   std::vector<double> caloJetEmFrac_;
   std::vector<double> caloJetn90_;*/
   ///pfjets
+  std::vector<double> patJetPfAk04JERSmear;
+  std::vector<double> patJetPfAk04JERSmearUp;
+  std::vector<double> patJetPfAk04JERSmearDn;
   std::vector<double> patJetPfAk04En_;
   std::vector<double> patJetPfAk04Pt_;
   std::vector<double> patJetPfAk04Eta_;
@@ -284,7 +287,7 @@ std::vector<double> pseudoTop_charge;
   std::vector<double> patJetPfAk04PtUp_;
   std::vector<double> patJetPfAk04PtDn_;
   std::vector<double> patJetPfAk04BDiscCSVv2_;
-  std::vector<double> patJetPfAk04BDiscCSVV1_;
+  std::vector<double> patJetPfAk04BDiscpfCMVA_;
   std::vector<double> patJetPfAk04BDiscCSVSLV1_;
   std::vector<double> unc_;
 std::vector<double> patJetPfAk04ConstId;
@@ -719,6 +722,9 @@ pseudoTop_charge.clear();
     caloJetEmEHF_.clear();
     caloJetEmFrac_.clear();
     caloJetn90_.clear();*/
+patJetPfAk04JERSmear.clear();
+patJetPfAk04JERSmearUp.clear();
+patJetPfAk04JERSmearDn.clear();
     patJetPfAk04En_.clear();
     patJetPfAk04Pt_.clear();
     patJetPfAk04Eta_.clear();
@@ -750,7 +756,7 @@ patJetPfAk04PartonFlavour_.clear();
     patJetPfAk04PtUp_.clear();
     patJetPfAk04PtDn_.clear();
     patJetPfAk04BDiscCSVv2_.clear();
-    patJetPfAk04BDiscCSVV1_.clear();
+    patJetPfAk04BDiscpfCMVA_.clear();
     patJetPfAk04BDiscCSVSLV1_.clear();
       patJetPfAk04ConstId.clear();
       patJetPfAk04ConstPt.clear();
@@ -1534,7 +1540,8 @@ int ngjets=0;
     for (unsigned int j = 0; j < muons->size(); ++j){
       const std::vector<pat::Muon> & mu = *muons;
       if(mu[j].isGlobalMuon()){ 
-        if(mu[j].pt()<15 || abs(mu[j].eta())>2.4)continue;
+        if((channel_!="noselection")&&(mu[j].pt()<15 || abs(mu[j].eta())>2.4))continue;
+        if((channel_=="noselection")&&(mu[j].pt()<10 || abs(mu[j].eta())>3.0))continue;
 	//const pat::TriggerObjectRef trigRef( matchHelper.triggerMatchObject( muons,j,muonMatch_, iEvent, *triggerEvent ) );
 	//if ( trigRef.isAvailable() && trigRef.isNonnull() ) {
 	//  Mu17_Mu8_Matched=1;
@@ -1822,7 +1829,9 @@ if(realdata){
 
 
       const pat::Jet & jet = jets->at(i);
-        if(jet.pt()<15 || abs(jet.eta())>2.5 )continue;
+
+        if((channel_!="noselection")&&(jet.pt()<15 || abs(jet.eta())>2.5))continue;
+        if((channel_=="noselection")&&(jet.pt()<15 || abs(jet.eta())>5.0))continue;
     //  cout<<"I am here"<<endl;                     
       //patJetPfAk04jetpuMVA_.push_back(jet.userFloat("pileupJetId:fullDiscriminant"));//not available!
       chf = jet.chargedHadronEnergyFraction();
@@ -1836,7 +1845,7 @@ if(realdata){
     //  //cout<<"jet.bDiscriminator(combinedSecondaryVertexV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexV1BJetTags")<<endl;
     //  //cout<<"jet.bDiscriminator(combinedSecondaryVertexSoftPFLeptonV1BJetTags)=  "<<jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags")<<endl;
       patJetPfAk04BDiscCSVv2_.push_back(jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
-      patJetPfAk04BDiscCSVV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
+      patJetPfAk04BDiscpfCMVA_.push_back(jet.bDiscriminator("pfCombinedMVAV2BJetTags"));
       patJetPfAk04BDiscCSVSLV1_.push_back(jet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
       
       patJetPfAk04En_.push_back(jet.energy());
@@ -1880,7 +1889,7 @@ if(realdata){
       }
       patJetPfAk04LooseId_.push_back(tempJetID);//ala 
       if(jet.pt()>30 &&tempJetID>0)PFjetFill++;
-      if(jet.pt()>30 &&tempJetID>0&& jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>=0.89)PFjetFill_b++;
+      if(jet.pt()>30 &&tempJetID>0&& jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>=0.8)PFjetFill_b++;
       for(unsigned int idx =0; idx<jet.numberOfDaughters();idx++){
      // cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
       patJetPfAk04ConstId.push_back(jet.daughter(idx)->pdgId());
@@ -1892,17 +1901,30 @@ if(realdata){
 
 
     }
+      double smear=1, smearUp=1,smearDn=1;
       if(!realdata){
 	bool matchGen=false;
 	if (jet.genJet()){
 	  matchGen=true;
+          //cout<<"Burdayım ulan "<<endl;
 	  MGjPt.push_back(jet.genJet()->pt());
 	  MGjeta.push_back(jet.genJet()->eta());
 	  MGjphi.push_back(jet.genJet()->phi());
 	  MGjE.push_back(jet.genJet()->energy());
+          smear = getJER(jet.eta(), 0); //JER nominal=0, up=+1, down=-1
+          smearUp = getJER(jet.eta(), 1); //JER nominal=0, up=+1, down=-1
+          smearDn = getJER(jet.eta(), -1); //JER nominal=0, up=+1, down=-1
+         // cout<<"Burdayım ulan  "<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
+   
+
+
 	}
+        cout<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
 	matchGjet.push_back(matchGen);
       }
+      patJetPfAk04JERSmear.push_back(smear);
+      patJetPfAk04JERSmearUp.push_back(smearUp);
+      patJetPfAk04JERSmearDn.push_back(smearUp);
     }
     //end jets
                 //cout<<"gggggggggggggggggggggg"<<endl;
@@ -2199,6 +2221,9 @@ Tupel::beginJob()
     myTree->Branch("patElec_mva_presel_",&patElec_mva_presel_);
     
     //PFJet
+    myTree->Branch("patJetPfAk04JERSmear",&patJetPfAk04JERSmear);
+    myTree->Branch("patJetPfAk04JERSmearUp",&patJetPfAk04JERSmearUp);
+    myTree->Branch("patJetPfAk04JERSmearDn",&patJetPfAk04JERSmearDn);
     myTree->Branch("patJetPfAk04En_",&patJetPfAk04En_);
     myTree->Branch("patJetPfAk04Pt_",&patJetPfAk04Pt_);
     myTree->Branch("patJetPfAk04Eta_",&patJetPfAk04Eta_);
@@ -2225,7 +2250,7 @@ Tupel::beginJob()
     myTree->Branch("patJetPfAk04jetpukMedium_",&patJetPfAk04jetpukMedium_);
     myTree->Branch("patJetPfAk04jetpukTight_",&patJetPfAk04jetpukTight_);
     myTree->Branch("patJetPfAk04BDiscCSVv2_",&patJetPfAk04BDiscCSVv2_);
-    myTree->Branch("patJetPfAk04BDiscCSVV1_",&patJetPfAk04BDiscCSVV1_);
+    myTree->Branch("patJetPfAk04BDiscpfCMVA_",&patJetPfAk04BDiscpfCMVA_);
     myTree->Branch("patJetPfAk04BDiscCSVSLV1_",&patJetPfAk04BDiscCSVSLV1_);
     myTree->Branch("unc_",&unc_);
     myTree->Branch("patJetPfAk04PtUp_",&patJetPfAk04PtUp_);
@@ -2257,6 +2282,42 @@ Tupel::beginJob()
     myTree->Branch("mcWeight_",&mcWeight_);
     myTree->Branch("mcWeights_",&mcWeights_);
     myTree->Branch("nup",&nup);   
+}
+
+double Tupel::getJER(double jetEta, int sysType){
+    /*
+    Here, jetEta should be the jet pseudorapidity, and sysType is :
+        nominal : 0
+        down    : -1
+        up      : +1
+    */
+
+  double jerSF = 1.0;
+
+  if (! (sysType==0 || sysType==-1 || sysType==1)){
+    cout<< "ERROR: Can't get JER! use type=0 (nom), -1 (down), +1 (up)"<<endl;
+    return jerSF;
+  }
+    // Values from https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
+  double etamin[] = {0.0,0.5,1.1,1.7,2.3,2.8,3.2};
+  double etamax[] = {0.5,1.1,1.7,2.3,2.8,3.2,5.0};
+    
+  double scale_nom[]  = {1.079,1.099,1.121,1.208,1.254,1.395,1.056};
+  double scale_dn[]   = {1.053,1.071,1.092,1.162,1.192,1.332,0.865};
+  double scale_up[]   = {1.105,1.127,1.150,1.254,1.316,1.458,1.247};
+
+//    for iSF in range(0,len(scale_nom)) :
+  for(int iSF=0;iSF<7;iSF++){//hardcoded size of array- to be checked if change
+
+    if (abs(jetEta) >= etamin[iSF] && abs(jetEta) < etamax[iSF]) {
+      //cout<<"I am here"<<endl;
+      if (sysType < 0) jerSF = scale_dn[iSF];
+      else if (sysType > 0)jerSF = scale_up[iSF];
+      else jerSF = scale_nom[iSF];
+      break;
+    }
+  }
+  return jerSF;
 }
 
 void 
