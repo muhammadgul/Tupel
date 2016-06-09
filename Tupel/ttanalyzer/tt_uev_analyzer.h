@@ -740,33 +740,33 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
     /*
     #include "25ns_data_D_prompt_local.h"
     #include "25ns_data_D_reminiaod_local.h"
-    name="25ns_data_D_uev_newlist_20160307_fromskimmed";
+    name="25ns_data_D_uev_newlist_20160523_fromskimmed";
     */
     /*  
     #include "25ns_wjet_local.h"
-    name="25ns_wjet_uev_miniaodv2_20160307_fromskimmed";
+    name="25ns_wjet_uev_miniaodv2_20160523_fromskimmed";
     */
-    /*
-    #include "25ns_tt_local.h"
+    
+    #include "25ns_tt_fromeos_76x.h"
     dosignal=true;
-    nev=1000000;
-    name="25ns_tt_uev_miniaodv2_20160307_fromskimmed";
-    */
+   // nev=20000;
+    name="25ns_tt_uev_miniaodv2_20160523_fromskimmed";
+    
     /*
     #include "25ns_st_t_top_uev_local.h"
-    name="25ns_st_t_top_uev_20160307_fromskimmed";
+    name="25ns_st_t_top_uev_20160523_fromskimmed";
     */
     /*
     #include "25ns_st_t_atop_uev_local.h"
-    name="25ns_st_t_atop_uev_20160307_fromskimmed";
+    name="25ns_st_t_atop_uev_20160523_fromskimmed";
     */
     /*
     #include "25ns_st_tw_atop_uev_local.h"
-    name="25ns_st_tw_top_uev_20160307_fromskimmed";
+    name="25ns_st_tw_top_uev_20160523_fromskimmed";
     */
     /*
     #include "25ns_st_tw_top_uev_local.h"
-    name="25ns_st_tw_atop_uev_20160307_fromskimmed";
+    name="25ns_st_tw_atop_uev_20160523_fromskimmed";
     */
     /*
     #include "25ns_powheg_hpp_local.h"
@@ -796,13 +796,13 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
     */
 
 
-    
+/*    
     #include "25ns_tt_local.h"
     nev=1000000;
     dosignal=true;
     dopdf=true;
     name="25ns_tt_uev_miniaodv2_2110_fromskimmed_pdfvar";
-    
+  */  
 
 
 
@@ -956,7 +956,7 @@ tt_uev_analyzer::tt_uev_analyzer(TTree *tree) : fChain(0)
 
     name += "_isElec_";
     name += doe;
-    name += "_v24.root";
+    name += "_v25.root";
 #endif // SINGLE_TREE
 
   }
@@ -1559,6 +1559,7 @@ double tt_uev_analyzer::DeltaPhi(double phi1, double phi2)
 
 bool tt_uev_analyzer::hasb(int id)
 {
+
   int fid=fabs(id);
   if((int)fid/10000000!=0)return false;
   if(fid<=100)return false;

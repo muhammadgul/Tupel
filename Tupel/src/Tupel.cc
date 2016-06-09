@@ -62,6 +62,8 @@ Code by: Bugra Bilin, Kittikul Kovitanggoon, Tomislav Seva, Efe Yazgan, ...
 
 #include "DataFormats/BTauReco/interface/JetTag.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "JetMETCorrections/Modules/interface/JetResolution.h"
+//#include "CondFormats/DataRecord/interface/JetResolutionRcd.h"
 class TTree;
 class Tupel : public edm::EDAnalyzer {
 
@@ -78,7 +80,7 @@ private:
   virtual void beginRun(edm::Run const&, edm::EventSetup const&) override;
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
   /// everything that needs to be done after the event loop
-   double getJER(double jetEta, int sysType);
+//   double getJER(double jetEta, int sysType);
   virtual void endJob() ;
 
   // input tags
@@ -253,9 +255,12 @@ std::vector<double> pseudoTop_charge;
   std::vector<double> caloJetEmFrac_;
   std::vector<double> caloJetn90_;*/
   ///pfjets
-  std::vector<double> patJetPfAk04JERSmear;
-  std::vector<double> patJetPfAk04JERSmearUp;
-  std::vector<double> patJetPfAk04JERSmearDn;
+  std::vector<double> patJetPfAk04PtJERSmear;
+  std::vector<double> patJetPfAk04PtJERSmearUp;
+  std::vector<double> patJetPfAk04PtJERSmearDn;
+  std::vector<double> patJetPfAk04EnJERSmear;
+  std::vector<double> patJetPfAk04EnJERSmearUp;
+  std::vector<double> patJetPfAk04EnJERSmearDn;
   std::vector<double> patJetPfAk04En_;
   std::vector<double> patJetPfAk04Pt_;
   std::vector<double> patJetPfAk04Eta_;
@@ -504,7 +509,13 @@ iSetup.get<JetCorrectionsRecord>().get("AK4PFchs",JetCorParColl);
 JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
 JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar);
 
+JME::JetResolution resolution;
+JME::JetResolutionScaleFactor resolution_sf;
+      if(! iEvent.isRealData()){
+ resolution= JME::JetResolution::get(iSetup, "AK4PFchs_pt");
 
+ resolution_sf = JME::JetResolutionScaleFactor::get(iSetup, "AK4PFchs");
+}
   const pat::helper::TriggerMatchHelper matchHelper;	
   edm::Handle<GenParticleCollection> genParticles_h;
   iEvent.getByToken(genParticleSrc_, genParticles_h);
@@ -722,9 +733,12 @@ pseudoTop_charge.clear();
     caloJetEmEHF_.clear();
     caloJetEmFrac_.clear();
     caloJetn90_.clear();*/
-patJetPfAk04JERSmear.clear();
-patJetPfAk04JERSmearUp.clear();
-patJetPfAk04JERSmearDn.clear();
+    patJetPfAk04PtJERSmear.clear();
+    patJetPfAk04PtJERSmearUp.clear();
+    patJetPfAk04PtJERSmearDn.clear();
+    patJetPfAk04EnJERSmear.clear();
+    patJetPfAk04EnJERSmearUp.clear();
+    patJetPfAk04EnJERSmearDn.clear();
     patJetPfAk04En_.clear();
     patJetPfAk04Pt_.clear();
     patJetPfAk04Eta_.clear();
@@ -1901,9 +1915,31 @@ if(realdata){
 
 
     }
-      double smear=1, smearUp=1,smearDn=1;
+      double smear=jet.pt(), smearUp=jet.pt(),smearDn=jet.pt();
+      double smearE=jet.energy(), smearUpE=jet.energy(),smearDnE=jet.energy();
+  //    smear = getJER(jet.eta(), 0); //JER nominal=0, up=+1, down=-1
+  //    smearUp = getJER(jet.eta(), 1); //JER nominal=0, up=+1, down=-1
+  //    smearDn = getJER(jet.eta(), -1); //JER nominal=0, up=+1, down=-1
       if(!realdata){
 	bool matchGen=false;
+        JME::JetParameters parameters_1;
+        parameters_1.setJetPt(jet.pt());
+        parameters_1.setJetEta(jet.eta());
+        parameters_1.setRho(*rho_);
+        double r = resolution.getResolution(parameters_1);
+        double sf = resolution_sf.getScaleFactor({{JME::Binning::JetEta, jet.eta()}});
+
+        // Access up and down variation of the scale factor
+        double sf_up = resolution_sf.getScaleFactor({{JME::Binning::JetEta, jet.eta()}}, Variation::UP);
+        double sf_down = resolution_sf.getScaleFactor({{JME::Binning::JetEta, jet.eta()}}, Variation::DOWN);
+
+//        cout<<r<<"  "<<sf<<"  "<<sf_up<<"  "<<sf_down <<endl;
+
+//        cout<<gRandom->Gaus(jet.pt(),sqrt(sf*sf-1)*r)<<endl;
+        smear=gRandom->Gaus(jet.pt(),sqrt(sf*sf-1)*r);
+        smearUp=gRandom->Gaus(jet.pt(),sqrt(sf_up*sf_up-1)*r);
+        smearDn=gRandom->Gaus(jet.pt(),sqrt(sf_down*sf_down-1)*r);
+
 	if (jet.genJet()){
 	  matchGen=true;
           //cout<<"Burdayım ulan "<<endl;
@@ -1911,20 +1947,24 @@ if(realdata){
 	  MGjeta.push_back(jet.genJet()->eta());
 	  MGjphi.push_back(jet.genJet()->phi());
 	  MGjE.push_back(jet.genJet()->energy());
-          smear = getJER(jet.eta(), 0); //JER nominal=0, up=+1, down=-1
-          smearUp = getJER(jet.eta(), 1); //JER nominal=0, up=+1, down=-1
-          smearDn = getJER(jet.eta(), -1); //JER nominal=0, up=+1, down=-1
+
+          smear=std::max(0.0,jet.genJet()->pt() +sf *( jet.pt()-jet.genJet()->pt() ) );
+          smearUp=std::max(0.0,jet.genJet()->pt() +sf *( jet.pt()-jet.genJet()->pt() ) );
+          smearDn=std::max(0.0,jet.genJet()->pt() +sf *( jet.pt()-jet.genJet()->pt() ) );
          // cout<<"Burdayım ulan  "<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
-   
-
-
 	}
-        cout<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
+        //cout<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
 	matchGjet.push_back(matchGen);
+        smearE=jet.energy()*smear/jet.pt();
+        smearUpE=jet.energy()*smearUp/jet.pt();
+        smearDnE=jet.energy()*smearDn/jet.pt();
       }
-      patJetPfAk04JERSmear.push_back(smear);
-      patJetPfAk04JERSmearUp.push_back(smearUp);
-      patJetPfAk04JERSmearDn.push_back(smearUp);
+      patJetPfAk04PtJERSmear.push_back(smear);
+      patJetPfAk04PtJERSmearUp.push_back(smearUp);
+      patJetPfAk04PtJERSmearDn.push_back(smearDn);
+      patJetPfAk04EnJERSmear.push_back(smearE);
+      patJetPfAk04EnJERSmearUp.push_back(smearUpE);
+      patJetPfAk04EnJERSmearDn.push_back(smearDnE);
     }
     //end jets
                 //cout<<"gggggggggggggggggggggg"<<endl;
@@ -2221,9 +2261,12 @@ Tupel::beginJob()
     myTree->Branch("patElec_mva_presel_",&patElec_mva_presel_);
     
     //PFJet
-    myTree->Branch("patJetPfAk04JERSmear",&patJetPfAk04JERSmear);
-    myTree->Branch("patJetPfAk04JERSmearUp",&patJetPfAk04JERSmearUp);
-    myTree->Branch("patJetPfAk04JERSmearDn",&patJetPfAk04JERSmearDn);
+    myTree->Branch("patJetPfAk04PtJERSmear",&patJetPfAk04PtJERSmear);
+    myTree->Branch("patJetPfAk04PtJERSmearUp",&patJetPfAk04PtJERSmearUp);
+    myTree->Branch("patJetPfAk04PtJERSmearDn",&patJetPfAk04PtJERSmearDn);
+    myTree->Branch("patJetPfAk04EnJERSmear",&patJetPfAk04EnJERSmear);
+    myTree->Branch("patJetPfAk04EnJERSmearUp",&patJetPfAk04EnJERSmearUp);
+    myTree->Branch("patJetPfAk04EnJERSmearDn",&patJetPfAk04EnJERSmearDn);
     myTree->Branch("patJetPfAk04En_",&patJetPfAk04En_);
     myTree->Branch("patJetPfAk04Pt_",&patJetPfAk04Pt_);
     myTree->Branch("patJetPfAk04Eta_",&patJetPfAk04Eta_);
@@ -2283,15 +2326,9 @@ Tupel::beginJob()
     myTree->Branch("mcWeights_",&mcWeights_);
     myTree->Branch("nup",&nup);   
 }
-
+/*
 double Tupel::getJER(double jetEta, int sysType){
-    /*
-    Here, jetEta should be the jet pseudorapidity, and sysType is :
-        nominal : 0
-        down    : -1
-        up      : +1
-    */
-
+  
   double jerSF = 1.0;
 
   if (! (sysType==0 || sysType==-1 || sysType==1)){
@@ -2319,7 +2356,7 @@ double Tupel::getJER(double jetEta, int sysType){
   }
   return jerSF;
 }
-
+*/
 void 
 Tupel::endJob() 
 {

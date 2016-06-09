@@ -16,6 +16,10 @@
 #include "standalone_LumiReWeighting.h"
 #include "BTagCalibrationStandalone.h"
 #include "BTagCalibrationStandalone.cc"
+
+#include "NeutrinoSolver.h"
+#include "NeutrinoSolver.cc"
+
 #include <iomanip>
 #include "TFile.h"
 #include "TTree.h"
@@ -105,6 +109,12 @@ void tt_uev_analyzer::Loop()
   //   double m_tt_range[]={200,300,350,400,420,440,460,490,550,700,1000};
   double m_tt_range[]={200,340,400,470,550,650,800,1100,2000};
   double pt_b_range[]={30,50,70,100,140,200,300,670};
+
+  int n_n_ch_gen_range=10;
+  int n_n_ch_rec_range=20;
+  double n_ch_gen_range[]={0,41,53,65,77,90,104,120,139,160,176};
+double n_ch_rec_range[]={0,20,41,47,53,59,65,71,77,83,90,97,104,112,120,129,139,149,160,168,176};
+
   TFile* file_out = new TFile(name,"RECREATE"); 
   file_out->cd();	
   int pdfind_max=1;
@@ -712,10 +722,11 @@ void tt_uev_analyzer::Loop()
 
 
     sprintf(nam,"1d_npf_%i",i);
-    h_1d_npf[i]= new TH1D (nam,nam,500,0,500);
+    if(i%2==0)h_1d_npf[i]= new TH1D (nam,nam,n_n_ch_gen_range,n_ch_gen_range);
+    if(i%2==1)h_1d_npf[i]= new TH1D (nam,nam,n_n_ch_rec_range,n_ch_rec_range);
 
     sprintf(nam,"2d_npf_%i",i);
-    h_2d_npf[i]= new TH2D (nam,nam,500,0,500,500,0,500);
+    h_2d_npf[i]= new TH2D (nam,nam,n_n_ch_gen_range,n_ch_gen_range,n_n_ch_rec_range,n_ch_rec_range);
 
     sprintf(nam,"1d_ptsumpf_%i",i);
     h_1d_ptsumpf[i]= new TH1D (nam,nam,500,0,500);
@@ -1614,7 +1625,10 @@ void tt_uev_analyzer::Loop()
 	for(unsigned int gj=0; gj<GjNConst->at(gj_ind); gj++){
 
 
-	  if(hasb(GjConstId->at(gj+const_size)))isbjet=true;
+	  if(hasb(GjConstId->at(gj+const_size))){
+            isbjet=true;
+            cout<<GjConstId->at(gj+const_size)<<"  "<<hasb(GjConstId->at(gj+const_size))<<endl;
+          }
 	  if(GjConstPt->at(gj+const_size)<0.5)continue;
 	  TLorentzVector tmpc;
 	  tmpc.SetPtEtaPhiE(GjConstPt->at(gj+const_size),GjConstEta->at(gj+const_size),GjConstPhi->at(gj+const_size),GjConstE->at(gj+const_size));
@@ -1623,7 +1637,7 @@ void tt_uev_analyzer::Loop()
 	}
 
 
-	if(isbjet)GBjet_vector.push_back(tmp);
+
 	if(!isbjet)Gjet_vector.push_back(tmp);
 	if(!isbjet)Gjetconst_vector.push_back(Gjetconst_vectortmp);
 	if(isbjet)GBjetconst_vector.push_back(Gjetconst_vectortmp);
@@ -1640,17 +1654,18 @@ void tt_uev_analyzer::Loop()
 
     double m[4];
     //cout<<"1"<<endl;
-    if(pseudoTop_pdgId->size()>0&& GBjet_vector.size()==2&& Gjet_vector.size()>1){
+ //   cout<<pseudoTop_pdgId->size()<<"  " << GBjet_vector.size()<<"  "<< Gjet_vector.size()<<endl;
+    if(pseudoTop_pdgId->size()>0/*&& GBjet_vector.size()==2&& Gjet_vector.size()>1*/){
     if(
-       ( fabs(pseudoTop_pdgId->at(4))==13 && fabs(pseudoTop_pdgId->at(6))<6 &&pseudoTop_pt->at(4)>22 && fabs(pseudoTop_eta->at(4))<2.4 &&pseudoTop_pt->at(6)>30 && fabs(pseudoTop_eta->at(6))<2.4  )
-     ||( fabs(pseudoTop_pdgId->at(6))==13 && fabs(pseudoTop_pdgId->at(4))<6 &&pseudoTop_pt->at(6)>22 && fabs(pseudoTop_eta->at(6))<2.4 &&pseudoTop_pt->at(4)>30 && fabs(pseudoTop_eta->at(4))<2.4  ) 
+       ( fabs(pseudoTop_pdgId->at(8))==13 && fabs(pseudoTop_pdgId->at(6))<6 &&pseudoTop_pt->at(8)>22 && fabs(pseudoTop_eta->at(8))<2.4 &&pseudoTop_pt->at(6)>30 && fabs(pseudoTop_eta->at(6))<2.4  )
+     ||( fabs(pseudoTop_pdgId->at(6))==13 && fabs(pseudoTop_pdgId->at(8))<6 &&pseudoTop_pt->at(6)>22 && fabs(pseudoTop_eta->at(6))<2.4 &&pseudoTop_pt->at(8)>30 && fabs(pseudoTop_eta->at(8))<2.4  ) 
       ){
     //cout<<"2"<<endl;
       TLorentzVector genWlep;
       TLorentzVector genWhad;
-      if( fabs(pseudoTop_pdgId->at(4)) ==13){
-        st01_nu_vector.SetPtEtaPhiE(pseudoTop_pt->at(5),pseudoTop_eta->at(5),pseudoTop_phi->at(5),pseudoTop_energy->at(5));
-        st01_mu_vector.SetPtEtaPhiE(pseudoTop_pt->at(4),pseudoTop_eta->at(4),pseudoTop_phi->at(4),pseudoTop_energy->at(4));
+      if( fabs(pseudoTop_pdgId->at(8)) ==13){
+        st01_nu_vector.SetPtEtaPhiE(pseudoTop_pt->at(9),pseudoTop_eta->at(9),pseudoTop_phi->at(9),pseudoTop_energy->at(9));
+        st01_mu_vector.SetPtEtaPhiE(pseudoTop_pt->at(8),pseudoTop_eta->at(8),pseudoTop_phi->at(8),pseudoTop_energy->at(8));
         genWlep.SetPtEtaPhiE(pseudoTop_pt->at(2),pseudoTop_eta->at(2),pseudoTop_phi->at(2),pseudoTop_energy->at(2));
         genWhad.SetPtEtaPhiE(pseudoTop_pt->at(3),pseudoTop_eta->at(3),pseudoTop_phi->at(3),pseudoTop_energy->at(3));
       }
@@ -1662,7 +1677,12 @@ void tt_uev_analyzer::Loop()
         genWhad.SetPtEtaPhiE(pseudoTop_pt->at(2),pseudoTop_eta->at(2),pseudoTop_phi->at(2),pseudoTop_energy->at(2));
       }
     //cout<<"3"<<endl;
-
+      TLorentzVector bjet_v;
+      bjet_v.SetPtEtaPhiE(pseudoTop_pt->at(4),pseudoTop_eta->at(4),pseudoTop_phi->at(4),pseudoTop_energy->at(4));
+      TLorentzVector bjet_v2;
+      bjet_v2.SetPtEtaPhiE(pseudoTop_pt->at(5),pseudoTop_eta->at(5),pseudoTop_phi->at(5),pseudoTop_energy->at(5));
+      GBjet_vector.push_back( bjet_v);
+      GBjet_vector.push_back( bjet_v2);
       getab1=GBjet_vector[0].Eta();
       getab2=GBjet_vector[1].Eta();
 
@@ -1696,7 +1716,7 @@ void tt_uev_analyzer::Loop()
 	if(dphi>120. &&dphi<180.)gnjet_away15++;
       }
     //cout<<"4"<<endl;
-      if(fabs(pseudoTop_pdgId->at(4))==13  ){
+      if(fabs(pseudoTop_pdgId->at(8))==13  ){
 	gtlep_vector.SetPtEtaPhiE(pseudoTop_pt->at(0),pseudoTop_eta->at(0),pseudoTop_phi->at(0),pseudoTop_energy->at(0));
 	gthad_vector.SetPtEtaPhiE(pseudoTop_pt->at(1),pseudoTop_eta->at(1),pseudoTop_phi->at(1),pseudoTop_energy->at(1));
       }
@@ -1758,8 +1778,9 @@ void tt_uev_analyzer::Loop()
 	      matchjet=true;break;
 	      }
 	      }
-	 
+	if(matchjet)continue;
 	gn_pf++;
+
 	gptsum_pf+=Packed01Pt->at(gp_ind);
         TLorentzVector gptmp;
         gptmp.SetPtEtaPhiE(Packed01Pt->at(gp_ind),Packed01Eta->at(gp_ind),Packed01Phi->at(gp_ind),Packed01E->at(gp_ind));
@@ -1788,6 +1809,7 @@ void tt_uev_analyzer::Loop()
 
 
       }
+//      cout<<gn_pf<<endl;
     //cout<<"7"<<endl;
       for(int pdfind=0; pdfind<pdfind_max;pdfind++){
 	// if(pdfind!=0)//cout<<mcWeights_->at(8+pdfind)<<endl;
@@ -2993,7 +3015,7 @@ void tt_uev_analyzer::Loop()
 	h_deltar_pf_jet[0]->Fill(dr_pf_jet_min,w);
 	deltar_pf_mu=  DeltaR(patPfCandEta->at(pfind),mu_vector[0].Eta(),patPfCandPhi->at(pfind),mu_vector[0].Phi()); 
 	h_deltar_pf_mu[0]->Fill(deltar_pf_mu,w); 
-	//if(dr_pf_jetpf_min<0.05 ||deltar_pf_mu<0.05 /*||dr_min_alljet_pf<0.4*/)continue;
+	if(dr_pf_jetpf_min<0.05 ||deltar_pf_mu<0.05 /*||dr_min_alljet_pf<0.4*/)continue;
 	h_deltar_pf_jet_after[0]->Fill(dr_pf_jet_min,w);
 	n_pf++;
 	ptsum_pf+=patPfCandPt->at(pfind);
@@ -3044,200 +3066,6 @@ void tt_uev_analyzer::Loop()
         }
       }
       }
-    //cout<<"18"<<endl;
-      int gn_pf_matched=0;
-      double gpt_pf_matched=0;
-      /* for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
-
-	 if(Packed01Pt->at(gp_ind)<0.5 ||Packed01Eta->at(gp_ind)>2.1||Packed01Charge->at(gp_ind)==0  ) continue;
-	 double drmin_gen_rec=99999.;
-	 double drmin_gen_rec_samecharge=99999.;
-	 double drmin_gen_rec_oppcharge=99999.;
-	 for(unsigned int recvecind=0; recvecind<recpart_vector.size();recvecind++){
-	 double dr_gen_rec=DeltaR(Packed01Eta->at(gp_ind),recpart_vector[recvecind].Eta(),Packed01Phi->at(gp_ind),recpart_vector[recvecind].Phi());
-	 if(dr_gen_rec<drmin_gen_rec)drmin_gen_rec=dr_gen_rec;
-	 h_dr_rec_gen_part->Fill(dr_gen_rec);  
-	 if(Packed01Charge->at(gp_ind)==recpart_charge[recvecind]){
-	 if(dr_gen_rec<drmin_gen_rec_samecharge)drmin_gen_rec_samecharge=dr_gen_rec;
-	 h_dr_rec_gen_part_samecharge->Fill(dr_gen_rec);  
-	 }
-	 if(Packed01Charge->at(gp_ind)!=recpart_charge[recvecind]){
-	 if(dr_gen_rec<drmin_gen_rec_oppcharge)drmin_gen_rec_oppcharge=dr_gen_rec;
-	 h_dr_rec_gen_part_oppcharge->Fill(dr_gen_rec);  
-	 }
-
-	 }
-	 h_drmin_rec_gen_part->Fill(drmin_gen_rec);  
-	 h_drmin_rec_gen_part_samecharge->Fill(drmin_gen_rec_samecharge);    
-	 if(drmin_gen_rec_samecharge<0.05){ 
-	 gn_pf_matched++;
-	 gpt_pf_matched+=Packed01Pt->at(gp_ind);   
-	 }
-	 h_drmin_rec_gen_part_oppcharge->Fill(drmin_gen_rec_oppcharge);                
-	 }
-
-	 if(gn_pf_matched!=0){
-	 h_1d_npf[2]->Fill(gn_pf_matched/4.);
-	 h_ptsumpf_inclusive[2]->Fill(gpt_pf_matched);
-	 if(n_pf!=0)h_2d_npf[2]->Fill(n_pf/4.,gn_pf_matched/4.);
-	 }*/
-
-
-      double drgenjetrecjet1min=9999, drgenjetrecjet2min=9999, drgenjetrecjetb1min=9999, drgenjetrecjetb2min=9999;
-      unsigned int gljMind1=99,  gljMind2=99, gljMindb1=99, gljMindb2=99;
-      unsigned int const_size2=0;
-      vector<vector<TLorentzVector>> GMjetconst_vector;
-      for(unsigned int gj_ind=0;gj_ind<GjPt->size();gj_ind++){
-	if(gj_ind!=0)const_size2+=GjNConst->at(gj_ind-1);
-	double DRjet_genjet1 =DeltaR(Gjeta->at(gj_ind),jet_vector[ljet_ind1].Eta(),Gjphi->at(gj_ind),jet_vector[ljet_ind1].Phi());
-	double DRjet_genjet2 =DeltaR(Gjeta->at(gj_ind),jet_vector[ljet_ind2].Eta(),Gjphi->at(gj_ind),jet_vector[ljet_ind2].Phi());
-	double DRjet_genjetb1=DeltaR(Gjeta->at(gj_ind),jet_vector[b_jet_index[0]].Eta(),Gjphi->at(gj_ind),jet_vector[b_jet_index[0]].Phi());
-	double DRjet_genjetb2=DeltaR(Gjeta->at(gj_ind),jet_vector[b_jet_index[1]].Eta(),Gjphi->at(gj_ind),jet_vector[b_jet_index[1]].Phi());
-	h_dr_rec_gen_j1->Fill(DRjet_genjet1);  
-	h_dr_rec_gen_j2->Fill(DRjet_genjet2);  
-	h_dr_rec_gen_bj1->Fill(DRjet_genjetb1);  
-	h_dr_rec_gen_bj2->Fill(DRjet_genjetb2);  
-
-
-	vector<TLorentzVector> Gjetconst_vectortmp;
-	for(unsigned int gj=0; gj<GjNConst->at(gj_ind); gj++){
-
-	  if(GjConstPt->at(gj+const_size2)<0.5)continue;
-	  TLorentzVector tmpc;
-	  tmpc.SetPtEtaPhiE(GjConstPt->at(gj+const_size2),GjConstEta->at(gj+const_size2),GjConstPhi->at(gj+const_size2),GjConstE->at(gj+const_size2));
-	  Gjetconst_vectortmp.push_back(tmpc);
-	}
-
-
-
-	if(DRjet_genjet1<drgenjetrecjet1min && DRjet_genjet1<0.1){
-	  drgenjetrecjet1min=DRjet_genjet1; gljMind1=gj_ind;
-	}
-
-	if(DRjet_genjet2<drgenjetrecjet2min && DRjet_genjet2<0.1){
-	  drgenjetrecjet2min=DRjet_genjet2; gljMind2=gj_ind;
-	}
-
-	if(DRjet_genjetb1<drgenjetrecjetb1min && DRjet_genjetb1<0.1){
-	  drgenjetrecjetb1min=DRjet_genjetb1; gljMindb1=gj_ind;
-	}
-
-	if(DRjet_genjetb2<drgenjetrecjetb2min && DRjet_genjetb2<0.1){
-	  drgenjetrecjetb2min=DRjet_genjetb2; gljMindb2=gj_ind;
-	}
-	GMjetconst_vector.push_back(Gjetconst_vectortmp);
-      }
-      //      //cout<<gljMind1<<" "<<gljMind2<<" "<<gljMindb1<<" "<<gljMindb2<<" "<<endl;
-
-      /*
-	for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
-
-
-
-
-	}
-      */
-    //cout<<"19"<<endl;
-      if(gljMind1!=99 && gljMind2!=99 &&gljMindb1!=99 && gljMindb2!=99 ){
-
-	for(unsigned int gp_ind=0;gp_ind<Packed01Id->size();gp_ind++){    
-
-	  if(Packed01Pt->at(gp_ind)<0.5 ||Packed01Eta->at(gp_ind)>2.1||Packed01Charge->at(gp_ind)==0  ) continue;
-
-
-	  if(lind!=9999){
-	    double dr_gen_mu=DeltaR(Packed01Eta->at(gp_ind),st01_mu_vector.Eta(),Packed01Phi->at(gp_ind),st01_mu_vector.Phi());
-	    if(dr_gen_mu<0.1)continue;
-	  }
-	  bool matchjet=false;
-	  for(unsigned int const_gen_ind=0;const_gen_ind<GMjetconst_vector[gljMind1].size();const_gen_ind++){
-	    double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GMjetconst_vector[gljMind1][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GMjetconst_vector[gljMind1][const_gen_ind].Phi());
-	    if(dr_gen_j1<0.1){
-	      matchjet=true;break;
-	    }    
-	  }
-
-	  for(unsigned int const_gen_ind=0;const_gen_ind<GMjetconst_vector[gljMind2].size();const_gen_ind++){
-	    double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GMjetconst_vector[gljMind2][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GMjetconst_vector[gljMind2][const_gen_ind].Phi());
-	    if(dr_gen_j1<0.1){
-	      matchjet=true;break;
-	    }
-	  }
-
-	  for(unsigned int const_gen_ind=0;const_gen_ind<GMjetconst_vector[gljMindb1].size();const_gen_ind++){
-	    double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GMjetconst_vector[gljMindb1][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GMjetconst_vector[gljMindb1][const_gen_ind].Phi());
-	    if(dr_gen_j1<0.1){
-	      matchjet=true;break;
-	    }
-
-	  }
-
-	  for(unsigned int const_gen_ind=0;const_gen_ind<GMjetconst_vector[gljMindb2].size();const_gen_ind++){
-	    double dr_gen_j1=DeltaR(Packed01Eta->at(gp_ind),GMjetconst_vector[gljMindb2][const_gen_ind].Eta(),Packed01Phi->at(gp_ind),GMjetconst_vector[gljMindb2][const_gen_ind].Phi());
-	    if(dr_gen_j1<0.1){
-	      matchjet=true;break;
-	    }
-	  }
-	  if(matchjet) continue;
-
-
-
-    //cout<<"20"<<endl;
-
-
-
-
-	  double drmin_gen_rec=99999.;
-	  double drmin_gen_rec_samecharge=99999.;
-	  double drmin_gen_rec_oppcharge=99999.;
-
-	  for(unsigned int recvecind=0; recvecind<recpart_vector.size();recvecind++){
-	    double dr_gen_rec=DeltaR(Packed01Eta->at(gp_ind),recpart_vector[recvecind].Eta(),Packed01Phi->at(gp_ind),recpart_vector[recvecind].Phi());
-	    if(dr_gen_rec<drmin_gen_rec)drmin_gen_rec=dr_gen_rec;
-	    h_dr_rec_gen_part->Fill(dr_gen_rec);  
-	    if(Packed01Charge->at(gp_ind)==recpart_charge[recvecind]){
-	      if(dr_gen_rec<drmin_gen_rec_samecharge)drmin_gen_rec_samecharge=dr_gen_rec;
-	      h_dr_rec_gen_part_samecharge->Fill(dr_gen_rec);  
-	    }
-	    if(Packed01Charge->at(gp_ind)!=recpart_charge[recvecind]){
-	      if(dr_gen_rec<drmin_gen_rec_oppcharge)drmin_gen_rec_oppcharge=dr_gen_rec;
-	      h_dr_rec_gen_part_oppcharge->Fill(dr_gen_rec);  
-	    }
-
-	  }
-    //cout<<"201"<<endl;
-	  h_drmin_rec_gen_part->Fill(drmin_gen_rec);  
-	  h_drmin_rec_gen_part_samecharge->Fill(drmin_gen_rec_samecharge);    
-
-	  //        if(drmin_gen_rec_samecharge<0.05){ 
-	  gn_pf_matched++;
-	  gpt_pf_matched+=Packed01Pt->at(gp_ind);   
-	  //        }
-	  h_drmin_rec_gen_part_oppcharge->Fill(drmin_gen_rec_oppcharge);                
-	}
-      }
-    //cout<<"202"<<endl;
- /*     if(gn_pf!=0&& n_pf!=0){
-	  h_1d_npf[2]->Fill(gn_pf,w);
-	  h_1d_ptsumpf[2]->Fill(gptsum_pf,w);
-	  h_1d_ptavepf[2]->Fill(gptsum_pf/gn_pf,w);
-	//h_ptsumpf_inclusive[2]->Fill(gpt_pf_matched);
-	  h_2d_npf[2]->Fill(n_pf,gn_pf_matched,w);
-	  h_2d_ptsumpf[2]->Fill(ptsum_pf,gptsum_pf,w);
-  	  h_2d_ptavepf[2]->Fill(ptsum_pf/n_pf,gptsum_pf/gn_pf,w);
-
-	  h_1d_npf[3]->Fill(n_pf,w);
-	  h_1d_ptsumpf[3]->Fill(ptsum_pf,w);
-	  h_1d_ptavepf[3]->Fill(ptsum_pf/n_pf,w);
-
-      }*/
-
-    //cout<<"203"<<endl;
-
-     
-
-
-    //cout<<"21"<<endl;
 
 
 
@@ -3280,10 +3108,10 @@ void tt_uev_analyzer::Loop()
 	  h_1d_ptsumpf[2*pdfind +1]->Fill(ptsum_pf,weight);
 	  h_1d_ptavepf[2*pdfind +1]->Fill(ptsum_pf/n_pf,weight);
 	  if(gn_pf!=0){
-	    h_2d_npf[2*pdfind +1]->Fill(n_pf,gn_pf,weight);
-	    h_2d_ptsumpf[2*pdfind +1]->Fill(ptsum_pf,gptsum_pf,weight);
-	    h_2d_ptavepf[2*pdfind +1]->Fill(ptsum_pf/n_pf,gptsum_pf/gn_pf,weight);
-            h_2d_mt[2*pdfind +1]->Fill(ttbar.M(),gttbar_vector.M(),weight);
+	    h_2d_npf[2*pdfind +1]->Fill(gn_pf,n_pf,weight);
+	    h_2d_ptsumpf[2*pdfind +1]->Fill(gptsum_pf,ptsum_pf,weight);
+	    h_2d_ptavepf[2*pdfind +1]->Fill(gptsum_pf/gn_pf,ptsum_pf/n_pf,weight);
+            h_2d_mt[2*pdfind +1]->Fill(gttbar_vector.M(),ttbar.M(),weight);
 	  }
 	  for(int dphiloop=0;dphiloop<10;dphiloop++){// 10 bins in pt, [0,1000] GeV
 	    if(ttbar.Pt()>dphiloop*100. &&ttbar.Pt()<(dphiloop+1)*100. ){

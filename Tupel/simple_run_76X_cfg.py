@@ -18,7 +18,7 @@ from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 if runOnData:
 	process.GlobalTag = GlobalTag(process.GlobalTag, '76X_dataRun2_16Dec2015_v0') #for 25 ns data
 else: 
-	process.GlobalTag = GlobalTag(process.GlobalTag, '76X_mcRun2_asymptotic_RunIIFall15DR76_v1') #for 25ns mc
+	process.GlobalTag = GlobalTag(process.GlobalTag, '76X_mcRun2_asymptotic_v12') #for 25ns mc
 
 #process.load('Configuration.StandardSequences.Services_cff')
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
@@ -32,6 +32,7 @@ else:
 process.source = cms.Source("PoolSource",
 #    fileNames = cms.untracked.vstring("/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt50ns_MCRUN2_74_V9A-v1/00000/0066F143-F8FD-E411-9A0B-D4AE526A0D2E.root")
   fileNames = cms.untracked.vstring("/store/mc/RunIIFall15MiniAODv2/TT_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext3-v1/00000/00DF0A73-17C2-E511-B086-E41D2D08DE30.root")
+
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
@@ -83,6 +84,35 @@ updateJetCollection(
    labelName = 'UpdatedJEC',
    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
 )
+
+
+process.load('Configuration.StandardSequences.Services_cff')
+process.load("JetMETCorrections.Modules.JetResolutionESProducer_cfi")
+
+
+from CondCore.DBCommon.CondDBSetup_cfi import *
+import os
+process.jer = cms.ESSource("PoolDBESSource",
+        CondDBSetup,
+        toGet = cms.VPSet(
+            # Resolution
+            cms.PSet(
+                record = cms.string('JetResolutionRcd'),
+                tag    = cms.string('JR_Fall15_25nsV2_MC_PtResolution_AK4PFchs'),
+                label  = cms.untracked.string('AK4PFchs_pt')
+                ),
+
+            # Scale factors
+            cms.PSet(
+                record = cms.string('JetResolutionScaleFactorRcd'),
+                tag    = cms.string('JR_Fall15_25nsV2_MC_SF_AK4PFchs'),
+                label  = cms.untracked.string('AK4PFchs')
+                ),
+            ),
+        connect = cms.string('sqlite:Fall15_25nsV2_MC.db')
+        )
+
+process.es_prefer_jer = cms.ESPrefer('PoolDBESSource', 'jer')
 
 
 process.pseudoTop = cms.EDProducer("PseudoTopProducer",
@@ -183,6 +213,8 @@ process.p = cms.Path(
 # +process.goodOfflinePrimaryVertices 
 #+process.kt6PFJets
 process.pseudoTop
+#+process.JetResolutionESProducer_AK4PFchs
+#+process.JetResolutionESProducer_SF_AK4PFchs 
 + process.tupel 
 )
 
