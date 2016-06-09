@@ -18,7 +18,7 @@ from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 if runOnData:
 	process.GlobalTag = GlobalTag(process.GlobalTag, '76X_dataRun2_16Dec2015_v0') #for 25 ns data
 else: 
-	process.GlobalTag = GlobalTag(process.GlobalTag, '76X_mcRun2_asymptotic_v12') #for 25ns mc
+	process.GlobalTag = GlobalTag(process.GlobalTag, '76X_mcRun2_asymptotic_RunIIFall15DR76_v1') #for 25ns mc
 
 #process.load('Configuration.StandardSequences.Services_cff')
 #process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
@@ -85,13 +85,13 @@ updateJetCollection(
    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
 )
 
-from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+#from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 
 #default configuration for miniAOD reprocessing, change the isData flag to run on data
 #for a full met computation, remove the pfCandColl input
-runMetCorAndUncFromMiniAOD(process,
-                           isData=runOnData,
-                           )
+#runMetCorAndUncFromMiniAOD(process,
+#                           isData=runOnData,
+#                           )
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("JetMETCorrections.Modules.JetResolutionESProducer_cfi")
@@ -235,9 +235,10 @@ process.options.allowUnscheduled = cms.untracked.bool(True)
 process.out = cms.OutputModule("PoolOutputModule",
     fileName = cms.untracked.string('test.root'),
 #    outputCommands = cms.untracked.vstring(['drop *','keep patJets_patJets_*_*','keep *_*_*_PAT','keep recoTracks_unp*_*_*','keep recoVertexs_unp*_*_*'])
-    outputCommands = cms.untracked.vstring(['drop *'])
+#    outputCommands = cms.untracked.vstring(['drop *'])
+outputCommands = cms.untracked.vstring(['drop *', 'keep *_slimmedMETs*_*_*'])
 )
-#process.endpath= cms.EndPath(process.out)
+process.endpath= cms.EndPath(process.out)
 
 
 #from PhysicsTools.PatAlgos.tools.trigTools import *

@@ -84,13 +84,21 @@ updateJetCollection(
    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute','L2L3Residual']), 'None')  # Do not forget 'L2L3Residual' on data!
 )
 
-from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+#from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 
 #default configuration for miniAOD reprocessing, change the isData flag to run on data
 #for a full met computation, remove the pfCandColl input
-runMetCorAndUncFromMiniAOD(process,
-                           isData=runOnData,
-                           )
+#runMetCorAndUncFromMiniAOD(process,
+#                           isData=runOnData,
+#                           )
+
+#if runOnData:
+#    process.patPFMetT1T2Corr.jetCorrLabelRes = cms.InputTag("L3Absolute")
+#    process.patPFMetT1T2SmearCorr.jetCorrLabelRes = cms.InputTag("L3Absolute")
+#    process.patPFMetT2Corr.jetCorrLabelRes = cms.InputTag("L3Absolute")
+#    process.patPFMetT2SmearCorr.jetCorrLabelRes = cms.InputTag("L3Absolute")
+#    process.shiftedPatJetEnDown.jetCorrLabelUpToL3Res = cms.InputTag("ak4PFCHSL1FastL2L3Corrector")
+#    process.shiftedPatJetEnUp.jetCorrLabelUpToL3Res = cms.InputTag("ak4PFCHSL1FastL2L3Corrector")
 
 #process.pseudoTop = cms.EDProducer("PseudoTopProducer",
 #    finalStates = cms.InputTag("packedGenParticles"),
