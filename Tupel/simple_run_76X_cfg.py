@@ -85,6 +85,13 @@ updateJetCollection(
    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
 )
 
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+
+#default configuration for miniAOD reprocessing, change the isData flag to run on data
+#for a full met computation, remove the pfCandColl input
+runMetCorAndUncFromMiniAOD(process,
+                           isData=runOnData,
+                           )
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load("JetMETCorrections.Modules.JetResolutionESProducer_cfi")
@@ -187,7 +194,7 @@ process.tupel = cms.EDAnalyzer("Tupel",
   CalojetLabel = cms.InputTag('slimmedJets'), #same collection now BB 
 #  jecunctable = cms.string(jecunctable_),
   #metSource = cms.VInputTag("slimmedMETs","slimmedMETs","slimmedMETs","slimmedMETs"), #no MET corr yet
-  metSource = cms.VInputTag("slimmedMETs","slimmedMETsPuppi"),
+  metSource = cms.VInputTag("slimmedMETs_RERUN","slimmedMETs","slimmedMETsPuppi"),
   lheSource=cms.InputTag('source')
 
 )
