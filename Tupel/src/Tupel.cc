@@ -30,6 +30,7 @@
 #include "DataFormats/Math/interface/deltaR.h"
 #include "FWCore/Common/interface/TriggerNames.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
+#include "DataFormats/Common/interface/ValueMap.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "PhysicsTools/PatUtils/interface/TriggerHelper.h"
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
@@ -185,6 +186,9 @@ private:
 
   void processGenJets(const edm::Event& iEvent);
 
+  //Modified by Clement Leloup
+  void processGenFatJets(const edm::Event& iEvent);
+
   void processPdfInfo(const edm::Event& iEvent);
 
   void processTrigger(const edm::Event& iEvent);
@@ -195,7 +199,13 @@ private:
 
   void processElectrons();
 
+  // Modified by Clement Leloup
+  void processTaus();
+
   void processJets();
+
+  //Modified by Clement Leloup
+  void processFatJets();
 
   void processPhotons(const edm::Event& iEvent, const edm::EventSetup& iSetup);
 
@@ -222,17 +232,25 @@ private:
   std::string muonMatch_;
   std::string muonMatch2_;
 
-
-  edm::EDGetTokenT<std::vector<pat::Electron> > elecToken_;  
+  edm::EDGetTokenT<std::vector<pat::Electron> > elecToken_;
 
   edm::EDGetTokenT<std::vector<pat::Muon> > muonToken_;
 
-  edm::EDGetTokenT<reco::ConversionCollection> conversionsToken_; 
+  // Modified by Clement Leloup
+  edm::EDGetTokenT<std::vector<pat::Tau> > tauToken_;  
+
+  edm::EDGetTokenT<reco::ConversionCollection> conversionsToken_;
 
   edm::EDGetTokenT<edm::View<pat::Jet> > jetToken_;
 
+  //Modified by Clement Leloup
+  std::string fatJetSw_;
+
+  //Modified by Clement Leloup
+  edm::EDGetTokenT<edm::View<pat::Jet> > fatJetToken_;
+
   std::string photonSw_;
-  edm::EDGetTokenT<std::vector<pat::Photon> > photonToken_; 
+  edm::EDGetTokenT<std::vector<pat::Photon> > photonToken_;
 
   std::string candidateSw_;
   edm::EDGetTokenT<std::vector<pat::PackedCandidate> > candidateToken_; 
@@ -252,6 +270,9 @@ private:
   edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticleToken_;  
 
   edm::EDGetTokenT<std::vector<reco::GenJet> > gjetToken_;
+
+  //Modified by Clement Leloup
+  edm::EDGetTokenT<std::vector<reco::GenJet> > gfatJetToken_;
 
   edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puToken_;
 
@@ -422,6 +443,24 @@ private:
   std::auto_ptr<std::vector<float> > GJetAk04MatchedPartonID_;
   std::auto_ptr<std::vector<float> > GJetAk04MatchedPartonDR_;
 
+  //Modified by Clement Leloup
+  //Gen Fat Jets
+  std::auto_ptr<std::vector<float> > GJetAk08Pt_;
+  std::auto_ptr<std::vector<float> > GJetAk08Eta_;
+  std::auto_ptr<std::vector<float> > GJetAk08Phi_;
+  std::auto_ptr<std::vector<float> > GJetAk08E_;
+  std::auto_ptr<std::vector<float> > GJetAk08Id_;
+  std::auto_ptr<std::vector<float> > GJetAk08PuId_;
+  std::auto_ptr<std::vector<float> > GJetAk08ChFrac_;
+  std::auto_ptr<std::vector<int> >   GJetAk08ConstCnt_;
+  std::auto_ptr<std::vector<int> >   GJetAk08ConstId_;
+  std::auto_ptr<std::vector<float> > GJetAk08ConstPt_;
+  std::auto_ptr<std::vector<float> > GJetAk08ConstEta_;
+  std::auto_ptr<std::vector<float> > GJetAk08ConstPhi_;
+  std::auto_ptr<std::vector<float> > GJetAk08ConstE_;
+  std::auto_ptr<std::vector<float> > GJetAk08MatchedPartonID_;
+  std::auto_ptr<std::vector<float> > GJetAk08MatchedPartonDR_;
+
   //Exta generator information
   std::auto_ptr<std::vector<int> >   GPdfId1_;
   std::auto_ptr<std::vector<int> >   GPdfId2_;
@@ -502,6 +541,22 @@ private:
   std::auto_ptr<std::vector<float> >    ElDr03EcalRecHitSumEt_;
   std::auto_ptr<std::vector<float> >    ElDr03HcalTowerSumEt_;
 
+  //Modified by Clement Leloup
+  // Taus
+  std::auto_ptr<std::vector<float> > 	TauPt_;
+  std::auto_ptr<std::vector<float> > 	TauEta_;
+  std::auto_ptr<std::vector<float> > 	TauPhi_;
+  std::auto_ptr<std::vector<float> > 	TauE_;
+  std::auto_ptr<std::vector<float> > 	TauCh_;
+  std::auto_ptr<std::vector<unsigned> > TauDecayModeFinding_;
+  std::auto_ptr<std::vector<float> >    TauCombinedIsolationDeltaBetaCorrRaw3Hits_;
+  std::auto_ptr<std::vector<unsigned> > TauDiscMuonLoose_;
+  std::auto_ptr<std::vector<unsigned> > TauDiscMuonTight_;
+  std::auto_ptr<std::vector<unsigned> > TauDiscElVLoose_;
+  std::auto_ptr<std::vector<unsigned> > TauDiscElLoose_;
+  std::auto_ptr<std::vector<unsigned> > TauDiscElVTight_;
+  std::auto_ptr<std::vector<unsigned> > TauDiscElTight_;
+
   //PF particle candidates
   std::auto_ptr<std::vector<float> > PfCandPt_;
   std::auto_ptr<std::vector<float> > PfCandEta_;
@@ -574,11 +629,12 @@ private:
   std::auto_ptr<std::vector<unsigned> > PhotId_;
   std::auto_ptr<std::vector<float> >    PhotHoE_;
   std::auto_ptr<std::vector<bool> >     PhotHasPixelSeed_;
+  std::auto_ptr<std::vector<int> >      PhotPassElVeto_;
 
   //photon timing
   std::auto_ptr<std::vector<float> > PhotTime_;
 
-  ///PF Jets
+  //PF Jets
   std::auto_ptr<std::vector<float> > JetAk04Pt_;
   std::auto_ptr<std::vector<float> > JetAk04Eta_;
   std::auto_ptr<std::vector<float> > JetAk04Phi_;
@@ -622,6 +678,53 @@ private:
   std::auto_ptr<std::vector<float> > JetAk04ConstE_;
   std::auto_ptr<std::vector<int> >   JetAk04GenJet_;
 
+  //Modified by Clement Leloup
+  //PF ak08 Jets
+  std::auto_ptr<std::vector<float> > JetAk08Pt_;
+  std::auto_ptr<std::vector<float> > JetAk08Eta_;
+  std::auto_ptr<std::vector<float> > JetAk08Phi_;
+  std::auto_ptr<std::vector<float> > JetAk08E_;
+  std::auto_ptr<std::vector<float> > JetAk08Id_;
+  std::auto_ptr<std::vector<float> > JetAk08RawPt_;
+  std::auto_ptr<std::vector<float> > JetAk08RawE_;
+  std::auto_ptr<std::vector<float> > JetAk08HfHadE_;
+  std::auto_ptr<std::vector<float> > JetAk08HfEmE_;
+  std::auto_ptr<std::vector<float> > JetAk08ChHadFrac_;
+  std::auto_ptr<std::vector<float> > JetAk08NeutralHadAndHfFrac_;
+  std::auto_ptr<std::vector<float> > JetAk08ChEmFrac_;
+  std::auto_ptr<std::vector<float> > JetAk08NeutralEmFrac_;
+  std::auto_ptr<std::vector<float> > JetAk08ChMult_;
+  std::auto_ptr<std::vector<float> > JetAk08ConstCnt_;
+  std::auto_ptr<std::vector<float> > JetAk08BTagCsv_;
+  std::auto_ptr<std::vector<float> > JetAk08BTagCsvV1_;
+  std::auto_ptr<std::vector<float> > JetAk08BTagCsvV2_;
+  std::auto_ptr<std::vector<float> > JetAk08BTagCsvSLV1_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscCisvV2_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscJp_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscBjp_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscTche_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscTchp_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscSsvhe_;
+  std::auto_ptr<std::vector<float> > JetAk08BDiscSsvhp_;
+  std::auto_ptr<std::vector<float> > JetAk08PartFlav_;
+  std::auto_ptr<std::vector<float> > JetAk08HadFlav_;
+  std::auto_ptr<std::vector<float> > JetAk08JecUncUp_;
+  std::auto_ptr<std::vector<float> > JetAk08JecUncDwn_;
+  std::auto_ptr<std::vector<int> >   JetAk08ConstId_;
+  std::auto_ptr<std::vector<float> > JetAk08ConstPt_;
+  std::auto_ptr<std::vector<float> > JetAk08ConstEta_;
+  std::auto_ptr<std::vector<float> > JetAk08ConstPhi_;
+  std::auto_ptr<std::vector<float> > JetAk08ConstE_;
+  std::auto_ptr<std::vector<int> >   JetAk08GenJet_;
+  std::auto_ptr<std::vector<float> > JetAk08PrunedMass_;
+  std::auto_ptr<std::vector<float> > JetAk08FilteredMass_;
+  std::auto_ptr<std::vector<float> > JetAk08SoftDropMass_;
+  std::auto_ptr<std::vector<float> > JetAk08TrimmedMass_;
+  std::auto_ptr<std::vector<float> > JetAk08Tau1_;
+  std::auto_ptr<std::vector<float> > JetAk08Tau2_;
+  std::auto_ptr<std::vector<float> > JetAk08Tau3_;
+  
+
   //bits
   unsigned kMuIdLoose_;
   unsigned kMuIdCustom_;
@@ -640,11 +743,25 @@ private:
   const std::vector<pat::Muon> * muon;
   edm::Handle<std::vector<pat::Electron> > electrons;
   const std::vector<pat::Electron>  *electron;
+
   edm::Handle<reco::ConversionCollection> conversions_h;
   edm::Handle<std::vector<pat::Tau> > taus;
+
+  //Modified by Clement Leloup
+  const std::vector<pat::Tau>  *tau;  
+
   edm::Handle<edm::View<pat::Jet> > jets;
+
+  //Modified by Clement Leloup
+  edm::Handle<edm::View<pat::Jet> > hFatJets;
+
   const edm::View<pat::Jet> * jettt;
+
+  //Modified by Clement Leloup
+  const edm::View<pat::Jet> * fatjettt;
+
   const std::vector<pat::Photon>  *photons;
+
   const std::vector<pat::PackedCandidate> *candidates;
   edm::Handle<std::vector<reco::Vertex> >  pvHandle;
   edm ::Handle<reco::VertexCollection> vtx_h;
@@ -654,6 +771,9 @@ private:
   reco::BeamSpot beamSpot;
   edm::Handle<double> rho;
   edm::Handle<reco::GenJetCollection> genjetColl_;
+
+  //Modified by Clement Leloup
+  edm::Handle<reco::GenJetCollection> genfatJetColl_;
   ///
 
   std::vector<std::vector<int> > trigAccept_;
@@ -661,6 +781,7 @@ private:
 
   enum { candidatesOff = 0, candidatesOn, candidatesWithTrack } candidateMode_;
   enum { photonsOff = 0, photonsOn } photonMode_;
+  enum { fatJetOff = 0, fatJetOn } fatJetMode_;
   //  std::vector<bool> elIdEnabled_;
   
   bool trigStatValid_;
@@ -681,13 +802,24 @@ private:
 //using namespace reco;
 
 Tupel::Tupel(const edm::ParameterSet& iConfig):
+
   elecMatch_( iConfig.getParameter< std::string >( "elecMatch" ) ),
   muonMatch_( iConfig.getParameter< std::string >( "muonMatch" ) ),
   muonMatch2_( iConfig.getParameter< std::string >( "muonMatch2" ) ),
+
   elecToken_(consumes<std::vector<pat::Electron> >(iConfig.getUntrackedParameter<edm::InputTag>("electronSrc"))),
+
   muonToken_(consumes<std::vector<pat::Muon> >(iConfig.getUntrackedParameter<edm::InputTag>("muonSrc"))),
+
+  //Modified by Clement Leloup
+  tauToken_(consumes<std::vector<pat::Tau> >(iConfig.getUntrackedParameter<edm::InputTag>("tauSrc"))),  
+
   conversionsToken_(consumes<reco::ConversionCollection>(edm::InputTag("reducedEgamma","reducedConversions"))),
   jetToken_(consumes<edm::View<pat::Jet> >(iConfig.getUntrackedParameter<edm::InputTag>("jetSrc"))),
+
+  //Modified by Clement Leloup
+  fatJetSw_(iConfig.getUntrackedParameter<std::string>("fatJetSw")),
+
   photonSw_(iConfig.getUntrackedParameter<std::string>("photonSw")),
   candidateSw_(iConfig.getUntrackedParameter<std::string>("candidateSw")),
   vertexToken_(consumes<std::vector<reco::Vertex> >(iConfig.getUntrackedParameter<edm::InputTag>("pvSrc"))),
@@ -733,6 +865,17 @@ Tupel::Tupel(const edm::ParameterSet& iConfig):
     candidateMode_ = candidatesOff;
   } else{
     throw cms::Exception(TString::Format("Invalid value (%s) for candidateSw parameter. Valid values are: all, withTrack, and off.", candidateSw_.c_str()));
+  }
+
+  //Modified by Clement Leloup
+  if(fatJetSw_==std::string("on")){
+    fatJetToken_ = consumes<edm::View<pat::Jet> >(iConfig.getUntrackedParameter<edm::InputTag>("fatJetSrc"));
+    gfatJetToken_ = consumes<std::vector<reco::GenJet> >(iConfig.getUntrackedParameter<edm::InputTag>("gfatJetSrc"));
+    fatJetMode_ = fatJetOn;
+  } else if(fatJetSw_ == std::string("off")){
+    fatJetMode_ = fatJetOff;
+  } else{
+    throw cms::Exception(TString::Format("Invalid value (%s) for useFatJet parameter. Valid values are: on and off.", fatJetSw_.c_str()));
   }
 }
 
@@ -1016,13 +1159,26 @@ void Tupel::readEvent(const edm::Event& iEvent){
   iEvent.getByToken(elecToken_,electrons);
   electron = electrons.failedToGet () ? 0 :  &*electrons;
 
+  //Modified by Clement Leloup
+  iEvent.getByToken(tauToken_, taus);
+  tau = taus.failedToGet () ? 0 : &*taus;
+
   //get photon conversion collection
   iEvent.getByToken(conversionsToken_, conversions_h);
 
   // get jet collection
   iEvent.getByToken(jetToken_, jets);  
   jettt = jets.failedToGet () ? 0 : &*jets ;
-  
+
+  //Modified by Clement Leloup
+  // get fat jet collection
+  if(fatJetMode_){
+    iEvent.getByToken(fatJetToken_, hFatJets);  
+    fatjettt = hFatJets.failedToGet () ? 0 : &*hFatJets ;
+  } else{
+    fatjettt = 0;
+  }
+
   edm::Handle<edm::ValueMap<StoredPileupJetIdentifier> > puJetIdHandle;
   iEvent.getByToken(puJetIdsToken_, puJetIdHandle);
   puJetIds_ = puJetIdHandle.failedToGet() ? 0 : &* puJetIdHandle;
@@ -1047,6 +1203,12 @@ void Tupel::readEvent(const edm::Event& iEvent){
 
   //get Gen jets
   iEvent.getByToken(gjetToken_, genjetColl_);
+
+  //Modified by Clement Leloup
+  //get Gen fat jets
+  if(fatJetMode_){
+    iEvent.getByToken(gfatJetToken_, genfatJetColl_);
+  }
 
   //get primary vertex collection
   iEvent.getByToken(vertexToken_, pvHandle);
@@ -1323,6 +1485,65 @@ void Tupel::processGenJets(const edm::Event& iEvent){
 
       GJetAk04MatchedPartonID_->push_back(mindr_id);
       GJetAk04MatchedPartonDR_->push_back(mindr);
+
+    }
+  }
+}
+
+//Modified by Clement Leloup
+void Tupel::processGenFatJets(const edm::Event& iEvent){
+
+  //matrix element info
+  edm::Handle<LHEEventProduct> lheH;
+  iEvent.getByToken(lheEventToken_, lheH);
+  if(lheH.isValid()) *GNup_ = lheH->hepeup().NUP;
+    //*GNup_ = lheH->hepeup().NUP;
+    //cout << " lheH.isValid() " << lheH.isValid() << " GNup_ " << *GNup_ << endl;
+    
+  if(!genfatJetColl_.failedToGet()){
+    const reco::GenJetCollection & genfatjet = *genfatJetColl_;
+    for(unsigned int k=0; k < genfatjet.size(); ++k){
+      GJetAk08Pt_->push_back(genfatjet[k].pt());
+      GJetAk08Eta_->push_back(genfatjet[k].eta());
+      GJetAk08Phi_->push_back(genfatjet[k].phi());
+      GJetAk08E_->push_back(genfatjet[k].energy());
+      GJetAk08ConstCnt_->push_back(genfatjet[k].numberOfDaughters());
+      /*if(genjet[k].numberOfDaughters()>0){
+	for(unsigned int idx =0; idx<genjet[k].numberOfDaughters();idx++){
+	//cout<<genjet[k].numberOfDaughters()<<" GEN AHMEEEEET "<<idx<<"  "<<genjet[k].daughter(idx)->pdgId()<<"  "<<endl;
+	GJetAk04ConstId->push_back(genjet[k].daughter(idx)->pdgId());
+	GJetAk04ConstPt->push_back(genjet[k].daughter(idx)->pt());
+	GJetAk04ConstEta->push_back(genjet[k].daughter(idx)->eta());
+	GJetAk04ConstPhi->push_back(genjet[k].daughter(idx)->phi());
+	GJetAk04ConstE->push_back(genjet[k].daughter(idx)->energy();)
+	}
+	}*/
+      
+      TLorentzVector genfatjetlv;
+      genfatjetlv.SetPtEtaPhiE( genfatjet[k].pt(), genfatjet[k].eta(), genfatjet[k].phi(), genfatjet[k].energy());
+      float mindr = 100.;
+      int mindr_id =0;
+          
+      const std::vector<reco::GenParticle> & gen = *genParticles_h;
+      for (size_t i=0; i<genParticles->size(); ++i){
+
+	int id = gen[i].pdgId();
+	if( !( id == 21 || abs(id) < 6 )  ) continue; // only consider quarks or gluons
+
+	if( gen[i].pt() < 0.0000001 ) continue; // prevent from using 0 pT  particles (DeltaR fails)
+
+	TLorentzVector genobj(0,0,0,0);
+	genobj.SetPtEtaPhiE(gen[i].pt(),gen[i].eta(),gen[i].phi(),gen[i].energy());
+	float dr = genfatjetlv.DeltaR( genobj );
+
+	if( dr < mindr ) {
+	  mindr = dr;
+	  mindr_id = gen[i].pdgId();
+	}
+      }
+
+      GJetAk08MatchedPartonID_->push_back(mindr_id);
+      GJetAk08MatchedPartonDR_->push_back(mindr);
 
     }
   }
@@ -1645,8 +1866,7 @@ void Tupel::processElectrons(){
     }
 
 
-
-    //     expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();//MISSING!!
+    //expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();//MISSING!!
     passConversionVeto_ = false;
     if( beamSpotHandle.isValid() && conversions_h.isValid()) {
       passConversionVeto_ = !ConversionTools::hasMatchedConversion(el,conversions_h,
@@ -1734,6 +1954,30 @@ void Tupel::processElectrons(){
     }
     ElMvaPresel_->push_back(myTrigPresel);
     ElecFill++;
+  }
+}
+
+//Modified by Clement Leloup
+void Tupel::processTaus(){
+
+  std::auto_ptr<std::vector<pat::Tau> > tauColl( new std::vector<pat::Tau> (*taus) );
+  for (unsigned int j=0; j < tauColl->size();++j){
+    pat::Tau & ta = (*tauColl)[j];
+
+    TauPt_->push_back(ta.pt());
+    TauEta_->push_back(ta.eta());
+    TauPhi_->push_back(ta.phi());
+    TauE_->push_back(ta.energy());
+    TauCh_->push_back(ta.charge());
+    TauDecayModeFinding_->push_back(ta.tauID("decayModeFinding"));
+    TauCombinedIsolationDeltaBetaCorrRaw3Hits_->push_back(ta.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits"));
+    TauDiscMuonLoose_->push_back(ta.tauID("againstMuonLoose3"));
+    TauDiscMuonTight_->push_back(ta.tauID("againstMuonTight3"));
+    TauDiscElVLoose_->push_back(ta.tauID("againstElectronVLooseMVA6"));
+    TauDiscElLoose_->push_back(ta.tauID("againstElectronLooseMVA6"));
+    TauDiscElVTight_->push_back(ta.tauID("againstElectronVTightMVA6"));
+    TauDiscElTight_->push_back(ta.tauID("againstElectronTightMVA6"));
+
   }
 }
 
@@ -1873,6 +2117,142 @@ void Tupel::processJets(){
   }
 }
 
+//Modified by Clement Leloup
+void Tupel::processFatJets(){
+
+  //double PFjetFill=0;
+  double chf = 0;
+  double nhf = 0;
+  double cemf = 0;
+  double nemf = 0;
+  double cmult = 0;
+  double nconst = 0;
+
+  for ( unsigned int i=0; i<hFatJets->size(); ++i ) {
+    const pat::Jet & fatjet = hFatJets->at(i);
+
+    if(i==0 && analyzedEventCnt_== 1){
+      std::cout << "Jet user float list:\n";
+      for(unsigned j = 0; j < fatjet.userFloatNames().size(); ++j){
+	std::cout << fatjet.userFloatNames()[j] << "\n";
+      }
+      std::cout << std::endl;
+    }
+
+    chf = fatjet.chargedHadronEnergyFraction();
+    nhf = (fatjet.neutralHadronEnergy()+fatjet.HFHadronEnergy())/fatjet.correctedJet(0).energy();
+    cemf = fatjet.chargedEmEnergyFraction();
+    nemf = fatjet.neutralEmEnergyFraction();
+    cmult = fatjet.chargedMultiplicity();
+    nconst = fatjet.numberOfDaughters();
+
+    JetAk08BTagCsv_->push_back(fatjet.bDiscriminator("combinedSecondaryVertexBJetTags"));
+    JetAk08BTagCsvV1_->push_back(fatjet.bDiscriminator("combinedSecondaryVertexV1BJetTags"));
+
+    JetAk08BTagCsvSLV1_->push_back(fatjet.bDiscriminator("combinedSecondaryVertexSoftPFLeptonV1BJetTags"));
+    JetAk08BDiscCisvV2_->push_back(fatjet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
+
+    JetAk08BDiscJp_->push_back(fatjet.bDiscriminator("pfJetProbabilityBJetTags"));
+    JetAk08BDiscBjp_->push_back(fatjet.bDiscriminator("pfJetBProbabilityBJetTags"));
+    JetAk08BDiscTche_->push_back(fatjet.bDiscriminator("pfTrackCountingHighEffBJetTags"));
+    
+    JetAk08BDiscTchp_->push_back(fatjet.bDiscriminator("pfTrackCountingHighPurBJetTags"));
+    JetAk08BDiscSsvhe_->push_back(fatjet.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags"));
+    JetAk08BDiscSsvhp_->push_back(fatjet.bDiscriminator("pfSimpleSecondaryVertexHighPurBJetTags"));
+    JetAk08PartFlav_->push_back(fatjet.partonFlavour());
+    JetAk08HadFlav_->push_back(fatjet.hadronFlavour());
+
+    //cout << " JetAk04HadFlav_ " << jet.hadronFlavour() << " " << jet.partonFlavour() << endl;
+    //cout << " jet.pt() " << jet.pt() << " corr " << jet.pt()/jet.correctedJet(0).pt() << " jet.correctedJet(0).pt() " << jet.correctedJet(0).pt() << " " << jet.eta() << endl;
+      
+    JetAk08E_->push_back(fatjet.energy());
+    JetAk08Pt_->push_back(fatjet.pt());
+    JetAk08Eta_->push_back(fatjet.eta());
+    JetAk08Phi_->push_back(fatjet.phi());
+    JetAk08RawPt_->push_back(fatjet.correctedJet(0).pt());
+    JetAk08RawE_->push_back(fatjet.correctedJet(0).energy());
+    JetAk08HfHadE_->push_back(fatjet.HFHadronEnergy());
+    JetAk08HfEmE_->push_back(fatjet.HFEMEnergy());
+    JetAk08ChHadFrac_->push_back(chf);
+    JetAk08NeutralHadAndHfFrac_->push_back(nhf);
+    JetAk08ChEmFrac_->push_back(cemf);
+    JetAk08NeutralEmFrac_->push_back(nemf);
+    JetAk08ChMult_->push_back(cmult);
+    JetAk08ConstCnt_->push_back(nconst);
+
+    for(unsigned int idx =0; idx<fatjet.numberOfDaughters();idx++){
+      //cout<<jet.numberOfDaughters()<<" RECO AHMEEEEET "<<idx<<"  "<<jet.daughter(idx)->pdgId()<<"  "<<endl;
+      JetAk08ConstId_->push_back(fatjet.daughter(idx)->pdgId());
+      JetAk08ConstPt_->push_back(fatjet.daughter(idx)->pt());
+      JetAk08ConstEta_->push_back(fatjet.daughter(idx)->eta());
+      JetAk08ConstPhi_->push_back(fatjet.daughter(idx)->phi());
+      JetAk08ConstE_->push_back(fatjet.daughter(idx)->energy());
+    }
+
+    //TODO: insert correct value
+    double unc = 1.;
+    JetAk08JecUncUp_->push_back(unc);
+    JetAk08JecUncDwn_->push_back(unc);
+    double tempJetID=0;
+    if( abs(fatjet.eta())<2.4){
+
+      if(chf>0 && nhf<0.99 && cmult>0.0 && cemf<0.99 && nemf<0.99 && nconst>1) tempJetID=1;
+      if((chf>0)&&(nhf<0.95)&&(cmult>0.0)&&(cemf<0.99)&&(nemf<0.95)&&(nconst>1)) tempJetID=2;
+      if((chf>0)&&(nhf<0.9)&&(cmult>0.0)&&(cemf<0.99)&&(nemf<0.9)&&(nconst>1)) tempJetID=3;
+    }
+    if( abs(fatjet.eta())>=2.4){
+      if ((nhf<0.99)&&(nemf<0.99)&&(nconst>1))tempJetID=1;
+      if ((nhf<0.95)&&(nemf<0.95)&&(nconst>1))tempJetID=2;
+      if ((nhf<0.9)&&(nemf<0.9)&&(nconst>1))tempJetID=3;
+    }
+
+    JetAk08Id_->push_back(tempJetID);//ala
+    //PFjetFill++;
+
+    if(!*EvtIsRealData_){
+      int genFatJetIdx = -1; //code for not matched jets
+      if (fatjet.genJet()){
+	//	genJetIdx = jet.genJetFwdRef().key();
+	for(genFatJetIdx = 0; (unsigned) genFatJetIdx < genfatJetColl_->size();++genFatJetIdx){
+	  if(&(*genfatJetColl_)[genFatJetIdx] == fatjet.genJet()) break;
+	}
+	genFatJetIdx = fatjet.genJetFwdRef().backRef().key();
+	assert(fatjet.genJet() == &(*genfatJetColl_)[genFatJetIdx]);
+	//	if((unsigned)genJetIdx == genjetColl_->size()){
+	//	  genJetIdx = -2;
+	//	  std::cerr << "Matched gen jet not found!\n";
+	//	} else{
+	//	  double dphi = fabs(jet.phi()-(*genjetColl_)[genJetIdx].phi());
+	//	  if(dphi > pi ) dphi = 2*pi - dphi;
+	//	  std::cout << "Jet matching check: R = "
+	//		    << sqrt(std::pow(jet.eta()-(*genjetColl_)[genJetIdx].eta(),2)
+	//			    + std::pow(dphi,2))
+	//		    << "\tPt ratio = "
+	//		    << jet.pt() / (*genjetColl_)[genJetIdx].pt()
+	//		    << "\t" << jet.pt() / jet.genJet()->pt()
+	//		    << "\t key: " << genJetIdx
+	//		    << "\t coll size: " <<  genjetColl_->size()
+	//		    << "\t" << hex << jet.genJet()
+	//		    << "\t" << &((*genjetColl_)[genJetIdx]) << dec
+	//		    << "\tIndices: " << genJetIdx << ", " << jet.genJetFwdRef().backRef().key() << ", " << jet.genJetFwdRef().ref().key() << ", " << jet.genJetFwdRef().key()
+	//		    << "\n";
+	//}
+      }
+      JetAk08GenJet_->push_back(genFatJetIdx);
+    }
+
+    JetAk08PrunedMass_->push_back(fatjet.userFloat("ak8PFJetsCHSPrunedMass"));
+    JetAk08FilteredMass_->push_back(fatjet.userFloat("ak8PFJetsCHSFilteredMass"));
+    JetAk08SoftDropMass_->push_back(fatjet.userFloat("ak8PFJetsCHSSoftDropMass"));
+    JetAk08TrimmedMass_->push_back(fatjet.userFloat("ak8PFJetsCHSTrimmedMass"));
+    JetAk08Tau1_->push_back(fatjet.userFloat("NjettinessAK8:tau1"));
+    JetAk08Tau2_->push_back(fatjet.userFloat("NjettinessAK8:tau2"));
+    JetAk08Tau3_->push_back(fatjet.userFloat("NjettinessAK8:tau3"));
+
+  }
+}
+
+
 void Tupel::processPfCands()
 {
   for (unsigned j = 0; j < candidates->size(); ++j){
@@ -1915,10 +2295,15 @@ void Tupel::processPfCands()
 void Tupel::processPhotons(const edm::Event& iEvent, const edm::EventSetup& iSetup){
 
   EcalClusterLazyTools lazyTool(iEvent, iSetup, ecalHitEBToken_, ecalHitEEToken_, ecalHitESToken_ );
+  std::auto_ptr<std::vector<pat::Electron> > electronColl( new std::vector<pat::Electron> (*electrons) );
 
   for (unsigned j = 0; j < photons->size(); ++j){
+
     const pat::Photon& photon = (*photons)[j];
+
     const reco::CaloClusterPtr  seed_clu = photon.superCluster()->seed();
+
+    int passElectronVeto_;
 
     //photon momentum
     PhotPt_->push_back(photon.pt());
@@ -1980,8 +2365,31 @@ void Tupel::processPhotons(const edm::Event& iEvent, const edm::EventSetup& iSet
     if(photon.photonID(std::string("PhotonCutBasedIDLoose"))) photonId |= 1;
     if(photon.photonID(std::string("PhotonCutBasedIDTight"))) photonId |= 4;
     PhotId_->push_back(photonId);
+
     PhotHoE_->push_back(photon.hadronicOverEm());
     PhotHasPixelSeed_->push_back(photon.hasPixelSeed());
+   
+    //Modified by Clement Leloup
+    passElectronVeto_ = true;
+    if( beamSpotHandle.isValid() && conversions_h.isValid()) {
+      if (!photon.superCluster().isNull()){
+	for (unsigned int j=0; j < electronColl->size();++j){
+	  pat::Electron & el = (*electronColl)[j];
+
+	  if(el.superCluster()!=photon.superCluster()) continue;
+	  //if(el.gsfTrack()->trackerExpectedHitsInner().numberOfHits()>0) continue;
+	  if(el.gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS)>0) continue;
+	  if(ConversionTools::hasMatchedConversion(el, conversions_h, beamSpotHandle->position())) continue;
+
+	  passElectronVeto_ = false;
+	}
+      }
+    }else{
+      printf("\n\nERROR!!! conversions not found!!!\n");
+    }
+
+    PhotPassElVeto_->push_back((int)passElectronVeto_); 
+
   }
 }
 
@@ -2003,6 +2411,12 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     processPu(iEvent);
     if (genParticles) processGenParticles(iEvent);
     processGenJets(iEvent);
+
+    //Modified by Clement Leloup
+    if(fatJetMode_ == fatJetOn){
+      processGenFatJets(iEvent);
+    }
+
     processPdfInfo(iEvent);
   }
 
@@ -2015,8 +2429,15 @@ void Tupel::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
   //electrons B.B.
   if(electron) processElectrons();
 
+  //Modified by Clement Leloup
+  if(tau) processTaus();
+
   //jets
   if(jettt) processJets();
+
+  //Modified by Clement Leloup
+  //fat jets
+  if(fatjettt) processFatJets();
 
   //photons. Ph. G.
   //if(photons) processPhotons(); 
@@ -2185,6 +2606,25 @@ Tupel::beginJob()
   ADD_BRANCH(GJetAk04MatchedPartonID);
   ADD_BRANCH(GJetAk04MatchedPartonDR);
 
+  //Modified by Clement Leloup
+  //Gen Fat Jets
+  if(fatJetMode_ == fatJetOn){
+    treeHelper_->addDescription("GJetAk08", "Generator-level reconstructed with the anti-kt algorithm with distance parameter R = 0.8");
+    ADD_BRANCH(GJetAk08Pt);
+    ADD_BRANCH(GJetAk08Eta);
+    ADD_BRANCH(GJetAk08Phi);
+    ADD_BRANCH(GJetAk08E);
+    ADD_BRANCH(GJetAk08ChFrac);
+    ADD_BRANCH(GJetAk08ConstCnt);
+    ADD_BRANCH(GJetAk08ConstId);
+    ADD_BRANCH(GJetAk08ConstPt);
+    ADD_BRANCH(GJetAk08ConstEta);
+    ADD_BRANCH(GJetAk08ConstPhi);
+    ADD_BRANCH(GJetAk08ConstE);
+    ADD_BRANCH(GJetAk08MatchedPartonID);
+    ADD_BRANCH(GJetAk08MatchedPartonDR);
+  }
+
   //Exta generator information
   ADD_BRANCH_D(GPdfId1, "PDF Id for beam 1");
   ADD_BRANCH_D(GPdfId2, "PDF Id for beam 2");
@@ -2264,6 +2704,22 @@ Tupel::beginJob()
   ADD_BRANCH(ElDr03EcalRecHitSumEt);
   ADD_BRANCH(ElDr03HcalTowerSumEt);
 
+  //Modified by Clement Leloup
+  treeHelper_->addDescription("Tau", "PF reconstructed taus");
+  ADD_BRANCH(TauPt);
+  ADD_BRANCH(TauEta);
+  ADD_BRANCH(TauPhi);
+  ADD_BRANCH(TauE);
+  ADD_BRANCH(TauCh);
+  ADD_BRANCH(TauDecayModeFinding);
+  ADD_BRANCH(TauCombinedIsolationDeltaBetaCorrRaw3Hits);
+  ADD_BRANCH(TauDiscMuonLoose);
+  ADD_BRANCH(TauDiscMuonTight);
+  ADD_BRANCH(TauDiscElVLoose);
+  ADD_BRANCH(TauDiscElLoose);
+  ADD_BRANCH(TauDiscElVTight);
+  ADD_BRANCH(TauDiscElTight);
+
   //PF candidates
   if(candidateMode_ != candidatesOff){
     treeHelper_->addDescription("PfCands", "PF particle candidates");
@@ -2339,6 +2795,7 @@ Tupel::beginJob()
     //photon ID
     ADD_BRANCH_D(PhotId, "Photon Id. Field of bits described in BitFields.PhotId");
     ADD_BRANCH_D(PhotHasPixelSeed, "Pixel and tracker based variable to discreminate photons from electrons");
+    ADD_BRANCH_D(PhotPassElVeto, "Conversion safe electron veto");
 
     //photon timing
     //ADD_BRANCH_D(PhotTime, "Photon. Timing from ECAL");
@@ -2389,6 +2846,57 @@ Tupel::beginJob()
   ADD_BRANCH(JetAk04ConstPhi);
   ADD_BRANCH(JetAk04ConstE);
   ADD_BRANCH(JetAk04GenJet);
+
+  //Modified by Clement Leloup
+  //PF Fat Jets
+  if(fatJetMode_ == fatJetOn){
+
+    treeHelper_->addDescription("JetAk08", "Reconstructed jets clustered with the anti-ket algorithm with distance parameter R = 0.8");
+    ADD_BRANCH(JetAk08Pt);
+    ADD_BRANCH(JetAk08Eta);
+    ADD_BRANCH(JetAk08Phi);
+    ADD_BRANCH(JetAk08E);
+    ADD_BRANCH_D(JetAk08Id, "Id to reject fake jets from electronic noice");
+    ADD_BRANCH_D(JetAk08RawPt, "Jet Pt before corrections");
+    ADD_BRANCH_D(JetAk08RawE, "Jet energy before corrections");
+    ADD_BRANCH_D(JetAk08HfHadE, "Jet hadronic energy deposited in HF");
+    ADD_BRANCH_D(JetAk08HfEmE, "Jet electromagnetic energy deposited in HF");
+    ADD_BRANCH(JetAk08ChHadFrac);
+    ADD_BRANCH(JetAk08NeutralHadAndHfFrac);
+    ADD_BRANCH(JetAk08ChEmFrac);
+    ADD_BRANCH(JetAk08NeutralEmFrac);
+    ADD_BRANCH(JetAk08ChMult);
+    ADD_BRANCH(JetAk08ConstCnt);
+
+    treeHelper_->addDescription("JetAk08BTag", "B tagging with different algorithms");
+    ADD_BRANCH_D(JetAk08BTagCsv, "combinedSecondaryVertexBJetTags");
+    ADD_BRANCH_D(JetAk08BTagCsvV1, "combinedSecondaryVertexV1BJetTags");
+    ADD_BRANCH_D(JetAk08BTagCsvSLV1, "combinedSecondaryVertexSoftPFLeptonV1BJetTags");
+    ADD_BRANCH_D(JetAk08BDiscCisvV2, "pfCombinedInclusiveSecondaryVertexV2BJetTags");
+    ADD_BRANCH_D(JetAk08BDiscJp, "pfJetProbabilityBJetTags");
+    ADD_BRANCH_D(JetAk08BDiscBjp, "pfJetBProbabilityBJetTags");
+    ADD_BRANCH_D(JetAk08BDiscTche, "pfTrackCountingHighEffBJetTags");
+    ADD_BRANCH_D(JetAk08BDiscTchp, "pfTrackCountingHighPurBJetTags");
+    ADD_BRANCH_D(JetAk08BDiscSsvhe, "pfSimpleSecondaryVertexHighEffBJetTags");
+    ADD_BRANCH_D(JetAk08BDiscSsvhp, "pfSimpleSecondaryVertexHighPurBJetTags");
+    ADD_BRANCH_D(JetAk08PartFlav, "Quark-based jet flavor.");
+    ADD_BRANCH_D(JetAk08HadFlav, "Hadron-based jet flavor.");
+    ADD_BRANCH(JetAk08JecUncUp);
+    ADD_BRANCH(JetAk08JecUncDwn);
+    ADD_BRANCH(JetAk08ConstId);
+    ADD_BRANCH(JetAk08ConstPt);
+    ADD_BRANCH(JetAk08ConstEta);
+    ADD_BRANCH(JetAk08ConstPhi);
+    ADD_BRANCH(JetAk08ConstE);
+    ADD_BRANCH(JetAk08GenJet);
+    ADD_BRANCH_D(JetAk08PrunedMass, "Pruned Mass of the jet");
+    ADD_BRANCH_D(JetAk08FilteredMass, "Filtered Mass of the jet");
+    ADD_BRANCH_D(JetAk08SoftDropMass, "SoftDrop Mass of the jet");
+    ADD_BRANCH_D(JetAk08TrimmedMass, "Trimmed Mass of the jet");
+    ADD_BRANCH_D(JetAk08Tau1, "1-Subjettiness");
+    ADD_BRANCH_D(JetAk08Tau2, "2-Subjettiness");
+    ADD_BRANCH_D(JetAk08Tau3, "3-Subjettiness");
+  }
 
   defineBitFields();
 

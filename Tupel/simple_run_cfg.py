@@ -21,6 +21,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', '')
 
+
 process.tupel = cms.EDAnalyzer("Tupel",
   triggerEvent = cms.InputTag( "patTriggerEvent" ),
   candidateSw  = cms.untracked.string("off"), #on, off, or withTrack
@@ -29,9 +30,13 @@ process.tupel = cms.EDAnalyzer("Tupel",
   photonSrc    = cms.untracked.InputTag("slimmedPhotons"),
   electronSrc  = cms.untracked.InputTag("slimmedElectrons"),
   muonSrc      = cms.untracked.InputTag("slimmedMuons"),
+  tauSrc       = cms.untracked.InputTag("slimmedTaus"),
   jetSrc       = cms.untracked.InputTag("slimmedJets"),
+  fatJetSw     = cms.untracked.string("on"),
+  fatJetSrc    = cms.untracked.InputTag("slimmedJetsAK8"),
   genSrc       = cms.untracked.InputTag("prunedGenParticles"),
   gjetSrc      = cms.untracked.InputTag('slimmedGenJets'),
+  gfatJetSrc   = cms.untracked.InputTag('slimmedGenJetsAK8'),
   muonMatch    = cms.string( 'muonTriggerMatchHLTMuons' ),
   muonMatch2   = cms.string( 'muonTriggerMatchHLTMuons2' ),
   elecMatch    = cms.string( 'elecTriggerMatchHLTElecs' ),
