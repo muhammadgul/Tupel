@@ -216,6 +216,7 @@ edm::EDGetTokenT<std::vector<PileupSummaryInfo> > PupSrc_;
   std::vector<double> GjPz;
   std::vector<double> GjChargedFraction;
 std::vector<double> GjConstId;
+std::vector<double>GjConstMomId;
 std::vector<double> GjNConst;
 std::vector<double> GjConstPt;
 std::vector<double> GjConstCharge;
@@ -696,6 +697,7 @@ St03NumberMom.clear();
     GjPz.clear();
     GjChargedFraction.clear();
       GjConstId.clear();
+GjConstMomId.clear();
 GjNConst.clear();
       GjConstPt.clear();
 GjConstCharge.clear();
@@ -1373,8 +1375,9 @@ int ngjets=0;
           for(unsigned int idx =0; idx<genjets.at(k)->numberOfDaughters();idx++){
 
           //cout<<genjets.at(k)->eta()<<endl;
-          //cout<<genjets.at(k)->numberOfDaughters()<< "  "<<idx<<"  "<<genjets.at(k)->daughter(idx)->pdgId()<<"  "<<endl;
+          cout<<genjets.at(k)->numberOfDaughters()<< "  "<<idx<<"  "<<genjets.at(k)->daughter(idx)->pdgId()<<"  "<<genjets.at(k)->daughter(idx)->numberOfMothers()<<"  "<<genjets.at(k)->daughter(idx)->mother()->pdgId()<<endl;
           //cout<<genjets.at(k)->daughter(idx)->pt()<<"  "<<genjets.at(k)->daughter(idx)->eta()<<"  "<<genjets.at(k)->daughter(idx)->phi()<<"  "<<genjets.at(k)->daughter(idx)->energy()<<endl<<endl;
+            GjConstMomId.push_back(genjets.at(k)->daughter(idx)->mother()->pdgId());
             GjConstId.push_back(genjets.at(k)->daughter(idx)->pdgId());
             GjConstPt.push_back(genjets.at(k)->daughter(idx)->pt());
             GjConstCharge.push_back(genjets.at(k)->daughter(idx)->charge());
@@ -1931,14 +1934,14 @@ if(realdata){
 
         // Access up and down variation of the scale factor
         double sf_up = resolution_sf.getScaleFactor({{JME::Binning::JetEta, jet.eta()}}, Variation::UP);
-        double sf_down = resolution_sf.getScaleFactor({{JME::Binning::JetEta, jet.eta()}}, Variation::DOWN);
+        double sf_dn = resolution_sf.getScaleFactor({{JME::Binning::JetEta, jet.eta()}}, Variation::DOWN);
 
-//        cout<<r<<"  "<<sf<<"  "<<sf_up<<"  "<<sf_down <<endl;
+//        cout<<r<<"  "<<sf<<"  "<<sf_up<<"  "<<sf_dn <<endl;
 
 //        cout<<gRandom->Gaus(jet.pt(),sqrt(sf*sf-1)*r)<<endl;
         smear=gRandom->Gaus(jet.pt(),sqrt(sf*sf-1)*r);
         smearUp=gRandom->Gaus(jet.pt(),sqrt(sf_up*sf_up-1)*r);
-        smearDn=gRandom->Gaus(jet.pt(),sqrt(sf_down*sf_down-1)*r);
+        smearDn=gRandom->Gaus(jet.pt(),sqrt(sf_dn*sf_dn-1)*r);
 
 	if (jet.genJet()){
 	  matchGen=true;
@@ -2129,6 +2132,7 @@ Tupel::beginJob()
     myTree->Branch("GjPz",&GjPz);
     myTree->Branch("GjChargedFraction",&GjChargedFraction);
     myTree->Branch("GjConstId",&GjConstId);
+    myTree->Branch("GjConstMomId",&GjConstMomId);
     myTree->Branch("GjNConst",&GjNConst);
     myTree->Branch("GjConstPt",&GjConstPt);
     myTree->Branch("GjConstCharge",&GjConstCharge);
