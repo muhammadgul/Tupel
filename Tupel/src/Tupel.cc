@@ -1945,6 +1945,13 @@ if(realdata){
 
 	if (jet.genJet()){
 	  matchGen=true;
+          TLorentzVector jet_vv;
+           TLorentzVector gjet_vv;
+          jet_vv.SetPtEtaPhiE(jet.pt(),jet.eta(),jet.phi(),jet.energy());
+          gjet_vv.SetPtEtaPhiE(jet.genJet()->pt(),jet.genJet()->eta(),jet.genJet()->phi(),jet.genJet()->energy());
+          double DR_gj_j=jet_vv.DeltaR(gjet_vv);
+          double DPt_gj_j=fabs(jet.pt()-jet.genJet()->pt());
+          if( DR_gj_j<0.2 &&DPt_gj_j<3*r ){
           //cout<<"Burdayım ulan "<<endl;
 	  MGjPt.push_back(jet.genJet()->pt());
 	  MGjeta.push_back(jet.genJet()->eta());
@@ -1955,7 +1962,7 @@ if(realdata){
           smearUp=std::max(0.0,jet.genJet()->pt() +sf_up *( jet.pt()-jet.genJet()->pt() ) );
           smearDn=std::max(0.0,jet.genJet()->pt() +sf_dn *( jet.pt()-jet.genJet()->pt() ) );
          // cout<<"Burdayım ulan  "<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
-	}
+	}}
         //cout<<smear<<"  "<<smearUp<<"  "<<smearDn<<endl;
 	matchGjet.push_back(matchGen);
         smearE=jet.energy()*smear/jet.pt();
