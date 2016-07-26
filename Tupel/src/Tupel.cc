@@ -1611,15 +1611,17 @@ int ngjets=0;
 	
 	int idpass=0;
         int tightid=0, medid=0, looseid=0;
-        for (const pat::Muon &mu : *muons)
-        {
-        if( pvHandle->empty() && pvHandle->front().isFake())continue;
+        bool isTight=0;       
+ /*for (const pat::Muon &mu : *muons)
+        {*/
+        if(!( pvHandle->empty() && pvHandle->front().isFake())){
         const reco::Vertex &vtx = pvHandle->front();
-        bool isTight(muon::isTightMuon(mu,vtx));
-        bool isMedium(muon::isMediumMuon(mu));
-        bool isLoose(muon::isLooseMuon(mu));
-        if (isTight)tightid=1;if (isMedium)medid=1;if (isLoose)looseid=1;
+	isTight=muon::isTightMuon(mu[j],vtx);
         }
+        bool isMedium(muon::isMediumMuon(mu[j]));
+        bool isLoose(muon::isLooseMuon(mu[j]));
+        if (isTight)tightid=1;if (isMedium)medid=1;if (isLoose)looseid=1;
+        
         patMuonLooseId_.push_back(looseid);
         patMuonMediumId_.push_back(medid);
         patMuonTightId_.push_back(tightid);
