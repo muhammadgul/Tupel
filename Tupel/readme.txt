@@ -7,8 +7,10 @@ git-cms-merge-topic 13960
 //to fetch the most recent pseudotop producer.
 git clone -b Tupel_MiniAOD_TTbar_76X git@github.com:muhammadgul/Tupel
 
-scram b -j 10
+// met corrections
+git cms-merge-topic cms-met:metTool76X
 
+scram b -j 10
 // eos mount (active for ~24 hours)
 mkdir ~/eos
 eosmount ~/eos
